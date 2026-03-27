@@ -88,4 +88,4 @@ Does the model still perform well? What changes in the plot?
 
 ## Next Lesson
 
-**[Lesson 1.3 — Logistic Regression](lesson_1_3.md):** Make yes/no decisions — phishing URL or legitimate?
+**[Lesson 1.3 — Logistic Regression](logistic_regression.md):** Make yes/no decisions — phishing URL or legitimate?

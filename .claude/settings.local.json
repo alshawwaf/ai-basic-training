@@ -3,7 +3,11 @@
     "allow": [
       "Bash(for f:*)",
       "Bash(do echo:*)",
-      "Bash(git -C \"c:/Users/admin/Desktop/AI Basic Training\" status)"
+      "Bash(git -C \"c:/Users/admin/Desktop/AI Basic Training\" status)",
+      "Bash(grep -rn \"lesson_\\\\|coming next\\\\|\\\\`[0-9]_\" --include=\"*.md\")",
+      "Bash(grep -n \"lesson_\\\\|\\\\`[0-9_]*\\\\.py\\\\`\\\\|\\\\`milestone\" \"c:/Users/admin/Desktop/AI Basic Training/stage2_intermediate/README.md\" \"c:/Users/admin/Desktop/AI Basic Training/stage3_neural_networks/README.md\" \"c:/Users/admin/Desktop/AI Basic Training/stage4_genai/README.md\")",
+      "Bash(sed -i 's|### \\\\[Feature Engineering\\\\]\\(feature_engineering.md\\) — Feature Engineering|### Lesson 2.1 — [Feature Engineering]\\(feature_engineering.md\\)|; s|### \\\\[Random Forests\\\\]\\(random_forests.md\\) — Random Forests|### Lesson 2.2 — [Random Forests]\\(random_forests.md\\)|; s|### \\\\[Clustering\\\\]\\(clustering_anomaly_detection.md\\) — k-Means Clustering|### Lesson 2.3 — [Clustering \\\\& Anomaly Detection]\\(clustering_anomaly_detection.md\\)|; s|### \\\\[Overfitting\\\\]\\(overfitting_cross_validation.md\\) — Cross-Validation \\\\& Overfitting|### Lesson 2.4 — [Overfitting \\\\& Cross-Validation]\\(overfitting_cross_validation.md\\)|; s|### Milestone — Network Intrusion Detector|### Milestone — [Network Intrusion Detector]\\(milestone_intrusion.py\\)|' stage2_intermediate/README.md)",
+      "Bash(sed -i 's|### \\\\[How LLMs Work\\\\]\\(how_llms_work.md\\) — How LLMs Work|### Lesson 4.1 — [How LLMs Work]\\(how_llms_work.md\\)|; s|### \\\\[HuggingFace\\\\]\\(huggingface_pretrained_models.md\\) — HuggingFace Pre-trained Models|### Lesson 4.2 — [HuggingFace Pre-trained Models]\\(huggingface_pretrained_models.md\\)|; s|### \\\\[Claude API\\\\]\\(claude_api.md\\) — The Claude API|### Lesson 4.3 — [The Claude API]\\(claude_api.md\\)|; s|### \\\\[RAG\\\\]\\(retrieval_augmented_generation.md\\) — RAG \\(Retrieval-Augmented Generation\\)|### Lesson 4.4 — [Retrieval-Augmented Generation]\\(retrieval_augmented_generation.md\\)|; s|### Milestone — Security Analyst Assistant|### Milestone — [Security Analyst Assistant]\\(milestone_security_assistant.py\\)|' stage4_genai/README.md)"
     ]
   }
 }

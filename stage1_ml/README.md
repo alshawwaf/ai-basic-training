@@ -68,28 +68,28 @@ The split in step 3 is critical: you never evaluate on data the model was traine
 
 ## Lessons
 
-### [Lesson 1.1](lesson_1_1.md) — What is ML? Exploring Data
+### Lesson 1.1 — [What is ML?](what_is_ml.md)
 **Script:** [1_concepts_and_data.py](1_concepts_and_data.py)
 Learn to load, inspect, and visualise a dataset before training anything.
 
-### Lesson 1.2 — Linear Regression *(coming next)*
-**Script:** `2_linear_regression.py`
+### Lesson 1.2 — [Linear Regression](linear_regression.md)
+**Script:** [2_linear_regression.py](2_linear_regression.py)
 Predict a continuous value: server response time from traffic load.
 
-### Lesson 1.3 — Logistic Regression
-**Script:** `3_logistic_regression.py`
+### Lesson 1.3 — [Logistic Regression](logistic_regression.md)
+**Script:** [3_logistic_regression.py](3_logistic_regression.py)
 Make binary decisions: phishing URL (yes/no).
 
-### Lesson 1.4 — Decision Trees
-**Script:** `4_decision_tree.py`
+### Lesson 1.4 — [Decision Trees](decision_trees.md)
+**Script:** [4_decision_tree.py](4_decision_tree.py)
 Classify network traffic as threat or benign using rule-based splits.
 
-### Lesson 1.5 — Model Evaluation
-**Script:** `5_model_evaluation.py`
+### Lesson 1.5 — [Model Evaluation](model_evaluation.md)
+**Script:** [5_model_evaluation.py](5_model_evaluation.py)
 Accuracy, precision, recall, F1, confusion matrix — what they mean and when to use each.
 
-### Milestone — Phishing URL Classifier
-**Script:** `milestone_phishing.py`
+### Milestone — [Phishing URL Classifier](milestone_phishing.py)
+**Script:** [milestone_phishing.py](milestone_phishing.py)
 End-to-end project using a real phishing dataset.
 
 ---

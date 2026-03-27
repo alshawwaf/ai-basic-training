@@ -89,4 +89,4 @@ plot_tree(model, feature_names=feature_names, class_names=['Benign', 'Attack'],
 
 ## Next Lesson
 
-**[Lesson 1.5 — Model Evaluation](lesson_1_5.md):** Accuracy alone is misleading in security. Learn precision, recall, F1, and ROC curves — and understand *why* they matter when 99% of traffic is benign.
+**[Lesson 1.5 — Model Evaluation](model_evaluation.md):** Accuracy alone is misleading in security. Learn precision, recall, F1, and ROC curves — and understand *why* they matter when 99% of traffic is benign.

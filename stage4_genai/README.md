@@ -32,23 +32,23 @@ Stage 4 is about **generative models**: given a prompt/context, *produce* meanin
 
 ## Lessons
 
-### [Lesson 4.1](lesson_4_1.md) — How LLMs Work
+### Lesson 4.1 — [How LLMs Work](how_llms_work.md)
 **Script:** [1_llm_concepts.py](1_llm_concepts.py)
 Tokenisation, embeddings, and next-token prediction — the machinery behind ChatGPT/Claude.
 
-### [Lesson 4.2](lesson_4_2.md) — HuggingFace Pre-trained Models
+### Lesson 4.2 — [HuggingFace Pre-trained Models](huggingface_pretrained_models.md)
 **Script:** [2_huggingface.py](2_huggingface.py)
 Use transformer models out-of-the-box for text classification, NER, and summarisation.
 
-### [Lesson 4.3](lesson_4_3.md) — The Claude API
+### Lesson 4.3 — [The Claude API](claude_api.md)
 **Script:** [3_claude_api.py](3_claude_api.py)
 Build a conversational threat intelligence assistant using Anthropic's Claude.
 
-### [Lesson 4.4](lesson_4_4.md) — RAG (Retrieval-Augmented Generation)
+### Lesson 4.4 — [Retrieval-Augmented Generation](retrieval_augmented_generation.md)
 **Script:** [4_rag.py](4_rag.py)
 Ground the model's answers in your own security documents to reduce hallucination.
 
-### Milestone — Security Analyst Assistant
+### Milestone — [Security Analyst Assistant](milestone_security_assistant.py)
 **Script:** [milestone_security_assistant.py](milestone_security_assistant.py)
 A full RAG-based assistant that answers questions about CVEs and threat intelligence.
 

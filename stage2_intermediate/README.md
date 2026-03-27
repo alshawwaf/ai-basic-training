@@ -26,23 +26,23 @@ This is where **unsupervised learning** comes in — the model finds unusual pat
 
 ## Lessons
 
-### [Lesson 2.1](lesson_2_1.md) — Feature Engineering
+### Lesson 2.1 — [Feature Engineering](feature_engineering.md)
 **Script:** [1_feature_engineering.py](1_feature_engineering.py)
 Turn raw log lines into ML-ready numerical features.
 
-### [Lesson 2.2](lesson_2_2.md) — Random Forests
+### Lesson 2.2 — [Random Forests](random_forests.md)
 **Script:** [2_random_forest.py](2_random_forest.py)
 Ensemble of decision trees — more accurate and less prone to overfitting.
 
-### [Lesson 2.3](lesson_2_3.md) — k-Means Clustering
+### Lesson 2.3 — [Clustering & Anomaly Detection](clustering_anomaly_detection.md)
 **Script:** [3_clustering.py](3_clustering.py)
 Find anomalous network behaviour without needing attack labels.
 
-### [Lesson 2.4](lesson_2_4.md) — Cross-Validation & Overfitting
+### Lesson 2.4 — [Overfitting & Cross-Validation](overfitting_cross_validation.md)
 **Script:** [4_overfitting.py](4_overfitting.py)
 Reliably estimate real-world model performance.
 
-### Milestone — Network Intrusion Detector
+### Milestone — [Network Intrusion Detector](milestone_intrusion.py)
 **Script:** [milestone_intrusion.py](milestone_intrusion.py)
 Full pipeline on KDD Cup-style network intrusion data.
 

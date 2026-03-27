@@ -1,4 +1,4 @@
-# Stage 4 — Generative AI
+# Module 4 — Generative AI
 
 ## Goal
 Move from models that classify to models that *generate* — understand how LLMs work, use pre-trained models, call the Claude API, and build a RAG-based security assistant.

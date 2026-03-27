@@ -1,11 +1,11 @@
-# Stage 2 — Intermediate Machine Learning
+# Module 2 — Intermediate Machine Learning
 
 ## Goal
 Handle real-world messiness: engineer features from raw logs, build more powerful models, detect overfitting, and work with unsupervised data.
 
 ---
 
-## What's New in Stage 2
+## What's New in Module 2
 
 | Concept | Why it matters |
 |---------|---------------|

@@ -1,4 +1,4 @@
-# Stage 1 — Classic Machine Learning
+# Module 1 — Classic Machine Learning
 
 ## Goal
 Understand what ML is, how models learn from data, and build your first classifiers using scikit-learn.

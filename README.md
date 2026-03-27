@@ -67,7 +67,29 @@ You will get the most out of this if you:
 
 ## Setup
 
-### Install Dependencies
+### 1. Create a Virtual Environment
+
+Always work inside a virtual environment — it keeps this project's packages isolated from the rest of your system and prevents version conflicts.
+
+```bash
+# Create the environment (one-time)
+python -m venv venv
+
+# Activate it — Windows
+venv\Scripts\activate
+
+# Activate it — Mac / Linux
+source venv/bin/activate
+```
+
+Your terminal prompt will change to show `(venv)` when it's active. **All pip installs below must be run with the environment active.**
+
+To deactivate when you're done for the day:
+```bash
+deactivate
+```
+
+### 2. Install Dependencies
 
 Install packages per module as you reach them, or install everything upfront:
 
@@ -79,7 +101,7 @@ pip install pandas scikit-learn matplotlib seaborn
 pip install tensorflow nnfs
 
 # Module 4 — Generative AI
-pip install transformers sentence-transformers anthropic openai google-generativeai
+pip install transformers sentence-transformers anthropic openai google-generativeai ollama
 ```
 
 ### API Key (Module 4 Only)
@@ -102,7 +124,7 @@ set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B               # Ollama (no key
 
 # Mac / Linux
 export ANTHROPIC_API_KEY=your-key-here
-export OLLAMA_MODEL=llama3
+export OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B
 ```
 
 > The `llm_client.py` helper in Module 4 handles provider selection automatically. Priority order: Claude → OpenAI → Gemini → Ollama. Set whichever you have — no code changes needed.

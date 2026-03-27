@@ -14,91 +14,104 @@ In cybersecurity terms: you wouldn't write detection rules without first looking
 
 ## The Dataset We Use
 
-We use scikit-learn's built-in **breast cancer dataset** as a warm-up. Why?
-- It's clean and well-understood
-- It's a **binary classification** problem (malignant vs benign)
-- This is the *exact same structure* as "is this traffic an attack or not?"
+We use scikit-learn's built-in **digits dataset** — 1,797 handwritten digit images (0–9), each stored as an 8×8 grid of pixel brightness values.
 
-The features are measurements of cell nuclei from a biopsy image:
-- `mean radius`, `mean texture`, `mean perimeter`, etc.
+```
+  0  0  5 13  9  1  0  0
+  0  0 13 15 10 15  5  0
+  0  3 15  2  0 11  8  0
+  0  4 12  0  0  8  8  0
+  0  5  8  0  0  9  8  0
+  0  4 11  0  1 12  7  0
+  0  2 14  5 10 12  0  0
+  0  0  6 13 10  0  0  0
+  ↑ This is the digit '0'
+```
 
-In a real security project, these would instead be:
-- `bytes_sent`, `packet_rate`, `entropy`, `port_number`, `connection_duration`, etc.
+Each image is **flattened into a row of 64 numbers** before the model sees it. The model never sees the picture — only the numbers. This is exactly how security ML works: a network connection becomes a row of numbers (bytes sent, packets per second, port, protocol...) and the model learns to classify it from those numbers alone.
 
 ---
 
 ## What the Script Does
 
-### Step 1 — Load the data
+### Step 1 — Load and inspect the data
 ```python
-data = load_breast_cancer()
-df = pd.DataFrame(data.data, columns=data.feature_names)
-df["target"] = data.target   # 0 = malignant, 1 = benign
+digits = load_digits()
+# digits.data   → shape (1797, 64) — 1797 images, 64 pixel features each
+# digits.target → shape (1797,)    — correct label for each image (0–9)
+# digits.images → shape (1797, 8, 8) — same data as 2D grids for plotting
 ```
 
-### Step 2 — Inspect the shape
+Always check the shape first. It tells you how much data you have and how many features each sample carries.
+
+### Step 2 — Check class balance
 ```python
-df.shape        # (569, 31) → 569 samples, 30 features + 1 label
-df.head()       # first 5 rows
-df.describe()   # mean, std, min, max for each feature
+df["target"].value_counts().sort_index()
+# 0    178
+# 1    182
+# 2    177
+# ...
 ```
 
-Always check:
-- How many rows do you have? (more is generally better)
-- How many features? (too many can cause problems — "curse of dimensionality")
+This dataset is well-balanced — roughly equal examples of each digit. In security data this is rarely true: you might have millions of normal connections and only hundreds of attacks. That imbalance matters enormously — you'll deal with it properly in Module 2.
 
-### Step 3 — Check class balance
+### Step 3 — Visualise sample images
+
+The script plots two examples of each digit side by side. This is your sanity check — do the images look like what you'd expect? Are there any obvious data quality problems?
+
+In security EDA, you do the equivalent: plot a few raw log lines from each class and ask "does this actually look like an attack?"
+
+### Step 4 — Print one image as raw numbers
+
 ```python
-df["target_name"].value_counts()
-# benign      357
-# malignant   212
+for row in digits.images[0].astype(int):
+    print("  ".join(f"{v:2d}" for v in row))
 ```
 
-**Class imbalance** is a major issue in cybersecurity ML. If 99% of traffic is normal and 1% is an attack, a model that always says "normal" gets 99% accuracy — but it's useless. You'll learn how to handle this in Stage 2.
+This makes the point concrete: **the model sees numbers, not pictures**. Pixel brightness values, floats, integers — it's all just a row of features. The label tells the model what those numbers mean.
 
-### Step 4 — Visualise feature distributions
-```python
-ax.hist(group[feature], alpha=0.6, label=label, bins=30)
-```
+### Step 5 — Plot the average image per class
 
-If the malignant and benign histograms **don't overlap much** → this feature is a strong signal for the model.
-If they **heavily overlap** → this feature alone isn't very useful, but combined with others it might be.
+Averaging all the `0`s together, all the `1`s together, etc., gives you the "prototype" of each class. If two classes have very similar averages (e.g. `1` and `7` might overlap in some pixels) the model will find those harder to separate.
 
 ---
 
 ## What to Look for When You Run It
 
-1. **Shape** — 569 rows, 31 columns
-2. **Class balance** — 357 benign vs 212 malignant (roughly 63/37 split)
-3. **Histograms** — `mean radius` should separate the classes well; you'll see two distinct humps
+1. **Shape** — 1797 rows, 64 features
+2. **Class balance** — roughly 178–182 examples per digit (well balanced)
+3. **Sample images** — recognisable digits, some messier than others
+4. **Average images** — each digit has a distinct shape; `1` and `7` are the most similar
 
 ---
 
 ## The Key Takeaway
 
-> A model is only as good as your understanding of the data.
+> The model only ever sees rows of numbers. Your job is to make sure those numbers carry enough signal to find the pattern.
 
-Spend time here. Ask questions like:
-- Do I have enough data?
+Before any training, ask:
+- How many samples do I have?
 - Are the classes balanced?
-- Do any features look like strong predictors?
-- Are there missing values? (check with `df.isnull().sum()`)
+- Do the features look meaningful?
+- Are there missing values? (`df.isnull().sum()`)
 
 ---
 
 ## Try It Yourself
 
-After running the script, open Python and try:
-
 ```python
-# Are there any missing values?
-print(df.isnull().sum())
+# Which pixel positions are most different between digit 0 and digit 1?
+mean_0 = digits.data[digits.target == 0].mean(axis=0)
+mean_1 = digits.data[digits.target == 1].mean(axis=0)
+diff = abs(mean_0 - mean_1).reshape(8, 8)
 
-# Which features have the highest correlation with the target?
-print(df.corr()["target"].sort_values(ascending=False).head(10))
+import matplotlib.pyplot as plt
+plt.imshow(diff, cmap="hot")
+plt.title("Pixel differences between 0 and 1")
+plt.colorbar()
+plt.show()
+# Bright areas = pixels that differ a lot → most useful features for separating these two classes
 ```
-
-The second line is a quick way to find your most predictive features — very useful when you're dealing with hundreds of columns in a real security dataset.
 
 ---
 

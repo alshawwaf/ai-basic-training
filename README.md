@@ -179,14 +179,14 @@ These lessons work through the mathematics and mechanics of a neural network fro
 
 | # | Script | What You Build |
 |---|--------|----------------|
-| 3.1 | [p001 — Basic Neuron](module3_neural_networks/foundations/p001-Basic-Neuron-3-inputs.py) | A single neuron: inputs × weights + bias |
-| 3.2 | [p002 — Neuron Layer](module3_neural_networks/foundations/p002-Basic-Neuron-Layer.py) | Multiple neurons computing in parallel — a full layer |
-| 3.3 | [p003 — Dot Product](module3_neural_networks/foundations/p003-Dot-Product.py) | Vectorising the computation with NumPy matrix multiplication |
-| 3.4 | [p004 — Layers as Classes](module3_neural_networks/foundations/p004-Layers-and-Object.py) | Structuring layers as reusable Python objects |
-| 3.5 | [p005 — ReLU Activation](module3_neural_networks/foundations/p005-ReLU-Activation.py) | Adding non-linearity so the network can learn complex patterns |
-| 3.6 | [p006 — Softmax Activation](module3_neural_networks/foundations/p006-Softmax-Activation.py) | Converting raw outputs into a probability distribution |
-| 3.7 | [p007 — Cross-Entropy Loss](module3_neural_networks/foundations/p007-Categorical-Cross-Entropy-Loss.py) | Quantifying how wrong the model's predictions are |
-| 3.8 | [p008 — Full Forward Pass](module3_neural_networks/foundations/p008-Categorical-Cross-Entropy-Loss-applied.py) | Complete network: input → layers → activations → loss |
+| 3.1 | [1_basic_neuron.py](module3_neural_networks/foundations/1_basic_neuron.py) | A single neuron: inputs × weights + bias |
+| 3.2 | [2_neuron_layer.py](module3_neural_networks/foundations/2_neuron_layer.py) | Multiple neurons computing in parallel — a full layer |
+| 3.3 | [3_dot_product.py](module3_neural_networks/foundations/3_dot_product.py) | Vectorising the computation with NumPy matrix multiplication |
+| 3.4 | [4_layers_as_classes.py](module3_neural_networks/foundations/4_layers_as_classes.py) | Structuring layers as reusable Python objects |
+| 3.5 | [5_relu_activation.py](module3_neural_networks/foundations/5_relu_activation.py) | Adding non-linearity so the network can learn complex patterns |
+| 3.6 | [6_softmax_activation.py](module3_neural_networks/foundations/6_softmax_activation.py) | Converting raw outputs into a probability distribution |
+| 3.7 | [7_cross_entropy_loss.py](module3_neural_networks/foundations/7_cross_entropy_loss.py) | Quantifying how wrong the model's predictions are |
+| 3.8 | [8_full_forward_pass.py](module3_neural_networks/foundations/8_full_forward_pass.py) | Complete network: input → layers → activations → loss |
 
 ### Phase 2 — Keras and Real Security Data
 

@@ -1,12 +1,13 @@
 # llm_client.py — Unified LLM provider helper
 #
-# Auto-detects whichever API key you have set and wraps it in a
-# common interface so all Stage 4 scripts work regardless of provider.
+# Auto-detects whichever API key / local model you have configured and wraps
+# it in a common interface so all Module 4 scripts work regardless of provider.
 #
-# Supported providers (set ONE of these environment variables):
-#   Claude  → ANTHROPIC_API_KEY   (https://console.anthropic.com)
-#   OpenAI  → OPENAI_API_KEY      (https://platform.openai.com)
-#   Gemini  → GOOGLE_API_KEY      (https://aistudio.google.com)
+# Supported providers (in priority order):
+#   Claude  → set ANTHROPIC_API_KEY   (https://console.anthropic.com)
+#   OpenAI  → set OPENAI_API_KEY      (https://platform.openai.com)
+#   Gemini  → set GOOGLE_API_KEY      (https://aistudio.google.com)
+#   Ollama  → set OLLAMA_MODEL=llama3  (local, no key needed — https://ollama.com)
 #
 # Usage:
 #   from llm_client import get_client
@@ -31,12 +32,17 @@ def get_client():
     elif os.environ.get("GOOGLE_API_KEY"):
         print("Provider: Gemini (Google)")
         return "gemini", _GeminiClient()
+    elif os.environ.get("OLLAMA_MODEL"):
+        model = os.environ["OLLAMA_MODEL"]
+        print(f"Provider: Ollama (local) — model: {model}")
+        return "ollama", _OllamaClient(model)
     else:
         print(
-            "\nNo API key found. Set one of:\n"
-            "  set ANTHROPIC_API_KEY=...   (Claude)\n"
-            "  set OPENAI_API_KEY=...      (OpenAI)\n"
-            "  set GOOGLE_API_KEY=...      (Gemini)\n"
+            "\nNo provider configured. Choose one:\n"
+            "  set ANTHROPIC_API_KEY=...    (Claude — cloud)\n"
+            "  set OPENAI_API_KEY=...       (OpenAI — cloud)\n"
+            "  set GOOGLE_API_KEY=...       (Gemini — cloud, free tier)\n"
+            "  set OLLAMA_MODEL=llama3      (Ollama — local, no key needed)\n"
         )
         return "none", None
 
@@ -150,3 +156,43 @@ class _GeminiClient:
         for chunk in response:
             if chunk.text:
                 yield chunk.text
+
+
+class _OllamaClient:
+    """Ollama — runs any model locally, no API key required.
+
+    Install Ollama: https://ollama.com
+    Pull a model:   ollama pull llama3
+    Set env var:    set OLLAMA_MODEL=llama3
+    """
+
+    def __init__(self, model: str):
+        try:
+            import ollama as _ollama
+        except ImportError:
+            raise ImportError("Run: pip install ollama")
+        self._ollama = _ollama
+        self.model = model
+
+    def _build_messages(self, system: str, messages: list) -> list:
+        return [{"role": "system", "content": system}] + messages
+
+    def chat(self, system: str, messages: list, max_tokens: int = 600) -> str:
+        response = self._ollama.chat(
+            model=self.model,
+            messages=self._build_messages(system, messages),
+            options={"num_predict": max_tokens},
+        )
+        return response["message"]["content"]
+
+    def stream(self, system: str, messages: list, max_tokens: int = 600):
+        """Yield text chunks as they arrive."""
+        for chunk in self._ollama.chat(
+            model=self.model,
+            messages=self._build_messages(system, messages),
+            options={"num_predict": max_tokens},
+            stream=True,
+        ):
+            content = chunk.get("message", {}).get("content", "")
+            if content:
+                yield content

@@ -91,18 +91,21 @@ Module 4 connects to a live LLM. You need an API key from **one** of the followi
 | Claude (Anthropic) | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) | Best quality responses |
 | OpenAI | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | GPT-4o-mini used by default |
 | Gemini (Google) | `GOOGLE_API_KEY` | [aistudio.google.com](https://aistudio.google.com) | Free tier available |
+| Ollama (local) | `OLLAMA_MODEL=llama3` | [ollama.com](https://ollama.com) | Runs on your machine — no key, no internet, no cost |
 
-**Set your key:**
+**Set your key (or model name for Ollama):**
 
 ```bash
 # Windows
-set ANTHROPIC_API_KEY=your-key-here
+set ANTHROPIC_API_KEY=your-key-here   # Claude
+set OLLAMA_MODEL=llama3               # Ollama (no key — just install Ollama and pull a model)
 
 # Mac / Linux
 export ANTHROPIC_API_KEY=your-key-here
+export OLLAMA_MODEL=llama3
 ```
 
-> The `llm_client.py` helper in Module 4 handles provider selection automatically. If multiple keys are present, it uses Claude → OpenAI → Gemini in priority order.
+> The `llm_client.py` helper in Module 4 handles provider selection automatically. Priority order: Claude → OpenAI → Gemini → Ollama. Set whichever you have — no code changes needed.
 
 ---
 
@@ -213,7 +216,7 @@ This module bridges traditional ML and modern AI. You will learn what an LLM act
 | 4.4 | [Retrieval-Augmented Generation](module4_genai/4_retrieval_augmented_generation.md) | [4_rag.py](module4_genai/4_rag.py) | Ground AI responses in your own CVE and threat report documents — eliminate hallucination |
 | — | **Milestone Project** | [milestone_security_assistant.py](module4_genai/milestone_security_assistant.py) | Interactive Q&A assistant over a knowledge base of CVEs, threat reports, and security runbooks |
 
-**Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, or Gemini. The `llm_client.py` helper abstracts the provider — set whichever API key you have and the code handles the rest.
+**Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, Gemini, or Ollama (local). The `llm_client.py` helper abstracts the provider — set whichever key or model you have and the code handles the rest. Ollama is a good option if you need to keep data local or don't want to sign up for a cloud service.
 
 **Key concepts covered:** tokens and context windows, embeddings, cosine similarity, vector search, RAG pipeline, prompt engineering, system prompts, conversation state, hallucination and grounding
 

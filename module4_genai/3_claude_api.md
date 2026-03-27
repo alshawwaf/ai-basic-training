@@ -8,12 +8,13 @@
 
 HuggingFace models are task-specific (summarise this, classify that). A conversational LLM API gives you a general-purpose AI that you direct entirely through natural language instructions — the **system prompt**.
 
-This lesson works with **Claude, OpenAI, or Gemini** — set whichever key you have:
+This lesson works with **Claude, OpenAI, Gemini, or Ollama** — set whichever you have:
 
 ```bash
 set ANTHROPIC_API_KEY=...   # Claude  (recommended)
 set OPENAI_API_KEY=...      # OpenAI
-set GOOGLE_API_KEY=...      # Gemini
+set GOOGLE_API_KEY=...      # Gemini  (free tier available)
+set OLLAMA_MODEL=llama3     # Ollama  (local, no key needed)
 ```
 
 The `llm_client.py` helper auto-detects which key is available and wraps it in a common interface, so the rest of the code is identical regardless of provider:
@@ -81,19 +82,51 @@ This is how you integrate Claude into automated security pipelines.
 ## Setup
 
 ```bash
-pip install anthropic
-set ANTHROPIC_API_KEY=your-key-here
+pip install anthropic          # if using Claude
+pip install openai             # if using OpenAI
+pip install google-generativeai  # if using Gemini
+pip install ollama             # if using Ollama (local)
 ```
 
 ---
 
-## API Cost Awareness
+## Running Locally with Ollama
 
-Claude pricing (as of 2024):
+Ollama lets you run open-source LLMs entirely on your own machine — no API key, no internet connection required after the initial model download.
+
+**Why this matters for security work:**
+- Sensitive data (malware samples, IR reports, CVE details) never leaves your machine
+- Works in air-gapped or restricted network environments
+- No usage costs, no rate limits
+
+**Setup:**
+
+1. Download and install Ollama from [ollama.com](https://ollama.com)
+2. Pull a model (one-time download, 4–8 GB depending on the model):
+   ```bash
+   ollama pull llama3        # good general-purpose model
+   ollama pull mistral       # lighter, faster on CPU
+   ollama pull phi3          # smallest — works on low-memory machines
+   ```
+3. Set the environment variable — no API key needed:
+   ```bash
+   set OLLAMA_MODEL=llama3   # Windows
+   export OLLAMA_MODEL=llama3  # Mac/Linux
+   ```
+
+All Module 4 scripts will automatically use your local model. No code changes required.
+
+**Trade-off to be aware of:** Local models are generally less capable than cloud APIs for complex reasoning tasks like RAG. For development and learning they work well; for production security tooling, a cloud API will give better results.
+
+---
+
+## API Cost Awareness (Cloud Providers)
+
+Claude pricing (as of 2025):
 - Input tokens: $3 / million tokens (Sonnet)
 - Output tokens: $15 / million tokens (Sonnet)
 
-A 1,000-word security report analysis costs ~$0.001 — effectively free for development.
+A 1,000-word security report analysis costs ~$0.001 — effectively free for development. Gemini offers a free tier. Ollama is free indefinitely.
 
 ---
 

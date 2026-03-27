@@ -14,6 +14,16 @@ In cybersecurity terms: you wouldn't write detection rules without first looking
 
 ## The Dataset We Use
 
+### Where It Comes From
+
+The digits dataset has a straightforward origin. In the early 1990s, researchers collected handwritten digit samples — people physically wrote the numbers 0–9 on paper. The paper was scanned, and each digit image was cropped and downsampled to an 8×8 grid of pixel brightness values (0 = white, 16 = black).
+
+The result was published as the **Optical Recognition of Handwritten Digits** dataset on the UCI Machine Learning Repository, one of the oldest and most widely used archives of ML datasets. It has been a standard teaching and benchmarking dataset ever since.
+
+When you call `load_digits()`, scikit-learn loads that data directly from a file bundled inside the package — no internet connection, no download. It is always available.
+
+---
+
 We use scikit-learn's built-in **digits dataset** — 1,797 handwritten digit images (0–9), each stored as an 8×8 grid of pixel brightness values.
 
 ```

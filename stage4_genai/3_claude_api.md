@@ -1,16 +1,28 @@
-# Lesson 4.3 — The Claude API
+# Lesson 4.3 — Working with LLM APIs
 
-**Script:** [3_claude_api.py](3_claude_api.py)
+**Script:** [3_claude_api.py](3_claude_api.py) · **Helper:** [llm_client.py](llm_client.py)
 
 ---
 
 ## Concept: Directing a Powerful Model with Natural Language
 
-HuggingFace models are task-specific (summarise this, classify that). The Claude API gives you a general-purpose AI that you direct entirely through natural language instructions — the **system prompt**.
+HuggingFace models are task-specific (summarise this, classify that). A conversational LLM API gives you a general-purpose AI that you direct entirely through natural language instructions — the **system prompt**.
+
+This lesson works with **Claude, OpenAI, or Gemini** — set whichever key you have:
+
+```bash
+set ANTHROPIC_API_KEY=...   # Claude  (recommended)
+set OPENAI_API_KEY=...      # OpenAI
+set GOOGLE_API_KEY=...      # Gemini
+```
+
+The `llm_client.py` helper auto-detects which key is available and wraps it in a common interface, so the rest of the code is identical regardless of provider:
 
 ```python
-client.messages.create(
-    model="claude-sonnet-4-6",
+from llm_client import get_client
+provider, client = get_client()   # auto-detects your key
+
+response = client.chat(
     system="You are a threat intelligence analyst. Be concise and technical.",
     messages=[{"role": "user", "content": "Analyse this log entry: ..."}]
 )

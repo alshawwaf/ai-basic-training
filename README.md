@@ -34,14 +34,23 @@ pip install pandas scikit-learn matplotlib seaborn
 pip install tensorflow nnfs
 
 # Module 4
-pip install transformers sentence-transformers anthropic
+pip install transformers sentence-transformers anthropic openai google-generativeai
 ```
 
-For Module 4, you will also need a free Anthropic API key:
+For Module 4, you need an API key from **one** of these providers:
+
+| Provider | Environment Variable | Get a key |
+|----------|---------------------|-----------|
+| Claude (Anthropic) | `ANTHROPIC_API_KEY` | console.anthropic.com |
+| OpenAI | `OPENAI_API_KEY` | platform.openai.com |
+| Gemini (Google) | `GOOGLE_API_KEY` | aistudio.google.com |
+
 ```bash
-set ANTHROPIC_API_KEY=your-key-here
+set ANTHROPIC_API_KEY=your-key-here   # Windows
+export ANTHROPIC_API_KEY=your-key-here  # Mac/Linux
 ```
-Get one at [console.anthropic.com](https://console.anthropic.com)
+
+The scripts auto-detect whichever key you have set — no code changes needed.
 
 ---
 

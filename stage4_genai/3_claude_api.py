@@ -1,40 +1,23 @@
-# Lesson 4.3 — The Claude API
+# Lesson 4.3 — Working with LLM APIs
 #
-# Build a threat intelligence assistant using Claude.
-# Demonstrates:
-#   - Basic API call
-#   - System prompt design
-#   - Multi-turn conversation
-#   - Structured JSON output
-#   - Streaming responses
+# Demonstrates calling an LLM provider to build a threat intelligence assistant.
+# Works with Claude, OpenAI, or Gemini — whichever key you have set.
 #
-# Setup:
-#   pip install anthropic
-#   set ANTHROPIC_API_KEY=your-key-here
+# Set ONE of:
+#   set ANTHROPIC_API_KEY=...    (Claude  — recommended)
+#   set OPENAI_API_KEY=...       (OpenAI)
+#   set GOOGLE_API_KEY=...       (Gemini)
 
-import os
 import json
-import anthropic
+from llm_client import get_client
 
-# ── Check for API key ──────────────────────────────────────────────────────────
-api_key = os.environ.get("ANTHROPIC_API_KEY")
-if not api_key:
-    print("ERROR: ANTHROPIC_API_KEY environment variable not set.")
-    print("\nTo get a key:")
-    print("  1. Go to https://console.anthropic.com")
-    print("  2. Create an account and generate an API key")
-    print("  3. Run: set ANTHROPIC_API_KEY=your-key-here")
+provider, client = get_client()
+if client is None:
     exit(1)
 
-client = anthropic.Anthropic(api_key=api_key)
-MODEL  = "claude-sonnet-4-6"
-
 print("=" * 60)
-print("  LESSON 4.3: CLAUDE API — THREAT INTEL ASSISTANT")
+print(f"  LESSON 4.3: LLM API — THREAT INTEL ASSISTANT ({provider.upper()})")
 print("=" * 60)
-
-# ── 1. Basic call: analyse a log entry ────────────────────────────────────────
-print("\n── 1. Basic API Call ──")
 
 SECURITY_ANALYST_SYSTEM = """You are a senior cybersecurity analyst and threat hunter.
 When given log entries, alerts, or IOCs:
@@ -44,6 +27,9 @@ When given log entries, alerts, or IOCs:
 - Give 2-3 immediate response actions
 Keep responses concise and technical. Use bullet points."""
 
+# ── 1. Basic call: analyse a log entry ────────────────────────────────────────
+print("\n── 1. Basic API Call ──")
+
 log_entry = """
 2024-01-15 03:47:22 | WORKSTATION-042 | Event ID 4688
 Process: cmd.exe → powershell.exe -EncodedCommand JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0...
@@ -52,39 +38,27 @@ User: jsmith (standard user)
 Network: Outbound connection to 185.234.219.47:443 immediately after
 """
 
-response = client.messages.create(
-    model=MODEL,
-    max_tokens=600,
+response = client.chat(
     system=SECURITY_ANALYST_SYSTEM,
-    messages=[{"role": "user", "content": f"Analyse this log entry:\n{log_entry}"}]
+    messages=[{"role": "user", "content": f"Analyse this log entry:\n{log_entry}"}],
+    max_tokens=600,
 )
-
-print(f"Response (used {response.usage.input_tokens} input + {response.usage.output_tokens} output tokens):\n")
-print(response.content[0].text)
+print(response)
 
 # ── 2. Multi-turn conversation ────────────────────────────────────────────────
 print("\n\n── 2. Multi-turn Conversation ──")
 
 conversation = []
 
-def chat(user_message, verbose=True):
-    """Add a message, get a response, maintain history."""
+def chat(user_message):
     conversation.append({"role": "user", "content": user_message})
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=400,
-        system=SECURITY_ANALYST_SYSTEM,
-        messages=conversation
-    )
-    reply = response.content[0].text
+    reply = client.chat(system=SECURITY_ANALYST_SYSTEM, messages=conversation, max_tokens=400)
     conversation.append({"role": "assistant", "content": reply})
-    if verbose:
-        print(f"\nUser: {user_message[:80]}")
-        print(f"\nClaude: {reply}\n")
-        print("-" * 40)
+    print(f"\nUser: {user_message}")
+    print(f"\n{provider.capitalize()}: {reply}")
+    print("-" * 40)
     return reply
 
-# Simulate a security investigation
 chat("We've detected lateral movement from WORKSTATION-042 to 5 servers in the last 10 minutes. What's the likely objective?")
 chat("The affected servers are our Active Directory domain controllers. How does this change the threat assessment?")
 chat("We've isolated the workstation. What are the next 3 steps in our incident response?")
@@ -105,49 +79,41 @@ The JSON must have exactly these fields:
   iocs: array of strings
   recommended_actions: array of strings (max 3)"""
 
-alerts_to_classify = [
+alerts = [
     "Mimikatz-style LSASS memory access detected on DC01 at 2am by service account",
     "DNS queries to randomised subdomains of .ru TLD at 500 queries/minute from multiple hosts",
     "Scheduled task created to run Base64-encoded PowerShell at system startup",
 ]
 
-print("\nClassifying alerts as structured JSON:")
-for alert in alerts_to_classify:
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=300,
+for alert in alerts:
+    response = client.chat(
         system=JSON_SYSTEM,
-        messages=[{"role": "user", "content": alert}]
+        messages=[{"role": "user", "content": alert}],
+        max_tokens=300,
     )
     try:
-        data = json.loads(response.content[0].text)
+        data = json.loads(response)
         print(f"\n  Alert: {alert[:60]}...")
-        print(f"  Tactic     : {data.get('tactic', 'N/A')}")
-        print(f"  Technique  : {data.get('technique_id')} — {data.get('technique_name')}")
-        print(f"  Severity   : {data.get('severity')} (confidence: {data.get('confidence', 0):.0%})")
-        print(f"  IOCs       : {data.get('iocs', [])}")
-        print(f"  Actions    : {data.get('recommended_actions', [])}")
+        print(f"  Tactic    : {data.get('tactic')}")
+        print(f"  Technique : {data.get('technique_id')} — {data.get('technique_name')}")
+        print(f"  Severity  : {data.get('severity')} (confidence: {data.get('confidence', 0):.0%})")
+        print(f"  Actions   : {data.get('recommended_actions', [])}")
     except json.JSONDecodeError:
-        print(f"  Raw response: {response.content[0].text[:200]}")
+        print(f"  Raw: {response[:200]}")
 
-# ── 4. Streaming (for long responses) ─────────────────────────────────────────
-print("\n\n── 4. Streaming Response ──")
-print("(useful when generating long reports — prints as tokens arrive)\n")
-
-print("Claude: ", end="", flush=True)
-with client.messages.stream(
-    model=MODEL,
-    max_tokens=400,
+# ── 4. Streaming ───────────────────────────────────────────────────────────────
+print("\n\n── 4. Streaming Response ──\n")
+print(f"{provider.capitalize()}: ", end="", flush=True)
+for chunk in client.stream(
     system="You are a concise threat intelligence writer.",
     messages=[{
         "role": "user",
-        "content": "Write a 3-sentence executive summary of the Log4Shell vulnerability (CVE-2021-44228) for a non-technical board."
-    }]
-) as stream:
-    for text in stream.text_stream:
-        print(text, end="", flush=True)
+        "content": "Write a 3-sentence executive summary of Log4Shell (CVE-2021-44228) for a non-technical board."
+    }],
+    max_tokens=300,
+):
+    print(chunk, end="", flush=True)
 print("\n")
 
 print("=" * 60)
-print("API lesson complete.")
-print("Next: Lesson 4.4 — RAG to ground Claude's answers in your own documents.")
+print("Next: Lesson 4.4 — RAG to ground answers in your own documents.")

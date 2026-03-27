@@ -57,14 +57,19 @@ A full RAG-based assistant that answers questions about CVEs and threat intellig
 ## Setup
 
 ```bash
-pip install transformers anthropic numpy pandas sentence-transformers
+pip install transformers anthropic openai google-generativeai numpy pandas sentence-transformers
 ```
 
-For the Claude API lessons you need an Anthropic API key:
+All scripts use [llm_client.py](llm_client.py) which auto-detects whichever key you have set.
+You only need **one** of these:
+
+| Provider | Environment Variable | Where to get it |
+|----------|---------------------|-----------------|
+| Claude (Anthropic) | `ANTHROPIC_API_KEY` | console.anthropic.com |
+| OpenAI | `OPENAI_API_KEY` | platform.openai.com |
+| Gemini (Google) | `GOOGLE_API_KEY` | aistudio.google.com (free) |
+
 ```bash
-# Set in your terminal (or add to .env file)
-set ANTHROPIC_API_KEY=your-key-here     # Windows
-export ANTHROPIC_API_KEY=your-key-here  # Mac/Linux
+set ANTHROPIC_API_KEY=your-key-here    # Windows
+export ANTHROPIC_API_KEY=your-key-here # Mac/Linux
 ```
-
-Get a key at: https://console.anthropic.com

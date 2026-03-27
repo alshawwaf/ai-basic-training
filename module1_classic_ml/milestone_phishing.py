@@ -184,9 +184,9 @@ else:
     axes[2].set_title('Feature Coefficients')
 
 plt.tight_layout()
-plt.savefig('stage1_ml/milestone_phishing.png')
+plt.savefig('module1_classic_ml/milestone_phishing.png')
 plt.show()
-print("\nPlot saved to stage1_ml/milestone_phishing.png")
+print("\nPlot saved to module1_classic_ml/milestone_phishing.png")
 print("\n" + "=" * 60)
 print("  MILESTONE COMPLETE")
 print("=" * 60)

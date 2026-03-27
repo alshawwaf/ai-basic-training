@@ -109,6 +109,6 @@ axes[2].axhline(y=0.05, color='grey', linestyle='--', label='Random baseline (5%
 axes[2].legend()
 
 plt.tight_layout()
-plt.savefig('stage1_ml/lesson5_evaluation.png')
+plt.savefig('module1_classic_ml/lesson5_evaluation.png')
 plt.show()
-print("\nPlot saved to stage1_ml/lesson5_evaluation.png")
+print("\nPlot saved to module1_classic_ml/lesson5_evaluation.png")

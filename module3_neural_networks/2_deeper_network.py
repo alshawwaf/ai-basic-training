@@ -144,6 +144,6 @@ axes[2].set_ylabel('ROC AUC')
 axes[2].set_title('Model Comparison')
 
 plt.tight_layout()
-plt.savefig('stage3_neural_networks/lesson2_deeper_network.png')
+plt.savefig('module3_neural_networks/lesson2_deeper_network.png')
 plt.show()
-print("\nPlot saved to stage3_neural_networks/lesson2_deeper_network.png")
+print("\nPlot saved to module3_neural_networks/lesson2_deeper_network.png")

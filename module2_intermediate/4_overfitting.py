@@ -135,6 +135,6 @@ axes[2].set_title('Learning Curve (how much data do we need?)')
 axes[2].legend()
 
 plt.tight_layout()
-plt.savefig('stage2_intermediate/lesson4_overfitting.png')
+plt.savefig('module2_intermediate/lesson4_overfitting.png')
 plt.show()
-print("\nPlot saved to stage2_intermediate/lesson4_overfitting.png")
+print("\nPlot saved to module2_intermediate/lesson4_overfitting.png")

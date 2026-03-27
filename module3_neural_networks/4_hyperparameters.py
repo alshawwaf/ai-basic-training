@@ -135,6 +135,6 @@ for bar, val in zip(bars, arch_aucs):
                  f'{val:.3f}', ha='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('stage3_neural_networks/lesson4_hyperparameters.png')
+plt.savefig('module3_neural_networks/lesson4_hyperparameters.png')
 plt.show()
-print("\nPlot saved to stage3_neural_networks/lesson4_hyperparameters.png")
+print("\nPlot saved to module3_neural_networks/lesson4_hyperparameters.png")

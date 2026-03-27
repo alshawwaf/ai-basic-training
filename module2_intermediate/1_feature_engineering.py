@@ -138,6 +138,6 @@ axes[1].set_title('Engineered Feature: bytes_per_second by Class')
 axes[1].legend()
 
 plt.tight_layout()
-plt.savefig('stage2_intermediate/lesson1_feature_engineering.png')
+plt.savefig('module2_intermediate/lesson1_feature_engineering.png')
 plt.show()
-print("\nPlot saved to stage2_intermediate/lesson1_feature_engineering.png")
+print("\nPlot saved to module2_intermediate/lesson1_feature_engineering.png")

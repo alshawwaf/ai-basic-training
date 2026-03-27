@@ -140,9 +140,9 @@ try:
     plt.xlabel('PCA Component 1')
     plt.ylabel('PCA Component 2')
     plt.tight_layout()
-    plt.savefig('stage4_genai/lesson1_embeddings.png')
+    plt.savefig('module4_genai/lesson1_embeddings.png')
     plt.show()
-    print("\nPlot saved to stage4_genai/lesson1_embeddings.png")
+    print("\nPlot saved to module4_genai/lesson1_embeddings.png")
 
 except ImportError:
     print("sentence-transformers not installed.")

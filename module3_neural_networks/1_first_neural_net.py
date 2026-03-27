@@ -100,6 +100,6 @@ axes[1].set_ylabel('Val loss − Train loss')
 axes[1].set_title('Generalisation Gap (0 = perfect, rising = overfitting)')
 
 plt.tight_layout()
-plt.savefig('stage3_neural_networks/lesson1_first_nn.png')
+plt.savefig('module3_neural_networks/lesson1_first_nn.png')
 plt.show()
-print("\nPlot saved to stage3_neural_networks/lesson1_first_nn.png")
+print("\nPlot saved to module3_neural_networks/lesson1_first_nn.png")

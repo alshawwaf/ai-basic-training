@@ -126,9 +126,9 @@ print(f"\nMisclassified: {len(misclassified)} / {len(y_test)} "
 
 plt.suptitle(f'CNN on MNIST — Test Accuracy: {test_acc*100:.2f}%', fontsize=14)
 plt.tight_layout()
-plt.savefig('stage3_neural_networks/lesson3_cnn.png')
+plt.savefig('module3_neural_networks/lesson3_cnn.png')
 plt.show()
-print("\nPlot saved to stage3_neural_networks/lesson3_cnn.png")
+print("\nPlot saved to module3_neural_networks/lesson3_cnn.png")
 
 # ── 7. First-layer filter visualisation ───────────────────────────────────────
 fig2, axes = plt.subplots(4, 8, figsize=(12, 6))
@@ -138,6 +138,6 @@ for i, ax in enumerate(axes.flat):
     ax.axis('off')
 fig2.suptitle('32 Learned Filters in Conv Layer 1\n(each detects a different low-level pattern)')
 plt.tight_layout()
-plt.savefig('stage3_neural_networks/lesson3_cnn_filters.png')
+plt.savefig('module3_neural_networks/lesson3_cnn_filters.png')
 plt.show()
-print("Filter plot saved to stage3_neural_networks/lesson3_cnn_filters.png")
+print("Filter plot saved to module3_neural_networks/lesson3_cnn_filters.png")

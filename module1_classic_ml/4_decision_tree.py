@@ -119,6 +119,6 @@ axes[1].set_xlabel('Importance')
 axes[1].set_title('Feature Importances')
 
 plt.tight_layout()
-plt.savefig('stage1_ml/lesson4_decision_tree.png')
+plt.savefig('module1_classic_ml/lesson4_decision_tree.png')
 plt.show()
-print("\nPlot saved to stage1_ml/lesson4_decision_tree.png")
+print("\nPlot saved to module1_classic_ml/lesson4_decision_tree.png")

@@ -48,9 +48,9 @@ for ax, feature in zip(axes, ["mean radius", "mean texture"]):
     ax.legend()
 
 plt.tight_layout()
-plt.savefig("stage1_ml/lesson1_data_exploration.png")
+plt.savefig("module1_classic_ml/lesson1_data_exploration.png")
 plt.show()
-print("\nPlot saved to stage1_ml/lesson1_data_exploration.png")
+print("\nPlot saved to module1_classic_ml/lesson1_data_exploration.png")
 
 # ── 4. Key takeaway ────────────────────────────────────────────────────────────
 # If the histograms for malignant vs benign barely overlap → easy for a model

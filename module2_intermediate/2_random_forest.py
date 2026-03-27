@@ -135,6 +135,6 @@ axes[2].axhline(aucs[-1], color='grey', linestyle='--', label='200-tree AUC')
 axes[2].legend()
 
 plt.tight_layout()
-plt.savefig('stage2_intermediate/lesson2_random_forest.png')
+plt.savefig('module2_intermediate/lesson2_random_forest.png')
 plt.show()
-print("\nPlot saved to stage2_intermediate/lesson2_random_forest.png")
+print("\nPlot saved to module2_intermediate/lesson2_random_forest.png")

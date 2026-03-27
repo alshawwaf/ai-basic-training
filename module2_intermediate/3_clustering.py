@@ -150,6 +150,6 @@ axes[1, 1].set_title('Anomaly Score Distribution')
 axes[1, 1].legend()
 
 plt.tight_layout()
-plt.savefig('stage2_intermediate/lesson3_clustering.png')
+plt.savefig('module2_intermediate/lesson3_clustering.png')
 plt.show()
-print("\nPlot saved to stage2_intermediate/lesson3_clustering.png")
+print("\nPlot saved to module2_intermediate/lesson3_clustering.png")

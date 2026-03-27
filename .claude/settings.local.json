@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Bash(git -C \"c:/Users/admin/Desktop/AI Basic Training\" status)"
+    ]
+  }
+}

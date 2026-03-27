@@ -1,0 +1,102 @@
+# Lesson 4.4 — RAG (Retrieval-Augmented Generation)
+
+**Script:** [4_rag.py](4_rag.py)
+
+---
+
+## The Problem RAG Solves
+
+Claude is powerful, but it has two limitations:
+1. **Knowledge cutoff** — it doesn't know about CVEs published after its training date
+2. **No internal knowledge** — it doesn't know your organisation's runbooks, policies, or past incidents
+
+RAG (Retrieval-Augmented Generation) solves both by **retrieving relevant documents** and **injecting them into the prompt** before asking the question.
+
+---
+
+## How RAG Works
+
+```
+1. INDEXING (done once):
+   Your documents → split into chunks → embed each chunk → store in vector database
+
+2. QUERYING (at runtime):
+   User question → embed the question → find most similar chunks → inject into prompt
+
+3. GENERATION:
+   Claude reads the retrieved chunks + question → generates a grounded answer
+```
+
+---
+
+## The Components
+
+### Chunking
+Split documents into manageable pieces (~500 tokens each). Overlap between chunks prevents losing context at boundaries.
+
+```python
+def chunk_text(text, chunk_size=500, overlap=50):
+    words = text.split()
+    chunks = []
+    for i in range(0, len(words), chunk_size - overlap):
+        chunks.append(' '.join(words[i:i + chunk_size]))
+    return chunks
+```
+
+### Embedding
+Convert each chunk to a vector. Similar content → similar vectors.
+
+```python
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('all-MiniLM-L6-v2')
+embeddings = model.encode(chunks)
+```
+
+### Retrieval
+Find the k chunks most similar to the user's question:
+
+```python
+def retrieve(question, embeddings, chunks, k=3):
+    q_vec = model.encode([question])
+    similarities = cosine_similarity(q_vec, embeddings)[0]
+    top_k = similarities.argsort()[-k:][::-1]
+    return [chunks[i] for i in top_k]
+```
+
+### Generation
+Put retrieved context into Claude's prompt:
+
+```python
+context = "\n\n".join(retrieved_chunks)
+prompt = f"""Based on the following context only, answer the question.
+If the answer is not in the context, say so.
+
+Context:
+{context}
+
+Question: {question}"""
+```
+
+---
+
+## Why "Based on the context only" Matters
+
+Without this instruction, Claude might blend its pre-training knowledge with the documents, making it impossible to know where the answer came from. Grounding the answer in your documents gives you:
+- Attributable answers (you can verify the source)
+- Accurate recall of your internal policies
+- Reduced hallucination
+
+---
+
+## What to Notice When You Run It
+
+1. The chunking — how many chunks does each document produce?
+2. The retrieval — does the right chunk come back for each question?
+3. The grounding — Claude says "Based on the provided context..." rather than hallucinating
+4. Compare: answer with context vs without context (hallucination demo)
+
+---
+
+## Next: Milestone Project
+
+**[milestone_security_assistant.py](milestone_security_assistant.py):** A complete RAG-based security assistant you can load your own CVE data into and query.

@@ -1,0 +1,85 @@
+# Lesson 4.2 — HuggingFace Pre-trained Models
+
+**Script:** [2_huggingface.py](2_huggingface.py)
+
+---
+
+## Concept: Use What Already Exists
+
+Training a transformer model from scratch would require months of compute time and billions of tokens. You don't need to do that.
+
+HuggingFace hosts thousands of pre-trained models you can load and use in a few lines of code — or fine-tune on your own security data in hours.
+
+---
+
+## The Pipeline API
+
+The simplest way to use a pre-trained model:
+
+```python
+from transformers import pipeline
+
+# Load a sentiment classifier
+classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
+result = classifier("This threat intelligence report is alarming.")
+# [{'label': 'NEGATIVE', 'score': 0.98}]
+```
+
+HuggingFace handles tokenisation, model loading, and post-processing automatically.
+
+---
+
+## Tasks Available Out-of-the-Box
+
+| Task | Pipeline name | Security use |
+|------|--------------|--------------|
+| Text classification | `text-classification` | Classify log severity, phishing detection |
+| Named entity recognition | `ner` | Extract IPs, CVEs, malware names from reports |
+| Summarisation | `summarization` | Summarise threat intel reports |
+| Question answering | `question-answering` | Extract answers from policy documents |
+| Zero-shot classification | `zero-shot-classification` | Classify text into custom categories without training |
+
+---
+
+## Zero-Shot Classification (Powerful for Security)
+
+Classify text into *any* categories — no training data needed:
+
+```python
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+result = classifier(
+    "Lateral movement detected: SMB connections to 15 internal hosts from workstation",
+    candidate_labels=["lateral movement", "data exfiltration", "persistence", "normal traffic"]
+)
+# Labels sorted by confidence
+```
+
+This can turn any security log line into a structured MITRE ATT&CK tactic classification.
+
+---
+
+## Named Entity Recognition (NER) for Threat Intel
+
+Extract structured IOCs from unstructured threat reports:
+
+```python
+ner = pipeline("ner", grouped_entities=True)
+result = ner("The Lazarus Group used 192.168.1.1 and CVE-2021-44228 in the attack.")
+# Extracts: ORG: Lazarus Group, IP: 192.168.1.1, ...
+```
+
+---
+
+## What to Notice When You Run It
+
+1. How fast inference is vs training (seconds vs hours)
+2. The confidence scores on each prediction
+3. Zero-shot performance on security-specific text — no fine-tuning at all
+4. NER on a sample threat intelligence report
+
+---
+
+## Next Lesson
+
+**[Lesson 4.3 — The Claude API](lesson_4_3.md):** Move from fixed pipelines to a conversational AI you can direct with natural language instructions.

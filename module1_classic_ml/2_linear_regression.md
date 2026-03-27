@@ -9,8 +9,28 @@
 Linear regression answers the question: **"Given input X, what number do I expect for output Y?"**
 
 It fits a straight line through your data:
+
+```
+Response
+Time (ms)
+  500 |          .                          /
+      |      .      .                    . /
+  400 |   .            .              . /
+      |        .          .        ./
+  300 |   .                .    ./  <-- line of best fit
+      |               .    . /
+  200 |          .       /
+      |             . /
+  100 |          /
+      +-----+-----+-----+-----+-----+------> Requests/sec
+            100   200   300   400   500
+```
+
 ```
 y = (weight × x) + bias
+       |               |
+  how many ms        baseline ms
+  per extra req/s    when traffic = 0
 ```
 
 The model learns the best `weight` and `bias` to minimise the gap between its predictions and the actual values.

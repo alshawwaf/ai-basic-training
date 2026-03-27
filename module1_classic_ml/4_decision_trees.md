@@ -8,14 +8,19 @@
 
 A decision tree works exactly like a flowchart of yes/no questions:
 
-```
-Is bytes_sent > 10,000?
-├── YES → Is connection_duration < 0.1s?
-│         ├── YES → ATTACK (fast data exfil)
-│         └── NO  → BENIGN
-└── NO  → Is unique_dest_ports > 20?
-          ├── YES → ATTACK (port scan)
-          └── NO  → BENIGN
+```mermaid
+flowchart TD
+    A{"bytes_sent > 10,000?"} -- YES --> B{"duration < 0.1s?"}
+    A -- NO --> C{"unique_dest_ports > 20?"}
+    B -- YES --> D["ATTACK\n(data exfil)"]
+    B -- NO --> E["BENIGN"]
+    C -- YES --> F["ATTACK\n(port scan)"]
+    C -- NO --> G["BENIGN"]
+
+    style D fill:#d9534f,color:#fff
+    style F fill:#d9534f,color:#fff
+    style E fill:#5cb85c,color:#fff
+    style G fill:#5cb85c,color:#fff
 ```
 
 The model learns *which questions to ask* and *at what thresholds* by finding the splits that best separate your classes in the training data.

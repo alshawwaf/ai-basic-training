@@ -32,6 +32,30 @@ You almost never have a perfectly labelled dataset of "attacks." What you *do* h
 4. Move each centroid to the mean of its assigned points
 5. Repeat steps 3-4 until assignments stop changing
 
+```
+  bytes_sent
+    ^
+    |   o o           x x x         o = cluster 1 (normal traffic)
+    |  o o o           x x          x = cluster 2 (heavy transfer)
+    |   o o                         * = cluster 3 (short bursts)
+    |                               ! = outlier (anomaly)
+    |        * * *
+    |         * *
+    |          *
+    |                        !
+    +--------------------------> duration
+```
+
+```mermaid
+flowchart LR
+    A["Start: random\ncentroids"] --> B["Assign each point\nto nearest centroid"]
+    B --> C["Move centroids\nto cluster mean"]
+    C --> D{"Assignments\nchanged?"}
+    D -- Yes --> B
+    D -- No --> E["Done:\nstable clusters"]
+    style E fill:#5cb85c,color:#fff
+```
+
 ---
 
 ## Choosing k: The Elbow Method

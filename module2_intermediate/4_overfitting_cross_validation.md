@@ -18,7 +18,22 @@ This is the single most important concept to master before moving to neural netw
 Training accuracy: 99.8%
 Test accuracy:     71.2%
 
-→ The model memorised the training data. It has not learned.
+-> The model memorised the training data. It has not learned.
+```
+
+```
+Accuracy
+  1.0 |              training ___________
+      |            ./
+  0.8 |          ./
+      |    _____/   <-- gap opens up = overfitting
+  0.6 |   validation \___________
+      |
+  0.4 |
+      +--+--+--+--+--+--+--+--+-> Model Complexity (e.g. tree depth)
+        low              high
+
+  Sweet spot: where validation accuracy is highest
 ```
 
 The model has learned noise specific to the training set — patterns that don't exist in the real world. It's like a student who memorises exam answers without understanding the material.
@@ -62,6 +77,18 @@ Instead of a single train/test split, cross-validation gives you a more reliable
 2. Train on k-1 folds, evaluate on the remaining fold
 3. Repeat k times, rotating the evaluation fold
 4. Final score = mean ± std across all folds
+
+```
+5-Fold Cross-Validation (k=5):
+
+Fold 1: [EVAL][train][train][train][train]  -> score: 0.91
+Fold 2: [train][EVAL][train][train][train]  -> score: 0.89
+Fold 3: [train][train][EVAL][train][train]  -> score: 0.93
+Fold 4: [train][train][train][EVAL][train]  -> score: 0.90
+Fold 5: [train][train][train][train][EVAL]  -> score: 0.92
+
+Final: 0.91 +/- 0.01  (stable = trustworthy)
+```
 
 ```python
 from sklearn.model_selection import cross_val_score

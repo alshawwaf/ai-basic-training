@@ -11,7 +11,17 @@ Raw log data looks like this:
 2024-01-15 03:42:17 | 192.168.1.5 | 185.23.44.102:443 | 3421 bytes | TCP | 2.3s
 ```
 
-A machine learning model can't learn from strings and timestamps. You need to **extract numerical features** that capture the signal.
+A machine learning model can't learn from strings and timestamps. You need to **extract numerical features** that capture the signal:
+
+```mermaid
+flowchart LR
+    A["Raw Log Line\ntimestamp, IPs,\nbytes, protocol"] --> B["Feature Engineering"]
+    B --> C["Numerical Features\nhour_of_day: 3\nis_after_hours: 1\nbytes_per_sec: 1487\nunique_dests: 12\n..."]
+    C --> D["ML Model\n(can now learn)"]
+
+    style A fill:#f0ad4e,color:#000
+    style D fill:#5cb85c,color:#fff
+```
 
 This transformation is called **feature engineering**, and it's often where the most value comes from in a real ML project.
 

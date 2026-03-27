@@ -38,6 +38,23 @@ Same thing. Keras handles initialisation, the forward pass, and (crucially) the 
 
 ---
 
+## What the Network Looks Like
+
+```
+Input Layer         Hidden Layer        Output Layer
+(64 pixel values)   (learned features)  (10 digit classes)
+
+  x1  ---+
+  x2  ---+---> [ neuron ] ---+
+  x3  ---+     [ neuron ] ---+---> [ 0 ] = P(digit=0)
+  ...      +-> [ neuron ] ---+     [ 1 ] = P(digit=1)
+  x64 ---+     [ neuron ]         ...
+               [ neuron ]         [ 9 ] = P(digit=9)
+
+  Each connection has a weight.       Softmax converts to
+  Training adjusts all weights.       probabilities (sum=1.0)
+```
+
 ## The Three Steps to Train Any Keras Model
 
 ```python
@@ -75,8 +92,25 @@ plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 ```
 
-- **loss decreasing** → model is learning
-- **val_loss increasing while loss decreases** → overfitting — stop training earlier
+```
+Loss
+  1.0 |\
+      | \  train loss        Good training:
+  0.6 |  \___                both curves fall together
+      |      \____
+  0.2 |           \__________
+      +---+---+---+---+---+--> Epoch
+
+  1.0 |         ____-----      Overfitting:
+      |        /               val_loss rises while
+  0.4 |  _____/                train_loss keeps falling
+      |train /
+  0.1 |-----/
+      +---+---+---+---+---+--> Epoch
+```
+
+- **loss decreasing** — model is learning
+- **val_loss increasing while loss decreases** — overfitting, stop training earlier
 
 ---
 

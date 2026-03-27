@@ -10,12 +10,19 @@ An LLM (Large Language Model) is, at its core, a very sophisticated **next-token
 
 ```
 Input:  "The attacker used a SQL injection to"
-Output: "exfiltrate" (most likely next token)
+         |       |      |   |   |         |
+       token1  token2 ...                token7
 
-Then:   "The attacker used a SQL injection to exfiltrate"
-Output: "the" (most likely next token)
+                     LLM predicts next token
+                              |
+                              v
+Output: "exfiltrate"   (highest probability next token)
 
-...and so on until it generates a complete response.
+Then feeds output back as new input and repeats...
+
+"The attacker used a SQL injection to exfiltrate the ..."
+                                                    ^
+                                               next token
 ```
 
 That's all it's doing. Everything — reasoning, coding, summarisation — emerges from predicting the next token, trained on trillions of tokens of text.
@@ -52,7 +59,16 @@ Before tokens are processed by the model, each is converted to an **embedding** 
 "pizza"      → [-0.51, 0.12, -0.33, ...]  # very different
 ```
 
-**Semantic similarity** = similar vectors. This is how the model knows "virus" and "malware" are related without being told.
+**Semantic similarity** = similar vectors. This is how the model knows "virus" and "malware" are related without being told:
+
+```
+         "malware" [0.23, -0.41, 0.88]
+         "ransomware" [0.25, -0.38, 0.91]   <-- close together
+         "virus" [0.21, -0.44, 0.85]        <-- (related meaning)
+
+         "pizza" [-0.51, 0.12, -0.33]       <-- far away
+         "guitar" [-0.48, 0.09, -0.29]      <-- (unrelated meaning)
+```
 
 ---
 

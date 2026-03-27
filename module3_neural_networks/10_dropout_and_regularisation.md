@@ -24,6 +24,20 @@ During training, randomly "drop" (zero out) a fraction of neurons in a layer. Th
 keras.layers.Dropout(0.3)   # randomly zero 30% of neurons each training step
 ```
 
+```
+Without Dropout:             With Dropout (rate=0.3):
+                             X = dropped this step
+
+  [N1]--[N2]--[N3]            [N1]-- X --[N3]
+   |  \  | \  /  |             |  \       /  |
+  [N4]--[N5]--[N6]            [N4]--[N5]-- X
+   |  \  | \  /  |             |  \  |       |
+  [N7]--[N8]--[N9]             X --[N8]--[N9]
+
+  All neurons active.         Different neurons dropped
+  Model can become lazy.      each step -> redundancy learned.
+```
+
 - Applied **only during training** — not during inference
 - Typical values: 0.2–0.5
 - Reduces overfitting significantly

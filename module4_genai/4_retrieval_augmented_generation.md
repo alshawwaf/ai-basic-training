@@ -16,15 +16,30 @@ RAG (Retrieval-Augmented Generation) solves both by **retrieving relevant docume
 
 ## How RAG Works
 
-```
-1. INDEXING (done once):
-   Your documents → split into chunks → embed each chunk → store in vector database
+```mermaid
+flowchart TD
+    subgraph INDEXING ["INDEXING (done once)"]
+        D1["Your Documents\n(CVEs, runbooks, reports)"] --> C["Split into Chunks\n~500 words each"]
+        C --> E["Embed each Chunk\n(convert to vector)"]
+        E --> VDB["Vector Store\n(chunks + embeddings)"]
+    end
 
-2. QUERYING (at runtime):
-   User question → embed the question → find most similar chunks → inject into prompt
+    subgraph QUERYING ["QUERYING (at runtime)"]
+        Q["User Question"] --> QE["Embed Question\n(same model)"]
+        QE --> SIM["Find Most Similar\nChunks (cosine similarity)"]
+        VDB --> SIM
+        SIM --> CTX["Top 3 Chunks\n(retrieved context)"]
+    end
 
-3. GENERATION:
-   Claude reads the retrieved chunks + question → generates a grounded answer
+    subgraph GENERATION ["GENERATION"]
+        CTX --> PROMPT["Build Prompt:\nContext + Question"]
+        Q --> PROMPT
+        PROMPT --> LLM["LLM"]
+        LLM --> ANS["Grounded Answer\n(cites your docs)"]
+    end
+
+    style ANS fill:#5cb85c,color:#fff
+    style VDB fill:#5bc0de,color:#fff
 ```
 
 ---

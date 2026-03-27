@@ -63,7 +63,27 @@ Use F1 when you need to balance catching attacks vs generating false alarms.
 
 ## The Precision-Recall Tradeoff
 
-Lowering the decision threshold catches more attacks (↑ recall) but generates more false alarms (↓ precision). The right balance depends on your organisation:
+Lowering the decision threshold catches more attacks (higher recall) but generates more false alarms (lower precision):
+
+```
+      Precision
+  1.0 |*
+      | **
+  0.8 |   ***
+      |      ****
+  0.6 |          ****
+      |              *****
+  0.4 |                   ******
+      |                         ******
+  0.2 |                               ****
+      +--+--+--+--+--+--+--+--+--+--+--> Recall
+        0.1  0.3  0.5  0.7  0.9  1.0
+
+  Threshold HIGH -----> LOW
+  (catch less, be sure)  (catch more, accept false alarms)
+```
+
+The right balance depends on your organisation:
 
 - **SOC with large team:** can handle more false alarms → lower threshold, higher recall
 - **Automated block rule:** must be high confidence → higher threshold, higher precision

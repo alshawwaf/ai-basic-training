@@ -38,7 +38,24 @@ We use scikit-learn's built-in **digits dataset** — 1,797 handwritten digit im
   ↑ This is the digit '0'
 ```
 
-Each image is **flattened into a row of 64 numbers** before the model sees it. The model never sees the picture — only the numbers. This is exactly how security ML works: a network connection becomes a row of numbers (bytes sent, packets per second, port, protocol...) and the model learns to classify it from those numbers alone.
+Each image is **flattened into a row of 64 numbers** before the model sees it:
+
+```
+  8x8 image          Flattened row (64 features)           Label
+  [ pixel grid ]  →  [ 0, 0, 5, 13, 9, 1, 0, 0, ... ]  →  "0"
+  [ pixel grid ]  →  [ 0, 0, 0, 2, 16, 12, 0, 0, ... ] →  "1"
+  [ pixel grid ]  →  [ 0, 1, 12, 8, 0, 3, 14, 0, ... ] →  "7"
+```
+
+The model never sees the picture — only the numbers. This is exactly how security ML works: a network connection becomes a row of numbers (bytes sent, packets per second, port, protocol...) and the model learns to classify it from those numbers alone.
+
+```mermaid
+flowchart LR
+    A["Raw Input\n(image / log line)"] --> B["Feature Extraction\n(pixel values / log fields)"]
+    B --> C["Row of Numbers\n[0.2, 13, 0, 5, ...]"]
+    C --> D["ML Model"]
+    D --> E["Label\n(digit / attack type)"]
+```
 
 ---
 

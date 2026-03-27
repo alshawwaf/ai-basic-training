@@ -12,7 +12,29 @@ Each tree in the forest:
 1. Is trained on a **random subset** of the training data (bootstrap sampling)
 2. At each split, only considers a **random subset** of features
 
-The final prediction is the majority vote (classification) or average (regression).
+The final prediction is the majority vote (classification) or average (regression):
+
+```mermaid
+flowchart TD
+    Data["Training Data"] --> T1["Tree 1\n(random subset)"]
+    Data --> T2["Tree 2\n(random subset)"]
+    Data --> T3["Tree 3\n(random subset)"]
+    Data --> TN["Tree N\n(random subset)"]
+
+    T1 --> V1["malware"]
+    T2 --> V2["benign"]
+    T3 --> V3["malware"]
+    TN --> VN["malware"]
+
+    V1 --> Vote["Majority Vote\n3 malware, 1 benign"]
+    V2 --> Vote
+    V3 --> Vote
+    VN --> Vote
+
+    Vote --> Result["MALWARE"]
+    style Result fill:#d9534f,color:#fff
+    style Vote fill:#f0ad4e,color:#000
+```
 
 ---
 

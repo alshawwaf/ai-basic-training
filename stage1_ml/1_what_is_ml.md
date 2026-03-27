@@ -104,4 +104,4 @@ The second line is a quick way to find your most predictive features — very us
 
 ## Next Lesson
 
-**[Lesson 1.2 — Linear Regression](linear_regression.md):** Predict a continuous number (server response time from traffic volume) using your first ML model.
+**[Lesson 1.2 — Linear Regression](2_linear_regression.md):** Predict a continuous number (server response time from traffic volume) using your first ML model.

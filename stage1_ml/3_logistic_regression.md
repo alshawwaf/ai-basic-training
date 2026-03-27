@@ -80,4 +80,4 @@ y_proba = model.predict_proba(X_test)[:, 1]   # probability of being phishing
 
 ## Next Lesson
 
-**[Lesson 1.4 — Decision Trees](decision_trees.md):** A different kind of classifier that works more like an explicit set of rules — great for interpretability.
+**[Lesson 1.4 — Decision Trees](4_decision_trees.md):** A different kind of classifier that works more like an explicit set of rules — great for interpretability.

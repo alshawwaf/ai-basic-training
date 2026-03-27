@@ -92,4 +92,4 @@ This tells the model to penalise missing an attack much more than a false alarm.
 
 ## Next Lesson
 
-**[Lesson 3.3 — CNNs](convolutional_networks.md):** A different network architecture designed for spatial/grid data like images.
+**[Lesson 3.3 — CNNs](11_convolutional_networks.md):** A different network architecture designed for spatial/grid data like images.

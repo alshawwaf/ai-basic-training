@@ -26,19 +26,19 @@ This is where **unsupervised learning** comes in — the model finds unusual pat
 
 ## Lessons
 
-### Lesson 2.1 — [Feature Engineering](feature_engineering.md)
+### Lesson 2.1 — [Feature Engineering](1_feature_engineering.md)
 **Script:** [1_feature_engineering.py](1_feature_engineering.py)
 Turn raw log lines into ML-ready numerical features.
 
-### Lesson 2.2 — [Random Forests](random_forests.md)
+### Lesson 2.2 — [Random Forests](2_random_forests.md)
 **Script:** [2_random_forest.py](2_random_forest.py)
 Ensemble of decision trees — more accurate and less prone to overfitting.
 
-### Lesson 2.3 — [Clustering & Anomaly Detection](clustering_anomaly_detection.md)
+### Lesson 2.3 — [Clustering & Anomaly Detection](3_clustering_anomaly_detection.md)
 **Script:** [3_clustering.py](3_clustering.py)
 Find anomalous network behaviour without needing attack labels.
 
-### Lesson 2.4 — [Overfitting & Cross-Validation](overfitting_cross_validation.md)
+### Lesson 2.4 — [Overfitting & Cross-Validation](4_overfitting_cross_validation.md)
 **Script:** [4_overfitting.py](4_overfitting.py)
 Reliably estimate real-world model performance.
 

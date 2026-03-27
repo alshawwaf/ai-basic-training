@@ -87,4 +87,4 @@ model.fit(X_train, y_train)
 
 ## Next Lesson
 
-**[Lesson 2.3 — k-Means Clustering](clustering_anomaly_detection.md):** What if you have no labels at all? Unsupervised anomaly detection.
+**[Lesson 2.3 — k-Means Clustering](3_clustering_anomaly_detection.md):** What if you have no labels at all? Unsupervised anomaly detection.

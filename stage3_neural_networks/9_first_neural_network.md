@@ -91,4 +91,4 @@ plt.plot(history.history['val_loss'])
 
 ## Next Lesson
 
-**[Lesson 3.2 — Deeper Networks](dropout_and_regularisation.md):** Add more layers, dropout, and batch normalisation to build a more powerful and stable model.
+**[Lesson 3.2 — Deeper Networks](10_dropout_and_regularisation.md):** Add more layers, dropout, and batch normalisation to build a more powerful and stable model.

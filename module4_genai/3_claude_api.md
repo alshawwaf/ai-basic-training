@@ -14,7 +14,7 @@ This lesson works with **Claude, OpenAI, Gemini, or Ollama** — set whichever y
 set ANTHROPIC_API_KEY=...   # Claude  (recommended)
 set OPENAI_API_KEY=...      # OpenAI
 set GOOGLE_API_KEY=...      # Gemini  (free tier available)
-set OLLAMA_MODEL=llama3     # Ollama  (local, no key needed)
+set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B     # Ollama  (local, no key needed)
 ```
 
 The `llm_client.py` helper auto-detects which key is available and wraps it in a common interface, so the rest of the code is identical regardless of provider:
@@ -102,16 +102,14 @@ Ollama lets you run open-source LLMs entirely on your own machine — no API key
 **Setup:**
 
 1. Download and install Ollama from [ollama.com](https://ollama.com)
-2. Pull a model (one-time download, 4–8 GB depending on the model):
+2. Pull the model (one-time download, ~2 GB):
    ```bash
-   ollama pull llama3        # good general-purpose model
-   ollama pull mistral       # lighter, faster on CPU
-   ollama pull phi3          # smallest — works on low-memory machines
+   ollama pull huihui_ai/qwen3.5-abliterated:2B
    ```
 3. Set the environment variable — no API key needed:
    ```bash
-   set OLLAMA_MODEL=llama3   # Windows
-   export OLLAMA_MODEL=llama3  # Mac/Linux
+   set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B   # Windows
+   export OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B  # Mac/Linux
    ```
 
 All Module 4 scripts will automatically use your local model. No code changes required.

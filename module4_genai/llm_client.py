@@ -7,7 +7,7 @@
 #   Claude  → set ANTHROPIC_API_KEY   (https://console.anthropic.com)
 #   OpenAI  → set OPENAI_API_KEY      (https://platform.openai.com)
 #   Gemini  → set GOOGLE_API_KEY      (https://aistudio.google.com)
-#   Ollama  → set OLLAMA_MODEL=llama3  (local, no key needed — https://ollama.com)
+#   Ollama  → set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B  (local, no key needed — https://ollama.com)
 #
 # Usage:
 #   from llm_client import get_client
@@ -42,7 +42,7 @@ def get_client():
             "  set ANTHROPIC_API_KEY=...    (Claude — cloud)\n"
             "  set OPENAI_API_KEY=...       (OpenAI — cloud)\n"
             "  set GOOGLE_API_KEY=...       (Gemini — cloud, free tier)\n"
-            "  set OLLAMA_MODEL=llama3      (Ollama — local, no key needed)\n"
+            "  set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B   (Ollama — local, no key needed)\n"
         )
         return "none", None
 
@@ -162,8 +162,8 @@ class _OllamaClient:
     """Ollama — runs any model locally, no API key required.
 
     Install Ollama: https://ollama.com
-    Pull a model:   ollama pull llama3
-    Set env var:    set OLLAMA_MODEL=llama3
+    Pull a model:   ollama pull huihui_ai/qwen3.5-abliterated:2B
+    Set env var:    set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B
     """
 
     def __init__(self, model: str):

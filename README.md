@@ -91,14 +91,14 @@ Module 4 connects to a live LLM. You need an API key from **one** of the followi
 | Claude (Anthropic) | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) | Best quality responses |
 | OpenAI | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | GPT-4o-mini used by default |
 | Gemini (Google) | `GOOGLE_API_KEY` | [aistudio.google.com](https://aistudio.google.com) | Free tier available |
-| Ollama (local) | `OLLAMA_MODEL=llama3` | [ollama.com](https://ollama.com) | Runs on your machine — no key, no internet, no cost |
+| Ollama (local) | `OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B` | [ollama.com](https://ollama.com) | Runs on your machine — no key, no internet, no cost |
 
 **Set your key (or model name for Ollama):**
 
 ```bash
 # Windows
 set ANTHROPIC_API_KEY=your-key-here   # Claude
-set OLLAMA_MODEL=llama3               # Ollama (no key — just install Ollama and pull a model)
+set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B               # Ollama (no key — just install Ollama and pull a model)
 
 # Mac / Linux
 export ANTHROPIC_API_KEY=your-key-here

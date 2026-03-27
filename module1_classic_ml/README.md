@@ -13,13 +13,25 @@ if "free money" in email:
     mark_as_spam()
 ```
 
-**Machine learning:** you show examples, and the computer figures out the rules.
+**Machine learning:** you show labelled examples, and the computer figures out the rules.
 ```python
-model.fit(emails, labels)    # show it 10,000 examples
-model.predict(new_email)     # it now knows the rule itself
+# emails = 10,000 emails, each described by measurable features
+#          e.g. [word_count, num_links, has_attachment, sender_domain_age, ...]
+# labels = the correct answer for each email
+#          e.g. [1, 0, 1, 1, 0, ...]  where 1 = spam, 0 = legitimate
+
+model.fit(emails, labels)
+# The model scans all 10,000 examples and finds the pattern:
+# "emails with many links + short sender domain age tend to be spam"
+# It encodes that pattern as numbers (weights) — not as rules you wrote.
+
+model.predict(new_email)
+# → 1  (spam)
+# The model applies the pattern it found to an email it has never seen before.
+# You never told it what spam looks like — it worked it out from the examples.
 ```
 
-ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the model data and let it extract patterns automatically. This is why it's so powerful in cybersecurity — attackers constantly change tactics, but their *statistical patterns* often persist.
+ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the model data and let it extract patterns automatically. This is why it works well in cybersecurity — attackers constantly change their tactics, but their *statistical patterns* often persist across campaigns.
 
 ---
 
@@ -31,7 +43,7 @@ ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the
 | **Unsupervised** | No labels — finds structure on its own | Anomaly detection in network traffic |
 | **Reinforcement** | Learns by trial and error with rewards | Automated pentesting agents |
 
-**Stage 1 focuses on supervised learning** — the most practical and widely used type.
+**Module 1 focuses on supervised learning** — the most practical and widely used type.
 
 ---
 

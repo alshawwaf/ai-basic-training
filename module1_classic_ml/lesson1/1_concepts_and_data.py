@@ -1,23 +1,24 @@
 # =============================================================================
-# LESSON 1.1 LAB - Exploring Data
+# LESSON 1.1 - REFERENCE SOLUTION
 # =============================================================================
 #
-# Read 1_what_is_ml.md before running this script.
+# This is the complete reference solution for Lesson 1.1.
 #
-# WHAT THIS LAB DOES
-# ------------------
-# Before training any model we need to understand our data.
-# This script loads the digits dataset (1,797 handwritten digit images 0-9),
-# inspects it from every angle, and builds intuition for what an ML model
-# actually "sees" - rows of numbers, not pictures.
+# BEFORE YOU LOOK AT THIS:
+# ------------------------
+# Follow the step-by-step walkthrough in 1_what_is_ml.md and build your own
+# version in a file called my_lab_1_1.py. Only open this file to compare your
+# solution once you have finished, or if you get stuck.
 #
-# RUN IT
-# ------
-# Make sure your virtual environment is active, then:
-#   python module1_classic_ml/1_concepts_and_data.py
+# WHAT THIS SCRIPT DOES:
+# ----------------------
+# Loads the digits dataset (1,797 handwritten digit images 0-9), inspects it
+# from every angle, and builds intuition for what an ML model actually "sees":
+# rows of numbers, not pictures.
 #
-# Work through it top to bottom. Read each comment block, then observe the
-# output. If something surprises you, that's a good sign - note it down.
+# RUN IT:
+# -------
+#   python module1_classic_ml/lesson1/1_concepts_and_data.py
 # =============================================================================
 
 
@@ -151,7 +152,7 @@ for digit in range(10):
 plt.tight_layout()
 # tight_layout() adjusts spacing so panels don't overlap.
 
-plt.savefig("module1_classic_ml/lesson1_sample_digits.png")
+plt.savefig("module1_classic_ml/lesson1/sample_digits.png")
 plt.show()
 print("What to look for: are the digits recognisable? Any that look ambiguous?")
 print("Ambiguous samples = harder for the model. That's expected and normal.")
@@ -211,7 +212,7 @@ for digit, ax in enumerate(axes):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("module1_classic_ml/lesson1_average_digits.png")
+plt.savefig("module1_classic_ml/lesson1/average_digits.png")
 plt.show()
 print("What to look for: which digits have the most similar average shapes?")
 print("Hint: look at 1 vs 7, and 3 vs 8. Those pairs will have higher confusion rates.")

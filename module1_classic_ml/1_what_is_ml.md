@@ -22,6 +22,8 @@ This works — until attackers learn your rules and work around them. Change one
 
 **Machine learning flips this**. Instead of writing rules, you show the computer thousands of examples with correct answers and let it figure out the rules itself.
 
+![Traditional Programming vs Machine Learning](../assets/ml_vs_programming.png)
+
 ```
 You provide:  10,000 emails labelled spam or not spam
 Computer:     finds its own patterns across all 10,000 examples
@@ -65,6 +67,8 @@ Useful in security when you don't have labelled attack data — which is most of
 Security examples:
 - Anomaly detection in network traffic (lesson 2.3)
 - Clustering user behaviour to find outliers
+
+![The Three Types of Machine Learning](../assets/three_types_of_ml.png)
 
 #### 3. Reinforcement Learning
 The model learns by trial and error, receiving rewards for good decisions and penalties for bad ones. Less common in security day-to-day, but increasingly used in:
@@ -139,6 +143,8 @@ Attack traffic:    50,000 connections   (5%)
 ```
 
 A model trained on this data can achieve 95% accuracy by predicting "normal" for everything — catching zero attacks. This is the **class imbalance problem**, and it is endemic in security ML. You will deal with it properly in Module 2.
+
+![Class Imbalance](../assets/class_imbalance.png)
 
 #### Missing Values
 Real-world log data often has gaps — fields that weren't captured, sensors that went offline, logs that were truncated.

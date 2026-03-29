@@ -1,3 +1,4 @@
 .claude/
 venv/
-*.png
+module*/*.png
+!assets/*.png

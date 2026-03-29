@@ -18,7 +18,7 @@
 #
 # RUN IT:
 # -------
-#   python module1_classic_ml/lesson1_what_is_ml/workshop/1_concepts_and_data.py
+#   python module1_classic_ml/lesson1_what_is_ml/workshop/reference_solution.py
 # =============================================================================
 
 

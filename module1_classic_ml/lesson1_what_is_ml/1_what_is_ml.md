@@ -190,13 +190,13 @@ These are the four most-used libraries in all of data science. You will use them
 
 ---
 
-## Ready for the Lab?
+## Ready for the Workshop?
 
-**[Open 1_lab_guide.md](workshop/1_lab_guide.md)** — it walks you through building the script yourself, step by step, with expected output shown at each stage.
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)** — 5 hands-on exercises that walk you through loading, inspecting, and visualising the dataset. Each exercise has a clear task and expected output. The reference solution is in `workshop/reference_solution.py`.
 
 
 ---
 
 ## Next Lesson
 
-**[Lesson 1.2 — Linear Regression](../lesson2/2_linear_regression.md):** Your first trained model — predict server response time from network traffic load.
+**[Lesson 1.2 — Linear Regression](../lesson2_linear_regression/2_linear_regression.md):** Your first trained model — predict server response time from network traffic load.

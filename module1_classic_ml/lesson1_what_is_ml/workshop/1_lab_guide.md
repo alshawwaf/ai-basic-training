@@ -1,6 +1,6 @@
 # Lesson 1.1 — Lab Guide: Build the Exploration Script
 
-> **Read first:** [1_what_is_ml.md](1_what_is_ml.md) — concepts and theory
+> **Read first:** [1_what_is_ml.md](../1_what_is_ml.md) — concepts and theory
 > **Reference solution:** [1_concepts_and_data.py](1_concepts_and_data.py) — open only after finishing this guide
 
 ---
@@ -39,7 +39,7 @@ What each one is:
 
 **Run it:**
 ```
-python module1_classic_ml/lesson1/my_lab_1_1.py
+python module1_classic_ml/lesson1_what_is_ml/workshop/my_lab_1_1.py
 ```
 
 **Expected output:** nothing. No errors means Python found all the libraries.
@@ -175,7 +175,7 @@ for digit in range(10):
         row[digit].axis("off")
 
 plt.tight_layout()
-plt.savefig("module1_classic_ml/lesson1/sample_digits.png")
+plt.savefig("module1_classic_ml/lesson1_what_is_ml/workshop/sample_digits.png")
 plt.show()
 print("What to look for: are the digits recognisable? Any that look ambiguous?")
 ```
@@ -258,7 +258,7 @@ for digit, ax in enumerate(axes):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("module1_classic_ml/lesson1/average_digits.png")
+plt.savefig("module1_classic_ml/lesson1_what_is_ml/workshop/average_digits.png")
 plt.show()
 print("What to look for: which digits have the most similar average shapes?")
 print("Hint: look at 1 vs 7, and 3 vs 8 - those pairs will confuse the model most.")

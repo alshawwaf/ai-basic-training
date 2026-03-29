@@ -192,7 +192,7 @@ These are the four most-used libraries in all of data science. You will use them
 
 ## Ready for the Lab?
 
-**[Open 1_lab_guide.md](1_lab_guide.md)** — it walks you through building the script yourself, step by step, with expected output shown at each stage.
+**[Open 1_lab_guide.md](workshop/1_lab_guide.md)** — it walks you through building the script yourself, step by step, with expected output shown at each stage.
 
 
 ---

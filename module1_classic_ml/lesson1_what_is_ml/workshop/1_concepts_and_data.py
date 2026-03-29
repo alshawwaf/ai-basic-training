@@ -18,7 +18,7 @@
 #
 # RUN IT:
 # -------
-#   python module1_classic_ml/lesson1/1_concepts_and_data.py
+#   python module1_classic_ml/lesson1_what_is_ml/workshop/1_concepts_and_data.py
 # =============================================================================
 
 
@@ -152,7 +152,7 @@ for digit in range(10):
 plt.tight_layout()
 # tight_layout() adjusts spacing so panels don't overlap.
 
-plt.savefig("module1_classic_ml/lesson1/sample_digits.png")
+plt.savefig("module1_classic_ml/lesson1_what_is_ml/workshop/sample_digits.png")
 plt.show()
 print("What to look for: are the digits recognisable? Any that look ambiguous?")
 print("Ambiguous samples = harder for the model. That's expected and normal.")
@@ -212,7 +212,7 @@ for digit, ax in enumerate(axes):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("module1_classic_ml/lesson1/average_digits.png")
+plt.savefig("module1_classic_ml/lesson1_what_is_ml/workshop/average_digits.png")
 plt.show()
 print("What to look for: which digits have the most similar average shapes?")
 print("Hint: look at 1 vs 7, and 3 vs 8. Those pairs will have higher confusion rates.")

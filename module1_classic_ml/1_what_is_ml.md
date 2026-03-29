@@ -12,6 +12,60 @@ In cybersecurity terms: you wouldn't write detection rules without first looking
 
 ---
 
+## Tools We Use in This Lesson
+
+Before diving in, here is what every import in the script does and why we use it.
+
+### NumPy (`import numpy as np`)
+
+NumPy is the foundational library for numerical computing in Python. It gives us **arrays** — fast, memory-efficient lists of numbers that support mathematical operations on the entire array at once.
+
+```python
+import numpy as np   # "np" is a universally-used shorthand alias
+```
+
+We use it here for array operations on pixel data. In later lessons it becomes essential for working with model weights and feature matrices.
+
+### Pandas (`import pandas as pd`)
+
+Pandas gives us the **DataFrame** — think of it as a spreadsheet or database table inside Python. Each row is one sample (one image), each column is one feature (one pixel value).
+
+```python
+import pandas as pd   # "pd" is the universal alias
+
+df = pd.DataFrame(data, columns=["pixel_0", "pixel_1", ...])
+#  ^                ^
+#  "df" = DataFrame  columns gives each column a name
+```
+
+Why use a DataFrame instead of a plain list?
+- `.head()` — see the first 5 rows instantly
+- `.shape` — check how many rows and columns you have
+- `.describe()` — get min, max, mean, std for every column in one call
+- `.value_counts()` — count how many times each value appears
+
+You'll use DataFrames in every ML project you ever build.
+
+### Matplotlib (`import matplotlib.pyplot as plt`)
+
+Matplotlib is Python's core plotting library. We import the `pyplot` sub-module and alias it as `plt`.
+
+```python
+import matplotlib.pyplot as plt   # "plt" is the universal alias
+
+plt.imshow(image)    # display an image
+plt.show()           # render and open the plot window
+plt.savefig("out.png")  # save to disk instead
+```
+
+### scikit-learn (`from sklearn.datasets import load_digits`)
+
+scikit-learn is the standard ML library in Python — it contains every classic algorithm (logistic regression, decision trees, random forests) plus utilities for data prep and evaluation. We use it throughout Modules 1 and 2.
+
+`load_digits()` is a convenience function that loads a well-known dataset that ships bundled with scikit-learn. No download needed.
+
+---
+
 ## The Dataset We Use
 
 ### Where It Comes From
@@ -24,27 +78,50 @@ When you call `load_digits()`, scikit-learn loads that data directly from a file
 
 ---
 
-We use scikit-learn's built-in **digits dataset** — 1,797 handwritten digit images (0–9), each stored as an 8×8 grid of pixel brightness values.
+### What `load_digits()` Returns
 
+```python
+digits = load_digits()
+
+digits.data    # a NumPy array of shape (1797, 64)
+               # 1797 images, each described by 64 pixel values
+               # one row = one image
+
+digits.target  # a NumPy array of shape (1797,)
+               # the correct label for each image — a number 0 through 9
+
+digits.images  # a NumPy array of shape (1797, 8, 8)
+               # the same pixel data, but kept as 8x8 grids (useful for plotting)
+
+digits.target_names  # array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+                     # the list of all possible class labels
 ```
-  0  0  5 13  9  1  0  0
-  0  0 13 15 10 15  5  0
-  0  3 15  2  0 11  8  0
-  0  4 12  0  0  8  8  0
-  0  5  8  0  0  9  8  0
-  0  4 11  0  1 12  7  0
-  0  2 14  5 10 12  0  0
-  0  0  6 13 10  0  0  0
-  ↑ This is the digit '0'
+
+### What `.shape` Means
+
+`.shape` is a NumPy property that tells you the dimensions of an array:
+
+```python
+digits.data.shape        # (1797, 64)
+                         #   ^     ^
+                         # rows  columns
+                         # 1797 images, 64 features each
+
+digits.target.shape      # (1797,)  — a 1D array of 1797 labels
+digits.images.shape      # (1797, 8, 8)  — 1797 grids, each 8 rows by 8 columns
 ```
+
+---
+
+### What the Data Actually Looks Like
 
 Each image is **flattened into a row of 64 numbers** before the model sees it:
 
 ```
   8x8 image          Flattened row (64 features)           Label
-  [ pixel grid ]  →  [ 0, 0, 5, 13, 9, 1, 0, 0, ... ]  →  "0"
-  [ pixel grid ]  →  [ 0, 0, 0, 2, 16, 12, 0, 0, ... ] →  "1"
-  [ pixel grid ]  →  [ 0, 1, 12, 8, 0, 3, 14, 0, ... ] →  "7"
+  [ pixel grid ]  ->  [ 0, 0, 5, 13, 9, 1, 0, 0, ... ]  ->  "0"
+  [ pixel grid ]  ->  [ 0, 0, 0, 2, 16, 12, 0, 0, ... ] ->  "1"
+  [ pixel grid ]  ->  [ 0, 1, 12, 8, 0, 3, 14, 0, ... ] ->  "7"
 ```
 
 The model never sees the picture — only the numbers. This is exactly how security ML works: a network connection becomes a row of numbers (bytes sent, packets per second, port, protocol...) and the model learns to classify it from those numbers alone.
@@ -61,45 +138,79 @@ flowchart LR
 
 ## What the Script Does
 
-### Step 1 — Load and inspect the data
+### Step 1 — Load and wrap in a DataFrame
+
 ```python
 digits = load_digits()
-# digits.data   → shape (1797, 64) — 1797 images, 64 pixel features each
-# digits.target → shape (1797,)    — correct label for each image (0–9)
-# digits.images → shape (1797, 8, 8) — same data as 2D grids for plotting
+
+df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
+#                 ^^^^^^^^^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#                 the raw data  give each column a readable name: pixel_0, pixel_1 ...
+
+df["target"] = digits.target
+# add a column called "target" with the correct digit label for each row
 ```
 
-Always check the shape first. It tells you how much data you have and how many features each sample carries.
+### Step 2 — Check the shape
 
-### Step 2 — Check class balance
+```python
+digits.data.shape[0]   # number of rows  (images)  = 1797
+digits.data.shape[1]   # number of columns (features) = 64
+```
+
+Always check shape first. It tells you immediately whether your data loaded correctly and how much you have to work with.
+
+### Step 3 — Check class balance
+
 ```python
 df["target"].value_counts().sort_index()
-# 0    178
-# 1    182
-# 2    177
-# ...
+# value_counts() counts how many rows have each label
+# sort_index()   sorts the result by label (0,1,2...) instead of by count
+```
+
+Expected output:
+```
+0    178
+1    182
+2    177
+...
 ```
 
 This dataset is well-balanced — roughly equal examples of each digit. In security data this is rarely true: you might have millions of normal connections and only hundreds of attacks. That imbalance matters enormously — you'll deal with it properly in Module 2.
 
-### Step 3 — Visualise sample images
-
-The script plots two examples of each digit side by side. This is your sanity check — do the images look like what you'd expect? Are there any obvious data quality problems?
-
-In security EDA, you do the equivalent: plot a few raw log lines from each class and ask "does this actually look like an attack?"
-
-### Step 4 — Print one image as raw numbers
+### Step 4 — Visualise sample images
 
 ```python
-for row in digits.images[0].astype(int):
-    print("  ".join(f"{v:2d}" for v in row))
+fig, axes = plt.subplots(2, 10, figsize=(18, 4))
+# subplots creates a grid of plot panels
+# (2, 10) = 2 rows, 10 columns = 20 panels total (2 examples per digit)
+# figsize=(18, 4) = width 18 inches, height 4 inches
+
+ax.imshow(sample, cmap="gray_r")
+# imshow displays a 2D array as an image
+# cmap="gray_r" = reversed greyscale: high values are dark, low are light
 ```
 
-This makes the point concrete: **the model sees numbers, not pictures**. Pixel brightness values, floats, integers — it's all just a row of features. The label tells the model what those numbers mean.
+This is your sanity check — do the images look like what you'd expect?
 
-### Step 5 — Plot the average image per class
+### Step 5 — Print one image as raw numbers
 
-Averaging all the `0`s together, all the `1`s together, etc., gives you the "prototype" of each class. If two classes have very similar averages (e.g. `1` and `7` might overlap in some pixels) the model will find those harder to separate.
+This step makes the most important point of the lesson: the model sees this, not a picture:
+
+```
+   0   0   5  13   9   1   0   0
+   0   0  13  15  10  15   5   0
+   ...
+```
+
+### Step 6 — Plot average images per class
+
+```python
+digits.images[digits.target == digit].mean(axis=0)
+# digits.target == digit  creates a True/False mask
+# applying it filters to only images of that digit
+# .mean(axis=0) averages across all those images, pixel by pixel
+```
 
 ---
 
@@ -108,7 +219,7 @@ Averaging all the `0`s together, all the `1`s together, etc., gives you the "pro
 1. **Shape** — 1797 rows, 64 features
 2. **Class balance** — roughly 178–182 examples per digit (well balanced)
 3. **Sample images** — recognisable digits, some messier than others
-4. **Average images** — each digit has a distinct shape; `1` and `7` are the most similar
+4. **Average images** — each digit has a distinct shape; `1` and `7` are the most visually similar
 
 ---
 
@@ -127,7 +238,7 @@ Before any training, ask:
 ## Try It Yourself
 
 ```python
-# Which pixel positions are most different between digit 0 and digit 1?
+# Which pixel positions differ most between digit 0 and digit 1?
 mean_0 = digits.data[digits.target == 0].mean(axis=0)
 mean_1 = digits.data[digits.target == 1].mean(axis=0)
 diff = abs(mean_0 - mean_1).reshape(8, 8)
@@ -137,7 +248,7 @@ plt.imshow(diff, cmap="hot")
 plt.title("Pixel differences between 0 and 1")
 plt.colorbar()
 plt.show()
-# Bright areas = pixels that differ a lot → most useful features for separating these two classes
+# Bright pixels = differ a lot between classes = most useful features for the model
 ```
 
 ---

@@ -26,15 +26,17 @@ When you are done, open [reference_solution.py](reference_solution.py) to compar
 
 ## Exercise Overview
 
-| File | Topic | Key skills |
-|------|-------|-----------|
-| [exercise1_loading_data.py](exercise1_loading_data.py) | Loading a dataset | `load_digits()`, Bunch objects, DataFrames, features vs labels |
-| [exercise2_statistics.py](exercise2_statistics.py) | Shape and statistics | `.describe()`, `.isnull()`, value ranges, zero-variance features |
-| [exercise3_class_balance.py](exercise3_class_balance.py) | Class balance | `value_counts()`, imbalance ratio, the naive accuracy trap |
-| [exercise4_visualise.py](exercise4_visualise.py) | Visualising data | `imshow()`, image grids, average prototypes, visual similarity |
-| [exercise5_what_model_sees.py](exercise5_what_model_sees.py) | What the model sees | Raw number grids, feature correlations, security data analogy |
+Work through them in order — each one builds on the previous.
 
-Work through them in order. Each one builds on what you learned in the previous one.
+| # | Guide | Exercise file | Topic |
+|---|-------|---------------|-------|
+| 1 | [exercise1_loading_data.md](exercise1_loading_data.md) | [exercise1_loading_data.py](exercise1_loading_data.py) | Loading a dataset — Bunch, DataFrame, features vs labels |
+| 2 | [exercise2_statistics.md](exercise2_statistics.md) | [exercise2_statistics.py](exercise2_statistics.py) | Shape and statistics — `.describe()`, missing values, zero-variance features |
+| 3 | [exercise3_class_balance.md](exercise3_class_balance.md) | [exercise3_class_balance.py](exercise3_class_balance.py) | Class balance — the naive accuracy trap, imbalance ratio |
+| 4 | [exercise4_visualise.md](exercise4_visualise.md) | [exercise4_visualise.py](exercise4_visualise.py) | Visualising data — image grids, average prototypes |
+| 5 | [exercise5_what_model_sees.md](exercise5_what_model_sees.md) | [exercise5_what_model_sees.py](exercise5_what_model_sees.py) | What the model sees — number grids, correlations, security analogy |
+
+**For each exercise:** read the `.md` guide first, then open the `.py` file and fill in the tasks.
 
 ---
 

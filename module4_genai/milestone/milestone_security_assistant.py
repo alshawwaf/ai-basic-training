@@ -13,6 +13,8 @@ import os
 import sys
 import numpy as np
 from typing import List, Dict
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from llm_client import get_client
 
 print("=" * 65)

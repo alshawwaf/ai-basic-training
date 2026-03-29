@@ -160,12 +160,12 @@ Classic ML is the foundation everything else builds on. These algorithms are sti
 
 | # | Concept Notes | Python Script | What You Learn |
 |---|---------------|---------------|----------------|
-| 1.1 | [What is ML?](module1_classic_ml/1_what_is_ml.md) | [1_concepts_and_data.py](module1_classic_ml/1_concepts_and_data.py) | The ML workflow, how models learn from data, loading and exploring a dataset |
-| 1.2 | [Linear Regression](module1_classic_ml/2_linear_regression.md) | [2_linear_regression.py](module1_classic_ml/2_linear_regression.py) | Predicting continuous values — server response time from traffic load |
-| 1.3 | [Logistic Regression](module1_classic_ml/3_logistic_regression.md) | [3_logistic_regression.py](module1_classic_ml/3_logistic_regression.py) | Binary classification — URL features → phishing or legitimate |
-| 1.4 | [Decision Trees](module1_classic_ml/4_decision_trees.md) | [4_decision_tree.py](module1_classic_ml/4_decision_tree.py) | Interpretable rule-based classification — network traffic labelled as threat or benign |
-| 1.5 | [Model Evaluation](module1_classic_ml/5_model_evaluation.md) | [5_model_evaluation.py](module1_classic_ml/5_model_evaluation.py) | Precision, recall, F1-score, ROC AUC — and why accuracy alone is meaningless in security |
-| — | **Milestone Project** | [milestone_phishing.py](module1_classic_ml/milestone_phishing.py) | End-to-end phishing URL classifier: feature extraction → training → evaluation |
+| 1.1 | [What is ML?](module1_classic_ml/lesson1/1_what_is_ml.md) | [1_concepts_and_data.py](module1_classic_ml/lesson1/1_concepts_and_data.py) | The ML workflow, how models learn from data, loading and exploring a dataset |
+| 1.2 | [Linear Regression](module1_classic_ml/lesson2/2_linear_regression.md) | [2_linear_regression.py](module1_classic_ml/lesson2/2_linear_regression.py) | Predicting continuous values — server response time from traffic load |
+| 1.3 | [Logistic Regression](module1_classic_ml/lesson3/3_logistic_regression.md) | [3_logistic_regression.py](module1_classic_ml/lesson3/3_logistic_regression.py) | Binary classification — URL features → phishing or legitimate |
+| 1.4 | [Decision Trees](module1_classic_ml/lesson4/4_decision_trees.md) | [4_decision_tree.py](module1_classic_ml/lesson4/4_decision_tree.py) | Interpretable rule-based classification — network traffic labelled as threat or benign |
+| 1.5 | [Model Evaluation](module1_classic_ml/lesson5/5_model_evaluation.md) | [5_model_evaluation.py](module1_classic_ml/lesson5/5_model_evaluation.py) | Precision, recall, F1-score, ROC AUC — and why accuracy alone is meaningless in security |
+| — | **Milestone Project** | [milestone_phishing.py](module1_classic_ml/milestone/milestone_phishing.py) | End-to-end phishing URL classifier: feature extraction → training → evaluation |
 
 **Key concepts covered:** supervised learning, features and labels, train/test split, underfitting, decision boundaries, confusion matrix, false positive rate
 
@@ -179,11 +179,11 @@ Real security data is never clean. Logs have missing fields, features need to be
 
 | # | Concept Notes | Python Script | What You Learn |
 |---|---------------|---------------|----------------|
-| 2.1 | [Feature Engineering](module2_intermediate/1_feature_engineering.md) | [1_feature_engineering.py](module2_intermediate/1_feature_engineering.py) | Extracting useful signals from raw firewall and NetFlow logs |
-| 2.2 | [Random Forests](module2_intermediate/2_random_forests.md) | [2_random_forest.py](module2_intermediate/2_random_forest.py) | Ensemble of decision trees — malware vs. benign file classifier |
-| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/3_clustering_anomaly_detection.md) | [3_clustering.py](module2_intermediate/3_clustering.py) | k-Means clustering to find anomalous network connections without any labels |
-| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/4_overfitting_cross_validation.md) | [4_overfitting.py](module2_intermediate/4_overfitting.py) | Why models fail in production, k-fold cross-validation, the bias-variance tradeoff |
-| — | **Milestone Project** | [milestone_intrusion.py](module2_intermediate/milestone_intrusion.py) | Network intrusion detector trained and evaluated on KDD Cup-style connection data |
+| 2.1 | [Feature Engineering](module2_intermediate/lesson1/1_feature_engineering.md) | [1_feature_engineering.py](module2_intermediate/lesson1/1_feature_engineering.py) | Extracting useful signals from raw firewall and NetFlow logs |
+| 2.2 | [Random Forests](module2_intermediate/lesson2/2_random_forests.md) | [2_random_forest.py](module2_intermediate/lesson2/2_random_forest.py) | Ensemble of decision trees — malware vs. benign file classifier |
+| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/lesson3/3_clustering_anomaly_detection.md) | [3_clustering.py](module2_intermediate/lesson3/3_clustering.py) | k-Means clustering to find anomalous network connections without any labels |
+| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/lesson4/4_overfitting_cross_validation.md) | [4_overfitting.py](module2_intermediate/lesson4/4_overfitting.py) | Why models fail in production, k-fold cross-validation, the bias-variance tradeoff |
+| — | **Milestone Project** | [milestone_intrusion.py](module2_intermediate/milestone/milestone_intrusion.py) | Network intrusion detector trained and evaluated on KDD Cup-style connection data |
 
 **Key concepts covered:** one-hot encoding, normalisation, missing value handling, ensemble methods, feature importance, unsupervised learning, silhouette score, regularisation
 
@@ -214,11 +214,11 @@ These lessons work through the mathematics and mechanics of a neural network fro
 
 | # | Concept Notes | Python Script | What You Learn |
 |---|---------------|---------------|----------------|
-| 3.9 | [First Neural Network](module3_neural_networks/9_first_neural_network.md) | [1_first_neural_net.py](module3_neural_networks/1_first_neural_net.py) | Rebuild the same network in Keras in ~10 lines |
-| 3.10 | [Dropout & Regularisation](module3_neural_networks/10_dropout_and_regularisation.md) | [2_deeper_network.py](module3_neural_networks/2_deeper_network.py) | Dropout, batch normalisation, early stopping — keeping the model from memorising |
-| 3.11 | [Convolutional Networks](module3_neural_networks/11_convolutional_networks.md) | [3_cnn.py](module3_neural_networks/3_cnn.py) | CNNs for spatial data — applied to malware binary visualisation |
-| 3.12 | [Hyperparameter Tuning](module3_neural_networks/12_hyperparameter_tuning.md) | [4_hyperparameters.py](module3_neural_networks/4_hyperparameters.py) | Learning rate, batch size, architecture choices — and how to search them systematically |
-| — | **Milestone Project** | [milestone_packets.py](module3_neural_networks/milestone_packets.py) | Neural network trained on network packet feature vectors to classify malicious traffic |
+| 3.9 | [First Neural Network](module3_neural_networks/lesson9/9_first_neural_network.md) | [1_first_neural_net.py](module3_neural_networks/lesson9/1_first_neural_net.py) | Rebuild the same network in Keras in ~10 lines |
+| 3.10 | [Dropout & Regularisation](module3_neural_networks/lesson10/10_dropout_and_regularisation.md) | [2_deeper_network.py](module3_neural_networks/lesson10/2_deeper_network.py) | Dropout, batch normalisation, early stopping — keeping the model from memorising |
+| 3.11 | [Convolutional Networks](module3_neural_networks/lesson11/11_convolutional_networks.md) | [3_cnn.py](module3_neural_networks/lesson11/3_cnn.py) | CNNs for spatial data — applied to malware binary visualisation |
+| 3.12 | [Hyperparameter Tuning](module3_neural_networks/lesson12/12_hyperparameter_tuning.md) | [4_hyperparameters.py](module3_neural_networks/lesson12/4_hyperparameters.py) | Learning rate, batch size, architecture choices — and how to search them systematically |
+| — | **Milestone Project** | [milestone_packets.py](module3_neural_networks/milestone/milestone_packets.py) | Neural network trained on network packet feature vectors to classify malicious traffic |
 
 **Key concepts covered:** forward pass, backpropagation (conceptual), gradient descent, activation functions, loss functions, regularisation, convolutional filters, pooling, epochs, batch size
 
@@ -232,11 +232,11 @@ This module bridges traditional ML and modern AI. You will learn what an LLM act
 
 | # | Concept Notes | Python Script | What You Learn |
 |---|---------------|---------------|----------------|
-| 4.1 | [How LLMs Work](module4_genai/1_how_llms_work.md) | [1_llm_concepts.py](module4_genai/1_llm_concepts.py) | Tokenisation, embeddings, attention, and next-token prediction — explained without hype |
-| 4.2 | [HuggingFace Models](module4_genai/2_huggingface_pretrained_models.md) | [2_huggingface.py](module4_genai/2_huggingface.py) | Zero-shot MITRE ATT&CK technique classification and named entity recognition on threat reports |
-| 4.3 | [The LLM API](module4_genai/3_claude_api.md) | [3_claude_api.py](module4_genai/3_claude_api.py) | System prompts, conversation history, streaming — build a threat intelligence assistant |
-| 4.4 | [Retrieval-Augmented Generation](module4_genai/4_retrieval_augmented_generation.md) | [4_rag.py](module4_genai/4_rag.py) | Ground AI responses in your own CVE and threat report documents — eliminate hallucination |
-| — | **Milestone Project** | [milestone_security_assistant.py](module4_genai/milestone_security_assistant.py) | Interactive Q&A assistant over a knowledge base of CVEs, threat reports, and security runbooks |
+| 4.1 | [How LLMs Work](module4_genai/lesson1/1_how_llms_work.md) | [1_llm_concepts.py](module4_genai/lesson1/1_llm_concepts.py) | Tokenisation, embeddings, attention, and next-token prediction — explained without hype |
+| 4.2 | [HuggingFace Models](module4_genai/lesson2/2_huggingface_pretrained_models.md) | [2_huggingface.py](module4_genai/lesson2/2_huggingface.py) | Zero-shot MITRE ATT&CK technique classification and named entity recognition on threat reports |
+| 4.3 | [The LLM API](module4_genai/lesson3/3_claude_api.md) | [3_claude_api.py](module4_genai/lesson3/3_claude_api.py) | System prompts, conversation history, streaming — build a threat intelligence assistant |
+| 4.4 | [Retrieval-Augmented Generation](module4_genai/lesson4/4_retrieval_augmented_generation.md) | [4_rag.py](module4_genai/lesson4/4_rag.py) | Ground AI responses in your own CVE and threat report documents — eliminate hallucination |
+| — | **Milestone Project** | [milestone_security_assistant.py](module4_genai/milestone/milestone_security_assistant.py) | Interactive Q&A assistant over a knowledge base of CVEs, threat reports, and security runbooks |
 
 **Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, Gemini, or Ollama (local). The `llm_client.py` helper abstracts the provider — set whichever key or model you have and the code handles the rest. Ollama is a good option if you need to keep data local or don't want to sign up for a cloud service.
 
@@ -249,49 +249,57 @@ This module bridges traditional ML and modern AI. You will learn what an LLM act
 ```
 AI Basic Training/
 │
+├── assets/                         Diagrams embedded in lesson notes
+│
 ├── module1_classic_ml/             Module 1 — Classic ML
-│   ├── 1_what_is_ml.md
-│   ├── 1_concepts_and_data.py
-│   ├── 2_linear_regression.md
-│   ├── 2_linear_regression.py
-│   ├── 3_logistic_regression.md
-│   ├── 3_logistic_regression.py
-│   ├── 4_decision_trees.md
-│   ├── 4_decision_tree.py
-│   ├── 5_model_evaluation.md
-│   ├── 5_model_evaluation.py
-│   └── milestone_phishing.py
+│   ├── lesson1/                    What is ML?
+│   │   ├── 1_what_is_ml.md
+│   │   └── 1_concepts_and_data.py
+│   ├── lesson2/                    Linear Regression
+│   │   ├── 2_linear_regression.md
+│   │   └── 2_linear_regression.py
+│   ├── lesson3/                    Logistic Regression
+│   │   ├── 3_logistic_regression.md
+│   │   └── 3_logistic_regression.py
+│   ├── lesson4/                    Decision Trees
+│   │   ├── 4_decision_trees.md
+│   │   └── 4_decision_tree.py
+│   ├── lesson5/                    Model Evaluation
+│   │   ├── 5_model_evaluation.md
+│   │   └── 5_model_evaluation.py
+│   └── milestone/
+│       └── milestone_phishing.py
 │
 ├── module2_intermediate/           Module 2 — Intermediate ML
-│   ├── 1_feature_engineering.md / .py
-│   ├── 2_random_forests.md / .py
-│   ├── 3_clustering_anomaly_detection.md / .py
-│   ├── 4_overfitting_cross_validation.md / .py
-│   └── milestone_intrusion.py
+│   ├── lesson1/ — 1_feature_engineering.md / .py
+│   ├── lesson2/ — 2_random_forests.md / .py
+│   ├── lesson3/ — 3_clustering_anomaly_detection.md / .py
+│   ├── lesson4/ — 4_overfitting_cross_validation.md / .py
+│   └── milestone/ — milestone_intrusion.py
 │
 ├── module3_neural_networks/        Module 3 — Neural Networks
-│   ├── foundations/                NumPy network (Lessons 3.1–3.8)
-│   │   ├── p001-Basic-Neuron-3-inputs.py
-│   │   ├── p002-Basic-Neuron-Layer.py
-│   │   ├── p003-Dot-Product.py
-│   │   ├── p004-Layers-and-Object.py
-│   │   ├── p005-ReLU-Activation.py
-│   │   ├── p006-Softmax-Activation.py
-│   │   ├── p007-Categorical-Cross-Entropy-Loss.py
-│   │   └── p008-Categorical-Cross-Entropy-Loss-applied.py
-│   ├── 9_first_neural_network.md / 1_first_neural_net.py
-│   ├── 10_dropout_and_regularisation.md / 2_deeper_network.py
-│   ├── 11_convolutional_networks.md / 3_cnn.py
-│   ├── 12_hyperparameter_tuning.md / 4_hyperparameters.py
-│   └── milestone_packets.py
+│   ├── foundations/                NumPy network from scratch (Lessons 3.1–3.8)
+│   │   ├── 1_basic_neuron.py
+│   │   ├── 2_neuron_layer.py
+│   │   ├── 3_dot_product.py
+│   │   ├── 4_layers_as_classes.py
+│   │   ├── 5_relu_activation.py
+│   │   ├── 6_softmax_activation.py
+│   │   ├── 7_cross_entropy_loss.py
+│   │   └── 8_full_forward_pass.py
+│   ├── lesson9/  — 9_first_neural_network.md / 1_first_neural_net.py
+│   ├── lesson10/ — 10_dropout_and_regularisation.md / 2_deeper_network.py
+│   ├── lesson11/ — 11_convolutional_networks.md / 3_cnn.py
+│   ├── lesson12/ — 12_hyperparameter_tuning.md / 4_hyperparameters.py
+│   └── milestone/ — milestone_packets.py
 │
 ├── module4_genai/                  Module 4 — Generative AI
-│   ├── llm_client.py               Multi-provider LLM helper (auto-detects your key)
-│   ├── 1_how_llms_work.md / 1_llm_concepts.py
-│   ├── 2_huggingface_pretrained_models.md / 2_huggingface.py
-│   ├── 3_claude_api.md / 3_claude_api.py
-│   ├── 4_retrieval_augmented_generation.md / 4_rag.py
-│   └── milestone_security_assistant.py
+│   ├── llm_client.py               Multi-provider LLM helper (Claude/OpenAI/Gemini/Ollama)
+│   ├── lesson1/ — 1_how_llms_work.md / 1_llm_concepts.py
+│   ├── lesson2/ — 2_huggingface_pretrained_models.md / 2_huggingface.py
+│   ├── lesson3/ — 3_claude_api.md / 3_claude_api.py
+│   ├── lesson4/ — 4_retrieval_augmented_generation.md / 4_rag.py
+│   └── milestone/ — milestone_security_assistant.py
 │
 └── README.md                       You are here
 ```

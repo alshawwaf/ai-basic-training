@@ -6,7 +6,17 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-Neural%20Networks-FF6F00?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow)](https://huggingface.co/)
 
-A hands-on, 4-week Python curriculum that takes you from your first ML model all the way to building a working AI-powered security assistant. Every lesson is grounded in a real cybersecurity scenario — because abstract examples don't help you think about your actual job.
+A self-paced, hands-on Python curriculum that takes you from your first ML model all the way to building a working AI-powered security assistant. Every lesson is grounded in a real cybersecurity scenario — because abstract examples don't help you think about your actual job.
+
+**79 runnable files across 4 modules, 17 lessons, and 67 exercises.** Go at whatever pace fits your schedule:
+
+| Pace | Daily time | Estimated completion |
+|------|-----------|---------------------|
+| Full-time sprint | 6–8 hours/day | ~2 weeks |
+| Part-time evenings | 1–2 hours/day | 6–8 weeks |
+| Weekends only | 3–4 hours/weekend | 3–4 months |
+
+There are no deadlines. Each lesson is independent enough that you can pause and resume without losing context.
 
 ---
 

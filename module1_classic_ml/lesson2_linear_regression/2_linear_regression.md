@@ -109,3 +109,12 @@ Does the model still perform well? What changes in the plot?
 ## Next Lesson
 
 **[Lesson 1.3 — Logistic Regression](3_logistic_regression.md):** Make yes/no decisions — phishing URL or legitimate?
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

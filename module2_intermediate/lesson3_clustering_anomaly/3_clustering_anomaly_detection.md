@@ -120,3 +120,12 @@ k-Means uses Euclidean distance. If `bytes_sent` ranges 0–1,000,000 and `durat
 ## Next Lesson
 
 **[Lesson 2.4 — Cross-Validation & Overfitting](4_overfitting_cross_validation.md):** How to know if your model will actually work on new data — not just the data you trained on.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

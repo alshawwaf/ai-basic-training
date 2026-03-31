@@ -122,3 +122,12 @@ RocCurveDisplay.from_predictions(y_test, y_proba).plot()
 ## Next: Milestone Project
 
 **[milestone_phishing.py](milestone_phishing.py):** Put it all together — full pipeline from raw features to a trained, evaluated phishing URL classifier.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

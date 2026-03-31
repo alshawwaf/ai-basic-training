@@ -85,3 +85,12 @@ def build_model(hp):
 ## Next: Milestone Project
 
 **[milestone_packets.py](milestone_packets.py):** Full neural network pipeline on network packet data with proper tuning.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

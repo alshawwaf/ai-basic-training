@@ -125,3 +125,12 @@ A low standard deviation means your model is stable across different data splits
 ## Next: Milestone Project
 
 **[milestone_intrusion.py](milestone_intrusion.py):** Full network intrusion detection pipeline with proper cross-validation and evaluation.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

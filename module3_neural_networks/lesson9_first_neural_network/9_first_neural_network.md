@@ -126,3 +126,12 @@ Loss
 ## Next Lesson
 
 **[Lesson 3.2 — Deeper Networks](10_dropout_and_regularisation.md):** Add more layers, dropout, and batch normalisation to build a more powerful and stable model.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

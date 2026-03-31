@@ -81,3 +81,12 @@ keras.layers.Dense(128, activation='relu')
 ## Next Lesson
 
 **[Lesson 3.4 — Hyperparameters](12_hyperparameter_tuning.md):** Systematically tune your network for better performance.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

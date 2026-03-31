@@ -115,3 +115,12 @@ Without this instruction, Claude might blend its pre-training knowledge with the
 ## Next: Milestone Project
 
 **[milestone_security_assistant.py](milestone_security_assistant.py):** A complete RAG-based security assistant you can load your own CVE data into and query.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

@@ -95,3 +95,12 @@ After engineering features, you may have too many. Use these techniques to trim:
 ## Next Lesson
 
 **[Lesson 2.2 — Random Forests](2_random_forests.md):** Feed your engineered features into a more powerful model — an ensemble of decision trees.
+
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)**

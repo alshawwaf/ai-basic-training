@@ -34,14 +34,18 @@ Imagine you have 10,000 emails that your security team has already reviewed. Eac
 # There is no ID column linking them — the lists must stay in the same order.
 # If you shuffle one without shuffling the other, the model learns nonsense.
 
+# Once both lists are ready, you hand them to the model together.
+# .fit() is the training step — the model reads through all 10,000 pairs
+# and adjusts its internal numbers until its predictions match the labels.
 model.fit(emails, labels)
-# The model scans all 10,000 examples and finds the pattern:
+# The model has now found the pattern:
 # "emails with many links + a very young sender domain tend to be spam"
 # It encodes that pattern as numbers (weights) — not as rules you wrote.
 
+# .predict() is the deployment step — you give it one new email it has never seen.
+# It applies the pattern it learned during .fit() and returns a label.
 model.predict(new_email)
 # → 1  (spam)
-# The model applies the pattern it found to an email it has never seen before.
 # You never told it what spam looks like — it worked it out from the examples.
 ```
 

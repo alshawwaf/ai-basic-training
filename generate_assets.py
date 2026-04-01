@@ -18,10 +18,10 @@ os.makedirs("assets", exist_ok=True)
 
 # ── Shared style ───────────────────────────────────────────────────────────────
 plt.rcParams.update({
-    "figure.facecolor": "white",
-    "axes.facecolor":   "#f8f9fa",
+    "figure.facecolor": "#e8e8e8",
+    "axes.facecolor":   "#f0f0f0",
     "axes.grid":        True,
-    "grid.color":       "#dee2e6",
+    "grid.color":       "#cccccc",
     "grid.linewidth":   0.8,
     "font.family":      "sans-serif",
     "font.size":        11,

@@ -14,15 +14,20 @@ if "free money" in email:
 ```
 
 **Machine learning:** you show labelled examples, and the computer figures out the rules.
+
+Imagine you have 10,000 emails that your security team has already reviewed. Each email is described by measurable properties — word count, number of links, whether there's an attachment, how old the sender's domain is. Each one has also been tagged: spam or legitimate. You hand all of that to a model and ask it to find the pattern.
+
 ```python
-# emails = 10,000 emails, each described by measurable features
-#          e.g. [word_count, num_links, has_attachment, sender_domain_age, ...]
-# labels = the correct answer for each email
-#          e.g. [1, 0, 1, 1, 0, ...]  where 1 = spam, 0 = legitimate
+# emails: 10,000 rows, one per email
+#         each row is a list of measurable properties
+#         e.g. [word_count=42, num_links=8, has_attachment=1, domain_age_days=3]
+#
+# labels: the correct answer for each email, in the same order
+#         e.g. [1, 0, 1, 1, 0, ...]  where 1 = spam, 0 = legitimate
 
 model.fit(emails, labels)
 # The model scans all 10,000 examples and finds the pattern:
-# "emails with many links + short sender domain age tend to be spam"
+# "emails with many links + a very young sender domain tend to be spam"
 # It encodes that pattern as numbers (weights) — not as rules you wrote.
 
 model.predict(new_email)

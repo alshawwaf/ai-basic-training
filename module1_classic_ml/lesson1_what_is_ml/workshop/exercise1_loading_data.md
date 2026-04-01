@@ -45,6 +45,8 @@ Label     =  malicious=1 or benign=0
 
 The structure is always the same. The domain changes; the math does not.
 
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
+
 ---
 
 ## Concept: The Digits Dataset
@@ -72,11 +74,26 @@ The hollow centre of the 0 is visible in the right column — rows 3–6 have `�
 
 The full dataset: **1,797 images**, **10 classes** (digits 0–9), **64 features** per image.
 
+> **Want to go deeper?** [UCI Optical Recognition of Handwritten Digits — Wikipedia](https://en.wikipedia.org/wiki/MNIST_database)
+
 ---
 
 ## Concept: The `load_digits()` Return Value — a Bunch Object
 
 scikit-learn ships several real datasets that load with a single function call — no downloading, no CSV files, no file paths. `load_digits()` is one of them. You call it once and it hands back everything: the pixel data, the correct labels, and metadata all bundled together.
+
+**Other built-in datasets you can explore the same way:**
+
+| Function | Dataset | Task |
+|----------|---------|------|
+| `load_iris()` | Iris flower measurements | Classify species (3 classes) |
+| `load_wine()` | Chemical analysis of wines | Classify origin (3 classes) |
+| `load_breast_cancer()` | Tumour measurements | Malignant vs benign (2 classes) |
+| `load_diabetes()` | Patient measurements | Predict disease progression (regression) |
+
+Each returns a `Bunch` with the same `.data`, `.target`, and `.DESCR` fields — the code you write today works on all of them.
+
+> **Want to go deeper?** [scikit-learn toy datasets — official docs](https://scikit-learn.org/stable/datasets/toy_dataset.html)
 
 That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access:
 
@@ -89,6 +106,8 @@ That bundle is called a `Bunch` — a container object that works like a Python 
 | `digits.DESCR` | str | Full text description of the dataset |
 
 `digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8×8 grid).
+
+> **Want to go deeper?** [NumPy ndarray — Wikipedia](https://en.wikipedia.org/wiki/NumPy)
 
 ---
 
@@ -110,6 +129,8 @@ df = pd.DataFrame(raw_data, columns=column_names)
 df["target"] = labels
 ```
 
+> **Want to go deeper?** [pandas — Wikipedia](https://en.wikipedia.org/wiki/Pandas_(software))
+
 ---
 
 ## Concept: f-Strings and List Comprehensions
@@ -129,6 +150,8 @@ names = [f"pixel_{i}" for i in range(5)]
 ```
 
 Together: `[f"pixel_{i}" for i in range(64)]` generates all 64 column names in one line.
+
+> **Want to go deeper?** [List comprehension — Wikipedia](https://en.wikipedia.org/wiki/List_comprehension)
 
 ---
 

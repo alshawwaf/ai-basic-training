@@ -1,7 +1,5 @@
 # Lesson 2.4 — Cross-Validation & Overfitting
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Does Your Model Actually Generalise?
@@ -125,7 +123,6 @@ A low standard deviation means your model is stable across different data splits
 ## Next: Milestone Project
 
 **[milestone_intrusion.py](../milestone/milestone_intrusion.py):** Full network intrusion detection pipeline with proper cross-validation and evaluation.
-
 
 ---
 

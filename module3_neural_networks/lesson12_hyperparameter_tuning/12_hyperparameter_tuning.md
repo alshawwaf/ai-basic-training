@@ -1,7 +1,5 @@
 # Lesson 3.4 — Hyperparameters & Tuning
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: The Knobs You Turn
@@ -85,7 +83,6 @@ def build_model(hp):
 ## Next: Milestone Project
 
 **[milestone_packets.py](../milestone/milestone_packets.py):** Full neural network pipeline on network packet data with proper tuning.
-
 
 ---
 

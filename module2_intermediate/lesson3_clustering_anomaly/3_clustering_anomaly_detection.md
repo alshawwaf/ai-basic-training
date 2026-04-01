@@ -1,7 +1,5 @@
 # Lesson 2.3 — k-Means Clustering (Unsupervised Learning)
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Finding Groups Without Labels
@@ -124,7 +122,6 @@ k-Means uses Euclidean distance. If `bytes_sent` ranges 0–1,000,000 and `durat
 ## Next Lesson
 
 **[Lesson 2.4 — Cross-Validation & Overfitting](4_overfitting_cross_validation.md):** How to know if your model will actually work on new data — not just the data you trained on.
-
 
 ---
 

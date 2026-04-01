@@ -1,7 +1,5 @@
 # Lesson 4.3 — Working with LLM APIs
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md) · **Helper:** [llm_client.py](../llm_client.py)
-
 ---
 
 ## Concept: Directing a Powerful Model with Natural Language
@@ -140,7 +138,6 @@ A 1,000-word security report analysis costs ~$0.001 — effectively free for dev
 ## Next Lesson
 
 **[Lesson 4.4 — RAG](4_retrieval_augmented_generation.md):** The model's knowledge has a cutoff date and doesn't know your internal documents. RAG fixes both problems.
-
 
 ---
 

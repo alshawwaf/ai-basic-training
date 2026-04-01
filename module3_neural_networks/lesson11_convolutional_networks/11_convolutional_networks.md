@@ -1,7 +1,5 @@
 # Lesson 3.3 — Convolutional Neural Networks (CNNs)
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Networks That See
@@ -81,7 +79,6 @@ keras.layers.Dense(128, activation='relu')
 ## Next Lesson
 
 **[Lesson 3.4 — Hyperparameters](12_hyperparameter_tuning.md):** Systematically tune your network for better performance.
-
 
 ---
 

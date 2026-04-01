@@ -1,7 +1,5 @@
 # Lesson 4.1 — How LLMs Work
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: The Core Idea
@@ -113,7 +111,6 @@ The model learns which tokens to "pay attention to" when predicting each next to
 ## Next Lesson
 
 **[Lesson 4.2 — HuggingFace](2_huggingface_pretrained_models.md):** Use pre-trained transformer models without training anything — just load and run.
-
 
 ---
 

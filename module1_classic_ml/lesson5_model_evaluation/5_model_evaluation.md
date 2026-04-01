@@ -1,7 +1,5 @@
 # Lesson 1.5 — Model Evaluation
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Why Accuracy Is Misleading in Security
@@ -122,7 +120,6 @@ RocCurveDisplay.from_predictions(y_test, y_proba).plot()
 ## Next: Milestone Project
 
 **[milestone_phishing.py](../milestone/milestone_phishing.py):** Put it all together — full pipeline from raw features to a trained, evaluated phishing URL classifier.
-
 
 ---
 

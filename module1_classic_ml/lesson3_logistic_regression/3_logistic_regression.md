@@ -1,7 +1,5 @@
 # Lesson 1.3 — Logistic Regression
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Yes or No Decisions
@@ -99,7 +97,6 @@ y_proba = model.predict_proba(X_test)[:, 1]   # probability of being phishing
 ## Next Lesson
 
 **[Lesson 1.4 — Decision Trees](4_decision_trees.md):** A different kind of classifier that works more like an explicit set of rules — great for interpretability.
-
 
 ---
 

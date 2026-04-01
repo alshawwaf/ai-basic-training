@@ -1,7 +1,5 @@
 # Lesson 4.2 — HuggingFace Pre-trained Models
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Use What Already Exists
@@ -83,7 +81,6 @@ result = ner("The Lazarus Group used 192.168.1.1 and CVE-2021-44228 in the attac
 ## Next Lesson
 
 **[Lesson 4.3 — The Claude API](3_claude_api.md):** Move from fixed pipelines to a conversational AI you can direct with natural language instructions.
-
 
 ---
 

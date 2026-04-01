@@ -1,7 +1,5 @@
 # Lesson 1.2 — Linear Regression
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## Concept: Predicting a Number
@@ -111,7 +109,6 @@ Does the model still perform well? What changes in the plot?
 ## Next Lesson
 
 **[Lesson 1.3 — Logistic Regression](3_logistic_regression.md):** Make yes/no decisions — phishing URL or legitimate?
-
 
 ---
 

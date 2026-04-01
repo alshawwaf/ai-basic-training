@@ -1,6 +1,5 @@
 # Lesson 3.1 — Your First Neural Network in Keras
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 **Pre-reading:** Work through the [foundations scripts](../foundations/) first.
 
 ---
@@ -126,7 +125,6 @@ Loss
 ## Next Lesson
 
 **[Lesson 3.2 — Deeper Networks](10_dropout_and_regularisation.md):** Add more layers, dropout, and batch normalisation to build a more powerful and stable model.
-
 
 ---
 

@@ -1,7 +1,5 @@
 # Lesson 1.1 — What is Machine Learning?
 
-**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
-
 ---
 
 ## What is Machine Learning?
@@ -192,7 +190,6 @@ These are the four most-used libraries in all of data science. You will use them
 ## Ready for the Workshop?
 
 **[Open workshop/1_lab_guide.md](workshop/1_lab_guide.md)** — 5 hands-on exercises that walk you through loading, inspecting, and visualising the dataset. Each exercise has a clear task and expected output. The reference solution is in `workshop/reference_solution.py`.
-
 
 ---
 

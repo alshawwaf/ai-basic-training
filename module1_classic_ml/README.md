@@ -24,6 +24,15 @@ Imagine you have 10,000 emails that your security team has already reviewed. Eac
 #
 # labels: the correct answer for each email, in the same order
 #         e.g. [1, 0, 1, 1, 0, ...]  where 1 = spam, 0 = legitimate
+#
+# The connection between them is position:
+#   emails[0] is the first email  →  labels[0] = 1 means that email is spam
+#   emails[1] is the second email →  labels[1] = 0 means that email is legitimate
+#   emails[2] is the third email  →  labels[2] = 1 means that email is spam
+#   ...and so on for all 10,000
+#
+# There is no ID column linking them — the lists must stay in the same order.
+# If you shuffle one without shuffling the other, the model learns nonsense.
 
 model.fit(emails, labels)
 # The model scans all 10,000 examples and finds the pattern:

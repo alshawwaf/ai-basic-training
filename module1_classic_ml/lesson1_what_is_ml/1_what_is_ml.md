@@ -1,7 +1,6 @@
 # Lesson 1.1 — What is Machine Learning?
 
-> **Reference solution:** [1_concepts_and_data.py](1_concepts_and_data.py)
-> Build your own version step by step in this guide. Use the reference only to check your work at the end.
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

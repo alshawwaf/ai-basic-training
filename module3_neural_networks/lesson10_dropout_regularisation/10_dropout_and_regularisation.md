@@ -1,6 +1,6 @@
 # Lesson 3.2 — Deeper Networks, Dropout & Batch Normalisation
 
-**Script:** [2_deeper_network.py](2_deeper_network.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

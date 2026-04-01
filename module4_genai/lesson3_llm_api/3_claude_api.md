@@ -1,6 +1,6 @@
 # Lesson 4.3 — Working with LLM APIs
 
-**Script:** [3_claude_api.py](3_claude_api.py) · **Helper:** [llm_client.py](llm_client.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md) · **Helper:** [llm_client.py](../llm_client.py)
 
 ---
 

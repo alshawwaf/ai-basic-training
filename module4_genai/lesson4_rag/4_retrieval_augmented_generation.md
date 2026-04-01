@@ -1,6 +1,6 @@
 # Lesson 4.4 — RAG (Retrieval-Augmented Generation)
 
-**Script:** [4_rag.py](4_rag.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 
@@ -114,7 +114,7 @@ Without this instruction, Claude might blend its pre-training knowledge with the
 
 ## Next: Milestone Project
 
-**[milestone_security_assistant.py](milestone_security_assistant.py):** A complete RAG-based security assistant you can load your own CVE data into and query.
+**[milestone_security_assistant.py](../milestone/milestone_security_assistant.py):** A complete RAG-based security assistant you can load your own CVE data into and query.
 
 
 ---

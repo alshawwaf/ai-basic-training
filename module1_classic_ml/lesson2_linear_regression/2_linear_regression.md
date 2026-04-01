@@ -1,6 +1,6 @@
 # Lesson 1.2 — Linear Regression
 
-**Script:** [2_linear_regression.py](2_linear_regression.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

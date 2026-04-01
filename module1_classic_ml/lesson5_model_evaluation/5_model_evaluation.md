@@ -1,6 +1,6 @@
 # Lesson 1.5 — Model Evaluation
 
-**Script:** [5_model_evaluation.py](5_model_evaluation.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 
@@ -121,7 +121,7 @@ RocCurveDisplay.from_predictions(y_test, y_proba).plot()
 
 ## Next: Milestone Project
 
-**[milestone_phishing.py](milestone_phishing.py):** Put it all together — full pipeline from raw features to a trained, evaluated phishing URL classifier.
+**[milestone_phishing.py](../milestone/milestone_phishing.py):** Put it all together — full pipeline from raw features to a trained, evaluated phishing URL classifier.
 
 
 ---

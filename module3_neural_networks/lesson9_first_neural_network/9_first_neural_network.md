@@ -1,7 +1,7 @@
 # Lesson 3.1 — Your First Neural Network in Keras
 
-**Script:** [1_first_neural_net.py](1_first_neural_net.py)
-**Pre-reading:** Work through [from_scratch/p001–p004](from_scratch/) first.
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
+**Pre-reading:** Work through the [foundations scripts](../foundations/) first.
 
 ---
 

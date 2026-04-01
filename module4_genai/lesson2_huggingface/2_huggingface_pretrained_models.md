@@ -1,6 +1,6 @@
 # Lesson 4.2 — HuggingFace Pre-trained Models
 
-**Script:** [2_huggingface.py](2_huggingface.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

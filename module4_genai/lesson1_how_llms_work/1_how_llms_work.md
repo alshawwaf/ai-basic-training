@@ -1,6 +1,6 @@
 # Lesson 4.1 — How LLMs Work
 
-**Script:** [1_llm_concepts.py](1_llm_concepts.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

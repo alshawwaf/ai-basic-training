@@ -1,6 +1,6 @@
 # Lesson 2.2 — Random Forests
 
-**Script:** [2_random_forest.py](2_random_forest.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

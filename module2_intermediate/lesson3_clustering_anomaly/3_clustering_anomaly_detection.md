@@ -1,6 +1,6 @@
 # Lesson 2.3 — k-Means Clustering (Unsupervised Learning)
 
-**Script:** [3_clustering.py](3_clustering.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

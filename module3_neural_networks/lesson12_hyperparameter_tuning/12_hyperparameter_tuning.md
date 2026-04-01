@@ -1,6 +1,6 @@
 # Lesson 3.4 — Hyperparameters & Tuning
 
-**Script:** [4_hyperparameters.py](4_hyperparameters.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 
@@ -84,7 +84,7 @@ def build_model(hp):
 
 ## Next: Milestone Project
 
-**[milestone_packets.py](milestone_packets.py):** Full neural network pipeline on network packet data with proper tuning.
+**[milestone_packets.py](../milestone/milestone_packets.py):** Full neural network pipeline on network packet data with proper tuning.
 
 
 ---

@@ -1,6 +1,6 @@
 # Lesson 3.3 — Convolutional Neural Networks (CNNs)
 
-**Script:** [3_cnn.py](3_cnn.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

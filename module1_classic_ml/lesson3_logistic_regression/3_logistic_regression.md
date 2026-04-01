@@ -1,6 +1,6 @@
 # Lesson 1.3 — Logistic Regression
 
-**Script:** [3_logistic_regression.py](3_logistic_regression.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

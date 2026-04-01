@@ -1,6 +1,6 @@
 # Lesson 2.1 — Feature Engineering
 
-**Script:** [1_feature_engineering.py](1_feature_engineering.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

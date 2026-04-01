@@ -1,6 +1,6 @@
 # Lesson 1.4 — Decision Trees
 
-**Script:** [4_decision_tree.py](4_decision_tree.py)
+**Workshop:** [workshop/1_lab_guide.md](workshop/1_lab_guide.md)
 
 ---
 

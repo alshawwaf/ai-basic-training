@@ -51,20 +51,24 @@ The structure is always the same. The domain changes; the math does not.
 
 We use the UCI Optical Recognition of Handwritten Digits dataset — a classic benchmark that ships inside scikit-learn. No download required.
 
-Each sample is an 8×8 greyscale image of a handwritten digit:
+Each sample is an 8×8 greyscale image of a handwritten digit. Each cell is a pixel brightness from 0 (white) to 16 (full ink):
 
 ```
- 0  0  5 13  9  1  0  0
- 0  0 13 15 10 15  5  0
- 0  3 15  2  0 11  8  0
- 0  4 12  0  0  8  8  0     ← This is the digit  0
- 0  5  8  0  0  9  8  0
- 0  4 11  0  1 12  7  0
- 0  2 14  5 10 12  0  0
- 0  0  6 13 10  0  0  0
+ Raw pixel values              Ink level — same data, visualised
+
+  0  0  5 13  9  1  0  0      ·  ·  ▒  █  ▓  ░  ·  ·
+  0  0 13 15 10 15  5  0      ·  ·  █  █  ▓  █  ▒  ·
+  0  3 15  2  0 11  8  0      ·  ░  █  ░  ·  ▓  ▒  ·
+  0  4 12  0  0  8  8  0      ·  ░  ▓  ·  ·  ▒  ▒  ·   ← the digit "0"
+  0  5  8  0  0  9  8  0      ·  ▒  ▒  ·  ·  ▓  ▒  ·
+  0  4 11  0  1 12  7  0      ·  ░  ▓  ·  ░  ▓  ▒  ·
+  0  2 14  5 10 12  0  0      ·  ░  █  ▒  ▓  ▓  ·  ·
+  0  0  6 13 10  0  0  0      ·  ·  ▒  █  ▓  ·  ·  ·
+
+  Key:  · = 0 (empty)   ░ = 1–4   ▒ = 5–8   ▓ = 9–12   █ = 13–16 (full ink)
 ```
 
-Pixel values run from 0 (white background) to 16 (maximum ink). The image is flattened to a single row of 64 numbers before the model receives it.
+The hollow centre of the 0 is visible in the right column — rows 3–6 have `·` in the middle. The image is then flattened to a single row of 64 numbers before the model receives it.
 
 The full dataset: **1,797 images**, **10 classes** (digits 0–9), **64 features** per image.
 

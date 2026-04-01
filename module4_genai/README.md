@@ -32,24 +32,24 @@ Stage 4 is about **generative models**: given a prompt/context, *produce* meanin
 
 ## Lessons
 
-### Lesson 4.1 — [How LLMs Work](1_how_llms_work.md)
-**Script:** [1_llm_concepts.py](1_llm_concepts.py)
+### Lesson 4.1 — [How LLMs Work](lesson1_how_llms_work/1_how_llms_work.md)
+**Workshop:** [lesson1_how_llms_work/workshop/1_lab_guide.md](lesson1_how_llms_work/workshop/1_lab_guide.md)
 Tokenisation, embeddings, and next-token prediction — the machinery behind ChatGPT/Claude.
 
-### Lesson 4.2 — [HuggingFace Pre-trained Models](2_huggingface_pretrained_models.md)
-**Script:** [2_huggingface.py](2_huggingface.py)
+### Lesson 4.2 — [HuggingFace Pre-trained Models](lesson2_huggingface/2_huggingface_pretrained_models.md)
+**Workshop:** [lesson2_huggingface/workshop/1_lab_guide.md](lesson2_huggingface/workshop/1_lab_guide.md)
 Use transformer models out-of-the-box for text classification, NER, and summarisation.
 
-### Lesson 4.3 — [The Claude API](3_claude_api.md)
-**Script:** [3_claude_api.py](3_claude_api.py)
+### Lesson 4.3 — [The Claude API](lesson3_llm_api/3_claude_api.md)
+**Workshop:** [lesson3_llm_api/workshop/1_lab_guide.md](lesson3_llm_api/workshop/1_lab_guide.md)
 Build a conversational threat intelligence assistant using Anthropic's Claude.
 
-### Lesson 4.4 — [Retrieval-Augmented Generation](4_retrieval_augmented_generation.md)
-**Script:** [4_rag.py](4_rag.py)
+### Lesson 4.4 — [Retrieval-Augmented Generation](lesson4_rag/4_retrieval_augmented_generation.md)
+**Workshop:** [lesson4_rag/workshop/1_lab_guide.md](lesson4_rag/workshop/1_lab_guide.md)
 Ground the model's answers in your own security documents to reduce hallucination.
 
-### Milestone — [Security Analyst Assistant](milestone_security_assistant.py)
-**Script:** [milestone_security_assistant.py](milestone_security_assistant.py)
+### Milestone — [Security Analyst Assistant](milestone/milestone_security_assistant.py)
+**Script:** [milestone/milestone_security_assistant.py](milestone/milestone_security_assistant.py)
 A full RAG-based assistant that answers questions about CVEs and threat intelligence.
 
 ---

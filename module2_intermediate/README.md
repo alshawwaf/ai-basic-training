@@ -26,24 +26,24 @@ This is where **unsupervised learning** comes in — the model finds unusual pat
 
 ## Lessons
 
-### Lesson 2.1 — [Feature Engineering](1_feature_engineering.md)
-**Script:** [1_feature_engineering.py](1_feature_engineering.py)
+### Lesson 2.1 — [Feature Engineering](lesson1_feature_engineering/1_feature_engineering.md)
+**Workshop:** [lesson1_feature_engineering/workshop/1_lab_guide.md](lesson1_feature_engineering/workshop/1_lab_guide.md)
 Turn raw log lines into ML-ready numerical features.
 
-### Lesson 2.2 — [Random Forests](2_random_forests.md)
-**Script:** [2_random_forest.py](2_random_forest.py)
+### Lesson 2.2 — [Random Forests](lesson2_random_forests/2_random_forests.md)
+**Workshop:** [lesson2_random_forests/workshop/1_lab_guide.md](lesson2_random_forests/workshop/1_lab_guide.md)
 Ensemble of decision trees — more accurate and less prone to overfitting.
 
-### Lesson 2.3 — [Clustering & Anomaly Detection](3_clustering_anomaly_detection.md)
-**Script:** [3_clustering.py](3_clustering.py)
+### Lesson 2.3 — [Clustering & Anomaly Detection](lesson3_clustering_anomaly/3_clustering_anomaly_detection.md)
+**Workshop:** [lesson3_clustering_anomaly/workshop/1_lab_guide.md](lesson3_clustering_anomaly/workshop/1_lab_guide.md)
 Find anomalous network behaviour without needing attack labels.
 
-### Lesson 2.4 — [Overfitting & Cross-Validation](4_overfitting_cross_validation.md)
-**Script:** [4_overfitting.py](4_overfitting.py)
+### Lesson 2.4 — [Overfitting & Cross-Validation](lesson4_overfitting_crossval/4_overfitting_cross_validation.md)
+**Workshop:** [lesson4_overfitting_crossval/workshop/1_lab_guide.md](lesson4_overfitting_crossval/workshop/1_lab_guide.md)
 Reliably estimate real-world model performance.
 
-### Milestone — [Network Intrusion Detector](milestone_intrusion.py)
-**Script:** [milestone_intrusion.py](milestone_intrusion.py)
+### Milestone — [Network Intrusion Detector](milestone/milestone_intrusion.py)
+**Script:** [milestone/milestone_intrusion.py](milestone/milestone_intrusion.py)
 Full pipeline on KDD Cup-style network intrusion data.
 
 ---

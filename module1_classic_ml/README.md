@@ -106,28 +106,28 @@ The split in step 3 is critical: you never evaluate on data the model was traine
 
 ## Lessons
 
-### Lesson 1.1 — [What is ML?](1_what_is_ml.md)
-**Script:** [1_concepts_and_data.py](1_concepts_and_data.py)
+### Lesson 1.1 — [What is ML?](lesson1_what_is_ml/1_what_is_ml.md)
+**Workshop:** [lesson1_what_is_ml/workshop/1_lab_guide.md](lesson1_what_is_ml/workshop/1_lab_guide.md)
 Learn to load, inspect, and visualise a dataset before training anything.
 
-### Lesson 1.2 — [Linear Regression](2_linear_regression.md)
-**Script:** [2_linear_regression.py](2_linear_regression.py)
+### Lesson 1.2 — [Linear Regression](lesson2_linear_regression/2_linear_regression.md)
+**Workshop:** [lesson2_linear_regression/workshop/1_lab_guide.md](lesson2_linear_regression/workshop/1_lab_guide.md)
 Predict a continuous value: server response time from traffic load.
 
-### Lesson 1.3 — [Logistic Regression](3_logistic_regression.md)
-**Script:** [3_logistic_regression.py](3_logistic_regression.py)
+### Lesson 1.3 — [Logistic Regression](lesson3_logistic_regression/3_logistic_regression.md)
+**Workshop:** [lesson3_logistic_regression/workshop/1_lab_guide.md](lesson3_logistic_regression/workshop/1_lab_guide.md)
 Make binary decisions: phishing URL (yes/no).
 
-### Lesson 1.4 — [Decision Trees](4_decision_trees.md)
-**Script:** [4_decision_tree.py](4_decision_tree.py)
+### Lesson 1.4 — [Decision Trees](lesson4_decision_trees/4_decision_trees.md)
+**Workshop:** [lesson4_decision_trees/workshop/1_lab_guide.md](lesson4_decision_trees/workshop/1_lab_guide.md)
 Classify network traffic as threat or benign using rule-based splits.
 
-### Lesson 1.5 — [Model Evaluation](5_model_evaluation.md)
-**Script:** [5_model_evaluation.py](5_model_evaluation.py)
+### Lesson 1.5 — [Model Evaluation](lesson5_model_evaluation/5_model_evaluation.md)
+**Workshop:** [lesson5_model_evaluation/workshop/1_lab_guide.md](lesson5_model_evaluation/workshop/1_lab_guide.md)
 Accuracy, precision, recall, F1, confusion matrix — what they mean and when to use each.
 
-### Milestone — [Phishing URL Classifier](milestone_phishing.py)
-**Script:** [milestone_phishing.py](milestone_phishing.py)
+### Milestone — [Phishing URL Classifier](milestone/milestone_phishing.py)
+**Script:** [milestone/milestone_phishing.py](milestone/milestone_phishing.py)
 End-to-end project using a real phishing dataset.
 
 ---

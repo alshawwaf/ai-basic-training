@@ -39,19 +39,19 @@ Loss measures how wrong the model is. Training = minimising loss via backpropaga
 
 | Lesson | File | Topic |
 |--------|------|-------|
-| 3.1 | [p001-Basic-Neuron-3-inputs.py](foundations/p001-Basic-Neuron-3-inputs.py) | Building your first neuron |
-| 3.2 | [p002-Basic-Neuron-Layer.py](foundations/p002-Basic-Neuron-Layer.py) | A layer of neurons |
-| 3.3 | [p003-Dot-Product.py](foundations/p003-Dot-Product.py) | Vectorising with NumPy |
-| 3.4 | [p004-Layers-and-Object.py](foundations/p004-Layers-and-Object.py) | Layers as Python classes |
-| 3.5 | [p005-ReLU-Activation.py](foundations/p005-ReLU-Activation.py) | ReLU activation function |
-| 3.6 | [p006-Softmax-Activation.py](foundations/p006-Softmax-Activation.py) | Softmax activation |
-| 3.7 | [p007-Categorical-Cross-Entropy-Loss.py](foundations/p007-Categorical-Cross-Entropy-Loss.py) | Cross-entropy loss |
-| 3.8 | [p008-Categorical-Cross-Entropy-Loss-applied.py](foundations/p008-Categorical-Cross-Entropy-Loss-applied.py) | Full network + loss |
-| 3.9 | [1_first_neural_net.py](1_first_neural_net.py) | Building with Keras |
-| 3.10 | [2_deeper_network.py](2_deeper_network.py) | Deeper networks + regularisation |
-| 3.11 | [3_cnn.py](3_cnn.py) | Convolutional networks |
-| 3.12 | [4_hyperparameters.py](4_hyperparameters.py) | Tuning your network |
-| Milestone | [milestone_packets.py](milestone_packets.py) | Neural network packet classifier |
+| 3.1 | [1_basic_neuron.py](foundations/1_basic_neuron.py) | Building your first neuron |
+| 3.2 | [2_neuron_layer.py](foundations/2_neuron_layer.py) | A layer of neurons |
+| 3.3 | [3_dot_product.py](foundations/3_dot_product.py) | Vectorising with NumPy |
+| 3.4 | [4_layers_as_classes.py](foundations/4_layers_as_classes.py) | Layers as Python classes |
+| 3.5 | [5_relu_activation.py](foundations/5_relu_activation.py) | ReLU activation function |
+| 3.6 | [6_softmax_activation.py](foundations/6_softmax_activation.py) | Softmax activation |
+| 3.7 | [7_cross_entropy_loss.py](foundations/7_cross_entropy_loss.py) | Cross-entropy loss |
+| 3.8 | [8_full_forward_pass.py](foundations/8_full_forward_pass.py) | Full network + loss |
+| 3.9 | [9_first_neural_network.md](lesson9_first_neural_network/9_first_neural_network.md) | Building with Keras — [workshop](lesson9_first_neural_network/workshop/1_lab_guide.md) |
+| 3.10 | [10_dropout_and_regularisation.md](lesson10_dropout_regularisation/10_dropout_and_regularisation.md) | Dropout + regularisation — [workshop](lesson10_dropout_regularisation/workshop/1_lab_guide.md) |
+| 3.11 | [11_convolutional_networks.md](lesson11_convolutional_networks/11_convolutional_networks.md) | Convolutional networks — [workshop](lesson11_convolutional_networks/workshop/1_lab_guide.md) |
+| 3.12 | [12_hyperparameter_tuning.md](lesson12_hyperparameter_tuning/12_hyperparameter_tuning.md) | Tuning your network — [workshop](lesson12_hyperparameter_tuning/workshop/1_lab_guide.md) |
+| Milestone | [milestone_packets.py](milestone/milestone_packets.py) | Neural network packet classifier |
 
 ---
 

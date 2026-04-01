@@ -56,10 +56,10 @@ def fig_ml_vs_programming():
         ax1.add_patch(mpatches.FancyBboxPatch((x, y), 2.5, 1.5,
             boxstyle="round,pad=0.1", facecolor=color, alpha=0.2, edgecolor=color, linewidth=2))
         ax1.text(x+1.25, y+0.75, label, ha="center", va="center", fontsize=10, fontweight="bold", color=color)
-    for (x1,y1), (x2,y2) in [((3.5,8.25),(6,6.75)), ((3.5,5.25),(6,6.25))]:
+    for (x1,y1), (x2,y2) in [((3.5,8.25),(6,7.0)), ((3.5,5.25),(6,6.5))]:
         ax1.annotate("", xy=(x2,y2), xytext=(x1,y1),
             arrowprops=dict(arrowstyle="->", color=GRAY, lw=1.5))
-    ax1.annotate("", xy=(6,3.75), xytext=(6,6),
+    ax1.annotate("", xy=(7.25,4.5), xytext=(7.25,6),
         arrowprops=dict(arrowstyle="->", color=GRAY, lw=1.5))
 
     # ML
@@ -75,10 +75,10 @@ def fig_ml_vs_programming():
         ax2.add_patch(mpatches.FancyBboxPatch((x, y), 2.5, 1.5,
             boxstyle="round,pad=0.1", facecolor=color, alpha=0.2, edgecolor=color, linewidth=2))
         ax2.text(x+1.25, y+0.75, label, ha="center", va="center", fontsize=10, fontweight="bold", color=color)
-    for (x1,y1), (x2,y2) in [((3.5,8.25),(6,6.75)), ((3.5,5.25),(6,6.25))]:
+    for (x1,y1), (x2,y2) in [((3.5,8.25),(6,7.0)), ((3.5,5.25),(6,6.5))]:
         ax2.annotate("", xy=(x2,y2), xytext=(x1,y1),
             arrowprops=dict(arrowstyle="->", color=GRAY, lw=1.5))
-    ax2.annotate("", xy=(6,4.5), xytext=(6,6),
+    ax2.annotate("", xy=(7.25,4.5), xytext=(7.25,6),
         arrowprops=dict(arrowstyle="->", color=GRAY, lw=1.5))
 
     plt.tight_layout()
@@ -166,8 +166,9 @@ def fig_class_imbalance():
     bars = ax2.bar(classes, counts_imbalanced, color=colors, alpha=0.8, edgecolor="white")
     ax2.set_title("Typical Security Dataset — Imbalanced", color=RED)
     ax2.set_ylabel("Number of Samples")
+    ax2.set_ylim(0, 108000)
     for bar, count in zip(bars, counts_imbalanced):
-        ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 500,
+        ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 800,
                  f"{count:,}", ha="center", va="bottom", fontsize=9, fontweight="bold")
     ax2.text(1.5, 70000,
         "A model predicting 'Normal'\nfor everything gets 95% accuracy\n— but catches ZERO attacks.",

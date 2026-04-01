@@ -29,7 +29,11 @@ This transformation is called **feature engineering**, and it's often where the 
 
 ## Types of Features to Extract from Security Logs
 
+Assume you have loaded a week of firewall logs into a pandas DataFrame. Each row is one connection, with columns like `timestamp`, `src_ip`, `dest_ip`, `bytes`, `duration`, `protocol`, and `bytes_uploaded`. Here is how you derive useful features from that raw data:
+
 ### Time-based features
+Attackers often exfiltrate data or run scans at off-hours. Extract when the connection happened:
+
 ```python
 df['hour_of_day']    = df['timestamp'].dt.hour
 df['is_after_hours'] = df['hour_of_day'].apply(lambda h: 1 if h < 6 or h > 22 else 0)
@@ -37,28 +41,34 @@ df['day_of_week']    = df['timestamp'].dt.dayofweek
 ```
 
 ### Aggregation features (per IP, per session)
+A single connection looks innocent; the pattern across many connections reveals the attacker. Ask how each IP behaves in aggregate:
+
 ```python
-# How many unique destinations did this IP contact in the last hour?
+# How many unique destinations did this IP contact?
 df['unique_dests_1h'] = df.groupby('src_ip')['dest_ip'].transform('nunique')
 ```
 
 ### Ratio features
+Ratios compress two columns into one signal — bytes-per-second captures transfer speed regardless of connection duration:
+
 ```python
 df['bytes_per_second'] = df['bytes'] / (df['duration'] + 0.001)
 df['upload_ratio']     = df['bytes_uploaded'] / (df['bytes_total'] + 1)
 ```
 
 ### Categorical encoding
+Models need numbers. Convert protocol strings to integers, or use one-hot encoding to avoid implying a false ordering:
+
 ```python
-# Convert protocol strings to numbers
 df['protocol_encoded'] = df['protocol'].map({'TCP': 0, 'UDP': 1, 'ICMP': 2})
 # Or use one-hot encoding:
 pd.get_dummies(df['protocol'], prefix='proto')
 ```
 
 ### Statistical features (per entity)
+How unusual is this connection compared to this IP's own history? A z-score tells you how many standard deviations away from the norm it sits:
+
 ```python
-# Z-score: how unusual is this connection compared to this IP's baseline?
 df['bytes_zscore'] = (df['bytes'] - df.groupby('src_ip')['bytes'].transform('mean')) \
                    / (df.groupby('src_ip')['bytes'].transform('std') + 1)
 ```

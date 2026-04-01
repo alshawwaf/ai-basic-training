@@ -64,6 +64,8 @@ response_time = coefficient × requests_per_second + intercept
 
 ## Key sklearn API
 
+Say you have collected 200 measurements: requests-per-second at a given moment, paired with the response time the server returned. Each row is one measurement; `X` is the traffic column, `y` is the response time column. Here's how you train and apply the model:
+
 ```python
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -71,8 +73,8 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = LinearRegression()
-model.fit(X_train, y_train)        # learn the line
-y_pred = model.predict(X_test)     # apply the line to new data
+model.fit(X_train, y_train)        # learn the line from 160 measurements
+y_pred = model.predict(X_test)     # predict response time for the remaining 40
 ```
 
 ---

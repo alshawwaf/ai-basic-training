@@ -14,7 +14,7 @@ HuggingFace hosts thousands of pre-trained models you can load and use in a few 
 
 ## The Pipeline API
 
-The simplest way to use a pre-trained model:
+The simplest way to use a pre-trained model. Say you have a string of text — a log line, a threat report excerpt, anything — and you want to run it through a classifier without training anything. Three lines:
 
 ```python
 from transformers import pipeline
@@ -43,7 +43,7 @@ HuggingFace handles tokenisation, model loading, and post-processing automatical
 
 ## Zero-Shot Classification (Powerful for Security)
 
-Classify text into *any* categories — no training data needed:
+Classify text into *any* categories — no training data needed. Say you have a raw SIEM alert and want to map it to a MITRE ATT&CK tactic without any labelled training data. Define your categories at call time and the model figures out the best fit:
 
 ```python
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
@@ -61,7 +61,7 @@ This can turn any security log line into a structured MITRE ATT&CK tactic classi
 
 ## Named Entity Recognition (NER) for Threat Intel
 
-Extract structured IOCs from unstructured threat reports:
+Extract structured IOCs from unstructured threat reports. Say you have a paragraph of threat intel text and you want to pull out the actor names, IP addresses, and CVE numbers automatically — without writing any regex:
 
 ```python
 ner = pipeline("ner", grouped_entities=True)

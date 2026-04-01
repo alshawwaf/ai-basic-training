@@ -75,6 +75,8 @@ This tells you which features matter most — great for explaining your detector
 
 ## Key sklearn API
 
+Say you have extracted features from 5,000 URLs — each row has `url_length`, `num_dots`, `has_at_symbol`, and similar columns. Half are phishing (label=1), half are legitimate (label=0). Here's how you train and apply the classifier:
+
 ```python
 from sklearn.linear_model import LogisticRegression
 

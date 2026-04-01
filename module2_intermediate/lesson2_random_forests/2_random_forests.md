@@ -83,6 +83,8 @@ More trees = better (up to a point), but slower. 100-300 is usually sufficient.
 
 ## Key sklearn API
 
+Say you have extracted PE file features for 20,000 files — half malware, half benign — and stored them in a DataFrame. Each row is one file; the columns are things like `file_entropy`, `num_sections`, `has_network_imports`. Here's how you train the forest:
+
 ```python
 from sklearn.ensemble import RandomForestClassifier
 

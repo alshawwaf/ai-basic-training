@@ -70,6 +70,8 @@ Tells you which features the tree relied on most. Great for understanding *why* 
 
 ## Key sklearn API
 
+Say you have extracted connection features (`duration`, `bytes_sent`, `unique_dest_ports`, etc.) from 10,000 network log entries, labelled either "Benign" or "Attack". Here's how you train the tree and visualise the rules it learned:
+
 ```python
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 

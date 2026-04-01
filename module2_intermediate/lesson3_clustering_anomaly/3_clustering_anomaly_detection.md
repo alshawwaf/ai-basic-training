@@ -62,6 +62,8 @@ flowchart LR
 
 Plot inertia (sum of squared distances to nearest centroid) vs k. The "elbow" where the curve bends is usually the right k.
 
+Say you have scaled your network connection features into a matrix `X`. Try k from 1 to 10 and record how tightly each k clusters the data:
+
 ```python
 inertias = []
 for k in range(1, 11):
@@ -77,6 +79,8 @@ After clustering normal traffic:
 1. Fit k-Means on baseline (known-good) data
 2. For each new connection, measure its **distance to its nearest centroid**
 3. If distance > threshold → flag as anomalous
+
+Say you have fitted k-Means on two weeks of baseline traffic and stored it as `km`. When new connections arrive in `X_new`, score them like this:
 
 ```python
 distances = km.transform(X_new).min(axis=1)

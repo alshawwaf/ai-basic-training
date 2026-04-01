@@ -47,7 +47,7 @@ flowchart TD
 ## The Components
 
 ### Chunking
-Split documents into manageable pieces (~500 tokens each). Overlap between chunks prevents losing context at boundaries.
+Say you have loaded a CVE advisory as a long string of text. Embedding models have a token limit, so you split it into overlapping 500-word pieces before encoding. Overlap prevents a sentence that falls on a boundary from being cut in half:
 
 ```python
 def chunk_text(text, chunk_size=500, overlap=50):
@@ -59,16 +59,16 @@ def chunk_text(text, chunk_size=500, overlap=50):
 ```
 
 ### Embedding
-Convert each chunk to a vector. Similar content → similar vectors.
+Now you have a list of chunks. Convert each one to a vector. Chunks that discuss similar topics will end up close together in this vector space — which is what makes retrieval possible:
 
 ```python
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('all-MiniLM-L6-v2')
-embeddings = model.encode(chunks)
+embeddings = model.encode(chunks)   # shape: (num_chunks, 384)
 ```
 
 ### Retrieval
-Find the k chunks most similar to the user's question:
+A user asks a question. Encode it into the same vector space, then find the chunks whose vectors are closest to the question vector:
 
 ```python
 def retrieve(question, embeddings, chunks, k=3):
@@ -79,7 +79,7 @@ def retrieve(question, embeddings, chunks, k=3):
 ```
 
 ### Generation
-Put retrieved context into Claude's prompt:
+You now have the 3 most relevant chunks. Paste them into the LLM's prompt alongside the question. The model reads them and answers from that material — not from its pre-training:
 
 ```python
 context = "\n\n".join(retrieved_chunks)

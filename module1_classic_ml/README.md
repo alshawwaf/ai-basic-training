@@ -17,37 +17,36 @@ if "free money" in email:
 
 Imagine you have 10,000 emails that your security team has already reviewed. Each email is described by measurable properties — word count, number of links, whether there's an attachment, how old the sender's domain is. Each one has also been tagged: spam or legitimate. You hand all of that to a model and ask it to find the pattern.
 
+**The data** — `emails` is 10,000 rows, one per email. Each row is a list of measurable properties:
+
 ```python
-# emails: 10,000 rows, one per email
-#         each row is a list of measurable properties
-#         e.g. [word_count=42, num_links=8, has_attachment=1, domain_age_days=3]
-#
-# labels: the correct answer for each email, in the same order
-#         e.g. [1, 0, 1, 1, 0, ...]  where 1 = spam, 0 = legitimate
-#
-# The connection between them is position:
-#   emails[0] is the first email  →  labels[0] = 1 means that email is spam
-#   emails[1] is the second email →  labels[1] = 0 means that email is legitimate
-#   emails[2] is the third email  →  labels[2] = 1 means that email is spam
-#   ...and so on for all 10,000
-#
-# There is no ID column linking them — the lists must stay in the same order.
-# If you shuffle one without shuffling the other, the model learns nonsense.
+emails[0] = [word_count=42, num_links=8, has_attachment=1, domain_age_days=3]
+```
 
-# Once both lists are ready, you hand them to the model together.
-# .fit() is the training step — the model reads through all 10,000 pairs
-# and adjusts its internal numbers until its predictions match the labels.
+**The labels** — `labels` is the correct answer for each email, in the same order:
+
+```python
+labels = [1, 0, 1, 1, 0, ...]   # 1 = spam, 0 = legitimate
+```
+
+The connection between them is position: `emails[0]` pairs with `labels[0]`, `emails[1]` with `labels[1]`, and so on for all 10,000. There is no ID column linking them — the lists must stay in the same order. If you shuffle one without shuffling the other, the model learns nonsense.
+
+**Training** — `.fit()` reads through all 10,000 pairs and adjusts the model's internal numbers until its predictions match the labels:
+
+```python
 model.fit(emails, labels)
-# The model has now found the pattern:
-# "emails with many links + a very young sender domain tend to be spam"
-# It encodes that pattern as numbers (weights) — not as rules you wrote.
+```
 
-# .predict() is the deployment step — you give it one new email it has never seen.
-# It applies the pattern it learned during .fit() and returns a label.
+The model has now found a pattern like *"emails with many links + a very young sender domain tend to be spam"*. It encodes that pattern as numbers (weights) — not as rules you wrote.
+
+**Prediction** — `.predict()` takes one new email the model has never seen and applies the pattern it learned during `.fit()`:
+
+```python
 model.predict(new_email)
 # → 1  (spam)
-# You never told it what spam looks like — it worked it out from the examples.
 ```
+
+You never told it what spam looks like — it worked it out from the examples.
 
 ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the model data and let it extract patterns automatically. This is why it works well in cybersecurity — attackers constantly change their tactics, but their *statistical patterns* often persist across campaigns.
 

@@ -232,6 +232,6 @@ This is not a one-time exercise. This is how every ML project begins — every s
 
 ## Workshop Complete
 
-When all 5 exercises run cleanly, open [reference_solution.py](reference_solution.py) and compare.
+When all 5 exercises run cleanly, compare your code against the matching `_solution_` file for each exercise.
 
 **Next lesson:** [Lesson 1.2 — Linear Regression](../../lesson2_linear_regression/notes.md) — build your first trained model.

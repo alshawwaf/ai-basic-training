@@ -99,4 +99,4 @@ print("\n--- Exercise 1 complete. Move to exercise2_train_test_split.py ---")
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `01_solution_understanding_regression.py` file if anything looks different.

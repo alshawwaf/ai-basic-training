@@ -140,4 +140,4 @@ URLs longer than ~74 characters are classified as phishing by this simple model.
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `_solution_` file (`01_solution_from_regression_to_classification.py`) if anything looks different.

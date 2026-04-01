@@ -120,4 +120,4 @@ print("\n--- Exercise 2 complete. Move to exercise3_fit_and_predict.py ---")
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `02_solution_train_test_split.py` file if anything looks different.

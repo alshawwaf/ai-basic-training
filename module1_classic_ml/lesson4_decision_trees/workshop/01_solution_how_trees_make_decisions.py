@@ -1,31 +1,6 @@
-# Lab -- Exercise 1: How Trees Make Decisions
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise1_how_trees_make_decisions.py` in this folder.
-
----
-
-## Step 2: Add the imports
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
-```
 
----
-
-## Step 3: Set up the dataset
-
-This code creates the data for this exercise. Add it after the imports:
-
-```python
 np.random.seed(42)
 n_per_class = 500
 benign = pd.DataFrame({
@@ -70,17 +45,7 @@ df = pd.concat([benign, port_scan, exfil, dos], ignore_index=True).sample(
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
-```
 
----
-
-## Step 4: Compute Gini Impurity Manually
-
-Scenario A: A node with 40 benign, 30 port_scan, 20 exfil, 10 DoS samples. Scenario B: A pure node with 100% benign. For each, compute Gini = 1 - sum(p_i^2).
-
-Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Gini impurity calculations")
 print("=" * 60)
@@ -94,23 +59,7 @@ counts_b = np.array([100, 0, 0, 0])
 probs_b  = counts_b / counts_b.sum()
 gini_b   = 1 - np.sum(probs_b ** 2)
 print(f"Pure node:  Gini = {gini_b:.3f}")
-```
 
-Run your file. You should see:
-```
-Mixed node (40b, 30ps, 20ex, 10dos): Gini = 0.700
-Pure node  (100b):                   Gini = 0.000
-```
-
----
-
-## Step 5: Compute Information Gain for a Split
-
-Parent: 60 benign, 40 DoS (n=100) Split on connection_rate > 50: Left child  (rate <= 50): 58 benign,  2 DoS  (n=60)
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — Information gain for a split")
 print("=" * 60)
@@ -130,26 +79,7 @@ print(f"Left child Gini:     {g_left:.3f}  (weight={w_left:.2f})")
 print(f"Right child Gini:    {g_right:.3f}  (weight={w_right:.2f})")
 print(f"Weighted child Gini: {weighted_avg:.3f}")
 print(f"Information Gain:    {gain:.3f}")
-```
 
-Run your file. You should see:
-```
-Parent Gini:         0.480
-Left child Gini:     0.065  (weight=0.60)
-Right child Gini:    0.095  (weight=0.40)
-Weighted child Gini: 0.077
-Information Gain:    0.403
-```
-
----
-
-## Step 6: Inspect the Network Traffic Dataset
-
-Print: shape, class distribution (counts and percentages), feature means by class (use df.groupby('label').mean()).
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Dataset inspection")
 print("=" * 60)
@@ -159,27 +89,7 @@ for label, count in counts.items():
     print(f"  {CLASS_NAMES[label]:10s}: {count} ({count/len(df)*100:.1f}%)")
 print("\nFeature means by class:")
 print(df.groupby('label')[FEATURES].mean().round(1).to_string())
-```
 
-Run your file. You should see:
-```
-Shape: (2000, 7)
-benign    : 500 (25.0%)
-port_scan : 500 (25.0%)
-exfil     : 500 (25.0%)
-DoS       : 500 (25.0%)
-Feature means show very different profiles per class.
-```
-
----
-
-## Step 7: TASK 4 (BONUS) — Manual Classification
-
-Using these rules (from a simplified tree): If connection_rate > 100: DoS Else if unique_dest_ports > 20: port_scan
-
-Add this to your file:
-
-```python
 connections = [
     {"name": "A", "connection_rate": 80,  "unique_dest_ports": 25, "bytes_sent": 1000},
     {"name": "B", "connection_rate": 20,  "unique_dest_ports": 3,  "bytes_sent": 200},
@@ -188,17 +98,3 @@ connections = [
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Manual rule-based classification")
 print("=" * 60)
-```
-
-Run your file. You should see:
-```
-Connection A (rate=80, ports=25, bytes=1000): port_scan
-Connection B (rate=20, ports=3,  bytes=200):  benign
-Connection C (rate=60, ports=5,  bytes=150000): exfil
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching `01_solution_how_trees_make_decisions.py` file if anything looks different.

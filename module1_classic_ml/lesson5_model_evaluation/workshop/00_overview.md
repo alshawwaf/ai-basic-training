@@ -2,7 +2,7 @@
 ## Model Evaluation on Imbalanced Security Data
 
 > Read first: [../notes.md](../notes.md)
-> Reference: [reference_solution.py](reference_solution.py)
+> Reference: Each exercise has a matching `_solution_` file (e.g. `01_solution_the_accuracy_trap.py`)
 
 ## What This Workshop Covers
 

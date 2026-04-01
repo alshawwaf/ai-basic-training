@@ -189,7 +189,7 @@ These are the four most-used libraries in all of data science. You will use them
 
 ## Ready for the Workshop?
 
-**[Open workshop/00_overview.md](workshop/00_overview.md)** — 5 hands-on exercises that walk you through loading, inspecting, and visualising the dataset. Each exercise has a clear task and expected output. The reference solution is in `workshop/reference_solution.py`.
+**[Open workshop/00_overview.md](workshop/00_overview.md)** — 5 hands-on exercises that walk you through loading, inspecting, and visualising the dataset. Each exercise has a clear task and expected output. Each exercise has a matching `_solution_` file you can compare against.
 
 ---
 

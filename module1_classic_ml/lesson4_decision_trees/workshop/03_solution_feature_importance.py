@@ -1,34 +1,9 @@
-# Lab -- Exercise 3: Feature Importance
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise3_feature_importance.py` in this folder.
-
----
-
-## Step 2: Add the imports
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-```
 
----
-
-## Step 3: Set up the dataset
-
-This code creates the data for this exercise. Add it after the imports:
-
-```python
 np.random.seed(42)
 n_per_class = 500
 def make_traffic():
@@ -82,17 +57,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 model = DecisionTreeClassifier(max_depth=4, random_state=42)
 model.fit(X_train, y_train)
-```
 
----
-
-## Step 4: Extract and Print Feature Importances
-
-Create a DataFrame with columns 'feature' and 'importance'. Sort by importance descending. Print it. Verify that importances sum to 1.0.
-
-Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Feature importances (sorted)")
 print("=" * 60)
@@ -102,29 +67,7 @@ imp_df = imp_df.sort_values('importance', ascending=False)
 print(imp_df.to_string(index=False))
 total = importances.sum()
 print(f"\nSum of importances: {total:.3f} {'✓' if abs(total-1.0)<0.001 else '✗'}")
-```
 
-Run your file. You should see:
-```
-feature                 importance
-connection_rate           0.524
-bytes_sent                0.283
-unique_dest_ports         0.107
-duration_seconds          0.052
-failed_connections        0.024
-bytes_received            0.010
-Sum of importances: 1.000 ✓
-```
-
----
-
-## Step 5: Feature Importance Bar Chart
-
-Create a HORIZONTAL bar chart. Sort features by importance ascending (so most important is at top). Add the importance value as a text label at the end of each bar.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — Feature importance bar chart")
 print("=" * 60)
@@ -139,17 +82,7 @@ ax.set_xlabel('Feature Importance (Mean Decrease in Impurity)')
 ax.set_title('Decision Tree Feature Importance — Network Traffic Classifier')
 plt.tight_layout()
 plt.show()
-```
 
----
-
-## Step 6: Retrain with Top-3 Features
-
-Identify the top 3 features from imp_df. Retrain the model using only those features. Print and compare accuracy: full model vs top-3 model.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Top-3 feature model vs full model")
 print("=" * 60)
@@ -162,25 +95,7 @@ acc_top3 = model_top3.score(X_test[top3], y_test)
 print(f"Full model accuracy:  {acc_full:.3f}")
 print(f"Top-3 model accuracy: {acc_top3:.3f}")
 print(f"Accuracy drop:        {acc_full - acc_top3:.3f}")
-```
 
-Run your file. You should see:
-```
-Top-3 features: ['connection_rate', 'bytes_sent', 'unique_dest_ports']
-Full model accuracy:  ~0.962
-Top-3 model accuracy: ~0.951
-Accuracy drop:        ~0.011
-```
-
----
-
-## Step 7: TASK 4 (BONUS) — Security Interpretation of Importances
-
-Write a comment for each feature explaining whether its importance rank makes intuitive sense from a network security standpoint. Then answer: which feature would you add to a real-time firewall rule first?
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Security interpretation")
 print("=" * 60)
@@ -195,10 +110,3 @@ interpretations = {
 }
 for feature, interp in interpretations.items():
   print(f"{feature:22s}: {interp}")
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching `03_solution_feature_importance.py` file if anything looks different.

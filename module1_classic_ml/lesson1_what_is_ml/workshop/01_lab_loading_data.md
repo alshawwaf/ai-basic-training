@@ -115,4 +115,4 @@ print("\n--- Exercise 1 complete. Move to exercise2_statistics.py ---")
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `_solution_` file (`01_solution_loading_data.py`) if anything looks different.

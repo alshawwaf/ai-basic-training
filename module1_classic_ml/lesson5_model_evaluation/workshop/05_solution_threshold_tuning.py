@@ -1,20 +1,3 @@
-# Lab -- Exercise 5: Threshold Tuning for Your Use Case
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise5_threshold_tuning.py` in this folder.
-
----
-
-## Step 2: Add the imports
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -22,15 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score
-```
 
----
-
-## Step 3: Set up the dataset
-
-This code creates the data for this exercise. Add it after the imports:
-
-```python
 np.random.seed(42)
 n_benign, n_attack = 9_500, 500
 benign_data = np.column_stack([
@@ -56,17 +31,7 @@ X_te_sc = scaler.transform(X_test)
 model   = LogisticRegression(max_iter=1000, random_state=42)
 model.fit(X_tr_sc, y_train)
 probs   = model.predict_proba(X_te_sc)[:, 1]   # P(attack) for each test sample
-```
 
----
-
-## Step 4: Build the Full Precision-Recall-Threshold Table
-
-For each threshold in np.arange(0.05, 0.95, 0.05): - Compute precision, recall, F1, and number of alerts (y_pred.sum()) Print as a formatted table. Mark the row with the highest F1.
-
-Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Full precision-recall-threshold table")
 print("=" * 60)
@@ -87,27 +52,7 @@ for i, row in results_df.iterrows():
     marker = " ← max F1" if i == best_f1_idx else ""
     print(f"{row['threshold']:>6.2f} {row['precision']:>9.3f} {row['recall']:>7.3f} "
           f"{row['f1']:>7.3f} {row['alerts']:>7}{marker}")
-```
 
-Run your file. You should see:
-```
-Thresh Precision  Recall      F1  Alerts
-0.10     ~0.74    ~0.99   ~0.85     267
-...
-0.50     ~0.93    ~0.91   ~0.92     196   ← max F1
-...
-0.90     ~0.99    ~0.70   ~0.82     141
-```
-
----
-
-## Step 5: Scenario A: Maximum Coverage (Recall >= 0.95)
-
-Find the LOWEST threshold where recall >= 0.95. Print the threshold, precision, recall, and the daily alert count (scale: test has 2000 samples; assume 10,000 events/day → multiply by 5).
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — Scenario A: Catch all attacks (recall >= 0.95)")
 print("=" * 60)
@@ -126,25 +71,7 @@ for t in np.arange(0.9, 0.0, -0.01):
         scenario_a_thresh = t
         scenario_a_p, scenario_a_r = p, r
         break
-```
 
-Run your file. You should see:
-```
-Threshold:    ~0.20
-Recall:       ~0.980
-Precision:    ~0.784
-Estimated daily alerts: ~1250
-```
-
----
-
-## Step 6: Scenario B: High Fidelity (Precision >= 0.95)
-
-Find the LOWEST threshold where precision >= 0.95. Print the threshold, precision, recall, and daily alert count.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Scenario B: Trusted alerts only (precision >= 0.95)")
 print("=" * 60)
@@ -163,25 +90,7 @@ for t in np.arange(0.0, 0.95, 0.01):
         scenario_b_thresh = t
         scenario_b_p, scenario_b_r = p, r
         break
-```
 
-Run your file. You should see:
-```
-Threshold:    ~0.68
-Precision:    ~0.951
-Recall:       ~0.760
-Estimated daily alerts: ~400
-```
-
----
-
-## Step 7: TASK 4 (BONUS) — Stakeholder Report
-
-For both thresholds, print a human-readable paragraph describing the tradeoff in business terms (attacks per day, false alarms per day, analyst hours at 5 minutes per alert review).
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Stakeholder report")
 print("=" * 60)
@@ -204,10 +113,3 @@ for label, thresh, p, r in [
     print(f"  False alarms per day:       {false_alarms_day}")
     print(f"  Total analyst reviews/day:  {alerts_per_day}")
     print(f"  Estimated analyst time:     {analyst_hours_day:.1f} hours/day")
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching solution file `05_solution_threshold_tuning.py` if anything looks different.

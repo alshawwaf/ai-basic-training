@@ -2,7 +2,7 @@
 ## Exploring Data Before You Train
 
 > **Read first:** [../notes.md](../notes.md) — theory and concepts
-> **Reference solution:** [reference_solution.py](reference_solution.py) — open only after finishing all exercises
+> **Reference solutions:** Each exercise has a matching `_solution_` file (e.g. `01_solution_loading_data.py`) — open only after finishing the exercise
 
 ---
 
@@ -20,7 +20,7 @@ Each exercise file is self-contained — it loads the data for you and gives you
 
 Every task shows you the **expected output** in a comment. Run the file after each task and verify your output matches before moving on.
 
-When you are done, open [reference_solution.py](reference_solution.py) to compare your code.
+When you are done, compare your code against the matching `_solution_` file for each exercise.
 
 ---
 
@@ -66,9 +66,8 @@ Replace `exercise1_loading_data` with whichever exercise you are working on.
 
 Once all 5 exercises run cleanly:
 
-1. Open [reference_solution.py](reference_solution.py) and compare it to your code
-2. The reference has more inline comments explaining *why* — read those
-3. Try the extended exercises in the `EXERCISES` section at the bottom of the reference
+1. Compare your code against the matching `_solution_` file for each exercise
+2. Review any differences and make sure you understand why
 
 ---
 

@@ -1,35 +1,10 @@
-# Lab -- Exercise 4: Depth and Overfitting
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise4_depth_and_overfitting.py` in this folder.
-
----
-
-## Step 2: Add the imports
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-```
 
----
-
-## Step 3: Set up the dataset
-
-This code creates the data for this exercise. Add it after the imports:
-
-```python
 np.random.seed(42)
 n_per_class = 500
 def make_traffic():
@@ -81,17 +56,7 @@ y = df['label']
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
-```
 
----
-
-## Step 4: Depth Sweep (Depths 1 to 15)
-
-For each depth from 1 to 15: - Train a new DecisionTreeClassifier with that max_depth - Record training accuracy and test accuracy
-
-Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Depth sweep (max_depth 1 to 15)")
 print("=" * 60)
@@ -107,27 +72,7 @@ for d in depths:
     train_accs.append(tr)
     test_accs.append(te)
     print(f"{d:>5} | {tr:>9.3f} | {te:>8.3f} | {tr-te:>6.3f}")
-```
 
-Run your file. You should see:
-```
-Depth | Train Acc | Test Acc |    Gap
-----------------------------------------
-1 |     0.652 |    0.648 |  0.004
-2 |     0.839 |    0.832 |  0.007
-...
-15 |     1.000 |    0.943 |  0.057
-```
-
----
-
-## Step 5: Find the Sweet Spot
-
-Identify: 1. The depth with the highest test accuracy 2. The depth with the smallest train/test gap (ignoring depth=1 if accuracy < 0.8)
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — Find the optimal depth")
 print("=" * 60)
@@ -135,23 +80,7 @@ best_test_depth = depths[np.argmax(test_accs)]   # need to run Task 1 first
 best_test_acc   = max(test_accs)
 print(f"Best test accuracy: {best_test_acc:.3f} at depth={best_test_depth}")
 print(f"Recommended max_depth: {best_test_depth}")
-```
 
-Run your file. You should see:
-```
-Best test accuracy: ~0.967 at depth=5
-Recommended max_depth: 5
-```
-
----
-
-## Step 6: Plot the Depth Sweep
-
-Create a line plot: - x-axis: depth (1 to 15) - y-axis: accuracy (0 to 1)
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Train vs test accuracy plot")
 print("=" * 60)
@@ -167,17 +96,7 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
-```
 
----
-
-## Step 7: TASK 4 (BONUS) — Compare Underfit vs Good Fit vs Overfit
-
-Train three models: depth=1 (underfit), depth=5 (good), depth=15 (overfit). Print classification_report for each on the test set. Comment on how the per-class metrics change.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Underfit vs good fit vs overfit")
 print("=" * 60)
@@ -187,20 +106,3 @@ for depth, label in [(1, "Underfit"), (5, "Good fit"), (15, "Overfit")]:
     y_pred = m.predict(X_test)
     print(f"\n--- depth={depth} ({label}) ---")
     print(classification_report(y_test, y_pred, target_names=CLASS_NAMES))
-```
-
-Run your file. You should see:
-```
---- depth=1 (Underfit) ---
-accuracy ~0.65; classes confused
---- depth=5 (Good fit) ---
-accuracy ~0.97; all classes well-separated
---- depth=15 (Overfit) ---
-accuracy ~0.94; slightly worse than depth=5; DoS and exfil have more confusion
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching `04_solution_depth_and_overfitting.py` file if anything looks different.

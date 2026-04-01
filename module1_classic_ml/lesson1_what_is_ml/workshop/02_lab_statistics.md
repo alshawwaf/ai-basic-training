@@ -111,4 +111,4 @@ print("\n--- Exercise 2 complete. Move to exercise3_class_balance.py ---")
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `_solution_` file (`02_solution_statistics.py`) if anything looks different.

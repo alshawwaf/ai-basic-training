@@ -1,20 +1,3 @@
-# Lab — Exercise 3: Fit and Predict
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise3_fit_and_predict.py` in this folder.
-
----
-
-## Step 2: Add the imports and setup
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,15 +17,7 @@ y = df["response_time_ms"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
-```
 
----
-
-## Step 3: Fit the model and inspect its parameters
-
-After `.fit()`, `model.coef_[0]` is the slope and `model.intercept_` is the y-intercept. Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Fit the model, inspect slope and intercept")
 print("=" * 60)
@@ -53,21 +28,7 @@ slope     = model.coef_[0]
 intercept = model.intercept_
 print(f"Slope (coef):  {slope:.2f} ms per request/second")
 print(f"Intercept:     {intercept:.2f} ms (baseline overhead)")
-```
 
-Run your file. You should see:
-```
-Slope (coef):  1.82 ms per request/second
-Intercept:     29.47 ms (baseline overhead)
-```
-
----
-
-## Step 4: Predict on the test set
-
-`model.predict(X_test)` applies the learned equation to every row in the test set. Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — Predictions vs actuals (first 5 rows)")
 print("=" * 60)
@@ -79,17 +40,7 @@ results = pd.DataFrame({
     'residual':  y_test.values - y_pred
 })
 print(results.head().round(1).to_string(index=False))
-```
 
-Run your file. The residuals (actual minus predicted) should be small — mostly within ±20 ms.
-
----
-
-## Step 5: Predict at specific load values
-
-`model.predict()` requires a 2D input — use `np.array([[value]])` for a single prediction. Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Predictions at specific load values")
 print("=" * 60)
@@ -98,22 +49,7 @@ load_values = np.array([[50], [100], [150]])
 predictions = model.predict(load_values)
 for rps, ms in zip([50, 100, 150], predictions):
     print(f"At {rps:3d} rps: predicted response time = {ms:.1f} ms")
-```
 
-Run your file. You should see:
-```
-At  50 rps: predicted response time = 120.5 ms
-At 100 rps: predicted response time = 211.5 ms
-At 150 rps: predicted response time = 302.5 ms
-```
-
----
-
-## Step 6: Visualise the regression line
-
-Plot the test set as scatter and overlay the fitted line in red. Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Regression line visualisation")
 print("=" * 60)
@@ -130,18 +66,5 @@ plt.title("Server Load vs Response Time — Regression Line")
 plt.legend()
 plt.tight_layout()
 plt.show()
-```
 
----
-
-## Step 7: Add the completion message
-
-```python
 print("\n--- Exercise 3 complete. Move to exercise4_evaluate_regression.py ---")
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching `03_solution_fit_and_predict.py` file if anything looks different.

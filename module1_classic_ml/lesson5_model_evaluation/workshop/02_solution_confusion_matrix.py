@@ -1,20 +1,3 @@
-# Lab -- Exercise 2: Confusion Matrix
-
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
-
----
-
-## Step 1: Create your script file
-
-Create a new file called `exercise2_confusion_matrix.py` in this folder.
-
----
-
-## Step 2: Add the imports
-
-Copy this to the top of your file:
-
-```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -27,15 +10,7 @@ try:
     HAS_SEABORN = True
 except ImportError:
     HAS_SEABORN = False
-```
 
----
-
-## Step 3: Set up the dataset
-
-This code creates the data for this exercise. Add it after the imports:
-
-```python
 np.random.seed(42)
 n_total, n_attack, n_benign = 10_000, 500, 9_500
 benign_data = np.column_stack([
@@ -61,17 +36,7 @@ X_te_sc = scaler.transform(X_test)
 model   = LogisticRegression(random_state=42, max_iter=1000)
 model.fit(X_tr_sc, y_train)
 y_pred  = model.predict(X_te_sc)
-```
 
----
-
-## Step 4: Compute TN, FP, FN, TP Manually
-
-Using boolean operations on y_test and y_pred arrays, compute each cell. Print each value with its security meaning.
-
-Add this to your file:
-
-```python
 print("=" * 60)
 print("TASK 1 — Manual confusion matrix values")
 print("=" * 60)
@@ -84,26 +49,7 @@ print(f"False Positives (FP) = {FP:4d}  — benign falsely flagged (alert fatigu
 print(f"False Negatives (FN) = {FN:4d}  — ATTACKS MISSED! (most dangerous)")
 print(f"True Positives  (TP) = {TP:4d}  — attacks correctly caught")
 print(f"\nTotal: {TP+TN+FP+FN} (should be {len(y_test)})")
-```
 
-Run your file. You should see:
-```
-True Negatives  (TN) = 1888  — benign correctly ignored
-False Positives (FP) =   12  — benign falsely flagged
-False Negatives (FN) =   28  — ATTACKS MISSED!
-True Positives  (TP) =   72  — attacks correctly caught
-Total: 2000
-```
-
----
-
-## Step 5: Verify with sklearn
-
-Use sklearn's confusion_matrix() to get the 2x2 array. Print it as a labelled table. Verify it matches Task 1's values.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 2 — sklearn confusion matrix")
 print("=" * 60)
@@ -113,25 +59,7 @@ print(f"Actual Benign      {cm[0,0]:6d}            {cm[0,1]:6d}")
 print(f"Actual Attack      {cm[1,0]:6d}            {cm[1,1]:6d}")
 matches = (cm[0,0]==TN and cm[0,1]==FP and cm[1,0]==FN and cm[1,1]==TP)
 print(f"\nMatches manual calculation: {matches} {'✓' if matches else '✗'}")
-```
 
-Run your file. You should see:
-```
-Predicted Benign  Predicted Attack
-Actual Benign        1888               12
-Actual Attack          28               72
-Matches manual calculation: True ✓
-```
-
----
-
-## Step 6: Derive All Metrics from TP/TN/FP/FN
-
-Using only TP, TN, FP, FN (the variables from Task 1), compute: accuracy, precision, recall, specificity, F1 Print each with its formula as a comment.
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 3 — Metrics derived from confusion matrix")
 print("=" * 60)
@@ -145,26 +73,7 @@ print(f"Precision   = TP/(TP+FP)             = {precision:.3f}")
 print(f"Recall      = TP/(TP+FN)             = {recall:.3f}")
 print(f"Specificity = TN/(TN+FP)             = {specificity:.3f}")
 print(f"F1          = 2*P*R/(P+R)            = {f1:.3f}")
-```
 
-Run your file. You should see:
-```
-Accuracy    = 0.980
-Precision   = 0.857
-Recall      = 0.720
-Specificity = 0.994
-F1          = 0.783
-```
-
----
-
-## Step 7: TASK 4 (BONUS) — Confusion Matrix Heatmap
-
-Create a seaborn heatmap of the confusion matrix. Annotate each cell with its count AND percentage of total. Label axes: "Predicted" (x) and "Actual" (y).
-
-Add this to your file:
-
-```python
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Heatmap visualisation")
 print("=" * 60)
@@ -184,10 +93,3 @@ if HAS_SEABORN:
     plt.show()
 else:
     print("seaborn not installed — skipping heatmap")
-```
-
----
-
-## Your completed script
-
-At this point your file contains all the working code. Compare it against the matching solution file `02_solution_confusion_matrix.py` if anything looks different.

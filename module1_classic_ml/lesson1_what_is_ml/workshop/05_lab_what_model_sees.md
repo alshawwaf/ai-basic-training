@@ -110,7 +110,7 @@ print("\n--- Exercise 5 complete ---")
 print("You have completed all 5 exercises for Lesson 1.1.")
 print("")
 print("Next steps:")
-print("  1. Open reference_solution.py to compare your code")
+print("  1. Open the matching solution file to compare your code")
 print("  2. Read the theory notes: ../notes.md")
 print("  3. Move to Lesson 1.2: ../../../lesson2_linear_regression/")
 ```
@@ -119,4 +119,4 @@ print("  3. Move to Lesson 1.2: ../../../lesson2_linear_regression/")
 
 ## Your completed script
 
-At this point your file contains all the working code. Compare it against `reference_solution.py` if anything looks different.
+At this point your file contains all the working code. Compare it against the matching `_solution_` file (`05_solution_what_model_sees.py`) if anything looks different.

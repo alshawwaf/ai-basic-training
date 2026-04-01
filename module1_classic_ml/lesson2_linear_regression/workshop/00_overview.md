@@ -2,7 +2,7 @@
 ## Predicting Server Response Time and Detecting DoS Anomalies
 
 > Read first: [../notes.md](../notes.md)
-> Reference: [reference_solution.py](reference_solution.py)
+> Reference: Each exercise has a matching `_solution_` file (e.g. `01_solution_understanding_regression.py`)
 
 ## What This Workshop Covers
 

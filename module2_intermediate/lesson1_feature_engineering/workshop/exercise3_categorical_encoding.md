@@ -36,6 +36,8 @@ Now there is no implied ordering. Each protocol is independent.
 | OneHotEncoder | Linear models, neural networks, any model that uses distances |
 | Ordinal encoding | Categories have a natural order (low/medium/high) |
 
+> **Want to go deeper?** [One-hot encoding (Wikipedia)](https://en.wikipedia.org/wiki/One-hot)
+
 ---
 
 ## Concept: The Dummy Variable Trap

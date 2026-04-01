@@ -12,11 +12,11 @@ In this workshop you will discover why accuracy is a dangerous metric for imbala
 
 | # | Guide | Exercise file | Topic |
 |---|-------|---------------|-------|
-| 1 | [exercise1_the_accuracy_trap.md](exercise1_the_accuracy_trap.md) | [exercise1_the_accuracy_trap.py](exercise1_the_accuracy_trap.py) | DummyClassifier, 95% accuracy that catches 0 attacks |
-| 2 | [exercise2_confusion_matrix.md](exercise2_confusion_matrix.md) | [exercise2_confusion_matrix.py](exercise2_confusion_matrix.py) | TP/TN/FP/FN for security, compute manually and with sklearn |
-| 3 | [exercise3_precision_recall_f1.md](exercise3_precision_recall_f1.md) | [exercise3_precision_recall_f1.py](exercise3_precision_recall_f1.py) | Precision, recall, F1, security tradeoffs |
-| 4 | [exercise4_roc_and_auc.md](exercise4_roc_and_auc.md) | [exercise4_roc_and_auc.py](exercise4_roc_and_auc.py) | ROC curve, AUC, compare three models |
-| 5 | [exercise5_threshold_tuning.md](exercise5_threshold_tuning.md) | [exercise5_threshold_tuning.py](exercise5_threshold_tuning.py) | Threshold sensitivity, pick for use case |
+| 1 | [exercise1_the_accuracy_trap.md](exercise1_the_accuracy_trap.md) | [exercise1_the_accuracy_trap_lab.md](exercise1_the_accuracy_trap_lab.md) | DummyClassifier, 95% accuracy that catches 0 attacks |
+| 2 | [exercise2_confusion_matrix.md](exercise2_confusion_matrix.md) | [exercise2_confusion_matrix_lab.md](exercise2_confusion_matrix_lab.md) | TP/TN/FP/FN for security, compute manually and with sklearn |
+| 3 | [exercise3_precision_recall_f1.md](exercise3_precision_recall_f1.md) | [exercise3_precision_recall_f1_lab.md](exercise3_precision_recall_f1_lab.md) | Precision, recall, F1, security tradeoffs |
+| 4 | [exercise4_roc_and_auc.md](exercise4_roc_and_auc.md) | [exercise4_roc_and_auc_lab.md](exercise4_roc_and_auc_lab.md) | ROC curve, AUC, compare three models |
+| 5 | [exercise5_threshold_tuning.md](exercise5_threshold_tuning.md) | [exercise5_threshold_tuning_lab.md](exercise5_threshold_tuning_lab.md) | Threshold sensitivity, pick for use case |
 
 ## Running an Exercise
 

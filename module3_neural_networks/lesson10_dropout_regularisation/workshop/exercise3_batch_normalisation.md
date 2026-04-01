@@ -52,6 +52,8 @@ The result: each layer always receives inputs with approximately mean=0 and std=
 
 The smoothing effect makes it much easier to spot overfitting — the val_loss trend is cleaner.
 
+> **Want to go deeper?** [Batch normalisation (Wikipedia)](https://en.wikipedia.org/wiki/Batch_normalization)
+
 ---
 
 ## Concept: Where to Place BatchNorm
@@ -120,7 +122,7 @@ Asymm train loss std (first 20 epochs):   ~0.025
 
 ## Now Open the Exercise File
 
-[exercise3_batch_normalisation.py](exercise3_batch_normalisation.py)
+[exercise3_batch_normalisation_lab.md](exercise3_batch_normalisation_lab.md)
 
 ## Next
 

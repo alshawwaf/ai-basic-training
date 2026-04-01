@@ -79,6 +79,8 @@ Opens the display window. On some systems this blocks execution until you close 
 
 ## Concept: Filtering with Boolean Masks
 
+> **Want to go deeper?** [pandas — Wikipedia](https://en.wikipedia.org/wiki/Pandas_(software))
+
 ```python
 samples = digits.images[digits.target == 3]
 ```
@@ -189,7 +191,7 @@ The directory in the save path must already exist. Run from the repo root so the
 
 ## Now Open the Exercise File
 
-[exercise4_visualise.py](exercise4_visualise.py)
+[exercise4_visualise_lab.md](exercise4_visualise_lab.md)
 
 ---
 

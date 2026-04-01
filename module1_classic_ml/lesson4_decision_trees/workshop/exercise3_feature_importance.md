@@ -13,6 +13,8 @@
 
 ## Concept: What feature_importances_ Measures
 
+> **Want to go deeper?** [Decision tree learning — Wikipedia](https://en.wikipedia.org/wiki/Decision_tree_learning)
+
 After training, `model.feature_importances_` is an array with one value per feature. Each value represents the total **information gain** contributed by that feature across all splits in the tree, normalised so all values sum to 1.0.
 
 ```

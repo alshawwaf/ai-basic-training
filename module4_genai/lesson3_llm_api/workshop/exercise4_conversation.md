@@ -104,7 +104,7 @@ Build a simple `while True` input loop that lets you type questions. Maintain th
 
 ## Now Open the Exercise File
 
-[exercise4_conversation.py](exercise4_conversation.py)
+[exercise4_conversation_lab.md](exercise4_conversation_lab.md)
 
 ---
 

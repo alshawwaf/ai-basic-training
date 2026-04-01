@@ -40,6 +40,8 @@ Each gradient update uses only the samples in that batch to compute the gradient
 
 The noise from small batches acts as implicit **regularisation** — it prevents the model from settling into sharp, narrow minima that don't generalise. This is counter-intuitive but well-established empirically.
 
+> **Want to go deeper?** [Gradient descent (Wikipedia)](https://en.wikipedia.org/wiki/Gradient_descent)
+
 ---
 
 ## Concept: The Sharp vs Flat Minima Insight
@@ -118,7 +120,7 @@ On CPU, very small batches have overhead per update. On GPU the relationship is 
 
 ## Now Open the Exercise File
 
-[exercise3_batch_size_effects.py](exercise3_batch_size_effects.py)
+[exercise3_batch_size_effects_lab.md](exercise3_batch_size_effects_lab.md)
 
 ---
 

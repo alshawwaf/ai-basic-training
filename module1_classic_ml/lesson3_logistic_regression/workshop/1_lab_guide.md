@@ -12,10 +12,10 @@ In this workshop you will build a logistic regression classifier that distinguis
 
 | # | Guide | Exercise file | Topic |
 |---|-------|---------------|-------|
-| 1 | [exercise1_from_regression_to_classification.md](exercise1_from_regression_to_classification.md) | [exercise1_from_regression_to_classification.py](exercise1_from_regression_to_classification.py) | What makes it classification, the sigmoid function, probability outputs |
-| 2 | [exercise2_feature_engineering_urls.md](exercise2_feature_engineering_urls.md) | [exercise2_feature_engineering_urls.py](exercise2_feature_engineering_urls.py) | Why URL features matter for phishing detection, dataset creation and inspection |
-| 3 | [exercise3_train_and_evaluate.md](exercise3_train_and_evaluate.md) | [exercise3_train_and_evaluate.py](exercise3_train_and_evaluate.py) | LogisticRegression, StandardScaler, classification_report, confusion matrix |
-| 4 | [exercise4_threshold_tuning.md](exercise4_threshold_tuning.md) | [exercise4_threshold_tuning.py](exercise4_threshold_tuning.py) | predict_proba(), why 0.5 is not always right, precision-recall tradeoff |
+| 1 | [exercise1_from_regression_to_classification.md](exercise1_from_regression_to_classification.md) | [exercise1_from_regression_to_classification_lab.md](exercise1_from_regression_to_classification_lab.md) | What makes it classification, the sigmoid function, probability outputs |
+| 2 | [exercise2_feature_engineering_urls.md](exercise2_feature_engineering_urls.md) | [exercise2_feature_engineering_urls_lab.md](exercise2_feature_engineering_urls_lab.md) | Why URL features matter for phishing detection, dataset creation and inspection |
+| 3 | [exercise3_train_and_evaluate.md](exercise3_train_and_evaluate.md) | [exercise3_train_and_evaluate_lab.md](exercise3_train_and_evaluate_lab.md) | LogisticRegression, StandardScaler, classification_report, confusion matrix |
+| 4 | [exercise4_threshold_tuning.md](exercise4_threshold_tuning.md) | [exercise4_threshold_tuning_lab.md](exercise4_threshold_tuning_lab.md) | predict_proba(), why 0.5 is not always right, precision-recall tradeoff |
 
 ## Running an Exercise
 

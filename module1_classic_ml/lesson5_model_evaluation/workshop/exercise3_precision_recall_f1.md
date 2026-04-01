@@ -13,6 +13,8 @@
 
 ## Concept: Precision vs Recall
 
+> **Want to go deeper?** [Precision and recall — Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall)
+
 **Precision** answers: "Of all the alerts my system raised, what fraction were real attacks?"
 - High precision = low false alarm rate = analysts can trust alerts
 - Low precision = alert fatigue = analysts start ignoring alerts

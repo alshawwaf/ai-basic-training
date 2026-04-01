@@ -12,10 +12,10 @@ In this workshop you will build a decision tree classifier that identifies four 
 
 | # | Guide | Exercise file | Topic |
 |---|-------|---------------|-------|
-| 1 | [exercise1_how_trees_make_decisions.md](exercise1_how_trees_make_decisions.md) | [exercise1_how_trees_make_decisions.py](exercise1_how_trees_make_decisions.py) | The if/else concept, Gini impurity, information gain |
-| 2 | [exercise2_train_and_read_the_tree.md](exercise2_train_and_read_the_tree.md) | [exercise2_train_and_read_the_tree.py](exercise2_train_and_read_the_tree.py) | DecisionTreeClassifier, plot_tree(), interpret rules |
-| 3 | [exercise3_feature_importance.md](exercise3_feature_importance.md) | [exercise3_feature_importance.py](exercise3_feature_importance.py) | .feature_importances_, which network features matter most |
-| 4 | [exercise4_depth_and_overfitting.md](exercise4_depth_and_overfitting.md) | [exercise4_depth_and_overfitting.py](exercise4_depth_and_overfitting.py) | max_depth sweep, train vs test accuracy, sweet spot |
+| 1 | [exercise1_how_trees_make_decisions.md](exercise1_how_trees_make_decisions.md) | [exercise1_how_trees_make_decisions_lab.md](exercise1_how_trees_make_decisions_lab.md) | The if/else concept, Gini impurity, information gain |
+| 2 | [exercise2_train_and_read_the_tree.md](exercise2_train_and_read_the_tree.md) | [exercise2_train_and_read_the_tree_lab.md](exercise2_train_and_read_the_tree_lab.md) | DecisionTreeClassifier, plot_tree(), interpret rules |
+| 3 | [exercise3_feature_importance.md](exercise3_feature_importance.md) | [exercise3_feature_importance_lab.md](exercise3_feature_importance_lab.md) | .feature_importances_, which network features matter most |
+| 4 | [exercise4_depth_and_overfitting.md](exercise4_depth_and_overfitting.md) | [exercise4_depth_and_overfitting_lab.md](exercise4_depth_and_overfitting_lab.md) | max_depth sweep, train vs test accuracy, sweet spot |
 
 ## Running an Exercise
 

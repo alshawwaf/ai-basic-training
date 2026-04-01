@@ -25,6 +25,8 @@ distances = np.min(kmeans.transform(X_scaled), axis=1)
 
 `kmeans.transform(X_scaled)` returns an (n, K) matrix of distances from each sample to each centroid. `np.min(..., axis=1)` gives the distance to the nearest centroid.
 
+> **Want to go deeper?** [Anomaly detection (Wikipedia)](https://en.wikipedia.org/wiki/Anomaly_detection)
+
 ---
 
 ## Concept: Setting the Threshold

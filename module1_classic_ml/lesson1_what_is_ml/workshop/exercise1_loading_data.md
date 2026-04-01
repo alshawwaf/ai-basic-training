@@ -228,7 +228,7 @@ You haven't added the target column yet. The line `df["target"] = digits.target`
 
 ## Now Open the Exercise File
 
-[exercise1_loading_data.py](exercise1_loading_data.py)
+[exercise1_loading_data_lab.md](exercise1_loading_data_lab.md)
 
 Fill in each `# >>> YOUR CODE HERE` block, run after each task, and verify your output matches.
 

@@ -101,7 +101,7 @@ Query: "how to detect LSASS memory access?"
 
 ## Now Open the Exercise File
 
-[exercise2_retrieval.py](exercise2_retrieval.py)
+[exercise2_retrieval_lab.md](exercise2_retrieval_lab.md)
 
 ---
 

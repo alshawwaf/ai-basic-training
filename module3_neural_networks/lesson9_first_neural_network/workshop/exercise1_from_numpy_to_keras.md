@@ -47,6 +47,8 @@ Input (shape: 4)  →  Dense(8, relu)  →  Dense(1, sigmoid)  →  Output (shap
 
 You only need to specify `input_shape` on the first layer. Keras infers the rest.
 
+> **Want to go deeper?** [Keras Sequential Model (keras.io)](https://keras.io/guides/sequential_model/)
+
 ---
 
 ## Concept: Counting Parameters
@@ -134,7 +136,7 @@ Architecture [256, 128, 64, 1]: ~67,393 params
 
 ## Now Open the Exercise File
 
-[exercise1_from_numpy_to_keras.py](exercise1_from_numpy_to_keras.py)
+[exercise1_from_numpy_to_keras_lab.md](exercise1_from_numpy_to_keras_lab.md)
 
 ## Next
 

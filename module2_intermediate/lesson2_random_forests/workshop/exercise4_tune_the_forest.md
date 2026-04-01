@@ -25,6 +25,8 @@ Adding trees always reduces variance — but the improvement shrinks quickly:
 
 The "elbow" of the learning curve — where accuracy plateaus — is usually around 100–200 trees. Beyond that, you are paying CPU time for tiny gains.
 
+> **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)
+
 ---
 
 ## Concept: max_features — Diversity vs Quality

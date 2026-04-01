@@ -20,6 +20,8 @@ In supervised learning (Lessons 1.2–2.2), every training sample has a label. I
 
 Unsupervised learning finds structure without labels. K-Means groups samples by similarity. The insight: normal traffic is **repetitive and predictable** — same devices, same services, same ports, day after day. This repetition creates dense clusters. Attacks are **unusual** — different traffic patterns, unexpected ports, abnormal volumes — and appear far from the dense normal clusters.
 
+> **Want to go deeper?** [Anomaly detection (Wikipedia)](https://en.wikipedia.org/wiki/Anomaly_detection)
+
 ---
 
 ## Concept: Why Normal Behaviour Clusters

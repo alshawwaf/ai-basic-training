@@ -125,7 +125,7 @@ Make sure your reverse vocabulary (ID→word) matches your forward vocabulary ex
 
 ## Now Open the Exercise File
 
-[exercise1_tokenisation.py](exercise1_tokenisation.py)
+[exercise1_tokenisation_lab.md](exercise1_tokenisation_lab.md)
 
 ---
 

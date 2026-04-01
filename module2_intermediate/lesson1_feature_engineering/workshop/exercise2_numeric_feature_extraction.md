@@ -22,6 +22,8 @@ Raw numeric fields like `bytes_sent` and `duration` are useful, but their *combi
 | `bytes_sent`, `bytes_received` | `bytes_ratio` | Asymmetric connections (much more sent than received) suggest upload/exfil |
 | `bytes_sent`, `packets` | `bytes_per_packet` | Large bytes/packet = file transfer; small = control traffic |
 
+> **Want to go deeper?** [Feature engineering (Wikipedia)](https://en.wikipedia.org/wiki/Feature_engineering)
+
 ---
 
 ## Concept: Port Risk Scores

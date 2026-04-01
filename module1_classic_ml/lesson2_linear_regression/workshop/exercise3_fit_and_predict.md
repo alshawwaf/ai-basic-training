@@ -13,6 +13,8 @@
 
 ## Concept: What model.fit() Does
 
+> **Want to go deeper?** [Gradient descent — Wikipedia](https://en.wikipedia.org/wiki/Gradient_descent)
+
 When you call `LinearRegression().fit(X_train, y_train)`, sklearn finds the slope and intercept that minimise the **sum of squared residuals** — the total squared distance between each actual value and the model's prediction.
 
 For simple linear regression (one feature):

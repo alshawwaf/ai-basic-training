@@ -13,6 +13,8 @@
 
 ## Concept: Regression vs Classification
 
+> **Want to go deeper?** [Linear regression — Wikipedia](https://en.wikipedia.org/wiki/Linear_regression)
+
 Machine learning problems divide into two broad types depending on what you are trying to predict.
 
 | Property | Regression | Classification |

@@ -33,6 +33,8 @@ rf = RandomForestClassifier(
 | `max_depth` | Limits individual tree depth; but random forests are usually grown fully |
 | `oob_score` | If True, computes OOB accuracy automatically (free; no extra data needed) |
 
+> **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)
+
 ---
 
 ## Concept: Feature Subsampling

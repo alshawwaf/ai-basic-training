@@ -115,7 +115,7 @@ Descriptive labels work better than generic ones. "malicious network activity" o
 
 ## Now Open the Exercise File
 
-[exercise1_zero_shot_classification.py](exercise1_zero_shot_classification.py)
+[exercise1_zero_shot_classification_lab.md](exercise1_zero_shot_classification_lab.md)
 
 ---
 

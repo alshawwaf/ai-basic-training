@@ -59,6 +59,8 @@ This ensemble effect is what makes Dropout so effective. A model with Dropout(0.
 
 The original Dropout paper (Srivastava et al.) recommended 0.5 for fully connected layers. In practice, 0.2–0.3 is the most common starting point.
 
+> **Want to go deeper?** [Dropout regularisation (Wikipedia)](https://en.wikipedia.org/wiki/Dilution_(neural_networks))
+
 ---
 
 ## What Each Task Asks You to Do
@@ -107,7 +109,7 @@ TASK 4 (BONUS):
 
 ## Now Open the Exercise File
 
-[exercise2_add_dropout.py](exercise2_add_dropout.py)
+[exercise2_add_dropout_lab.md](exercise2_add_dropout_lab.md)
 
 ## Next
 

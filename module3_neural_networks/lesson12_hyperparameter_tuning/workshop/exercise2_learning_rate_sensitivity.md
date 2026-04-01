@@ -30,6 +30,8 @@ lr=0.01    →  bigger steps →  faster early, may oscillate near minimum
 lr=0.1     →  huge steps   →  often diverges (loss explodes or oscillates wildly)
 ```
 
+> **Want to go deeper?** [Learning rate (Wikipedia)](https://en.wikipedia.org/wiki/Learning_rate)
+
 ---
 
 ## Concept: The Three Training Failure Modes
@@ -132,7 +134,7 @@ Neural network training has randomness. Set `tf.random.set_seed(42)` and `np.ran
 
 ## Now Open the Exercise File
 
-[exercise2_learning_rate_sensitivity.py](exercise2_learning_rate_sensitivity.py)
+[exercise2_learning_rate_sensitivity_lab.md](exercise2_learning_rate_sensitivity_lab.md)
 
 ---
 

@@ -35,6 +35,8 @@ train_scores, val_scores = validation_curve(
 
 The result shapes are both `(n_param_values, n_cv_folds)`. Take `.mean(axis=1)` and `.std(axis=1)` for summary statistics.
 
+> **Want to go deeper?** [Cross-validation (Wikipedia)](https://en.wikipedia.org/wiki/Cross-validation_(statistics))
+
 ---
 
 ## Concept: Reading the Three Regions
@@ -141,7 +143,7 @@ At depth=20:
 
 ## Now Open the Exercise File
 
-[exercise4_validation_curve.py](exercise4_validation_curve.py)
+[exercise4_validation_curve_lab.md](exercise4_validation_curve_lab.md)
 
 ## Next
 

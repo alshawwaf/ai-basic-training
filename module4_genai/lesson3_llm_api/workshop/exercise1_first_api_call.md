@@ -112,7 +112,7 @@ Analysis: This log entry indicates a brute-force SSH attack...
 
 ## Now Open the Exercise File
 
-[exercise1_first_api_call.py](exercise1_first_api_call.py)
+[exercise1_first_api_call_lab.md](exercise1_first_api_call_lab.md)
 
 ---
 

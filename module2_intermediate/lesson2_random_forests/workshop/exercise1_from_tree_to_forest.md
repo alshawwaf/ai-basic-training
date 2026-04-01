@@ -22,6 +22,8 @@ Single tree (no limit):
   Test accuracy:     0.891   (gap of 0.109 = overfitting)
 ```
 
+> **Want to go deeper?** [Decision tree learning (Wikipedia)](https://en.wikipedia.org/wiki/Decision_tree_learning)
+
 ---
 
 ## Concept: Bootstrap Aggregation (Bagging)
@@ -35,6 +37,8 @@ Bagging creates diversity among trees:
 Because each tree sees a different random subset, no single noisy point can dominate all trees. The ensemble averages out errors.
 
 **Out-of-Bag (OOB) samples:** In each bootstrap sample, ~37% of training rows are *not* sampled. These "out-of-bag" samples can be used as a free validation set, giving an unbiased estimate of test performance without a separate hold-out set.
+
+> **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)
 
 ---
 

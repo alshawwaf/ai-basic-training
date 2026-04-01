@@ -47,6 +47,8 @@ At the end, sort by val_accuracy and pick the winner.
 
 This is the brute-force approach. It works fine when the search space is small. For larger spaces, Bayesian optimisation (used by Keras Tuner, Optuna) is more efficient.
 
+> **Want to go deeper?** [Hyperparameter optimisation (Wikipedia)](https://en.wikipedia.org/wiki/Hyperparameter_optimization)
+
 ---
 
 ## Concept: Why Deeper Is Not Always Better

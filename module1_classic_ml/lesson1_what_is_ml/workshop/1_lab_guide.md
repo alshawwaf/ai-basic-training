@@ -30,11 +30,11 @@ Work through them in order — each one builds on the previous.
 
 | # | Guide | Exercise file | Topic |
 |---|-------|---------------|-------|
-| 1 | [exercise1_loading_data.md](exercise1_loading_data.md) | [exercise1_loading_data.py](exercise1_loading_data.py) | Loading a dataset — Bunch, DataFrame, features vs labels |
-| 2 | [exercise2_statistics.md](exercise2_statistics.md) | [exercise2_statistics.py](exercise2_statistics.py) | Shape and statistics — `.describe()`, missing values, zero-variance features |
-| 3 | [exercise3_class_balance.md](exercise3_class_balance.md) | [exercise3_class_balance.py](exercise3_class_balance.py) | Class balance — the naive accuracy trap, imbalance ratio |
-| 4 | [exercise4_visualise.md](exercise4_visualise.md) | [exercise4_visualise.py](exercise4_visualise.py) | Visualising data — image grids, average prototypes |
-| 5 | [exercise5_what_model_sees.md](exercise5_what_model_sees.md) | [exercise5_what_model_sees.py](exercise5_what_model_sees.py) | What the model sees — number grids, correlations, security analogy |
+| 1 | [exercise1_loading_data.md](exercise1_loading_data.md) | [exercise1_loading_data_lab.md](exercise1_loading_data_lab.md) | Loading a dataset — Bunch, DataFrame, features vs labels |
+| 2 | [exercise2_statistics.md](exercise2_statistics.md) | [exercise2_statistics_lab.md](exercise2_statistics_lab.md) | Shape and statistics — `.describe()`, missing values, zero-variance features |
+| 3 | [exercise3_class_balance.md](exercise3_class_balance.md) | [exercise3_class_balance_lab.md](exercise3_class_balance_lab.md) | Class balance — the naive accuracy trap, imbalance ratio |
+| 4 | [exercise4_visualise.md](exercise4_visualise.md) | [exercise4_visualise_lab.md](exercise4_visualise_lab.md) | Visualising data — image grids, average prototypes |
+| 5 | [exercise5_what_model_sees.md](exercise5_what_model_sees.md) | [exercise5_what_model_sees_lab.md](exercise5_what_model_sees_lab.md) | What the model sees — number grids, correlations, security analogy |
 
 **For each exercise:** read the `.md` guide first, then open the `.py` file and fill in the tasks.
 

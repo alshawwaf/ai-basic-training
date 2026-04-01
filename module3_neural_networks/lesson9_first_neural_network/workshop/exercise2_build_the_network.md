@@ -58,6 +58,8 @@ softmax([2.0, 1.0, 0.1]) → [0.66, 0.24, 0.10]  # sums to 1.0
 
 Use when your problem has 3+ mutually exclusive classes.
 
+> **Want to go deeper?** [Activation function (Wikipedia)](https://en.wikipedia.org/wiki/Activation_function)
+
 ---
 
 ## Concept: Output Layer Design
@@ -87,6 +89,8 @@ model.compile(
 **Adam** (Adaptive Moment Estimation) is the default optimizer for almost all neural networks. It adjusts the learning rate for each weight individually, converging faster than plain gradient descent.
 
 **binary_crossentropy** measures how far a probability prediction is from the true label (0 or 1). It penalises confident wrong predictions heavily.
+
+> **Want to go deeper?** [Cross-entropy (Wikipedia)](https://en.wikipedia.org/wiki/Cross-entropy)
 
 ---
 
@@ -140,7 +144,7 @@ Loss: binary_crossentropy
 
 ## Now Open the Exercise File
 
-[exercise2_build_the_network.py](exercise2_build_the_network.py)
+[exercise2_build_the_network_lab.md](exercise2_build_the_network_lab.md)
 
 ## Next
 

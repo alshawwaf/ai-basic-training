@@ -36,6 +36,8 @@ With 1,600 training samples and `batch_size=32`:
 With `batch_size=1600` (one big batch):
 - **1 gradient update per epoch** — slow learning
 
+> **Want to go deeper?** [Backpropagation (Wikipedia)](https://en.wikipedia.org/wiki/Backpropagation)
+
 ---
 
 ## Concept: The History Object
@@ -147,7 +149,7 @@ Difference (overtraining effect): ~0.007
 
 ## Now Open the Exercise File
 
-[exercise3_compile_and_train.py](exercise3_compile_and_train.py)
+[exercise3_compile_and_train_lab.md](exercise3_compile_and_train_lab.md)
 
 ## Next
 

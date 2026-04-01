@@ -13,6 +13,8 @@
 
 ## Concept: Class Imbalance in Security
 
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
+
 In most real-world security monitoring, attacks are rare:
 
 | Dataset | Typical attack rate |

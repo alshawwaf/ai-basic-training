@@ -24,6 +24,8 @@
 
 **The sweet spot** is the depth where both bias and variance are low enough — validation accuracy is highest.
 
+> **Want to go deeper?** [Bias-variance tradeoff (Wikipedia)](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff)
+
 ---
 
 ## Concept: Security Implications

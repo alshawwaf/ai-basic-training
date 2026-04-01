@@ -52,6 +52,8 @@ Feature engineering is the process of translating raw data into a numerical repr
 
 For network logs, this means computing *behavioural* features that capture what the connection is *doing*, not just its identifiers.
 
+> **Want to go deeper?** [Feature engineering (Wikipedia)](https://en.wikipedia.org/wiki/Feature_engineering)
+
 ---
 
 ## What Each Task Asks You to Do

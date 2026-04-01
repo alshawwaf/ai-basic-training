@@ -15,6 +15,8 @@
 
 ## Concept: The Model's View of the World
 
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
+
 This is the most important conceptual shift in all of machine learning.
 
 A human sees this:
@@ -224,7 +226,7 @@ This is not a one-time exercise. This is how every ML project begins — every s
 
 ## Now Open the Exercise File
 
-[exercise5_what_model_sees.py](exercise5_what_model_sees.py)
+[exercise5_what_model_sees_lab.md](exercise5_what_model_sees_lab.md)
 
 ---
 

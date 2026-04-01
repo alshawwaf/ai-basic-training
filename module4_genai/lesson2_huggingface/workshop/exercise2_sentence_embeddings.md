@@ -106,7 +106,7 @@ Query: Suspicious outbound connection after script execution
 
 ## Now Open the Exercise File
 
-[exercise2_sentence_embeddings.py](exercise2_sentence_embeddings.py)
+[exercise2_sentence_embeddings_lab.md](exercise2_sentence_embeddings_lab.md)
 
 ---
 

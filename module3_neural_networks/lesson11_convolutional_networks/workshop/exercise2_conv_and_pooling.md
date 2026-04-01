@@ -77,6 +77,8 @@ Benefits:
 - Provides small-translation invariance (a feature slightly shifted still activates)
 - No learnable parameters (just a max operation)
 
+> **Want to go deeper?** [Pooling layer (Wikipedia)](https://en.wikipedia.org/wiki/Convolutional_neural_network#Pooling_layer)
+
 ---
 
 ## Concept: Parameter Count
@@ -141,7 +143,7 @@ TASK 4 (BONUS):
 
 ## Now Open the Exercise File
 
-[exercise2_conv_and_pooling.py](exercise2_conv_and_pooling.py)
+[exercise2_conv_and_pooling_lab.md](exercise2_conv_and_pooling_lab.md)
 
 ## Next
 

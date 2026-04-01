@@ -99,7 +99,7 @@ Strong system prompt response:
 
 ## Now Open the Exercise File
 
-[exercise2_system_prompts.py](exercise2_system_prompts.py)
+[exercise2_system_prompts_lab.md](exercise2_system_prompts_lab.md)
 
 ---
 

@@ -103,7 +103,7 @@ Query: how to prevent attackers from moving between systems?
 
 ## Now Open the Exercise File
 
-[exercise3_semantic_search.py](exercise3_semantic_search.py)
+[exercise3_semantic_search_lab.md](exercise3_semantic_search_lab.md)
 
 ---
 

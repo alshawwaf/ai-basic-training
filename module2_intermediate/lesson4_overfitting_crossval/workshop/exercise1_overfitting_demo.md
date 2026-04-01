@@ -21,6 +21,8 @@ When tuning hyperparameters (like tree depth), you cannot use the test set — t
 
 This three-way split ensures the test set truly measures generalisation to unseen data.
 
+> **Want to go deeper?** [Overfitting (Wikipedia)](https://en.wikipedia.org/wiki/Overfitting)
+
 ---
 
 ## Concept: Reading the Divergence

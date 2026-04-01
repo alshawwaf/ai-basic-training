@@ -75,6 +75,8 @@ Always use `restore_best_weights=True` unless you have a specific reason not to.
 
 Rule of thumb: use `patience = max(5, 10% of expected_epochs)`.
 
+> **Want to go deeper?** [Overfitting (Wikipedia)](https://en.wikipedia.org/wiki/Overfitting)
+
 ---
 
 ## What Each Task Asks You to Do
@@ -128,7 +130,7 @@ TASK 4 (BONUS):
 
 ## Now Open the Exercise File
 
-[exercise4_early_stopping.py](exercise4_early_stopping.py)
+[exercise4_early_stopping_lab.md](exercise4_early_stopping_lab.md)
 
 ## Next
 

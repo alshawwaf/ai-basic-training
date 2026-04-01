@@ -13,6 +13,8 @@
 
 ## Concept: The Four Outcomes
 
+> **Want to go deeper?** [Confusion matrix — Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix)
+
 Every prediction for a binary security classifier falls into one of four cells:
 
 |  | Predicted: Benign | Predicted: Attack |

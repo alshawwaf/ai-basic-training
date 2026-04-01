@@ -13,6 +13,8 @@
 
 ## Concept: Feature Scaling
 
+> **Want to go deeper?** [Logistic regression — Wikipedia](https://en.wikipedia.org/wiki/Logistic_regression)
+
 Logistic regression uses a numerical optimiser (gradient descent) to find the best weights. If features are on very different scales (e.g., `url_length` ranges 10–250 while `has_at_symbol` is 0/1), the optimiser converges slowly and some features dominate unfairly.
 
 `StandardScaler` fixes this by transforming each feature to have **mean=0 and std=1**:
@@ -56,6 +58,8 @@ macro avg        0.92     0.92      0.92      200
 ---
 
 ## Concept: Confusion Matrix
+
+> **Want to go deeper?** [Confusion matrix — Wikipedia](https://en.wikipedia.org/wiki/Confusion_matrix)
 
 The confusion matrix shows the 4 possible outcomes for a binary classifier:
 

@@ -22,6 +22,8 @@ With a single 80/20 split, your test set is one random 20% sample. If that 20% h
 
 Every sample is used as both training and test exactly once. The K scores give you a distribution — mean and std — that is far more reliable than a single split.
 
+> **Want to go deeper?** [Cross-validation (Wikipedia)](https://en.wikipedia.org/wiki/Cross-validation_(statistics))
+
 ---
 
 ## Concept: 5-fold vs 10-fold

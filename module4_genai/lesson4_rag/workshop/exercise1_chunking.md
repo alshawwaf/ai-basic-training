@@ -119,7 +119,7 @@ Fixed-size chunks (size=50): 4 chunks
 
 ## Now Open the Exercise File
 
-[exercise1_chunking.py](exercise1_chunking.py)
+[exercise1_chunking_lab.md](exercise1_chunking_lab.md)
 
 ---
 

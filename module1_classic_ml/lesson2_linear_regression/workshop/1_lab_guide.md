@@ -12,10 +12,10 @@ In this workshop you will build a linear regression model that predicts a server
 
 | # | Guide | Exercise file | Topic |
 |---|-------|---------------|-------|
-| 1 | [exercise1_understanding_regression.md](exercise1_understanding_regression.md) | [exercise1_understanding_regression.py](exercise1_understanding_regression.py) | Regression vs classification, the dataset, visualising the relationship |
-| 2 | [exercise2_train_test_split.md](exercise2_train_test_split.md) | [exercise2_train_test_split.py](exercise2_train_test_split.py) | Why we split data, train_test_split(), the danger of evaluating on training data |
-| 3 | [exercise3_fit_and_predict.md](exercise3_fit_and_predict.md) | [exercise3_fit_and_predict.py](exercise3_fit_and_predict.py) | model.fit(), model.predict(), slope and intercept, visualise the line |
-| 4 | [exercise4_evaluate_regression.md](exercise4_evaluate_regression.md) | [exercise4_evaluate_regression.py](exercise4_evaluate_regression.py) | MSE, RMSE, MAE, R², interpret results, build a security baseline |
+| 1 | [exercise1_understanding_regression.md](exercise1_understanding_regression.md) | [exercise1_understanding_regression_lab.md](exercise1_understanding_regression_lab.md) | Regression vs classification, the dataset, visualising the relationship |
+| 2 | [exercise2_train_test_split.md](exercise2_train_test_split.md) | [exercise2_train_test_split_lab.md](exercise2_train_test_split_lab.md) | Why we split data, train_test_split(), the danger of evaluating on training data |
+| 3 | [exercise3_fit_and_predict.md](exercise3_fit_and_predict.md) | [exercise3_fit_and_predict_lab.md](exercise3_fit_and_predict_lab.md) | model.fit(), model.predict(), slope and intercept, visualise the line |
+| 4 | [exercise4_evaluate_regression.md](exercise4_evaluate_regression.md) | [exercise4_evaluate_regression_lab.md](exercise4_evaluate_regression_lab.md) | MSE, RMSE, MAE, R², interpret results, build a security baseline |
 
 ## Running an Exercise
 

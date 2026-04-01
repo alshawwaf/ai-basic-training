@@ -13,6 +13,8 @@
 
 ## Concept: The ROC Curve
 
+> **Want to go deeper?** [Receiver operating characteristic — Wikipedia](https://en.wikipedia.org/wiki/Receiver_operating_characteristic)
+
 The ROC (Receiver Operating Characteristic) curve plots:
 - **x-axis**: False Positive Rate (FPR) = FP / (FP + TN) = 1 - Specificity
 - **y-axis**: True Positive Rate (TPR) = TP / (TP + FN) = Recall

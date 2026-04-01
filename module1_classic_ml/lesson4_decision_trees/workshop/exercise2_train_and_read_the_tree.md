@@ -13,6 +13,8 @@
 
 ## Concept: DecisionTreeClassifier Parameters
 
+> **Want to go deeper?** [Decision tree learning — Wikipedia](https://en.wikipedia.org/wiki/Decision_tree_learning)
+
 ```python
 from sklearn.tree import DecisionTreeClassifier
 

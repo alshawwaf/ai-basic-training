@@ -50,6 +50,8 @@ Dense head:   maps detected shapes to digit identity
 
 This hierarchical feature learning is why CNNs generalise well from far fewer parameters than Dense networks.
 
+> **Want to go deeper?** [Convolutional neural network (Wikipedia)](https://en.wikipedia.org/wiki/Convolutional_neural_network)
+
 ---
 
 ## Concept: Flatten Layer
@@ -106,7 +108,7 @@ CNN improvement:                +0.020
 
 ## Now Open the Exercise File
 
-[exercise3_build_and_train_cnn.py](exercise3_build_and_train_cnn.py)
+[exercise3_build_and_train_cnn_lab.md](exercise3_build_and_train_cnn_lab.md)
 
 ## Next
 

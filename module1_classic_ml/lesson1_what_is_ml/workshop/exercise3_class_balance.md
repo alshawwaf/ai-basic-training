@@ -15,6 +15,8 @@
 
 ## Concept: What Class Imbalance Is
 
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
+
 In a classification dataset, **class imbalance** means one class has far more examples than another.
 
 This is the rule in security ML, not the exception:
@@ -210,7 +212,7 @@ In every lesson from this point on, the first check after loading data is: what 
 
 ## Now Open the Exercise File
 
-[exercise3_class_balance.py](exercise3_class_balance.py)
+[exercise3_class_balance_lab.md](exercise3_class_balance_lab.md)
 
 ---
 

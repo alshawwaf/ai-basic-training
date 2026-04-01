@@ -108,7 +108,7 @@ Top 5 words most similar to "attack":
 
 ## Now Open the Exercise File
 
-[exercise2_embeddings.py](exercise2_embeddings.py)
+[exercise2_embeddings_lab.md](exercise2_embeddings_lab.md)
 
 ---
 

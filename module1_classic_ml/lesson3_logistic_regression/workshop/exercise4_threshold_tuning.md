@@ -13,6 +13,8 @@
 
 ## Concept: predict_proba() vs predict()
 
+> **Want to go deeper?** [Precision and recall — Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall)
+
 `model.predict(X)` returns hard labels (0 or 1) using the default 0.5 threshold.
 
 `model.predict_proba(X)` returns a 2-column array: `[:, 0]` is P(legitimate), `[:, 1]` is P(phishing). You can then apply any threshold yourself:

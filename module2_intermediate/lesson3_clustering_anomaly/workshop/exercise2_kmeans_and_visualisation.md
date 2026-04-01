@@ -21,6 +21,8 @@ K-Means iteratively:
 
 The result: K clusters, each with a centroid. Distance from centroid = "how typical" a sample is for its cluster. High distance = anomalous.
 
+> **Want to go deeper?** [k-means clustering (Wikipedia)](https://en.wikipedia.org/wiki/K-means_clustering)
+
 ---
 
 ## Concept: PCA for Visualisation

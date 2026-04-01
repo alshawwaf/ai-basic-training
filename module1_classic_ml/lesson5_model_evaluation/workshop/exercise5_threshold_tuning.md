@@ -13,6 +13,8 @@
 
 ## Concept: The Operational Decision
 
+> **Want to go deeper?** [Precision and recall — Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall)
+
 Once you have selected a model, you still have one more decision: what threshold to use for deployment. This is not a technical question — it is a business question:
 
 > What is the cost of a missed attack vs the cost of a false alarm in your environment?

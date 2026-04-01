@@ -56,6 +56,8 @@ Training learns (parameters):
 
 Hyperparameter tuning = choosing the best combination from this space.
 
+> **Want to go deeper?** [Hyperparameter optimisation (Wikipedia)](https://en.wikipedia.org/wiki/Hyperparameter_optimization)
+
 ---
 
 ## What Each Task Asks You to Do
@@ -103,7 +105,7 @@ With seed:    0.9350, 0.9350 — same? True
 
 ## Now Open the Exercise File
 
-[exercise1_what_are_hyperparameters.py](exercise1_what_are_hyperparameters.py)
+[exercise1_what_are_hyperparameters_lab.md](exercise1_what_are_hyperparameters_lab.md)
 
 ## Next
 

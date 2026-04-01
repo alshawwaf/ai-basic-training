@@ -17,6 +17,8 @@ Inertia = sum of squared distances from each sample to its nearest centroid. Low
 
 Plot inertia vs K. Look for the "elbow" where inertia drops steeply then flattens. The elbow suggests the K where adding more clusters gives diminishing improvement.
 
+> **Want to go deeper?** [k-means clustering (Wikipedia)](https://en.wikipedia.org/wiki/K-means_clustering)
+
 ---
 
 ## Concept: Silhouette Score

@@ -60,6 +60,8 @@ AUC = 1.0  → Perfect ranking
 
 Always report AUC (or average precision) alongside accuracy on imbalanced datasets.
 
+> **Want to go deeper?** [Artificial neural network (Wikipedia)](https://en.wikipedia.org/wiki/Artificial_neural_network)
+
 ---
 
 ## Concept: Is Neural Network Better Than Logistic Regression?
@@ -121,7 +123,7 @@ Neural Network AUC:      ~0.974
 
 ## Now Open the Exercise File
 
-[exercise4_evaluate_and_improve.py](exercise4_evaluate_and_improve.py)
+[exercise4_evaluate_and_improve_lab.md](exercise4_evaluate_and_improve_lab.md)
 
 ## Next
 

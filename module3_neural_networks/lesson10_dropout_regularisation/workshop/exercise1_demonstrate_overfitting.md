@@ -58,6 +58,8 @@ Loss
 
 The point where val loss hits its minimum is the ideal stopping point. Training beyond that point makes the model worse on unseen data.
 
+> **Want to go deeper?** [Overfitting (Wikipedia)](https://en.wikipedia.org/wiki/Overfitting)
+
 ---
 
 ## What Each Task Asks You to Do
@@ -102,7 +104,7 @@ Loss gap (val - train):     ~0.110
 
 ## Now Open the Exercise File
 
-[exercise1_demonstrate_overfitting.py](exercise1_demonstrate_overfitting.py)
+[exercise1_demonstrate_overfitting_lab.md](exercise1_demonstrate_overfitting_lab.md)
 
 ## Next
 

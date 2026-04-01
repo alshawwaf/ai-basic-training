@@ -46,6 +46,8 @@ This is why CNNs use dramatically fewer parameters:
 | Dense(128) on 784 pixels | ~101,770 |
 | Conv2D(32,(3,3)) on 28×28×1 | 288 (just the filter weights!) |
 
+> **Want to go deeper?** [Convolutional neural network (Wikipedia)](https://en.wikipedia.org/wiki/Convolutional_neural_network)
+
 ---
 
 ## What Each Task Asks You to Do
@@ -90,7 +92,7 @@ Dense on shuffled pixels: ~0.968  (nearly identical!)
 
 ## Now Open the Exercise File
 
-[exercise1_why_dense_fails_on_images.py](exercise1_why_dense_fails_on_images.py)
+[exercise1_why_dense_fails_on_images_lab.md](exercise1_why_dense_fails_on_images_lab.md)
 
 ## Next
 

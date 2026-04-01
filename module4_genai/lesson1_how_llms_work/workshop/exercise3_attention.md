@@ -127,7 +127,7 @@ Value vectors have shape `(embedding_dim,)`. Use `attention[2] @ values` for the
 
 ## Now Open the Exercise File
 
-[exercise3_attention.py](exercise3_attention.py)
+[exercise3_attention_lab.md](exercise3_attention_lab.md)
 
 ---
 

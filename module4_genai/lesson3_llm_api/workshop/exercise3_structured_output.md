@@ -118,7 +118,7 @@ High      | T1046     |   0.88     | Network port scan from internal host
 
 ## Now Open the Exercise File
 
-[exercise3_structured_output.py](exercise3_structured_output.py)
+[exercise3_structured_output_lab.md](exercise3_structured_output_lab.md)
 
 ---
 

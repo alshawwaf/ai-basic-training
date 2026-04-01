@@ -15,6 +15,8 @@
 
 ## Concept: Why Statistics Before Modelling
 
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
+
 It is tempting to skip straight to training a model. Don't.
 
 Problems hidden in data that are not caught here will cause the model to fail later — silently, in ways that are hard to trace back to the root cause. Every experienced ML practitioner checks these things first, every time.
@@ -204,7 +206,7 @@ You may have called `.describe()` on the wrong variable. Make sure you are descr
 
 ## Now Open the Exercise File
 
-[exercise2_statistics.py](exercise2_statistics.py)
+[exercise2_statistics_lab.md](exercise2_statistics_lab.md)
 
 ---
 

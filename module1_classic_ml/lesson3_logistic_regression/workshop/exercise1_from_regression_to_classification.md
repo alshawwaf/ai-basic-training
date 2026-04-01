@@ -13,6 +13,8 @@
 
 ## Concept: Why Linear Regression Fails for Classification
 
+> **Want to go deeper?** [Logistic regression — Wikipedia](https://en.wikipedia.org/wiki/Logistic_regression)
+
 Suppose you try to predict whether a URL is phishing (1) or legitimate (0) using linear regression. The model would predict numbers like 0.3, 0.7, 1.2, -0.1 — numbers outside the valid 0–1 probability range, and there is no natural way to convert 1.2 into "definitely phishing."
 
 The problems with using linear regression for binary outcomes:

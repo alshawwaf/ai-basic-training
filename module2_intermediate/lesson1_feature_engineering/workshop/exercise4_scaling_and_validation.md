@@ -23,6 +23,8 @@
 - `StandardScaler` handles outliers better because it uses standard deviation
 - `MinMaxScaler` is sensitive to outliers: one extreme value compresses all others
 
+> **Want to go deeper?** [Standard score (Wikipedia)](https://en.wikipedia.org/wiki/Standard_score)
+
 ---
 
 ## Concept: Fit on Train, Transform Both

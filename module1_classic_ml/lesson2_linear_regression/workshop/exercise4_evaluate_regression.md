@@ -13,6 +13,8 @@
 
 ## Concept: Error Metrics for Regression
 
+> **Want to go deeper?** [Linear regression — Wikipedia](https://en.wikipedia.org/wiki/Linear_regression)
+
 After fitting a model, you need to quantify how wrong it is. Four metrics are standard:
 
 | Metric | Formula | Units | Interpretation |

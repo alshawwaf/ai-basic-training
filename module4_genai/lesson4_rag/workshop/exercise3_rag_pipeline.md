@@ -105,7 +105,7 @@ The RAG answer is more specific because it is drawing from your knowledge base.
 
 ## Now Open the Exercise File
 
-[exercise3_rag_pipeline.py](exercise3_rag_pipeline.py)
+[exercise3_rag_pipeline_lab.md](exercise3_rag_pipeline_lab.md)
 
 ---
 

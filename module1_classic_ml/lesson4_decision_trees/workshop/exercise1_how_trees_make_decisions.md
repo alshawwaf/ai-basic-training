@@ -13,6 +13,8 @@
 
 ## Concept: The If/Else Tree
 
+> **Want to go deeper?** [Decision tree learning — Wikipedia](https://en.wikipedia.org/wiki/Decision_tree_learning)
+
 A decision tree is a flowchart of yes/no questions. Each internal node asks a question about one feature; each branch is an answer; each leaf is a prediction.
 
 Example for network traffic:

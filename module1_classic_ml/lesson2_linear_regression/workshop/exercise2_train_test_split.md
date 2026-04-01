@@ -13,6 +13,8 @@
 
 ## Concept: The Problem With Evaluating on Training Data
 
+> **Want to go deeper?** [Cross-validation — Wikipedia](https://en.wikipedia.org/wiki/Cross-validation_(statistics))
+
 Imagine you study for an exam using a practice test, then take the *exact same* test as the real exam. Your score looks great — but it does not tell you whether you actually *learned* the material, only that you *memorised* the questions.
 
 The same problem applies to ML models. If you train and evaluate on the same data:

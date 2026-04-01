@@ -11,6 +11,7 @@ try:
 except ImportError:
     HAS_SEABORN = False
 
+# Same synthetic network traffic dataset as exercise 1 (95% benign, 5% attack)
 np.random.seed(42)
 n_total, n_attack, n_benign = 10_000, 500, 9_500
 benign_data = np.column_stack([
@@ -30,6 +31,8 @@ X, y = X[idx], y[idx]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
+
+# Scale, train, and get predictions to build a confusion matrix from
 scaler  = StandardScaler()
 X_tr_sc = scaler.fit_transform(X_train)
 X_te_sc = scaler.transform(X_test)
@@ -40,10 +43,11 @@ y_pred  = model.predict(X_te_sc)
 print("=" * 60)
 print("TASK 1 — Manual confusion matrix values")
 print("=" * 60)
-TP = np.sum((y_pred == 1) & (y_test == 1))
-TN = np.sum((y_pred == 0) & (y_test == 0))
-FP = np.sum((y_pred == 1) & (y_test == 0))
-FN = np.sum((y_pred == 0) & (y_test == 1))
+# Compute the 4 confusion matrix cells by comparing predictions vs ground truth
+TP = np.sum((y_pred == 1) & (y_test == 1))  # correctly flagged attacks
+TN = np.sum((y_pred == 0) & (y_test == 0))  # correctly ignored benign
+FP = np.sum((y_pred == 1) & (y_test == 0))  # false alarms
+FN = np.sum((y_pred == 0) & (y_test == 1))  # missed attacks
 print(f"True Negatives  (TN) = {TN:4d}  — benign correctly ignored")
 print(f"False Positives (FP) = {FP:4d}  — benign falsely flagged (alert fatigue)")
 print(f"False Negatives (FN) = {FN:4d}  — ATTACKS MISSED! (most dangerous)")
@@ -53,6 +57,8 @@ print(f"\nTotal: {TP+TN+FP+FN} (should be {len(y_test)})")
 print("\n" + "=" * 60)
 print("TASK 2 — sklearn confusion matrix")
 print("=" * 60)
+# sklearn's confusion_matrix returns the same 4 values in a 2x2 array
+# Layout: rows = actual class, cols = predicted class
 cm = confusion_matrix(y_test, y_pred)
 print("              Predicted Benign  Predicted Attack")
 print(f"Actual Benign      {cm[0,0]:6d}            {cm[0,1]:6d}")
@@ -63,11 +69,12 @@ print(f"\nMatches manual calculation: {matches} {'✓' if matches else '✗'}")
 print("\n" + "=" * 60)
 print("TASK 3 — Metrics derived from confusion matrix")
 print("=" * 60)
-accuracy    = (TP + TN) / (TP + TN + FP + FN)
-precision   = TP / (TP + FP)
-recall      = TP / (TP + FN)
-specificity = TN / (TN + FP)
-f1          = 2 * precision * recall / (precision + recall)
+# Every standard metric can be derived from these 4 values
+accuracy    = (TP + TN) / (TP + TN + FP + FN)   # overall correct rate (misleading when imbalanced)
+precision   = TP / (TP + FP)                     # of all alerts, how many were real attacks?
+recall      = TP / (TP + FN)                     # of all real attacks, how many did we catch?
+specificity = TN / (TN + FP)                     # of all benign, how many did we correctly ignore?
+f1          = 2 * precision * recall / (precision + recall)  # harmonic mean of precision & recall
 print(f"Accuracy    = (TP+TN)/(TP+TN+FP+FN) = {accuracy:.3f}")
 print(f"Precision   = TP/(TP+FP)             = {precision:.3f}")
 print(f"Recall      = TP/(TP+FN)             = {recall:.3f}")
@@ -78,6 +85,7 @@ print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Heatmap visualisation")
 print("=" * 60)
 print("\n--- Exercise 2 complete. Move to exercise3_precision_recall_f1.py ---")
+# Heatmap gives a quick visual feel for where the model gets it right vs wrong
 if HAS_SEABORN:
     labels = [['TN', 'FP'], ['FN', 'TP']]
     pcts   = cm / cm.sum() * 100

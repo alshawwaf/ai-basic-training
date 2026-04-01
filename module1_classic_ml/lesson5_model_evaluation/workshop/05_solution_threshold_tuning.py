@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score
 
+# Same imbalanced dataset (95% benign, 5% attack)
 np.random.seed(42)
 n_benign, n_attack = 9_500, 500
 benign_data = np.column_stack([
@@ -25,6 +26,7 @@ X, y = X[idx], y[idx]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
+# Scale features, train model, and extract attack probabilities for threshold tuning
 scaler  = StandardScaler()
 X_tr_sc = scaler.fit_transform(X_train)
 X_te_sc = scaler.transform(X_test)
@@ -35,6 +37,7 @@ probs   = model.predict_proba(X_te_sc)[:, 1]   # P(attack) for each test sample
 print("=" * 60)
 print("TASK 1 — Full precision-recall-threshold table")
 print("=" * 60)
+# Sweep thresholds from 0.05 to 0.90 and record metrics at each one
 thresholds = np.arange(0.05, 0.95, 0.05)
 results = []
 for t in thresholds:
@@ -44,6 +47,7 @@ for t in thresholds:
     f = f1_score(y_test, y_pred, zero_division=0)
     alerts = int(y_pred.sum())
     results.append({'threshold': t, 'precision': p, 'recall': r, 'f1': f, 'alerts': alerts})
+# Find the threshold that maximises F1 (the best precision-recall balance)
 results_df = pd.DataFrame(results)
 best_f1_idx = results_df['f1'].idxmax()
 print(f"{'Thresh':>6} {'Precision':>9} {'Recall':>7} {'F1':>7} {'Alerts':>7}")
@@ -56,6 +60,7 @@ for i, row in results_df.iterrows():
 print("\n" + "=" * 60)
 print("TASK 2 — Scenario A: Catch all attacks (recall >= 0.95)")
 print("=" * 60)
+# Start from a high threshold and lower it until we catch >=95% of attacks
 for t in np.arange(0.9, 0.0, -0.01):
     y_pred = (probs >= t).astype(int)
     r = recall_score(y_test, y_pred)
@@ -75,6 +80,7 @@ for t in np.arange(0.9, 0.0, -0.01):
 print("\n" + "=" * 60)
 print("TASK 3 — Scenario B: Trusted alerts only (precision >= 0.95)")
 print("=" * 60)
+# Start from a low threshold and raise it until >=95% of alerts are real attacks
 for t in np.arange(0.0, 0.95, 0.01):
     y_pred = (probs >= t).astype(int)
     p = precision_score(y_test, y_pred, zero_division=0)
@@ -96,6 +102,7 @@ print("TASK 4 (BONUS) — Stakeholder report")
 print("=" * 60)
 print("\n--- Exercise 5 complete. Lesson 1.5 workshop done! ---")
 print("--- Module 1 complete! Next: module2_intermediate/ ---")
+# Translate metrics into real-world SOC numbers: analyst time, missed attacks, false alarms
 daily_attacks = 500    # 5% of 10,000
 mins_per_alert = 5
 for label, thresh, p, r in [

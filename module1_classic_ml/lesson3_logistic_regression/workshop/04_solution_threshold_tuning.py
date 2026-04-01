@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score, precision_recall_curve
 
+# Reuse the same dataset, split, scaling, and model from exercise 3
 np.random.seed(42)
 n, half = 1000, 500
 def make_urls(n_legit, n_phish):
@@ -49,19 +50,23 @@ model.fit(X_train_scaled, y_train)
 print("=" * 60)
 print("TASK 1 — Probability scores vs hard labels")
 print("=" * 60)
+# Get raw probabilities instead of hard 0/1 predictions
 probs = model.predict_proba(X_test_scaled)[:, 1]
+# Show probability alongside the default threshold=0.5 label and the true label
 results = pd.DataFrame({
     'P(phishing)':      probs,
     'predicted_label':  (probs >= 0.5).astype(int),
     'actual':           y_test.values
 })
 print(results.head(10).to_string(index=False))
+# "Close calls" are samples near the boundary — these are hardest for the model
 close_calls = results[(results['P(phishing)'] > 0.4) & (results['P(phishing)'] < 0.6)]
 print(f"\nClose calls (P between 0.4 and 0.6): {len(close_calls)}")
 
 print("\n" + "=" * 60)
 print("TASK 2 — Threshold comparison table")
 print("=" * 60)
+# Lower thresholds flag more URLs (higher recall but lower precision) — and vice versa
 thresholds = [0.2, 0.3, 0.5, 0.7, 0.8]
 print(f"{'Threshold':>10} | {'Precision':>9} | {'Recall':>7} | {'F1':>6} | {'Flagged':>8}")
 print("-" * 55)
@@ -76,6 +81,8 @@ for thresh in thresholds:
 print("\n" + "=" * 60)
 print("TASK 3 — Find threshold for recall >= 0.95")
 print("=" * 60)
+# In security, missing a phishing URL (FN) is worse than a false alarm (FP)
+# So we search for the highest threshold that still catches >=95% of phishing URLs
 for thresh in np.arange(0.9, 0.0, -0.01):
     y_pred = (probs >= thresh).astype(int)
     r = recall_score(y_test, y_pred)
@@ -93,10 +100,11 @@ print("TASK 4 (BONUS) — Precision-recall curve")
 print("=" * 60)
 print("\n--- Exercise 4 complete. Lesson 1.3 workshop done! ---")
 print("--- Next: module1_classic_ml/lesson4_decision_trees/ ---")
+# PR curve shows the precision/recall trade-off across all possible thresholds
 precision_vals, recall_vals, thresholds_pr = precision_recall_curve(y_test, probs)
 plt.figure(figsize=(8, 6))
 plt.plot(recall_vals, precision_vals, label='PR Curve')
-# Find the point closest to threshold=0.5
+# Mark the default threshold=0.5 on the curve for reference
 idx_05 = np.argmin(np.abs(thresholds_pr - 0.5))
 plt.scatter(recall_vals[idx_05], precision_vals[idx_05],
             color='red', zorder=5, label='Threshold=0.5')

@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 
 np.random.seed(42)
 n_per_class = 500
+
+# Generate synthetic network traffic with distinct statistical profiles per attack type
 def make_traffic():
     benign = pd.DataFrame({
         'connection_rate':    np.random.normal(10, 3, n_per_class).clip(1, 25),
@@ -55,16 +57,20 @@ y = df['label']
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
+# Train the tree first -- feature importances come from the trained model
 model = DecisionTreeClassifier(max_depth=4, random_state=42)
 model.fit(X_train, y_train)
 
 print("=" * 60)
 print("TASK 1 — Feature importances (sorted)")
 print("=" * 60)
+# feature_importances_ = total Gini reduction each feature contributed across all splits
+# Higher value means the feature was more useful for separating classes
 importances = model.feature_importances_
 imp_df = pd.DataFrame({'feature': FEATURES, 'importance': importances})
 imp_df = imp_df.sort_values('importance', ascending=False)
 print(imp_df.to_string(index=False))
+# Importances always sum to 1.0 -- they are normalised proportions
 total = importances.sum()
 print(f"\nSum of importances: {total:.3f} {'✓' if abs(total-1.0)<0.001 else '✗'}")
 
@@ -72,9 +78,11 @@ print("\n" + "=" * 60)
 print("TASK 2 — Feature importance bar chart")
 print("=" * 60)
 print("Bar chart created.")
-sorted_df = imp_df.sort_values('importance', ascending=True)  # ascending for horizontal
+# Horizontal bar chart with lowest importance at top so highest ends up at bottom (eye-level)
+sorted_df = imp_df.sort_values('importance', ascending=True)
 fig, ax = plt.subplots(figsize=(8, 5))
 bars = ax.barh(sorted_df['feature'], sorted_df['importance'], color='steelblue')
+# Label each bar with its numeric importance value
 for bar, val in zip(bars, sorted_df['importance']):
     ax.text(bar.get_width() + 0.005, bar.get_y() + bar.get_height()/2,
             f'{val:.3f}', va='center')
@@ -86,10 +94,13 @@ plt.show()
 print("\n" + "=" * 60)
 print("TASK 3 — Top-3 feature model vs full model")
 print("=" * 60)
+# Train a new tree using only the 3 most important features
+# This tests whether the remaining features actually add value
 top3 = imp_df.nlargest(3, 'importance')['feature'].tolist()
 print(f"Top-3 features: {top3}")
 model_top3 = DecisionTreeClassifier(max_depth=4, random_state=42)
 model_top3.fit(X_train[top3], y_train)
+# Compare: a small accuracy drop means the other features are mostly redundant
 acc_full = model.score(X_test, y_test)
 acc_top3 = model_top3.score(X_test[top3], y_test)
 print(f"Full model accuracy:  {acc_full:.3f}")
@@ -100,6 +111,7 @@ print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Security interpretation")
 print("=" * 60)
 print("\n--- Exercise 3 complete. Move to exercise4_depth_and_overfitting.py ---")
+# Map each feature to its security meaning -- why did the tree find it useful?
 interpretations = {
   "connection_rate":    "Highest importance — DoS is identified by extreme rate.",
   "bytes_sent":         "Separates exfil (very high) from port scans (very low).",

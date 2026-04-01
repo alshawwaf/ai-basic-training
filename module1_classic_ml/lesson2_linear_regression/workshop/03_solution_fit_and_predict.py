@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
+# Rebuild the same dataset and split from previous exercises
 np.random.seed(42)
 n = 500
 requests_per_second = np.random.uniform(5, 200, n)
@@ -22,8 +23,11 @@ print("=" * 60)
 print("TASK 1 — Fit the model, inspect slope and intercept")
 print("=" * 60)
 
+# fit() learns the line y = slope*x + intercept that minimises squared errors
 model = LinearRegression()
 model.fit(X_train, y_train)
+# coef_ = slope (how much response time increases per additional request/sec)
+# intercept_ = predicted response time at zero load (baseline latency)
 slope     = model.coef_[0]
 intercept = model.intercept_
 print(f"Slope (coef):  {slope:.2f} ms per request/second")
@@ -33,7 +37,9 @@ print("\n" + "=" * 60)
 print("TASK 2 — Predictions vs actuals (first 5 rows)")
 print("=" * 60)
 
+# predict() applies the learned line to unseen test data
 y_pred = model.predict(X_test)
+# Residual = actual - predicted; large residuals mean the model missed badly
 results = pd.DataFrame({
     'actual':    y_test.values,
     'predicted': y_pred,
@@ -45,6 +51,7 @@ print("\n" + "=" * 60)
 print("TASK 3 — Predictions at specific load values")
 print("=" * 60)
 
+# Feed specific load levels to the model — useful for capacity planning
 load_values = np.array([[50], [100], [150]])
 predictions = model.predict(load_values)
 for rps, ms in zip([50, 100, 150], predictions):
@@ -54,9 +61,11 @@ print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Regression line visualisation")
 print("=" * 60)
 
+# Create 200 evenly spaced points across the feature range to draw a smooth line
 x_line = np.linspace(X.min().values[0], X.max().values[0], 200).reshape(-1, 1)
 y_line = model.predict(x_line)
 
+# Overlay the regression line on the test data to visually assess fit
 plt.figure(figsize=(8, 5))
 plt.scatter(X_test, y_test, alpha=0.4, label="Actual (test set)")
 plt.plot(x_line, y_line, color="red", linewidth=2, label="Model prediction")

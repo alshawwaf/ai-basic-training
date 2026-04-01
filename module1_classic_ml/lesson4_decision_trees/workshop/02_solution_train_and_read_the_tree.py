@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 
 np.random.seed(42)
 n_per_class = 500
+
+# Generate synthetic network traffic with distinct statistical profiles per attack type
 def make_traffic():
     benign = pd.DataFrame({
         'connection_rate':    np.random.normal(10, 3, n_per_class).clip(1, 25),
@@ -50,8 +52,10 @@ df = make_traffic()
 FEATURES    = ['connection_rate', 'bytes_sent', 'bytes_received',
                'unique_dest_ports', 'duration_seconds', 'failed_connections']
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
+# Separate features (X) from the target label (y)
 X = df[FEATURES]
 y = df['label']
+# Hold out 20% for testing; stratify keeps class proportions equal in both splits
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -59,8 +63,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 print("=" * 60)
 print("TASK 1 — Train the decision tree")
 print("=" * 60)
+# max_depth=4 limits the tree to 4 levels of splits, preventing overfitting
 model = DecisionTreeClassifier(max_depth=4, random_state=42)
 model.fit(X_train, y_train)
+# Compare train vs test accuracy -- a large gap signals the model memorised training data
 train_acc = model.score(X_train, y_train)
 test_acc  = model.score(X_test,  y_test)
 print(f"Training accuracy: {train_acc:.3f}")
@@ -69,11 +75,12 @@ print(f"Test accuracy:     {test_acc:.3f}")
 print("\n" + "=" * 60)
 print("TASK 2 — Tree rules (first 40 lines)")
 print("=" * 60)
+# export_text prints the tree as human-readable if/else rules
 rules = export_text(model, feature_names=FEATURES)
 lines = rules.split('\n')
 for line in lines[:40]:
     print(line)
-# The root is the first line that contains '<='
+# The root split is the most informative feature -- the tree chose it first
 root_line = [l for l in lines if '<=' in l][0].strip()
 print(f"\nRoot split: {root_line}")
 
@@ -81,6 +88,7 @@ print("\n" + "=" * 60)
 print("TASK 3 — Tree visualisation")
 print("=" * 60)
 print("Tree visualisation created.")
+# plot_tree draws the full tree; filled=True colours nodes by majority class
 plt.figure(figsize=(20, 10))
 plot_tree(model,
           feature_names=FEATURES,
@@ -97,10 +105,12 @@ plt.show()
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Trace a sample through the tree")
 print("=" * 60)
+# Pick one test sample and walk it through the tree to see how prediction works
 sample = X_test.iloc[[0]]
 print("Sample features:")
 print(sample.to_string())
 pred_class = model.predict(sample)[0]
+# predict_proba returns the fraction of training samples in the leaf node per class
 pred_proba = model.predict_proba(sample)[0]
 print(f"\nPredicted class: {CLASS_NAMES[pred_class]} ({pred_class})")
 print("Class probabilities:")

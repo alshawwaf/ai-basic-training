@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 
+# Generate the same synthetic phishing dataset used in exercise 2
 np.random.seed(42)
 n, half = 1000, 500
 def make_urls(n_legit, n_phish):
@@ -38,6 +39,7 @@ FEATURES = ['url_length', 'num_dots', 'has_at_symbol', 'uses_https',
             'num_subdomains', 'has_ip_address', 'num_hyphens', 'path_length']
 X = df[FEATURES]
 y = df['is_phishing']
+# Hold out 20% for testing; stratify keeps the same class ratio in both splits
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -45,11 +47,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 print("=" * 60)
 print("TASK 1 — Feature scaling")
 print("=" * 60)
+# StandardScaler centres each feature to mean=0 and std=1 so no single feature dominates
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled  = scaler.transform(X_test)          # NOTE: transform only, no fit!
 #
-# Compare raw vs scaled url_length
+# Compare raw vs scaled url_length to verify the scaler worked
 raw_col   = X_train['url_length']
 scaled_col = X_train_scaled[:, 0]   # url_length is first column
 print(f"Raw url_length:    mean={raw_col.mean():.1f}, std={raw_col.std():.1f}")
@@ -58,8 +61,10 @@ print(f"Scaled url_length: mean={scaled_col.mean():.2f}, std={scaled_col.std():.
 print("\n" + "=" * 60)
 print("TASK 2 — Model coefficients")
 print("=" * 60)
+# Train logistic regression on the scaled features
 model = LogisticRegression(max_iter=1000, random_state=42)
 model.fit(X_train_scaled, y_train)
+# With scaled data, coefficient magnitude shows each feature's relative importance
 coef_df = pd.DataFrame({
     'feature': FEATURES,
     'coefficient': model.coef_[0]
@@ -69,10 +74,12 @@ print(coef_df.to_string(index=False))
 print("\n" + "=" * 60)
 print("TASK 3 — Evaluation: classification report + confusion matrix")
 print("=" * 60)
+# Predict on the held-out test set and print precision, recall, and F1 per class
 y_pred = model.predict(X_test_scaled)
 print(classification_report(y_test, y_pred,
                              target_names=['legitimate', 'phishing']))
 #
+# Confusion matrix: TN/FP/FN/TP — FN matters most in security (missed phishing)
 cm = confusion_matrix(y_test, y_pred)
 print("\nConfusion matrix:")
 print("                Predicted Legit  Predicted Phishing")
@@ -87,6 +94,7 @@ print(f"Actual Phish       {cm[1,0]:3d} (FN)         {cm[1,1]:3d} (TP)")
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Scaled vs unscaled comparison")
 print("=" * 60)
+# Train on raw (unscaled) features with fewer iterations to demonstrate convergence issues
 import warnings
 with warnings.catch_warnings(record=True) as w:
     warnings.simplefilter("always")
@@ -94,6 +102,7 @@ with warnings.catch_warnings(record=True) as w:
     model_unscaled.fit(X_train, y_train)
     if w:
         print(f"Warning: {w[-1].message}")
+# Compare accuracy: scaling often helps the optimiser converge to a better solution
 acc_scaled   = model.score(X_test_scaled, y_test)
 acc_unscaled = model_unscaled.score(X_test, y_test)
 print(f"Scaled model accuracy:   {acc_scaled:.3f}")

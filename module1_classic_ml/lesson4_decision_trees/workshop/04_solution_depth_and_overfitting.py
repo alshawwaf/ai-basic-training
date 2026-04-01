@@ -7,6 +7,8 @@ from sklearn.metrics import classification_report
 
 np.random.seed(42)
 n_per_class = 500
+
+# Generate synthetic network traffic with distinct statistical profiles per attack type
 def make_traffic():
     benign = pd.DataFrame({
         'connection_rate':    np.random.normal(10, 3, n_per_class).clip(1, 25),
@@ -53,6 +55,7 @@ FEATURES    = ['connection_rate', 'bytes_sent', 'bytes_received',
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
 X = df[FEATURES]
 y = df['label']
+# Hold out 20% for testing; stratify keeps class proportions equal in both splits
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -60,6 +63,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 print("=" * 60)
 print("TASK 1 — Depth sweep (max_depth 1 to 15)")
 print("=" * 60)
+# Train a separate tree at each depth from 1 to 15 and record both accuracies
+# The gap between train and test accuracy reveals overfitting
 depths = range(1, 16)
 train_accs, test_accs = [], []
 print(f"{'Depth':>5} | {'Train Acc':>9} | {'Test Acc':>8} | {'Gap':>6}")
@@ -76,7 +81,8 @@ for d in depths:
 print("\n" + "=" * 60)
 print("TASK 2 — Find the optimal depth")
 print("=" * 60)
-best_test_depth = depths[np.argmax(test_accs)]   # need to run Task 1 first
+# Pick the depth that gives the highest test accuracy (best generalisation)
+best_test_depth = depths[np.argmax(test_accs)]
 best_test_acc   = max(test_accs)
 print(f"Best test accuracy: {best_test_acc:.3f} at depth={best_test_depth}")
 print(f"Recommended max_depth: {best_test_depth}")
@@ -85,9 +91,11 @@ print("\n" + "=" * 60)
 print("TASK 3 — Train vs test accuracy plot")
 print("=" * 60)
 print("Depth sweep plot created.")
+# Plot train vs test accuracy -- look for where the curves diverge (overfitting begins)
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(list(depths), train_accs, 'b-o', label='Training accuracy', markersize=4)
 ax.plot(list(depths), test_accs,  'r--o', label='Test accuracy', markersize=4)
+# Mark the optimal depth with a vertical line
 ax.axvline(x=best_test_depth, color='green', linestyle=':', label=f'Sweet spot (depth={best_test_depth})')
 ax.set_xlabel('max_depth')
 ax.set_ylabel('Accuracy')
@@ -100,6 +108,8 @@ plt.show()
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Underfit vs good fit vs overfit")
 print("=" * 60)
+# Compare three regimes: too shallow (underfit), just right, too deep (overfit)
+# classification_report shows precision/recall/f1 per class -- watch for drops at depth=15
 for depth, label in [(1, "Underfit"), (5, "Good fit"), (15, "Overfit")]:
     m = DecisionTreeClassifier(max_depth=depth, random_state=42)
     m.fit(X_train, y_train)

@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+# Rebuild dataset, split, train, and generate predictions (same as previous exercises)
 np.random.seed(42)
 n = 500
 requests_per_second = np.random.uniform(5, 200, n)
@@ -20,23 +21,27 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 model = LinearRegression()
 model.fit(X_train, y_train)
+# We need predictions on both sets: train (for baseline) and test (for evaluation)
 y_pred_train = model.predict(X_train)
 y_pred_test  = model.predict(X_test)
 
 print("=" * 60)
 print("TASK 1 — Regression metrics on test set")
 print("=" * 60)
-# Manual calculation:
+# Manual calculation — understanding the math behind each metric:
+# MSE: average of squared errors (penalises large errors heavily)
+# RMSE: square root of MSE (same unit as the target, easier to interpret)
+# MAE: average of absolute errors (more robust to outliers than MSE)
+# R²: fraction of variance explained (1.0 = perfect, 0.0 = no better than guessing the mean)
 mse_manual  = np.mean((y_test.values - y_pred_test) ** 2)
 rmse_manual = np.sqrt(mse_manual)
 mae_manual  = np.mean(np.abs(y_test.values - y_pred_test))
 r2_manual   = 1 - np.sum((y_test.values - y_pred_test)**2) / \
                   np.sum((y_test.values - y_test.mean())**2)
-# sklearn verification:
+# Verify our manual formulas match sklearn's built-in implementations
 mse_sk  = mean_squared_error(y_test, y_pred_test)
 mae_sk  = mean_absolute_error(y_test, y_pred_test)
 r2_sk   = r2_score(y_test, y_pred_test)
-# Print all values with units
 print(f"MSE:   {mse_manual:.1f} ms²")
 print(f"RMSE:  {rmse_manual:.1f} ms")
 print(f"MAE:   {mae_manual:.1f} ms")
@@ -47,6 +52,8 @@ print(f"sklearn values match manual values: "
 print("\n" + "=" * 60)
 print("TASK 2 — Residual analysis")
 print("=" * 60)
+# Build a table of predictions and residuals, then find the 5 worst over-predictions
+# In security terms, these are the requests where actual response was far above expected
 test_df = X_test.copy()
 test_df['actual']    = y_test.values
 test_df['predicted'] = y_pred_test
@@ -57,6 +64,8 @@ print(top5.to_string(index=False))
 print("\n" + "=" * 60)
 print("TASK 3 — Security baseline anomaly detection")
 print("=" * 60)
+# Learn what "normal" looks like from training residuals, then flag outliers
+# The 3-sigma rule: points beyond 3 standard deviations are statistically rare (~0.3%)
 train_residuals = y_train.values - y_pred_train
 sigma = np.std(train_residuals)
 alert_threshold = 3 * sigma
@@ -69,6 +78,8 @@ print(f"Anomalies flagged:      {flagged} / {len(y_test)}")
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Threshold sensitivity analysis")
 print("=" * 60)
+# Sweep k from 1.5 to 4.0 to see the trade-off: lower k = more alerts (noisier),
+# higher k = fewer alerts (may miss real anomalies). Same idea as tuning IDS sensitivity.
 print(f"{'k':>5} {'threshold':>14} {'flagged':>10} {'flag_rate':>10}")
 print("-" * 45)
 for k in np.arange(1.5, 4.1, 0.5):

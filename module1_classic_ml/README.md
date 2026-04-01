@@ -51,7 +51,7 @@ model.predict(new_email)
 
 ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the model data and let it extract patterns automatically. This is why it works well in cybersecurity — attackers constantly change their tactics, but their *statistical patterns* often persist across campaigns.
 
-> **Want to go deeper?** [A Visual Introduction to Machine Learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/) — an interactive, no-code explainer that shows gradient descent and decision boundaries animating in real time.
+> **Want to go deeper?** [Machine Learning — Wikipedia](https://en.wikipedia.org/wiki/Machine_learning) — a thorough overview of what ML is, how it works, and where it is applied.
 
 ---
 
@@ -65,7 +65,7 @@ ML is pattern recognition at scale. Instead of hand-crafting rules, you hand the
 
 **Module 1 focuses on supervised learning** — the most practical and widely used type.
 
-> **Want to go deeper?** [Supervised vs Unsupervised Learning — IBM](https://www.ibm.com/think/topics/supervised-vs-unsupervised-learning) — concise overview with real-world examples of each type.
+> **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning) — covers the full concept, with links to unsupervised and reinforcement learning for comparison.
 
 ---
 
@@ -85,7 +85,7 @@ This loop applies to every single ML project you'll ever build:
 
 The split in step 3 is critical: you never evaluate on data the model was trained on, because it would look artificially good. You need to test on data it has never seen — just like in real life.
 
-> **Want to go deeper?** [Train/Test Split and Cross-Validation — Towards Data Science](https://towardsdatascience.com/train-test-split-and-cross-validation-in-python-80b61beca4b6) — explains why the split matters and how cross-validation takes it further.
+> **Want to go deeper?** [Training, Validation, and Test Sets — Wikipedia](https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets) — explains the purpose of each split and why evaluating on training data gives falsely optimistic results.
 
 ---
 
@@ -93,14 +93,14 @@ The split in step 3 is critical: you never evaluate on data the model was traine
 
 | Term | Plain English | Learn more |
 |------|--------------|------------|
-| **Feature** | An input variable (e.g. URL length, number of dots in domain) | [Feature Engineering — Google ML Crash Course](https://developers.google.com/machine-learning/crash-course/feature-crosses/video-lecture) |
+| **Feature** | An input variable (e.g. URL length, number of dots in domain) | [Feature Engineering — Wikipedia](https://en.wikipedia.org/wiki/Feature_engineering) |
 | **Label / Target** | The answer the model predicts (e.g. phishing = 1, legit = 0) | |
 | **Training set** | Data used to teach the model | |
 | **Test set** | Held-out data used to evaluate the model honestly | |
-| **Accuracy** | % of predictions that were correct — often misleading in security | [Why Accuracy Is a Poor Metric — Elite Data Science](https://elitedatascience.com/imbalanced-classes) |
-| **Overfitting** | Model memorised training data but fails on new data | [Overfitting and Underfitting — Machine Learning Mastery](https://machinelearningmastery.com/overfitting-and-underfitting-with-machine-learning-algorithms/) |
+| **Accuracy** | % of predictions that were correct — often misleading in security | [Precision and Recall — Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall) |
+| **Overfitting** | Model memorised training data but fails on new data | [Overfitting — Wikipedia](https://en.wikipedia.org/wiki/Overfitting) |
 | **Underfitting** | Model is too simple to capture the real pattern | ↑ same article |
-| **Class imbalance** | One label appears far more often — normal traffic vastly outnumbers attacks | [Imbalanced Classes — Elite Data Science](https://elitedatascience.com/imbalanced-classes) |
+| **Class imbalance** | One label appears far more often — normal traffic vastly outnumbers attacks | [Imbalanced Data — Wikipedia](https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis) |
 
 ---
 

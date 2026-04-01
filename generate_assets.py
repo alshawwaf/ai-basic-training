@@ -147,17 +147,26 @@ def fig_three_types_of_ml():
 # ── 3. Class Imbalance ────────────────────────────────────────────────────────
 def fig_class_imbalance():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4))
-    fig.suptitle("Class Balance: Digits Dataset vs Typical Security Data", fontsize=13, fontweight="bold")
+    fig.suptitle("Class Imbalance: Ideal Training Data vs Real-World Security Data", fontsize=13, fontweight="bold")
 
-    # Balanced (digits)
-    counts_balanced = [178, 182, 177, 183, 181, 182, 181, 179, 174, 180]
-    ax1.bar(range(10), counts_balanced, color=BLUE, alpha=0.8, edgecolor="white")
-    ax1.set_title("Digits Dataset — Well Balanced", color=GREEN)
-    ax1.set_xlabel("Digit Class"); ax1.set_ylabel("Number of Samples")
-    ax1.set_xticks(range(10))
-    ax1.set_ylim(0, 250)
-    ax1.axhline(np.mean(counts_balanced), color=GREEN, linestyle="--", linewidth=1.5, label=f"Mean: {np.mean(counts_balanced):.0f}")
+    # Balanced (ideal security dataset)
+    classes = ["Normal\nTraffic", "Port\nScan", "DoS\nAttack", "Data\nExfil"]
+    counts_balanced = [25000, 24500, 25200, 25300]
+    colors = [GREEN, ORANGE, RED, PURPLE]
+    bars1 = ax1.bar(classes, counts_balanced, color=colors, alpha=0.8, edgecolor="white")
+    ax1.set_title("Ideal Training Dataset — Well Balanced", color=GREEN)
+    ax1.set_ylabel("Number of Samples")
+    ax1.set_ylim(0, 32000)
+    mean_val = np.mean(counts_balanced)
+    ax1.axhline(mean_val, color=GREEN, linestyle="--", linewidth=1.5, label=f"Mean: {mean_val:,.0f}")
+    for bar, count in zip(bars1, counts_balanced):
+        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 300,
+                 f"{count:,}", ha="center", va="bottom", fontsize=9, fontweight="bold")
     ax1.legend()
+    ax1.text(1.5, 5000,
+        "Each attack type has enough\nexamples for the model to learn.",
+        ha="center", va="center", fontsize=9, color=GREEN,
+        bbox=dict(boxstyle="round", facecolor="white", edgecolor=GREEN, alpha=0.9))
 
     # Imbalanced (security)
     classes = ["Normal\nTraffic", "Port\nScan", "DoS\nAttack", "Data\nExfil"]

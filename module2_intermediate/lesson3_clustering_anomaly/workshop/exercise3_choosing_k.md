@@ -1,7 +1,6 @@
 # Exercise 3 — Choosing K
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_choosing_k.py](exercise3_choosing_k.py)
 
 ## What You Will Learn
 

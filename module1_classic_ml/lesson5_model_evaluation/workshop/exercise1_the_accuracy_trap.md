@@ -1,7 +1,6 @@
 # Exercise 1 — The Accuracy Trap
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_the_accuracy_trap.py](exercise1_the_accuracy_trap.py)
 
 ## What You Will Learn
 

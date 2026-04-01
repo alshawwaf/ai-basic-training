@@ -1,6 +1,5 @@
 # Exercise 1 — Zero-Shot Classification
 
-> **Exercise file:** [exercise1_zero_shot_classification.py](exercise1_zero_shot_classification.py)
 > Read this guide fully before opening the exercise file.
 
 ---

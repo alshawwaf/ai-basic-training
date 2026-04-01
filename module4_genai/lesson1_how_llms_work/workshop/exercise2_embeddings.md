@@ -1,6 +1,5 @@
 # Exercise 2 — Embeddings: Tokens as Vectors
 
-> **Exercise file:** [exercise2_embeddings.py](exercise2_embeddings.py)
 > Read this guide fully before opening the exercise file.
 
 ---

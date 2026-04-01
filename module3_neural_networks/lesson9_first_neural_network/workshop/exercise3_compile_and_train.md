@@ -1,6 +1,5 @@
 # Exercise 3 — Compile and Train
 
-> **Exercise file:** [exercise3_compile_and_train.py](exercise3_compile_and_train.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

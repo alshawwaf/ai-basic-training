@@ -1,7 +1,6 @@
 # Exercise 1 — From Tree to Forest
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_from_tree_to_forest.py](exercise1_from_tree_to_forest.py)
 
 ## What You Will Learn
 

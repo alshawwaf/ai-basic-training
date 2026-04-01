@@ -1,6 +1,5 @@
 # Exercise 2 — Shape, Statistics, and Missing Values
 
-> **Exercise file:** [exercise2_statistics.py](exercise2_statistics.py)
 > Read this guide fully before opening the exercise file.
 
 ---

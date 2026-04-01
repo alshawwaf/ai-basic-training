@@ -1,7 +1,6 @@
 # Exercise 2 — Train a Random Forest
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_train_random_forest.py](exercise2_train_random_forest.py)
 
 ## What You Will Learn
 

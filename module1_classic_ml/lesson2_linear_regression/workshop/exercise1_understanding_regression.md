@@ -1,7 +1,6 @@
 # Exercise 1 — Understanding Regression
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_understanding_regression.py](exercise1_understanding_regression.py)
 
 ## What You Will Learn
 

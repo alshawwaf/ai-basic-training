@@ -1,6 +1,5 @@
 # Exercise 2 — Conv2D and MaxPooling2D
 
-> **Exercise file:** [exercise2_conv_and_pooling.py](exercise2_conv_and_pooling.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

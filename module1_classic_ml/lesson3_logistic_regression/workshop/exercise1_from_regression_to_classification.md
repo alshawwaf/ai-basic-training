@@ -1,7 +1,6 @@
 # Exercise 1 — From Regression to Classification
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_from_regression_to_classification.py](exercise1_from_regression_to_classification.py)
 
 ## What You Will Learn
 

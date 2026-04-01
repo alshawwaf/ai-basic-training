@@ -1,7 +1,6 @@
 # Exercise 4 — Depth and Overfitting
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_depth_and_overfitting.py](exercise4_depth_and_overfitting.py)
 
 ## What You Will Learn
 

@@ -1,6 +1,5 @@
 # Exercise 3 — The Full RAG Pipeline
 
-> **Exercise file:** [exercise3_rag_pipeline.py](exercise3_rag_pipeline.py)
 > Read this guide fully before opening the exercise file.
 
 ---

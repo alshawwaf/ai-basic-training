@@ -1,7 +1,6 @@
 # Exercise 2 — Train and Read the Tree
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_train_and_read_the_tree.py](exercise2_train_and_read_the_tree.py)
 
 ## What You Will Learn
 

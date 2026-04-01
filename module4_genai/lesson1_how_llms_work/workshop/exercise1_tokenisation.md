@@ -1,6 +1,5 @@
 # Exercise 1 — Tokenisation: Text as Token IDs
 
-> **Exercise file:** [exercise1_tokenisation.py](exercise1_tokenisation.py)
 > Read this guide fully before opening the exercise file.
 
 ---

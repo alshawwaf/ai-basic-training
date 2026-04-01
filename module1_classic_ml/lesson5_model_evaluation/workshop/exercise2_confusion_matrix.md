@@ -1,7 +1,6 @@
 # Exercise 2 — Confusion Matrix
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_confusion_matrix.py](exercise2_confusion_matrix.py)
 
 ## What You Will Learn
 

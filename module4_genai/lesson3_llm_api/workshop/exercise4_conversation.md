@@ -1,6 +1,5 @@
 # Exercise 4 — Multi-Turn Conversation
 
-> **Exercise file:** [exercise4_conversation.py](exercise4_conversation.py)
 > Read this guide fully before opening the exercise file.
 
 ---

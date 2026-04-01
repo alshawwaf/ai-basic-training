@@ -1,7 +1,6 @@
 # Exercise 2 — Feature Engineering for URL Phishing Detection
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_feature_engineering_urls.py](exercise2_feature_engineering_urls.py)
 
 ## What You Will Learn
 

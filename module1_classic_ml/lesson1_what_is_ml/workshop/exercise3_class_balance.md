@@ -1,6 +1,5 @@
 # Exercise 3 — Class Balance: The Silent Model Killer
 
-> **Exercise file:** [exercise3_class_balance.py](exercise3_class_balance.py)
 > Read this guide fully before opening the exercise file.
 
 ---

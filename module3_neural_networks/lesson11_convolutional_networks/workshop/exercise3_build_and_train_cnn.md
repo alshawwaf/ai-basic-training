@@ -1,6 +1,5 @@
 # Exercise 3 — Build and Train a CNN
 
-> **Exercise file:** [exercise3_build_and_train_cnn.py](exercise3_build_and_train_cnn.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

@@ -1,6 +1,5 @@
 # Exercise 2 — System Prompt Design
 
-> **Exercise file:** [exercise2_system_prompts.py](exercise2_system_prompts.py)
 > Read this guide fully before opening the exercise file.
 
 ---

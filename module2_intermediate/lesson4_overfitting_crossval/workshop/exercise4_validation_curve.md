@@ -1,6 +1,5 @@
 # Exercise 4 — Validation Curve
 
-> **Exercise file:** [exercise4_validation_curve.py](exercise4_validation_curve.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

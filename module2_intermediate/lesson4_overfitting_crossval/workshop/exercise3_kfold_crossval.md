@@ -1,7 +1,6 @@
 # Exercise 3 — K-Fold Cross-Validation
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_kfold_crossval.py](exercise3_kfold_crossval.py)
 
 ## What You Will Learn
 

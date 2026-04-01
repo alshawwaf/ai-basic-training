@@ -1,7 +1,6 @@
 # Exercise 3 — Train and Evaluate the Phishing Classifier
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_train_and_evaluate.py](exercise3_train_and_evaluate.py)
 
 ## What You Will Learn
 

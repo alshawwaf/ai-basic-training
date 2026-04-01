@@ -1,7 +1,6 @@
 # Exercise 3 — Feature Importance
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_feature_importance.py](exercise3_feature_importance.py)
 
 ## What You Will Learn
 

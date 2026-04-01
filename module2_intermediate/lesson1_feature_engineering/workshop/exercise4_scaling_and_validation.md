@@ -1,7 +1,6 @@
 # Exercise 4 — Scaling and Validation
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_scaling_and_validation.py](exercise4_scaling_and_validation.py)
 
 ## What You Will Learn
 

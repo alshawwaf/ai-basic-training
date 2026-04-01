@@ -1,7 +1,6 @@
 # Exercise 4 — Tune the Forest
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_tune_the_forest.py](exercise4_tune_the_forest.py)
 
 ## What You Will Learn
 

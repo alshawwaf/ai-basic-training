@@ -1,6 +1,5 @@
 # Exercise 2 — Build the Network
 
-> **Exercise file:** [exercise2_build_the_network.py](exercise2_build_the_network.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

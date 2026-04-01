@@ -1,6 +1,5 @@
 # Exercise 1 — Why Dense Fails on Images
 
-> **Exercise file:** [exercise1_why_dense_fails_on_images.py](exercise1_why_dense_fails_on_images.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

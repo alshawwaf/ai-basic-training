@@ -1,7 +1,6 @@
 # Exercise 1 — Unsupervised Framing
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_unsupervised_framing.py](exercise1_unsupervised_framing.py)
 
 ## What You Will Learn
 

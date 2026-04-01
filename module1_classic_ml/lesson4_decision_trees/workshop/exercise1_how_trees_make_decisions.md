@@ -1,7 +1,6 @@
 # Exercise 1 — How Trees Make Decisions
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_how_trees_make_decisions.py](exercise1_how_trees_make_decisions.py)
 
 ## What You Will Learn
 

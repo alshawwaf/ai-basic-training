@@ -1,6 +1,5 @@
 # Exercise 1 — Document Chunking
 
-> **Exercise file:** [exercise1_chunking.py](exercise1_chunking.py)
 > Read this guide fully before opening the exercise file.
 
 ---

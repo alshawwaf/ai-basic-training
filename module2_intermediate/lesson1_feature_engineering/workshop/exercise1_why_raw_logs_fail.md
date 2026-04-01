@@ -1,7 +1,6 @@
 # Exercise 1 — Why Raw Logs Fail
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_why_raw_logs_fail.py](exercise1_why_raw_logs_fail.py)
 
 ## What You Will Learn
 

@@ -1,6 +1,5 @@
 # Exercise 1 — Loading a Dataset
 
-> **Exercise file:** [exercise1_loading_data.py](exercise1_loading_data.py)
 > Read this guide fully before opening the exercise file.
 
 ---

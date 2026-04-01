@@ -1,6 +1,5 @@
 # Exercise 4 — Early Stopping
 
-> **Exercise file:** [exercise4_early_stopping.py](exercise4_early_stopping.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

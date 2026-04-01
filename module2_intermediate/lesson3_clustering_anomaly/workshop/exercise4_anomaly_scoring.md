@@ -1,7 +1,6 @@
 # Exercise 4 — Anomaly Scoring
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_anomaly_scoring.py](exercise4_anomaly_scoring.py)
 
 ## What You Will Learn
 

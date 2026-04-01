@@ -1,6 +1,5 @@
 # Exercise 4 — Visualising Your Data
 
-> **Exercise file:** [exercise4_visualise.py](exercise4_visualise.py)
 > Read this guide fully before opening the exercise file.
 
 ---

@@ -1,7 +1,6 @@
 # Exercise 3 — Categorical Encoding
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_categorical_encoding.py](exercise3_categorical_encoding.py)
 
 ## What You Will Learn
 

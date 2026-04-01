@@ -1,6 +1,5 @@
 # Exercise 1 — What Are Hyperparameters?
 
-> **Exercise file:** [exercise1_what_are_hyperparameters.py](exercise1_what_are_hyperparameters.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

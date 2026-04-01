@@ -1,7 +1,6 @@
 # Exercise 2 — K-Means and Visualisation
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_kmeans_and_visualisation.py](exercise2_kmeans_and_visualisation.py)
 
 ## What You Will Learn
 

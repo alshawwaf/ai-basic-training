@@ -1,6 +1,5 @@
 # Exercise 3 — Batch Size Effects
 
-> **Exercise file:** [exercise3_batch_size_effects.py](exercise3_batch_size_effects.py)
 > Read this guide fully before opening the exercise file.
 
 ---

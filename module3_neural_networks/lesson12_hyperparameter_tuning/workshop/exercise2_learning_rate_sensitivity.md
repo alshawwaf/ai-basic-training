@@ -1,6 +1,5 @@
 # Exercise 2 — Learning Rate Sensitivity
 
-> **Exercise file:** [exercise2_learning_rate_sensitivity.py](exercise2_learning_rate_sensitivity.py)
 > Read this guide fully before opening the exercise file.
 
 ---

@@ -1,7 +1,6 @@
 # Exercise 2 — Numeric Feature Extraction
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_numeric_feature_extraction.py](exercise2_numeric_feature_extraction.py)
 
 ## What You Will Learn
 

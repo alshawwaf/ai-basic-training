@@ -1,6 +1,5 @@
 # Exercise 1 — Demonstrate Overfitting
 
-> **Exercise file:** [exercise1_demonstrate_overfitting.py](exercise1_demonstrate_overfitting.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

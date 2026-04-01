@@ -1,7 +1,6 @@
 # Exercise 3 — Precision, Recall, and F1
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_precision_recall_f1.py](exercise3_precision_recall_f1.py)
 
 ## What You Will Learn
 

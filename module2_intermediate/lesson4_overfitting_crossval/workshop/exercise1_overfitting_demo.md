@@ -1,7 +1,6 @@
 # Exercise 1 — Overfitting Demo
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise1_overfitting_demo.py](exercise1_overfitting_demo.py)
 
 ## What You Will Learn
 

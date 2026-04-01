@@ -1,6 +1,5 @@
 # Exercise 2 — Retrieval: Finding Relevant Chunks
 
-> **Exercise file:** [exercise2_retrieval.py](exercise2_retrieval.py)
 > Read this guide fully before opening the exercise file.
 
 ---

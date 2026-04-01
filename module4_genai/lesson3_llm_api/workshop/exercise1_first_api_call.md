@@ -1,6 +1,5 @@
 # Exercise 1 — Your First LLM API Call
 
-> **Exercise file:** [exercise1_first_api_call.py](exercise1_first_api_call.py)
 > Read this guide fully before opening the exercise file.
 
 ---

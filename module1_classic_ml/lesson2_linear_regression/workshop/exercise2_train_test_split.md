@@ -1,7 +1,6 @@
 # Exercise 2 — Train/Test Split
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_train_test_split.py](exercise2_train_test_split.py)
 
 ## What You Will Learn
 

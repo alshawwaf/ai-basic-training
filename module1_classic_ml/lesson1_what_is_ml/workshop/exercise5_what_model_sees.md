@@ -1,6 +1,5 @@
 # Exercise 5 — What the Model Actually Sees
 
-> **Exercise file:** [exercise5_what_model_sees.py](exercise5_what_model_sees.py)
 > Read this guide fully before opening the exercise file.
 
 ---

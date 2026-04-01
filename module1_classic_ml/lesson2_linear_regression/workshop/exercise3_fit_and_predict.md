@@ -1,7 +1,6 @@
 # Exercise 3 — Fit and Predict
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise3_fit_and_predict.py](exercise3_fit_and_predict.py)
 
 ## What You Will Learn
 

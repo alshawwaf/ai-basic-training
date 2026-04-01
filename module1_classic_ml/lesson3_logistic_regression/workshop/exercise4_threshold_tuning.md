@@ -1,7 +1,6 @@
 # Exercise 4 — Threshold Tuning
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_threshold_tuning.py](exercise4_threshold_tuning.py)
 
 ## What You Will Learn
 

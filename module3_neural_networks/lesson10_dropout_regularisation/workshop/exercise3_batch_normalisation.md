@@ -1,6 +1,5 @@
 # Exercise 3 — Batch Normalisation
 
-> **Exercise file:** [exercise3_batch_normalisation.py](exercise3_batch_normalisation.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

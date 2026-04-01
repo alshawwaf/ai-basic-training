@@ -1,6 +1,5 @@
 # Exercise 2 — Sentence Embeddings
 
-> **Exercise file:** [exercise2_sentence_embeddings.py](exercise2_sentence_embeddings.py)
 > Read this guide fully before opening the exercise file.
 
 ---

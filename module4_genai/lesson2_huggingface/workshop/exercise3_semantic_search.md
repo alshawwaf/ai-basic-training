@@ -1,6 +1,5 @@
 # Exercise 3 — Semantic Search over a Security Knowledge Base
 
-> **Exercise file:** [exercise3_semantic_search.py](exercise3_semantic_search.py)
 > Read this guide fully before opening the exercise file.
 
 ---

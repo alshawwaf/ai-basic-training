@@ -1,6 +1,5 @@
 # Exercise 3 — Attention: Which Words Matter to Which
 
-> **Exercise file:** [exercise3_attention.py](exercise3_attention.py)
 > Read this guide fully before opening the exercise file.
 
 ---

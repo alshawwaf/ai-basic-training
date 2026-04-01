@@ -1,6 +1,5 @@
 # Exercise 1 — From NumPy to Keras
 
-> **Exercise file:** [exercise1_from_numpy_to_keras.py](exercise1_from_numpy_to_keras.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

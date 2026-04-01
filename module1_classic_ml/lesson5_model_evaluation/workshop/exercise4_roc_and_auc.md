@@ -1,7 +1,6 @@
 # Exercise 4 — ROC Curve and AUC
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_roc_and_auc.py](exercise4_roc_and_auc.py)
 
 ## What You Will Learn
 

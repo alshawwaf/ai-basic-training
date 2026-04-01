@@ -1,7 +1,6 @@
 # Exercise 2 — Bias-Variance Tradeoff
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise2_bias_variance.py](exercise2_bias_variance.py)
 
 ## What You Will Learn
 

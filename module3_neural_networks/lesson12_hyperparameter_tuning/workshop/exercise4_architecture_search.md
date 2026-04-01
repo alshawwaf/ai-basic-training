@@ -1,6 +1,5 @@
 # Exercise 4 — Architecture Search
 
-> **Exercise file:** [exercise4_architecture_search.py](exercise4_architecture_search.py)
 > Read this guide fully before opening the exercise file.
 
 ---

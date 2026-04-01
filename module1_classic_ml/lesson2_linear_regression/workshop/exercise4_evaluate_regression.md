@@ -1,7 +1,6 @@
 # Exercise 4 — Evaluate Regression and Build a Security Baseline
 
 > Back to [1_lab_guide.md](1_lab_guide.md)
-> Exercise file: [exercise4_evaluate_regression.py](exercise4_evaluate_regression.py)
 
 ## What You Will Learn
 

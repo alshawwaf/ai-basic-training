@@ -1,6 +1,5 @@
 # Exercise 2 — Add Dropout
 
-> **Exercise file:** [exercise2_add_dropout.py](exercise2_add_dropout.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

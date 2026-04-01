@@ -1,6 +1,5 @@
 # Exercise 4 — Evaluate and Improve
 
-> **Exercise file:** [exercise4_evaluate_and_improve.py](exercise4_evaluate_and_improve.py)
 > Read this guide fully before opening the exercise file.
 
 ## What You Will Learn

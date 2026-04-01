@@ -1,6 +1,5 @@
 # Exercise 3 — Structured JSON Output
 
-> **Exercise file:** [exercise3_structured_output.py](exercise3_structured_output.py)
 > Read this guide fully before opening the exercise file.
 
 ---

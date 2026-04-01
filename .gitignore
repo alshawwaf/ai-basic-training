@@ -1,4 +1,1 @@
-.claude/
-venv/
-module*/*.png
-!assets/*.png
+__pycache__/

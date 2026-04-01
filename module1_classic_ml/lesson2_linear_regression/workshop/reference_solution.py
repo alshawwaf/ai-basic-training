@@ -13,15 +13,15 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 # ── 1. Generate synthetic server load data ─────────────────────────────────────
 np.random.seed(42)
-n_samples = 300
+n_samples = 500
 
-requests_per_second = np.random.uniform(10, 500, n_samples)
+requests_per_second = np.random.uniform(5, 200, n_samples)
 
 # Response time increases linearly with load + realistic noise
-# True relationship: ~2.5 ms per req/s, 50 ms baseline
-response_time_ms = (2.5 * requests_per_second
-                    + np.random.normal(0, 25, n_samples)
-                    + 50)
+# True relationship: ~1.8 ms per req/s, 30 ms baseline
+response_time_ms = (1.8 * requests_per_second
+                    + np.random.normal(0, 15, n_samples)
+                    + 30)
 
 df = pd.DataFrame({
     'requests_per_second': requests_per_second,

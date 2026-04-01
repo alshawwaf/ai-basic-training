@@ -15,44 +15,45 @@ from sklearn.preprocessing import StandardScaler
 # ── 1. Generate synthetic phishing URL feature dataset ────────────────────────
 np.random.seed(42)
 n = 1000
+half = n // 2
 
-# Legitimate URLs (label = 0)
+# Legitimate URLs (is_phishing = 0)
 legit = pd.DataFrame({
-    'url_length':       np.random.normal(40, 10, n // 2).clip(10, 100),
-    'num_dots':         np.random.poisson(2, n // 2).clip(1, 5),
-    'has_at_symbol':    np.random.binomial(1, 0.01, n // 2),
-    'uses_https':       np.random.binomial(1, 0.90, n // 2),
-    'num_subdomains':   np.random.poisson(1, n // 2).clip(0, 3),
-    'has_ip_address':   np.random.binomial(1, 0.01, n // 2),
-    'num_hyphens':      np.random.poisson(0.5, n // 2).clip(0, 3),
-    'path_length':      np.random.normal(20, 10, n // 2).clip(0, 60),
-    'label': 0
+    'url_length':       np.random.normal(45, 12, half).clip(10, 100).astype(int),
+    'num_dots':         np.random.poisson(2.1, half),
+    'has_at_symbol':    (np.random.rand(half) < 0.05).astype(int),
+    'uses_https':       (np.random.rand(half) < 0.82).astype(int),
+    'num_subdomains':   np.random.poisson(0.8, half),
+    'has_ip_address':   (np.random.rand(half) < 0.02).astype(int),
+    'num_hyphens':      np.random.poisson(0.3, half),
+    'path_length':      np.random.normal(15, 8, half).clip(0, 60).astype(int),
+    'is_phishing': 0
 })
 
-# Phishing URLs (label = 1)
+# Phishing URLs (is_phishing = 1)
 phish = pd.DataFrame({
-    'url_length':       np.random.normal(75, 20, n // 2).clip(20, 200),
-    'num_dots':         np.random.poisson(5, n // 2).clip(2, 12),
-    'has_at_symbol':    np.random.binomial(1, 0.30, n // 2),
-    'uses_https':       np.random.binomial(1, 0.40, n // 2),
-    'num_subdomains':   np.random.poisson(4, n // 2).clip(1, 10),
-    'has_ip_address':   np.random.binomial(1, 0.25, n // 2),
-    'num_hyphens':      np.random.poisson(3, n // 2).clip(0, 10),
-    'path_length':      np.random.normal(50, 20, n // 2).clip(0, 150),
-    'label': 1
+    'url_length':       np.random.normal(98, 25, half).clip(30, 250).astype(int),
+    'num_dots':         np.random.poisson(4.8, half),
+    'has_at_symbol':    (np.random.rand(half) < 0.31).astype(int),
+    'uses_https':       (np.random.rand(half) < 0.61).astype(int),
+    'num_subdomains':   np.random.poisson(2.5, half),
+    'has_ip_address':   (np.random.rand(half) < 0.21).astype(int),
+    'num_hyphens':      np.random.poisson(2.1, half),
+    'path_length':      np.random.normal(48, 18, half).clip(0, 150).astype(int),
+    'is_phishing': 1
 })
 
 df = pd.concat([legit, phish], ignore_index=True).sample(frac=1, random_state=42)
 
 print("=== Dataset ===")
-print(df['label'].value_counts().rename({0: 'Legitimate', 1: 'Phishing'}))
+print(df['is_phishing'].value_counts().rename({0: 'Legitimate', 1: 'Phishing'}))
 print("\nFeature preview:")
-print(df.drop('label', axis=1).describe().round(2))
+print(df.drop('is_phishing', axis=1).describe().round(2))
 
 # ── 2. Prepare and split ───────────────────────────────────────────────────────
-feature_cols = [c for c in df.columns if c != 'label']
+feature_cols = [c for c in df.columns if c != 'is_phishing']
 X = df[feature_cols]
-y = df['label']
+y = df['is_phishing']
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y

@@ -106,24 +106,24 @@ The split in step 3 is critical: you never evaluate on data the model was traine
 
 ## Lessons
 
-### Lesson 1.1 — [What is ML?](lesson1_what_is_ml/1_what_is_ml.md)
-**Workshop:** [lesson1_what_is_ml/workshop/1_lab_guide.md](lesson1_what_is_ml/workshop/1_lab_guide.md)
+### Lesson 1.1 — [What is ML?](lesson1_what_is_ml/notes.md)
+**Workshop:** [lesson1_what_is_ml/workshop/00_overview.md](lesson1_what_is_ml/workshop/00_overview.md)
 Learn to load, inspect, and visualise a dataset before training anything.
 
-### Lesson 1.2 — [Linear Regression](lesson2_linear_regression/2_linear_regression.md)
-**Workshop:** [lesson2_linear_regression/workshop/1_lab_guide.md](lesson2_linear_regression/workshop/1_lab_guide.md)
+### Lesson 1.2 — [Linear Regression](lesson2_linear_regression/notes.md)
+**Workshop:** [lesson2_linear_regression/workshop/00_overview.md](lesson2_linear_regression/workshop/00_overview.md)
 Predict a continuous value: server response time from traffic load.
 
-### Lesson 1.3 — [Logistic Regression](lesson3_logistic_regression/3_logistic_regression.md)
-**Workshop:** [lesson3_logistic_regression/workshop/1_lab_guide.md](lesson3_logistic_regression/workshop/1_lab_guide.md)
+### Lesson 1.3 — [Logistic Regression](lesson3_logistic_regression/notes.md)
+**Workshop:** [lesson3_logistic_regression/workshop/00_overview.md](lesson3_logistic_regression/workshop/00_overview.md)
 Make binary decisions: phishing URL (yes/no).
 
-### Lesson 1.4 — [Decision Trees](lesson4_decision_trees/4_decision_trees.md)
-**Workshop:** [lesson4_decision_trees/workshop/1_lab_guide.md](lesson4_decision_trees/workshop/1_lab_guide.md)
+### Lesson 1.4 — [Decision Trees](lesson4_decision_trees/notes.md)
+**Workshop:** [lesson4_decision_trees/workshop/00_overview.md](lesson4_decision_trees/workshop/00_overview.md)
 Classify network traffic as threat or benign using rule-based splits.
 
-### Lesson 1.5 — [Model Evaluation](lesson5_model_evaluation/5_model_evaluation.md)
-**Workshop:** [lesson5_model_evaluation/workshop/1_lab_guide.md](lesson5_model_evaluation/workshop/1_lab_guide.md)
+### Lesson 1.5 — [Model Evaluation](lesson5_model_evaluation/notes.md)
+**Workshop:** [lesson5_model_evaluation/workshop/00_overview.md](lesson5_model_evaluation/workshop/00_overview.md)
 Accuracy, precision, recall, F1, confusion matrix — what they mean and when to use each.
 
 ### Milestone — [Phishing URL Classifier](milestone/milestone_phishing.py)

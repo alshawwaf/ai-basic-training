@@ -147,24 +147,18 @@ Each lesson has three parts:
 
 | File / Folder | Role |
 |---------------|------|
-| `N_topic_name.md` | **Read this first.** Explains the concept in plain English with analogies and security context. No code. Ends with a link to the workshop. |
-| `workshop/` | **Do this next.** A guided set of exercises you complete yourself. Each exercise has its own `.md` guide and `.py` scaffold with `# >>> YOUR CODE HERE` markers. |
-| `workshop/reference_solution.py` | **Open last.** Complete working implementation — compare against your own after finishing all exercises. |
+| `notes.md` (or `N_topic.md`) | **Read this first.** Explains the concept in plain English with analogies and security context. Ends with a link to the workshop. |
+| `workshop/` | **Do this next.** A guided set of exercises you complete yourself. Each exercise has a guide (`.md`) and a lab (`.md`) with step-by-step instructions to build your script. |
+| `_solution_` files | **Open last.** Each exercise has a matching solution file — compare against your own after finishing. |
 
 **The recommended flow for every lesson:**
 
-1. Read the `.md` theory file — understand the concept before touching code
-2. Open `workshop/1_lab_guide.md` — read the exercise overview
-3. For each exercise: read the `.md` guide, then fill in the `.py` file
-4. Run the `.py` file after each task and verify your output matches the expected output
-5. After all exercises pass, open `reference_solution.py` and compare your code
+1. Read the theory file — understand the concept before touching code
+2. Open the workshop overview — read the exercise list
+3. For each exercise: read the guide, then follow the lab steps to build your script
+4. Run your script after each task and verify your output matches the expected output
+5. Compare your code against the matching `_solution_` file
 6. Move on when the output makes sense to you
-
-**Running an exercise:**
-```bash
-# Activate your venv first, then from the repo root:
-python module1_classic_ml/lesson1_what_is_ml/workshop/exercise1_loading_data.py
-```
 
 You don't need to understand every line before moving forward. The goal is to build intuition — deep understanding comes from repetition across modules.
 
@@ -178,11 +172,11 @@ Classic ML is the foundation everything else builds on. These algorithms are sti
 
 | # | Theory | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 1.1 | [What is ML?](module1_classic_ml/lesson1_what_is_ml/1_what_is_ml.md) | [Workshop (5 exercises)](module1_classic_ml/lesson1_what_is_ml/workshop/1_lab_guide.md) | The ML workflow, loading and exploring a dataset, EDA, class balance |
-| 1.2 | [Linear Regression](module1_classic_ml/lesson2_linear_regression/2_linear_regression.md) | [Workshop (4 exercises)](module1_classic_ml/lesson2_linear_regression/workshop/1_lab_guide.md) | Predicting continuous values — server response time from traffic load |
-| 1.3 | [Logistic Regression](module1_classic_ml/lesson3_logistic_regression/3_logistic_regression.md) | [Workshop (4 exercises)](module1_classic_ml/lesson3_logistic_regression/workshop/1_lab_guide.md) | Binary classification — URL features → phishing or legitimate |
-| 1.4 | [Decision Trees](module1_classic_ml/lesson4_decision_trees/4_decision_trees.md) | [Workshop (4 exercises)](module1_classic_ml/lesson4_decision_trees/workshop/1_lab_guide.md) | Interpretable rule-based classification — network traffic labelled as threat or benign |
-| 1.5 | [Model Evaluation](module1_classic_ml/lesson5_model_evaluation/5_model_evaluation.md) | [Workshop (5 exercises)](module1_classic_ml/lesson5_model_evaluation/workshop/1_lab_guide.md) | Precision, recall, F1-score, ROC AUC — and why accuracy alone is meaningless in security |
+| 1.1 | [What is ML?](module1_classic_ml/lesson1_what_is_ml/notes.md) | [Workshop (5 exercises)](module1_classic_ml/lesson1_what_is_ml/workshop/00_overview.md) | The ML workflow, loading and exploring a dataset, EDA, class balance |
+| 1.2 | [Linear Regression](module1_classic_ml/lesson2_linear_regression/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson2_linear_regression/workshop/00_overview.md) | Predicting continuous values — server response time from traffic load |
+| 1.3 | [Logistic Regression](module1_classic_ml/lesson3_logistic_regression/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson3_logistic_regression/workshop/00_overview.md) | Binary classification — URL features → phishing or legitimate |
+| 1.4 | [Decision Trees](module1_classic_ml/lesson4_decision_trees/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson4_decision_trees/workshop/00_overview.md) | Interpretable rule-based classification — network traffic labelled as threat or benign |
+| 1.5 | [Model Evaluation](module1_classic_ml/lesson5_model_evaluation/notes.md) | [Workshop (5 exercises)](module1_classic_ml/lesson5_model_evaluation/workshop/00_overview.md) | Precision, recall, F1-score, ROC AUC — and why accuracy alone is meaningless in security |
 | — | **Milestone Project** | [milestone_phishing.py](module1_classic_ml/milestone/milestone_phishing.py) | End-to-end phishing URL classifier: feature extraction → training → evaluation |
 
 **Key concepts covered:** supervised learning, features and labels, train/test split, underfitting, decision boundaries, confusion matrix, false positive rate
@@ -271,13 +265,14 @@ AI Basic Training/
 │
 ├── module1_classic_ml/
 │   ├── lesson1_what_is_ml/
-│   │   ├── 1_what_is_ml.md             ← Theory (read first)
+│   │   ├── notes.md                    ← Theory (read first)
 │   │   └── workshop/
-│   │       ├── 1_lab_guide.md          ← Exercise overview
-│   │       ├── exercise1_*.md          ← Per-exercise guide
-│   │       ├── exercise1_*.py          ← Your code goes here
-│   │       ├── exercise2_* ... 5_*     ← (repeated for each exercise)
-│   │       └── reference_solution.py  ← Open after finishing
+│   │       ├── 00_overview.md          ← Exercise overview
+│   │       ├── 01_guide_*.md           ← Per-exercise concept guide
+│   │       ├── 01_lab_*.md             ← Step-by-step lab instructions
+│   │       ├── 01_solution_*.py        ← Reference solution for exercise 1
+│   │       ├── 02_guide/lab/solution   ← (repeated for each exercise)
+│   │       └── ...
 │   ├── lesson2_linear_regression/  (same structure, 4 exercises)
 │   ├── lesson3_logistic_regression/ (same structure, 4 exercises)
 │   ├── lesson4_decision_trees/     (same structure, 4 exercises)

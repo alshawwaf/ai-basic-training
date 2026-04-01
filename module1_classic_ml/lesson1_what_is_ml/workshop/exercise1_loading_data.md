@@ -76,7 +76,9 @@ The full dataset: **1,797 images**, **10 classes** (digits 0–9), **64 features
 
 ## Concept: The `load_digits()` Return Value — a Bunch Object
 
-`load_digits()` returns a `Bunch` — a container object that works like a Python dictionary with dot-notation access:
+scikit-learn ships several real datasets that load with a single function call — no downloading, no CSV files, no file paths. `load_digits()` is one of them. You call it once and it hands back everything: the pixel data, the correct labels, and metadata all bundled together.
+
+That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access:
 
 | Field | Type | Contents |
 |-------|------|----------|

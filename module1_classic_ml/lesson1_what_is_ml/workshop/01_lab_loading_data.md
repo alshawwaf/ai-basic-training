@@ -57,7 +57,26 @@ Fields available: ['data', 'target', 'frame', 'feature_names', 'target_names', '
 
 ## Step 4: Access the raw arrays
 
-`.shape` returns a tuple: `(rows, columns)`. Add this to your file:
+Every supervised ML dataset has two parts:
+
+- **Features (X)** — the measurements the model uses to make predictions. Here, the pixel intensities of each image.
+- **Labels (y)** — the correct answer for each sample. Here, which digit (0–9) the image actually shows.
+
+They are stored as two separate arrays that line up by row — row 0 of X pairs with row 0 of y, row 1 with row 1, and so on:
+
+```
+Features (X)                          Labels (y)
+┌──────────────────────────────┐      ┌───┐
+│ sample 0:  0  0  5 13 ...    │ ───► │ 0 │   ← this image is a "0"
+│ sample 1:  0  0  0 12 ...    │ ───► │ 1 │   ← this image is a "1"
+│ sample 2:  0  0  0 12 ...    │ ───► │ 2 │   ← this image is a "2"
+│ ...        (1797 rows)       │      │...│
+│ sample 1796: 0  0 10 14 ...  │ ───► │ 8 │
+└──────────────────────────────┘      └───┘
+  1797 rows × 64 columns               1797 values
+```
+
+`.shape` tells you the dimensions. Add this to your file:
 
 ```python
 print(f"Features (X) shape: {digits.data.shape}")
@@ -69,6 +88,8 @@ Run your file. You should see:
 Features (X) shape: (1797, 64)
 Labels   (y) shape: (1797,)
 ```
+
+`(1797, 64)` means 1,797 samples, each described by 64 features (one per pixel). `(1797,)` means a flat array of 1,797 labels — one per sample.
 
 ---
 

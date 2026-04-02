@@ -110,7 +110,7 @@ print(f"Accuracy drop:        {acc_full - acc_top3:.3f}")
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Security interpretation")
 print("=" * 60)
-print("\n--- Exercise 3 complete. Move to exercise4_depth_and_overfitting.py ---")
+print("\n--- Exercise 3 complete. Move to 04_depth_and_overfitting.py ---")
 # Map each feature to its security meaning -- why did the tree find it useful?
 interpretations = {
   "connection_rate":    "Highest importance — DoS is identified by extreme rate.",

@@ -47,4 +47,4 @@ plt.tight_layout()
 plt.savefig("module1_classic_ml/lesson1_what_is_ml/workshop/average_digits.png")
 plt.show()
 
-print("\n--- Exercise 4 complete. Move to exercise5_what_model_sees.py ---")
+print("\n--- Exercise 4 complete. Move to 05_what_model_sees.py ---")

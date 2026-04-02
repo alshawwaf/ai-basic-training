@@ -76,4 +76,4 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-print("\n--- Exercise 3 complete. Move to exercise4_evaluate_regression.py ---")
+print("\n--- Exercise 3 complete. Move to 04_evaluate_regression.py ---")

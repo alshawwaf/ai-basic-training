@@ -53,4 +53,4 @@ print(f"Test R²:     {test_r2:.3f}")
 # A large gap between train and test R² signals overfitting
 print(f"Gap (overfit indicator): {abs(train_r2 - test_r2):.3f}")
 
-print("\n--- Exercise 2 complete. Move to exercise3_fit_and_predict.py ---")
+print("\n--- Exercise 2 complete. Move to 03_fit_and_predict.py ---")

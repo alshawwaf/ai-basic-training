@@ -47,4 +47,4 @@ for label, count in counts.items():
     bar = "#" * count
     print(f"{label} | {bar} ({count})")
 
-print("\n--- Exercise 3 complete. Move to exercise4_visualise.py ---")
+print("\n--- Exercise 3 complete. Move to 04_visualise.py ---")

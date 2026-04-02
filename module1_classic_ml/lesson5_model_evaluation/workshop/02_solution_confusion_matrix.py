@@ -84,7 +84,7 @@ print(f"F1          = 2*P*R/(P+R)            = {f1:.3f}")
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Heatmap visualisation")
 print("=" * 60)
-print("\n--- Exercise 2 complete. Move to exercise3_precision_recall_f1.py ---")
+print("\n--- Exercise 2 complete. Move to 03_precision_recall_f1.py ---")
 # Heatmap gives a quick visual feel for where the model gets it right vs wrong
 if HAS_SEABORN:
     labels = [['TN', 'FP'], ['FN', 'TP']]

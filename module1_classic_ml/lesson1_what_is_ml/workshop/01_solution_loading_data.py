@@ -18,13 +18,15 @@ print(f"Labels   (y) shape: {digits.target.shape}")
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 
-print("\nFirst 3 rows of the DataFrame:")
-print(df.head(3).to_string())
-print(f"\nDataFrame shape: {df.shape}")
+# Show a few selected columns instead of all 65 — keeps the output readable
+preview_cols = ["pixel_0", "pixel_8", "pixel_32", "pixel_63", "target"]
+print("\nFirst 5 rows (selected columns):")
+print(df[preview_cols].head().to_string())
+print(f"\nFull DataFrame shape: {df.shape}")
 print(f"Columns: pixel_0 ... pixel_63, target  ({df.shape[1]} total)")
 
 # Sanity-check: look at one sample to see what the raw data looks like
 print(f"\nFirst sample — label: {digits.target[0]}")
 print(f"First 10 pixel values: {digits.data[0, :10]}")
 
-print("\n--- Exercise 1 complete. Move to exercise2_statistics.py ---")
+print("\n--- Exercise 1 complete. Move to 02_statistics.py ---")

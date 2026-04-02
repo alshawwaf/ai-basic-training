@@ -44,4 +44,4 @@ plt.title("Server Load vs Response Time")
 plt.tight_layout()
 plt.show()
 
-print("\n--- Exercise 1 complete. Move to exercise2_train_test_split.py ---")
+print("\n--- Exercise 1 complete. Move to 02_train_test_split.py ---")

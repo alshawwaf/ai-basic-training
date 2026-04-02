@@ -80,21 +80,24 @@ A DataFrame gives you named columns and easy inspection. Add this to your file:
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 
-print("\nFirst 3 rows of the DataFrame:")
-print(df.head(3).to_string())
-print(f"\nDataFrame shape: {df.shape}")
+preview_cols = ["pixel_0", "pixel_8", "pixel_32", "pixel_63", "target"]
+print("\nFirst 5 rows (selected columns):")
+print(df[preview_cols].head().to_string())
+print(f"\nFull DataFrame shape: {df.shape}")
 print(f"Columns: pixel_0 ... pixel_63, target  ({df.shape[1]} total)")
 ```
 
 Run your file. You should see:
 ```
-First 3 rows of the DataFrame:
-   pixel_0  pixel_1  pixel_2  ...  pixel_63  target
-0      0.0      0.0      5.0  ...       0.0       0
-1      0.0      0.0      0.0  ...       0.0       1
-2      0.0      0.0      0.0  ...       0.0       2
+First 5 rows (selected columns):
+   pixel_0  pixel_8  pixel_32  pixel_63  target
+0      0.0      0.0       0.0       0.0       0
+1      0.0      0.0      10.0       0.0       1
+2      0.0      1.0       1.0       0.0       2
+3      0.0      7.0       2.0       0.0       3
+4      0.0      0.0       0.0       0.0       4
 
-DataFrame shape: (1797, 65)
+Full DataFrame shape: (1797, 65)
 Columns: pixel_0 ... pixel_63, target  (65 total)
 ```
 

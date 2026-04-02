@@ -107,17 +107,19 @@ Each returns a `Bunch` with the same `.data`, `.target`, and `.DESCR` fields —
 
 > **Want to go deeper?** [scikit-learn toy datasets — official docs](https://scikit-learn.org/stable/datasets/toy_dataset.html)
 
-That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access:
+That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access.
+
+Most of the fields inside are **ndarray** objects. An `ndarray` (short for *n-dimensional array*) is NumPy's core data type — a grid of numbers that can have any number of dimensions. A 1D ndarray is a list of numbers, a 2D ndarray is a table (rows and columns), and a 3D ndarray is a stack of tables. All ML data flows through ndarrays because they are fast and memory-efficient.
 
 | Field | Type | Contents |
 |-------|------|----------|
 | `digits.data` | ndarray (1797, 64) | Raw pixel values — one row per image, one column per pixel |
-| `digits.target` | ndarray (1797,) | Correct label (0–9) for each image |
-| `digits.images` | ndarray (1797, 8, 8) | Same pixel values arranged as 8×8 grids — only used for plotting |
+| `digits.target` | ndarray (1797,) | Correct label (0-9) for each image |
+| `digits.images` | ndarray (1797, 8, 8) | Same pixel values arranged as 8x8 grids — only used for plotting |
 | `digits.target_names` | ndarray ([0..9]) | The list of all unique class labels |
 | `digits.DESCR` | str | Full text description of the dataset |
 
-`digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8×8 grid).
+`digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8x8 grid).
 
 ```
 digits = load_digits()
@@ -138,7 +140,7 @@ Same pixels, two shapes:
 .data[0]    →  [ 0, 0, 5, 13, 9, 1, 0, 0, 0, 0, ... ]    64 values in a flat row
                  ↑  ↑  ↑   ↑                               (what the model sees)
 
-.images[0]  →  ┌  0  0  5 13  9  1  0  0 ┐                8 rows × 8 columns
+.images[0]  →  ┌  0  0  5 13  9  1  0  0  ┐               8 rows × 8 columns
                │  0  0 13 15 10 15  5  0  │                (what the image looks like)
                │  0  3 15  2  0 11  8  0  │
                │  ...                     │

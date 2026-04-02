@@ -81,10 +81,10 @@ With `restore_best_weights=True`:
 Without restore_best_weights:       With restore_best_weights:
 
  Training stops at epoch 23          Training stops at epoch 23
- ┌─────────────────────┐            ┌─────────────────────┐
- │ Keeps epoch 23 weights│           │ Restores epoch 18    │
- │ (slightly overfit)   │            │ weights (best val)  │
- └─────────────────────┘            └─────────────────────┘
+ ┌────────────────────────┐         ┌──────────────────────┐
+ │ Keeps epoch 23 weights │         │ Restores epoch 18    │
+ │ (slightly overfit)     │         │ weights (best val)   │
+ └────────────────────────┘         └──────────────────────┘
  val_loss = 0.184                    val_loss = 0.169
 ```
 

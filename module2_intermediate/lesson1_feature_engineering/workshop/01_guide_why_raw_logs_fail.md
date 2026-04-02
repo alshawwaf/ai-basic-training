@@ -52,9 +52,9 @@ Feature engineering is the process of translating raw data into a numerical repr
 
 ```
 Raw log line (strings, mixed types — sklearn rejects this)
-┌──────────────────────────────────────────────────────────┐
-│ "2024-01-15 08:23:11  192.168.1.42  TCP  443  14580  2.3s" │
-└──────────────────────────┬───────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ "2024-01-15 08:23:11  192.168.1.42  TCP  443  14580  2.3s"  │
+└──────────────────────────┬───────────────────────────────────┘
                            │  feature engineering
                            ▼
 Numeric feature vector (sklearn accepts this)

@@ -36,22 +36,22 @@ The model has never seen your labels before. It uses its general understanding o
 Zero-Shot Classification Flow
 ──────────────────────────────────────────────────────────────
  Input text                          Candidate labels
-┌──────────────────────────────┐    ┌─────────────────────┐
-│ "Outbound connection from    │    │ "malicious activity" │
-│  workstation to 185.234..."  │    │ "normal traffic"     │
-└──────────────┬───────────────┘    │ "configuration change│
-               │                    └──────────┬──────────┘
+┌──────────────────────────────┐    ┌───────────────────────┐
+│ "Outbound connection from    │    │ "malicious activity"  │
+│  workstation to 185.234..."  │    │ "normal traffic"      │
+└──────────────┬───────────────┘    │ "configuration change"│
+               │                    └───────────┬───────────┘
                ▼                               │
         ┌──────────────────────────────────────┐
         │     NLI Model (BART-large-MNLI)      │
         │   "does text entail each label?"      │
         └──────────────────┬───────────────────┘
                            ▼
-                ┌──────────────────────┐
+                ┌────────────────────────┐
                 │ malicious activity 0.87│ ← top
                 │ normal traffic     0.09│
                 │ config change      0.04│
-                └──────────────────────┘
+                └────────────────────────┘
 ```
 
 ---

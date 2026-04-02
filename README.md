@@ -59,16 +59,17 @@ Classic ML              Intermediate ML         Neural Networks         Generati
 
 ## Who This Is For
 
-This curriculum is designed for **security professionals** who want to understand and apply AI/ML — not just use tools that happen to contain it.
+This curriculum is designed for **Security Engineers and Security Architects** who want to understand and apply AI/ML — not just consume tools that happen to contain it.
 
 You will get the most out of this if you:
 
-- Work in a security-adjacent role — SOC analyst, threat intelligence, red team, incident response, GRC, or similar
-- Write Python regularly (scripts, automation, tooling)
-- Want to understand what AI tools are actually doing under the hood
+- Design, build, or evaluate security controls and architectures
+- Write Python regularly — automation, tooling, detection logic, integrations
+- Want to understand what AI-powered security products are actually doing under the hood
+- Need to make informed decisions about where ML fits (and where it doesn't) in your security stack
 - Have **no prior ML or data science background**
 
-This is not a data science bootcamp. It is a structured, technical introduction to the parts of AI/ML that matter most to people who defend networks, investigate incidents, and assess risk.
+This is not a data science bootcamp. It is a structured, technical introduction to the parts of AI/ML that matter most to people who design security systems, evaluate detection capabilities, and architect defences.
 
 ---
 

@@ -16,7 +16,15 @@
       "Bash(sort echo:*)",
       "Read(//c/Users/admin/Desktop/AI Basic Training/{\n  depth = NF - 1\n  name = $NF\n  for\\(i=1; i<=depth; i++\\) printf \"  \"\n  printf \"|-- %s/**)",
       "Bash(grep -l \"1_lab_guide\\\\|exercise[0-9]_\" module2_intermediate/*/workshop/0*_guide_*.md)",
-      "Bash(grep -l \"1_lab_guide\\\\|exercise[0-9]_\" module2_intermediate/*/notes.md)"
+      "Bash(grep -l \"1_lab_guide\\\\|exercise[0-9]_\" module2_intermediate/*/notes.md)",
+      "Bash(grep -rn \"module[1-4]_\" stage*/ --include=\"*.md\")",
+      "Bash(grep -rn \"lesson[0-9]\" stage*/ --include=\"*.md\")",
+      "Bash(grep -rn \"notes\\\\.md\" stage*/ --include=\"*.md\")",
+      "Bash(grep -rln \"notes\\\\.md\" stage*/ --include=\"*.md\")",
+      "Bash(grep -rn \"Module [1-4]\" stage*/ --include=\"*.md\")",
+      "Bash(grep -rln \"Module [1-4]\" stage*/ --include=\"*.md\" --include=\"*.py\")",
+      "Bash(grep -rn \"milestone\" stage*/ --include=\"*.md\" --include=\"*.py\" -i)",
+      "Bash(grep -rn \"_solution_\\\\|_guide_\\\\|_lab_\" stage*/ --include=\"*.md\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\admin\\.claude\\projects\\c--Users-admin-Desktop-AI-Basic-Training\\memory",

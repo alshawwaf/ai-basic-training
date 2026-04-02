@@ -1,0 +1,153 @@
+# Lesson 3.2 — Deeper Networks, Dropout & Batch Normalisation
+
+---
+
+## Concept: Going Deeper
+
+Adding more layers lets the network learn more complex, hierarchical patterns:
+
+- **Layer 1** might learn low-level features (e.g. high packet rate)
+- **Layer 2** might learn combinations (high rate + specific port = scan)
+- **Layer 3** might learn context (that combination with long duration = APT)
+
+But deeper networks have two new problems: **overfitting** and **unstable training**.
+
+---
+
+## Dropout
+
+During training, randomly "drop" (zero out) a fraction of neurons in a layer. This forces the network to not rely on any single neuron — similar to ensemble learning.
+
+```python
+keras.layers.Dropout(0.3)   # randomly zero 30% of neurons each training step
+```
+
+```
+Without Dropout:             With Dropout (rate=0.3):
+                             X = dropped this step
+
+  [N1]--[N2]--[N3]            [N1]-- X --[N3]
+   |  \  | \  /  |             |  \       /  |
+  [N4]--[N5]--[N6]            [N4]--[N5]-- X
+   |  \  | \  /  |             |  \  |       |
+  [N7]--[N8]--[N9]             X --[N8]--[N9]
+
+  All neurons active.         Different neurons dropped
+  Model can become lazy.      each step -> redundancy learned.
+```
+
+- Applied **only during training** — not during inference
+- Typical values: 0.2–0.5
+- Reduces overfitting significantly
+
+**Analogy:** Like training a sports team where random players sit out each practice — everyone has to learn every position.
+
+---
+
+## Batch Normalisation
+
+Normalises the activations within each mini-batch during training. This:
+- Speeds up training (can use higher learning rates)
+- Reduces sensitivity to weight initialisation
+- Acts as a mild regulariser
+
+```python
+keras.layers.BatchNormalization()
+```
+
+Place it **between** a Dense layer and its activation:
+```python
+keras.layers.Dense(64),
+keras.layers.BatchNormalization(),
+keras.layers.Activation('relu'),
+```
+
+---
+
+## Early Stopping
+
+Instead of choosing the number of epochs manually, let Keras stop training when validation loss stops improving:
+
+```python
+early_stop = keras.callbacks.EarlyStopping(
+    monitor='val_loss',
+    patience=10,        # stop if no improvement for 10 epochs
+    restore_best_weights=True
+)
+model.fit(..., callbacks=[early_stop])
+```
+
+This is the most practical way to prevent overfitting without manual tuning.
+
+---
+
+## Class Imbalance in Neural Networks
+
+Security data is heavily imbalanced (1% attacks). Fix with:
+```python
+from sklearn.utils import class_weight
+weights = class_weight.compute_class_weight('balanced', classes=[0,1], y=y_train)
+model.fit(..., class_weight={0: weights[0], 1: weights[1]})
+```
+
+This tells the model to penalise missing an attack much more than a false alarm.
+
+---
+
+## What to Notice When You Run It
+
+1. Compare the loss curves to Lesson 3.1 — does dropout help?
+2. The early stopping callback — how many epochs did it actually train?
+3. Final AUC vs the shallow model from 3.1
+
+---
+
+## Next Lesson
+
+**[Lesson 3.3 — CNNs](../03_convolutional_networks/README.md):** A different network architecture designed for spatial/grid data like images.
+
+---
+
+## Ready for the Workshop?
+
+You have covered the concepts. Now build it yourself.
+
+**[Open README.md](README.md)**
+
+# Lesson 3.10 — Workshop Guide
+## Dropout and Regularisation
+
+> **Read first:** [README.md](README.md)
+> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_demonstrate_overfitting/solve.py`) — open only after finishing the exercise
+
+## What This Workshop Covers
+
+You will deliberately overfit a large neural network to see the problem clearly, then apply three regularisation techniques one by one: Dropout, Batch Normalisation, and Early Stopping. Each exercise isolates one technique so you can measure its effect directly. By the end you will have a regularised model that generalises well and stops training automatically at the right moment.
+
+This workshop reuses the same synthetic binary classification dataset from Lesson 3.9 (10 features, 90/10 class imbalance). Import and setup code is provided in each exercise — do not modify it.
+
+## Exercise Overview
+
+| # | Guide | Lab | Topic |
+|---|-------|---------------|-------|
+| 1 | [guide.md](1_demonstrate_overfitting/guide.md) | [lab.md](1_demonstrate_overfitting/lab.md) | Build large unregularised network, plot diverging loss |
+| 2 | [guide.md](2_add_dropout/guide.md) | [lab.md](2_add_dropout/lab.md) | Add Dropout(0.3), compare val loss to exercise 1 |
+| 3 | [guide.md](3_batch_normalisation/guide.md) | [lab.md](3_batch_normalisation/lab.md) | BatchNormalization, smoother curves, combine with Dropout |
+| 4 | [guide.md](4_early_stopping/guide.md) | [lab.md](4_early_stopping/lab.md) | EarlyStopping callback, patience, restore_best_weights |
+
+## Running an Exercise
+
+```bash
+cd "C:/Users/admin/Desktop/AI Basic Training"
+python stage3_neural_networks/02_dropout_regularisation/1_demonstrate_overfitting/solve.py
+```
+
+## Tips
+
+- Training 50 epochs on a large network takes 5-15 seconds — be patient
+- Overfitting may not always be dramatic on this synthetic dataset — look for any increasing val_loss trend
+- Random seed is set for reproducibility but some variance in results is expected
+
+## After This Workshop
+
+Move to [Lesson 3.11 — Convolutional Networks](../../03_convolutional_networks/README.md)

@@ -32,25 +32,24 @@ The structure is always the same. Only the domain changes:
 No matter the domain, the code follows the same pattern:
 
 ```
-          ┌──────────────────┐
-          │   Raw Data       │
-          │  (logs, images,  │
-          │   URLs, packets) │
-          └────────┬─────────┘
-                   ▼
-          ┌──────────────────┐
-          │  Extract Features│   ← turn raw data into numbers
-          │  (X) and Labels  │   ← identify what you're predicting
-          │  (y)             │
-          └────────┬─────────┘
-                   ▼
-          ┌──────────────────┐
-          │  model.fit(X, y) │   ← the model finds the pattern
-          └────────┬─────────┘
-                   ▼
-          ┌──────────────────┐
-          │  model.predict() │   ← apply the pattern to new data
-          └──────────────────┘
+      ┌──────────────────────────────┐
+      │          Raw Data            │
+      │   (logs, images, URLs,       │
+      │    packets, sensor data)     │
+      └──────────────┬───────────────┘
+                     ▼
+      ┌──────────────────────────────┐
+      │   Extract Features (X)       │   ← turn raw data into numbers
+      │   and Labels (y)             │   ← identify what you're predicting
+      └──────────────┬───────────────┘
+                     ▼
+      ┌──────────────────────────────┐
+      │       model.fit(X, y)        │   ← the model finds the pattern
+      └──────────────┬───────────────┘
+                     ▼
+      ┌──────────────────────────────┐
+      │      model.predict(X_new)    │   ← apply the pattern to new data
+      └──────────────────────────────┘
 ```
 
 > **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)

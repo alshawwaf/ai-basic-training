@@ -63,7 +63,7 @@ for digit in range(10):
         row_idx[digit].axis("off")
 
 plt.tight_layout()
-plt.savefig("stage1_classic_ml/01_what_is_ml/sample_digits.png")
+plt.savefig("sample_digits.png")
 plt.show()
 ```
 
@@ -83,7 +83,7 @@ for digit, ax in enumerate(axes):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("stage1_classic_ml/01_what_is_ml/average_digits.png")
+plt.savefig("average_digits.png")
 plt.show()
 ```
 

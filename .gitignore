@@ -1,1 +1,6 @@
 __pycache__/
+
+# Generated plots from exercise scripts
+*.png
+# Keep asset images
+!assets/*.png

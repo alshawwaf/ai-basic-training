@@ -64,6 +64,22 @@ Feature maps: (5, 5, 64)  →  Flatten  →  (1600,)
 
 `Flatten()` just reshapes the tensor. It has no learnable parameters.
 
+```
+Flatten: 3D feature maps → 1D vector
+
+ 64 feature maps, each 5×5:
+ ┌─────┐ ┌─────┐       ┌─────┐
+ │5 × 5│ │5 × 5│  ...  │5 × 5│    64 maps
+ └─────┘ └─────┘       └─────┘
+    map 1    map 2        map 64
+          \     |        /
+           ▼    ▼       ▼
+ ┌──────────────────────────────────┐
+ │  25 + 25 + ... + 25 = 1600 vals │   1D vector
+ └──────────────────────────────────┘
+   → feeds into Dense(128, relu)
+```
+
 ---
 
 ## What Each Task Asks You to Do

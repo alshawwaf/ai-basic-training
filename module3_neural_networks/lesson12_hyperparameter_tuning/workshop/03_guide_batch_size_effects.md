@@ -27,6 +27,31 @@ batch_size=1600 → 1 batch per epoch    →  1 gradient update per epoch (= "fu
 
 Each gradient update uses only the samples in that batch to compute the gradient. Smaller batches = noisier gradient estimates.
 
+```
+One epoch with batch_size=32 (1600 samples):
+
+┌────────┬────────┬────────┬─── ... ───┬────────┐
+│batch 1 │batch 2 │batch 3 │           │batch 50│
+│ 32     │ 32     │ 32     │   ...     │ 32     │
+│samples │samples │samples │           │samples │
+└───┬────┴───┬────┴───┬────┘           └───┬────┘
+    ▼        ▼        ▼                    ▼
+ update   update   update    ...        update
+   #1       #2       #3                   #50
+
+ = 50 weight updates per epoch (noisy but frequent)
+
+One epoch with batch_size=1600 (full batch):
+
+┌────────────────────────────────────────────────┐
+│              all 1600 samples                  │
+└────────────────────────┬───────────────────────┘
+                         ▼
+                      update #1
+
+ = 1 weight update per epoch (stable but infrequent)
+```
+
 ---
 
 ## Concept: The Noise-Stability Tradeoff

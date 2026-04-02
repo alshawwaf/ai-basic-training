@@ -39,6 +39,21 @@ For each mini-batch, this layer:
 
 The result: each layer always receives inputs with approximately mean=0 and std=1, regardless of what happened in earlier layers.
 
+```
+BatchNorm transformation (per feature, within one mini-batch):
+
+ Before BN                  After BN
+ (shifting distribution)    (stable, centred)
+
+      __                         __
+    /    \   mean=2.1          /    \   mean~0
+   /      \  std=3.8          /      \  std~1
+  /        \                 /        \
+ /          \               /          \
+─┼──────────┼──►         ──┼──────────┼──►
+ -2    0  2  4             -2    0    2
+```
+
 ---
 
 ## Concept: Effect on Training
@@ -75,6 +90,32 @@ In practice the difference is small for most problems. Use the first (simpler) p
 **Combined with Dropout:**
 The standard order is: `Dense → BatchNorm → Dropout → next Dense`
 BatchNorm comes before Dropout because Dropout changes the scale of inputs.
+
+```
+Recommended layer stack (one "block"):
+
+┌──────────────────────┐
+│  Dense(256, relu)    │  ← compute activations
+├──────────────────────┤
+│  BatchNormalization  │  ← normalise to mean~0, std~1
+├──────────────────────┤
+│  Dropout(0.3)        │  ← randomly zero 30% of neurons
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  Dense(256, relu)    │  ← next block receives clean,
+├──────────────────────┤     normalised, regularised input
+│  BatchNormalization  │
+├──────────────────────┤
+│  Dropout(0.3)        │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  Dense(1, sigmoid)   │  ← output layer (no BN, no Dropout)
+└──────────────────────┘
+```
 
 ---
 

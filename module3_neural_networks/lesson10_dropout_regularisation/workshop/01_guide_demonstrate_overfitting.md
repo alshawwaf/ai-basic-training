@@ -15,7 +15,26 @@
 
 **Model capacity** = how many distinct functions the model can represent. A network with more parameters has higher capacity — it can fit more complex patterns.
 
-With 3 × Dense(256) layers and 10 input features, this model has ~133,000 parameters being trained on 1,600 samples. That's 83 parameters per training sample. The model has enough capacity to memorise every training example, including the random noise in the data.
+With 3 x Dense(256) layers and 10 input features, this model has ~133,000 parameters being trained on 1,600 samples. That's 83 parameters per training sample. The model has enough capacity to memorise every training example, including the random noise in the data.
+
+```
+The overfit architecture:
+
+Input    Dense(256)   Dense(256)   Dense(256)   Output
+ (10)      relu         relu         relu       sigmoid
+
+  o ──►  oooooooo ──► oooooooo ──► oooooooo ──►  o
+         oooooooo     oooooooo     oooooooo
+         oooooooo     oooooooo     oooooooo
+         oooooooo     oooooooo     oooooooo
+          (256)        (256)        (256)        (1)
+
+Params:  10×256+256  256×256+256  256×256+256  256×1+1
+         = 2,816     = 65,792     = 65,792     = 257
+                                         Total: ~134,657
+                                         Samples: 1,600
+                                         Ratio: 84 params per sample!
+```
 
 ```
 Too much capacity:

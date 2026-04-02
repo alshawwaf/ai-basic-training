@@ -48,6 +48,23 @@ Epoch 23: val_loss = 0.184  (counter = 5) ← STOP, restore epoch 18 weights
 
 The model that gets restored is from epoch 18 (val_loss = 0.169) — the best it ever achieved.
 
+```
+Early Stopping with patience=5:
+
+val_loss
+  0.19 |      .     . . . .
+       |    .   .         X ← STOP (patience exhausted)
+  0.17 |  .       *           * = best epoch (18), weights restored here
+       | .
+  0.15 |.
+       +--+--+--+--+--+--+--+--+---> Epoch
+         15 16 17 18 19 20 21 22 23
+
+         ◄──────────────────────►
+          patience counter: resets at epoch 18,
+          reaches 5 at epoch 23 → training stops
+```
+
 ---
 
 ## Concept: restore_best_weights
@@ -59,6 +76,17 @@ Without `restore_best_weights=True`:
 With `restore_best_weights=True`:
 - Model stops at epoch 23 but restores epoch-18 weights
 - You get the best model for free, automatically
+
+```
+Without restore_best_weights:       With restore_best_weights:
+
+ Training stops at epoch 23          Training stops at epoch 23
+ ┌─────────────────────┐            ┌─────────────────────┐
+ │ Keeps epoch 23 weights│           │ Restores epoch 18    │
+ │ (slightly overfit)   │            │ weights (best val)  │
+ └─────────────────────┘            └─────────────────────┘
+ val_loss = 0.184                    val_loss = 0.169
+```
 
 Always use `restore_best_weights=True` unless you have a specific reason not to.
 

@@ -24,6 +24,32 @@ For each sample in a training batch, this layer:
 
 With `rate=0.3`: 30% of neurons are zeroed each batch. Different neurons are zeroed each batch.
 
+```
+Dropout(0.3) in action — training vs prediction:
+
+TRAINING (batch 1):             TRAINING (batch 2):
+ o  active                       o  active
+ X  DROPPED (zeroed)             o  active
+ o  active                       X  DROPPED
+ o  active                       o  active
+ X  DROPPED                      o  active
+ o  active                       X  DROPPED
+ o  active                       o  active
+ X  DROPPED                      o  active
+
+ 30% off (random)                30% off (different random set)
+
+PREDICTION (always):
+ o  active
+ o  active       ← ALL neurons active
+ o  active          no dropout applied
+ o  active          outputs unchanged
+ o  active
+ o  active
+ o  active
+ o  active
+```
+
 **Training vs Prediction behaviour:**
 
 | Phase | Dropout active? | Effect |

@@ -27,6 +27,16 @@ class Layer_Dense:
 
 Keras `Dense(8, activation='relu')` does exactly this — plus the activation function in one step. The API looks different but the maths is identical.
 
+```
+Single Dense Neuron (what happens inside ONE unit):
+
+  x1 ──w1──┐
+  x2 ──w2──┤
+  x3 ──w3──┼──► [ sum + bias ] ──► [ relu ] ──► output
+  x4 ──w4──┘
+            weighted sum = x1*w1 + x2*w2 + x3*w3 + x4*w4 + b
+```
+
 ---
 
 ## Concept: Sequential Model
@@ -43,6 +53,26 @@ model = keras.Sequential([
 Data flow:
 ```
 Input (shape: 4)  →  Dense(8, relu)  →  Dense(1, sigmoid)  →  Output (shape: 1)
+```
+
+How Dense layers connect — every input feeds every neuron:
+
+```
+ Input          Dense(8, relu)       Dense(1, sigmoid)
+  (4)              (8)                   (1)
+
+  o ─────┬──────► o
+  o ─────┼──────► o ─────┬──────────► o  → output
+  o ─────┼──────► o ─────┘               (probability)
+  o ─────┼──────► o
+         ├──────► o        All 8 neurons
+         ├──────► o        connect to the
+         ├──────► o        1 output neuron
+         └──────► o
+
+  4 inputs       8 neurons             1 neuron
+  each connects  each connects
+  to ALL 8       to the 1 output
 ```
 
 You only need to specify `input_shape` on the first layer. Keras infers the rest.
@@ -68,6 +98,18 @@ Example for `Dense(8)` receiving 4 inputs:
 W: 4 × 8 = 32  entries
 b:     8 =  8  entries
 Total = 40 parameters
+```
+
+```
+Weight matrix W          Bias vector b
+(4 inputs × 8 units)    (8 units)
+┌─────────────────────┐  ┌───┐
+│ w11 w12 w13 ... w18 │  │b1 │
+│ w21 w22 w23 ... w28 │  │b2 │
+│ w31 w32 w33 ... w38 │  │...│
+│ w41 w42 w43 ... w48 │  │b8 │
+└─────────────────────┘  └───┘
+     32 values            8 values   = 40 params total
 ```
 
 This is exactly what `model.summary()` shows in the "Param #" column.

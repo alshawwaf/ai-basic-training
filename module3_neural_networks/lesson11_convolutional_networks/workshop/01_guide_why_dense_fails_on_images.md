@@ -39,6 +39,23 @@ If the digit "3" slides one pixel to the right, a Dense layer must re-learn all 
 
 A Conv2D filter learns **one detector** (e.g., "curved line") and applies it at **every position**. If the "3" shifts right, the same filter still detects it.
 
+```
+Dense: must learn separate weights for each position
+
+ "3" centred:               "3" shifted right:
+ ┌─────────────┐            ┌─────────────┐
+ │    ###      │            │       ###   │
+ │       #     │            │          #  │
+ │    ###      │            │       ###   │
+ │       #     │            │          #  │
+ │    ###      │            │       ###   │
+ └─────────────┘            └─────────────┘
+ Dense: learned!             Dense: never seen this!
+
+Conv2D: same 3x3 filter detects curves at EVERY position
+ → works for both, no relearning needed
+```
+
 This is why CNNs use dramatically fewer parameters:
 
 | Architecture | Parameters (for MNIST) |

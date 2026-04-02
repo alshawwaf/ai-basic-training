@@ -41,6 +41,20 @@ The sigmoid output is a probability, not a class label. You apply a threshold to
 y_pred = (model.predict(X_test).flatten() > 0.5).astype(int)
 ```
 
+```
+Prediction pipeline:  raw output → threshold → class label
+
+model.predict(X_test)     threshold=0.5       y_pred
+┌──────────────┐          ┌───────────┐       ┌───┐
+│ sample 0: 0.92│ ──────► │ 0.92>0.5? │ YES ► │ 1 │  attack
+│ sample 1: 0.14│ ──────► │ 0.14>0.5? │ NO  ► │ 0 │  benign
+│ sample 2: 0.67│ ──────► │ 0.67>0.5? │ YES ► │ 1 │  attack
+│ sample 3: 0.03│ ──────► │ 0.03>0.5? │ NO  ► │ 0 │  benign
+└──────────────┘          └───────────┘       └───┘
+  shape: (n, 1)                                shape: (n,)
+  call .flatten() first
+```
+
 This is identical to the threshold tuning concept from Lesson 1.3. A lower threshold (e.g., 0.3) increases recall but decreases precision for the positive class. In security work, you often lower the threshold to catch more attacks, accepting more false positives.
 
 ---

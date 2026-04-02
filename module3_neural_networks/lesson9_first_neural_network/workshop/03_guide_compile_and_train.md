@@ -27,6 +27,22 @@ For each epoch:
     Print epoch summary
 ```
 
+```
+One mini-batch iteration (forward + backward):
+
+ FORWARD PASS (left to right):
+ ┌───────┐    ┌──────────┐    ┌──────────┐    ┌────────┐
+ │ batch │───►│ Dense(64) │───►│ Dense(1)  │───►│  loss  │
+ │ 32×10 │    │   relu    │    │ sigmoid   │    │function│
+ └───────┘    └──────────┘    └──────────┘    └───┬────┘
+                                                   │
+ BACKWARD PASS (right to left):                    │
+ ┌───────────┐    ┌──────────┐    ┌──────────┐    │
+ │  weights  │◄───│ gradients│◄───│ gradients│◄───┘
+ │  updated  │    │  layer 1 │    │  layer 2 │
+ └───────────┘    └──────────┘    └──────────┘
+```
+
 One **epoch** = one complete pass through all training data.
 One **batch** = `batch_size` samples processed before updating weights.
 
@@ -95,6 +111,22 @@ X_train (1600 samples after split)
 
 X_test (400 samples — never seen during training or validation)
   |__ Used ONLY for final evaluation in Exercise 4
+```
+
+```
+Data split with validation_split=0.2:
+
+┌──────────────────────────────────────────────────────┐
+│                   X_train (1600 samples)              │
+│  ┌──────────────────────────────┬───────────────┐    │
+│  │  Training (1280 = 80%)       │ Val (320=20%) │    │
+│  │  gradient updates happen     │ monitor only  │    │
+│  └──────────────────────────────┴───────────────┘    │
+└──────────────────────────────────────────────────────┘
+
+┌──────────────────┐
+│ X_test (400)     │  ← never seen during fit(), used ONLY for final eval
+└──────────────────┘
 ```
 
 Never use `X_test` inside the training loop. The test set evaluates how well the trained model generalises to truly unseen data.

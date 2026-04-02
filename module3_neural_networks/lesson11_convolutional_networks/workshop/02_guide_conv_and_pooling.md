@@ -59,6 +59,19 @@ output_size = input_size / pool_size
 | 26×26 | 2×2 | 13×13 |
 | 13×13 | 2×2 | 6×6 |
 
+```
+Shape trace through Conv + Pool on MNIST:
+
+Input         Conv2D(32,(3,3))     MaxPool(2,2)
+(28,28,1)  ───►  (26,26,32)    ───►  (13,13,32)
+               28-3+1=26             26/2=13
+               32 filters            spatial halved
+               ↓                     ↓
+            each filter           keep max of
+            produces one          each 2x2 block
+            26x26 map
+```
+
 ---
 
 ## Concept: MaxPooling2D

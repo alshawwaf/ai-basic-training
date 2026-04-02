@@ -72,6 +72,21 @@ Use when your problem has 3+ mutually exclusive classes.
 
 The number of output units must match the number of classes in your problem.
 
+```
+Binary classification:                Multi-class (3 classes):
+
+ Hidden          Output               Hidden          Output
+  (64)            (1)                   (64)           (3)
+
+   o ──────────► o  → sigmoid          o ──────────► o  → softmax
+   o ──────────►     → P(attack)       o ──────────► o  → [0.66, 0.24, 0.10]
+   o ──────────►     = 0.82            o ──────────► o     sums to 1.0
+   o                                   o
+  ...                                 ...
+
+ Loss: binary_crossentropy            Loss: sparse_categorical_crossentropy
+```
+
 ---
 
 ## Concept: Compiling a Model

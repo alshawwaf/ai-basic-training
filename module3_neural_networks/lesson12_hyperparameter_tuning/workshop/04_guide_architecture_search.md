@@ -37,6 +37,23 @@ depth_options = [1, 2, 3]
 Total combinations: 3 × 3 = 9 models to train
 ```
 
+```
+Grid search: every cell = one trained model
+
+              units
+          32      64      128
+       ┌───────┬───────┬───────┐
+   1   │ 0.891 │ 0.903 │ 0.910 │
+       ├───────┼───────┼───────┤
+depth  2   │ 0.905 │ 0.915 │ 0.912 │  ← val_accuracy per combo
+       ├───────┼───────┼───────┤
+   3   │ 0.898 │ 0.909 │ 0.907 │
+       └───────┴───────┴───────┘
+                    ▲
+                 winner: depth=2, units=64
+                 (example values — yours will differ)
+```
+
 For each combination:
 1. Build the model
 2. Train it
@@ -57,6 +74,14 @@ This is the brute-force approach. It works fine when the search space is small. 
 Depth 1 (1 hidden layer): fast, underfit risk for complex problems
 Depth 2:                   usually a good balance
 Depth 3:                   more capacity, but harder to train, more parameters
+```
+
+```
+Depth 1:   Input ──► Dense(64) ──► Output       ~1,400 params
+Depth 2:   Input ──► Dense(64) ──► Dense(64) ──► Output   ~5,500 params
+Depth 3:   Input ──► Dense(64) ──► Dense(64) ──► Dense(64) ──► Output  ~9,600 params
+                                                              ▲
+                                      more params, but not always better accuracy
 ```
 
 For this dataset (20 features, 2 classes, 1600 samples) depth 2 often wins. Deeper networks don't always help when the problem isn't complex enough to justify the extra capacity.

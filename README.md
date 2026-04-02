@@ -1,110 +1,122 @@
-# AI Learning Journey
-### From Classic Machine Learning to Generative AI — Built for Cybersecurity Professionals
+# AI Basic Training
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+### A Hands-On Curriculum for Cybersecurity Professionals
+
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-Neural%20Networks-FF6F00?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow)](https://huggingface.co/)
+[![Claude API](https://img.shields.io/badge/Claude-API-cc785c)](https://docs.anthropic.com/)
 
-A self-paced, hands-on Python curriculum that takes you from your first ML model all the way to building a working AI-powered security assistant. Every lesson is grounded in a real cybersecurity scenario — because abstract examples don't help you think about your actual job.
+---
 
-**79 runnable files across 4 modules, 17 lessons, and 67 exercises.** Go at whatever pace fits your schedule:
+This curriculum teaches AI and machine learning from the ground up, using **real cybersecurity scenarios** in every lesson. It starts with classic ML algorithms and progresses through neural networks to generative AI — the same trajectory the field itself followed.
 
-| Pace | Daily time | Estimated completion |
-|------|-----------|---------------------|
-| Full-time sprint | 6–8 hours/day | ~2 weeks |
-| Part-time evenings | 1–2 hours/day | 6–8 weeks |
-| Weekends only | 3–4 hours/weekend | 3–4 months |
+Everything is self-paced. There are no deadlines, no quizzes, and no abstract toy datasets. Every exercise uses security data — phishing URLs, network traffic, threat reports, CVEs — so the skills transfer directly to your work.
 
-There are no deadlines. Each lesson is independent enough that you can pause and resume without losing context.
+**4 modules | 17 lessons | 67 exercises | 79 runnable files**
 
 ---
 
 ## Table of Contents
 
-- [What You Will Build](#what-you-will-build)
+- [Learning Path](#learning-path)
 - [Who This Is For](#who-this-is-for)
 - [Prerequisites](#prerequisites)
-- [Setup](#setup)
-- [How Each Lesson Works](#how-each-lesson-works)
+- [Environment Setup](#environment-setup)
+- [How Lessons Are Structured](#how-lessons-are-structured)
 - [Module 1 — Classic Machine Learning](#module-1--classic-machine-learning)
 - [Module 2 — Intermediate ML](#module-2--intermediate-ml)
 - [Module 3 — Neural Networks](#module-3--neural-networks)
 - [Module 4 — Generative AI](#module-4--generative-ai)
-- [Repository Structure](#repository-structure)
-- [Learning Tips](#learning-tips)
+- [Repository Map](#repository-map)
+- [Pacing Guide](#pacing-guide)
+- [Tips for Success](#tips-for-success)
 
 ---
 
-## What You Will Build
+## Learning Path
 
-Each module culminates in a milestone project — a complete, working application you can run end-to-end.
+The four modules follow a deliberate progression. Each one builds on the concepts and intuition developed in the previous stage.
 
-| Module | Milestone Project | What It Does |
-|--------|------------------|--------------|
-| 1 — Classic ML | **Phishing URL Classifier** | Detects malicious URLs based on structural features alone — no external lookup required |
-| 2 — Intermediate ML | **Network Intrusion Detector** | Classifies KDD Cup-style connection records into attack categories vs. normal traffic |
-| 3 — Neural Networks | **Malicious Packet Classifier** | Deep learning model trained on network traffic feature vectors |
-| 4 — Generative AI | **Security Analyst Assistant** | Conversational AI that answers questions about CVEs and threat reports using RAG |
+```
+Module 1                Module 2                Module 3                Module 4
+Classic ML              Intermediate ML         Neural Networks         Generative AI
+─────────────────────── ─────────────────────── ─────────────────────── ───────────────────────
+ Supervised learning     Feature engineering     Neurons & layers        Tokenisation
+ Linear regression       Random Forests          Activations & loss      Embeddings & attention
+ Logistic regression     Clustering              Keras & CNNs            LLM APIs
+ Decision trees          Cross-validation        Hyperparameter tuning   RAG pipelines
+ Model evaluation        Anomaly detection       Regularisation          Prompt engineering
+─────────────────────── ─────────────────────── ─────────────────────── ───────────────────────
+       Milestone:              Milestone:              Milestone:              Milestone:
+  Phishing Classifier   Intrusion Detector      Packet Classifier      Security Assistant
+```
+
+> Each module ends with a **milestone project** — a complete, working application you build from scratch and can run end-to-end.
 
 ---
 
 ## Who This Is For
 
-This curriculum is designed for **security professionals** who want to understand and apply AI/ML without switching careers.
+This curriculum is designed for **security professionals** who want to understand and apply AI/ML — not just use tools that happen to contain it.
 
 You will get the most out of this if you:
+
+- Work in a security-adjacent role — SOC analyst, threat intelligence, red team, incident response, GRC, or similar
 - Write Python regularly (scripts, automation, tooling)
-- Work in a security-adjacent role — SOC analyst, threat intel, red team, incident response, or similar
-- Want to understand what AI tools are actually doing under the hood, not just how to call an API
-- Have no prior ML or data science background
+- Want to understand what AI tools are actually doing under the hood
+- Have **no prior ML or data science background**
+
+This is not a data science bootcamp. It is a structured, technical introduction to the parts of AI/ML that matter most to people who defend networks, investigate incidents, and assess risk.
 
 ---
 
 ## Prerequisites
 
 **Required:**
+
 - Python 3.10 or higher
-- Comfort with Python basics: loops, functions, classes, list comprehensions
-- A terminal / command prompt
+- Comfort with Python fundamentals — variables, loops, functions, classes, list comprehensions
+- A terminal or command prompt you are comfortable working in
 
 **Not required:**
+
 - Prior ML, statistics, or data science experience
 - Mathematics beyond basic algebra
-- Any specific security certification or role
+- Any specific security certification
 
 ---
 
-## Setup
+## Environment Setup
 
-### 1. Create a Virtual Environment
+### Step 1 — Create a Virtual Environment
 
-Always work inside a virtual environment — it keeps this project's packages isolated from the rest of your system and prevents version conflicts.
+A virtual environment isolates this project's packages from the rest of your system and prevents version conflicts. All commands below assume you are inside the activated environment.
 
 ```bash
-# Create the environment (one-time)
+# Create the environment (one-time setup)
 python -m venv venv
 
-# Activate it — Windows
+# Activate — Windows
 venv\Scripts\activate
 
-# Activate it — Mac / Linux
+# Activate — Mac / Linux
 source venv/bin/activate
 ```
 
-Your terminal prompt will change to show `(venv)` when it's active. **All pip installs below must be run with the environment active.**
+Your terminal prompt will show `(venv)` when the environment is active. To deactivate when you are done:
 
-To deactivate when you're done for the day:
 ```bash
 deactivate
 ```
 
-### 2. Install Dependencies
+### Step 2 — Install Dependencies
 
-Install packages per module as you reach them, or install everything upfront:
+Install packages as you reach each module, or install everything upfront:
 
 ```bash
-# Module 1 & 2 — Classic and Intermediate ML
+# Modules 1 & 2 — Classic and Intermediate ML
 pip install pandas scikit-learn matplotlib seaborn
 
 # Module 3 — Neural Networks
@@ -114,225 +126,256 @@ pip install tensorflow nnfs
 pip install transformers sentence-transformers anthropic openai google-generativeai ollama
 ```
 
-### API Key (Module 4 Only)
+### Step 3 — API Key (Module 4 Only)
 
-Module 4 connects to a live LLM. You need an API key from **one** of the following providers — the scripts auto-detect whichever key you have set, so no code changes are needed.
+Module 4 connects to a live LLM. You need **one** of the following providers — the code auto-detects whichever key you have set.
 
-| Provider | Environment Variable | Where to Get It | Notes |
-|----------|---------------------|-----------------|-------|
-| Claude (Anthropic) | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) | Best quality responses |
-| OpenAI | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | GPT-4o-mini used by default |
-| Gemini (Google) | `GOOGLE_API_KEY` | [aistudio.google.com](https://aistudio.google.com) | Free tier available |
-| Ollama (local) | `OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B` | [ollama.com](https://ollama.com) | Runs on your machine — no key, no internet, no cost |
-
-**Set your key (or model name for Ollama):**
+| Provider | Environment Variable | Where to Get It |
+|----------|---------------------|-----------------|
+| Claude (Anthropic) | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) |
+| OpenAI | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) |
+| Gemini (Google) | `GOOGLE_API_KEY` | [aistudio.google.com](https://aistudio.google.com) |
+| Ollama (local) | `OLLAMA_MODEL` | [ollama.com](https://ollama.com) — runs locally, no key needed |
 
 ```bash
-# Windows
-set ANTHROPIC_API_KEY=your-key-here   # Claude
-set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B               # Ollama (no key — just install Ollama and pull a model)
+# Set your key — Windows
+set ANTHROPIC_API_KEY=your-key-here
 
-# Mac / Linux
+# Set your key — Mac / Linux
 export ANTHROPIC_API_KEY=your-key-here
-export OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B
+
+# Or use Ollama for a fully local setup (no API key, no internet)
+set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B    # Windows
+export OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B  # Mac / Linux
 ```
 
-> The `llm_client.py` helper in Module 4 handles provider selection automatically. Priority order: Claude → OpenAI → Gemini → Ollama. Set whichever you have — no code changes needed.
+> The `llm_client.py` helper in Module 4 handles provider selection automatically. Priority: Claude > OpenAI > Gemini > Ollama.
 
 ---
 
-## How Each Lesson Works
+## How Lessons Are Structured
 
-Each lesson has three parts:
+Every lesson follows the same three-part structure:
 
-| File / Folder | Role |
-|---------------|------|
-| `notes.md` | **Read this first.** Explains the concept in plain English with analogies and security context. Ends with a link to the workshop. |
-| `workshop/` | **Do this next.** A guided set of exercises you complete yourself. Each exercise has a guide (`.md`) and a lab (`.md`) with step-by-step instructions to build your script. |
-| `_solution_` files | **Open last.** Each exercise has a matching solution file — compare against your own after finishing. |
+```
+notes.md                Read first — explains the concept in plain English with security context
+  │
+  └── workshop/
+        ├── 00_overview.md         Exercise list and objectives
+        ├── 01_guide_*.md          Concept guide for exercise 1
+        ├── 01_lab_*.md            Step-by-step lab instructions
+        ├── 01_solution_*.py       Reference solution (open last)
+        ├── 02_guide_*.md          Exercise 2 ...
+        ├── 02_lab_*.md
+        ├── 02_solution_*.py
+        └── ...
+```
 
-**The recommended flow for every lesson:**
+**Recommended workflow for each lesson:**
 
-1. Read the theory file — understand the concept before touching code
-2. Open the workshop overview — read the exercise list
-3. For each exercise: read the guide, then follow the lab steps to build your script
-4. Run your script after each task and verify your output matches the expected output
-5. Compare your code against the matching `_solution_` file
-6. Move on when the output makes sense to you
-
-You don't need to understand every line before moving forward. The goal is to build intuition — deep understanding comes from repetition across modules.
+1. **Read** the theory (`notes.md`) — understand the concept before writing code
+2. **Open** the workshop overview (`00_overview.md`) — see what you will build
+3. **For each exercise:**
+   - Read the **guide** — it explains the concept and the API you need
+   - Follow the **lab** — step-by-step instructions to build your script
+   - Run your script and verify output matches expected results
+   - Compare against the **solution** file when you are done
+4. **Move on** when the output makes sense — deep understanding comes from repetition across modules
 
 ---
 
 ## Module 1 — Classic Machine Learning
 
-> **Goal:** Understand how machines learn from labelled data, and build your first working classifiers.
+> Understand how machines learn from labelled data, and build your first working classifiers.
 
-Classic ML is the foundation everything else builds on. These algorithms are still widely used in production security tooling because they are fast, interpretable, and require far less data than neural networks. You will build a real phishing detector by the end of this module.
+Classic ML is the foundation everything else builds on. These algorithms are fast, interpretable, and still widely used in production security tooling — SIEM correlation rules, email filters, endpoint detection. You will build a real phishing detector by the end of this module.
 
-| # | Theory | Workshop | What You Learn |
+| # | Lesson | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 1.1 | [What is ML?](module1_classic_ml/lesson1_what_is_ml/notes.md) | [Workshop (5 exercises)](module1_classic_ml/lesson1_what_is_ml/workshop/00_overview.md) | The ML workflow, loading and exploring a dataset, EDA, class balance |
-| 1.2 | [Linear Regression](module1_classic_ml/lesson2_linear_regression/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson2_linear_regression/workshop/00_overview.md) | Predicting continuous values — server response time from traffic load |
-| 1.3 | [Logistic Regression](module1_classic_ml/lesson3_logistic_regression/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson3_logistic_regression/workshop/00_overview.md) | Binary classification — URL features → phishing or legitimate |
-| 1.4 | [Decision Trees](module1_classic_ml/lesson4_decision_trees/notes.md) | [Workshop (4 exercises)](module1_classic_ml/lesson4_decision_trees/workshop/00_overview.md) | Interpretable rule-based classification — network traffic labelled as threat or benign |
-| 1.5 | [Model Evaluation](module1_classic_ml/lesson5_model_evaluation/notes.md) | [Workshop (5 exercises)](module1_classic_ml/lesson5_model_evaluation/workshop/00_overview.md) | Precision, recall, F1-score, ROC AUC — and why accuracy alone is meaningless in security |
-| — | **Milestone Project** | [milestone_phishing.py](module1_classic_ml/milestone/milestone_phishing.py) | End-to-end phishing URL classifier: feature extraction → training → evaluation |
+| 1.1 | [What is ML?](module1_classic_ml/lesson1_what_is_ml/notes.md) | [5 exercises](module1_classic_ml/lesson1_what_is_ml/workshop/00_overview.md) | The ML workflow — loading data, exploring features, EDA, class balance |
+| 1.2 | [Linear Regression](module1_classic_ml/lesson2_linear_regression/notes.md) | [4 exercises](module1_classic_ml/lesson2_linear_regression/workshop/00_overview.md) | Predicting continuous values — server response time from traffic load |
+| 1.3 | [Logistic Regression](module1_classic_ml/lesson3_logistic_regression/notes.md) | [4 exercises](module1_classic_ml/lesson3_logistic_regression/workshop/00_overview.md) | Binary classification — phishing or legitimate from URL features |
+| 1.4 | [Decision Trees](module1_classic_ml/lesson4_decision_trees/notes.md) | [4 exercises](module1_classic_ml/lesson4_decision_trees/workshop/00_overview.md) | Interpretable rule-based splits — network traffic as threat or benign |
+| 1.5 | [Model Evaluation](module1_classic_ml/lesson5_model_evaluation/notes.md) | [5 exercises](module1_classic_ml/lesson5_model_evaluation/workshop/00_overview.md) | Precision, recall, F1, ROC AUC — why accuracy alone is meaningless in security |
 
-**Key concepts covered:** supervised learning, features and labels, train/test split, underfitting, decision boundaries, confusion matrix, false positive rate
+**Milestone:** [Phishing URL Classifier](module1_classic_ml/milestone/milestone_phishing.py) — end-to-end pipeline from feature extraction through training to evaluation on a real phishing dataset.
+
+<details>
+<summary><strong>Key concepts in this module</strong></summary>
+
+Supervised learning, features and labels, train/test split, underfitting, decision boundaries, confusion matrix, false positive rate, class imbalance, model selection
+</details>
 
 ---
 
 ## Module 2 — Intermediate ML
 
-> **Goal:** Handle real-world, messy data — build stronger models and detect threats without any labels.
+> Handle real-world messy data — build stronger models and detect threats without any labels.
 
-Real security data is never clean. Logs have missing fields, features need to be engineered, and many of the most interesting problems have no labelled ground truth at all. This module covers the techniques used in real SOC tooling.
+Real security data is never clean. Logs have missing fields, features need to be engineered from raw text, and many of the most interesting problems have no labelled ground truth at all. This module covers the techniques you will encounter in real SOC tooling and detection engineering.
 
-| # | Theory | Workshop | What You Learn |
+| # | Lesson | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 2.1 | [Feature Engineering](module2_intermediate/lesson1_feature_engineering/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson1_feature_engineering/workshop/00_overview.md) | Extracting useful signals from raw firewall and NetFlow logs |
-| 2.2 | [Random Forests](module2_intermediate/lesson2_random_forests/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson2_random_forests/workshop/00_overview.md) | Ensemble of decision trees — malware vs. benign file classifier |
-| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/lesson3_clustering_anomaly/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson3_clustering_anomaly/workshop/00_overview.md) | k-Means clustering to find anomalous network connections without any labels |
-| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/lesson4_overfitting_crossval/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson4_overfitting_crossval/workshop/00_overview.md) | Why models fail in production, k-fold cross-validation, the bias-variance tradeoff |
-| — | **Milestone Project** | [milestone_intrusion.py](module2_intermediate/milestone/milestone_intrusion.py) | Network intrusion detector trained and evaluated on KDD Cup-style connection data |
+| 2.1 | [Feature Engineering](module2_intermediate/lesson1_feature_engineering/notes.md) | [4 exercises](module2_intermediate/lesson1_feature_engineering/workshop/00_overview.md) | Extracting numerical signals from raw firewall and NetFlow logs |
+| 2.2 | [Random Forests](module2_intermediate/lesson2_random_forests/notes.md) | [4 exercises](module2_intermediate/lesson2_random_forests/workshop/00_overview.md) | Ensemble of decision trees — malware vs. benign file classifier |
+| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/lesson3_clustering_anomaly/notes.md) | [4 exercises](module2_intermediate/lesson3_clustering_anomaly/workshop/00_overview.md) | K-Means to find anomalous network connections — no labels needed |
+| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/lesson4_overfitting_crossval/notes.md) | [4 exercises](module2_intermediate/lesson4_overfitting_crossval/workshop/00_overview.md) | Why models fail in production — k-fold CV, bias-variance tradeoff |
 
-**Key concepts covered:** one-hot encoding, normalisation, missing value handling, ensemble methods, feature importance, unsupervised learning, silhouette score, regularisation
+**Milestone:** [Network Intrusion Detector](module2_intermediate/milestone/milestone_intrusion.py) — full pipeline trained and evaluated on KDD Cup-style network connection data.
+
+<details>
+<summary><strong>Key concepts in this module</strong></summary>
+
+One-hot encoding, normalisation, missing value handling, ensemble methods, feature importance, unsupervised learning, silhouette score, bias-variance tradeoff, regularisation
+</details>
 
 ---
 
 ## Module 3 — Neural Networks
 
-> **Goal:** Build a neural network piece by piece — understand every layer before using a framework.
+> Build a neural network piece by piece — understand every layer before using a framework.
 
-This module has two phases. The first eight lessons build a neural network using only NumPy, one component at a time: neurons, layers, activations, and loss functions. Once you have built it yourself, the second phase rebuilds it in Keras — now every Keras call maps to something you already understand.
+This module has two phases. **Phase 1** builds a neural network using only NumPy — neurons, layers, activations, and loss functions implemented from scratch. **Phase 2** rebuilds it in Keras, so every framework call maps to something you already understand from first principles.
 
-### Phase 1 — Building the Network (NumPy Only)
+### Phase 1 — From Scratch with NumPy (Lessons 3.1–3.8)
 
-These lessons work through the mathematics and mechanics of a neural network from first principles. No ML framework — just arrays and arithmetic.
+No ML framework — just arrays and arithmetic. Each script builds one component and connects it to the last.
 
 | # | Script | What You Build |
 |---|--------|----------------|
-| 3.1 | [1_basic_neuron.py](module3_neural_networks/foundations/1_basic_neuron.py) | A single neuron: inputs × weights + bias |
+| 3.1 | [1_basic_neuron.py](module3_neural_networks/foundations/1_basic_neuron.py) | A single neuron — inputs x weights + bias |
 | 3.2 | [2_neuron_layer.py](module3_neural_networks/foundations/2_neuron_layer.py) | Multiple neurons computing in parallel — a full layer |
-| 3.3 | [3_dot_product.py](module3_neural_networks/foundations/3_dot_product.py) | Vectorising the computation with NumPy matrix multiplication |
+| 3.3 | [3_dot_product.py](module3_neural_networks/foundations/3_dot_product.py) | Vectorising computation with NumPy matrix multiplication |
 | 3.4 | [4_layers_as_classes.py](module3_neural_networks/foundations/4_layers_as_classes.py) | Structuring layers as reusable Python objects |
-| 3.5 | [5_relu_activation.py](module3_neural_networks/foundations/5_relu_activation.py) | Adding non-linearity so the network can learn complex patterns |
-| 3.6 | [6_softmax_activation.py](module3_neural_networks/foundations/6_softmax_activation.py) | Converting raw outputs into a probability distribution |
-| 3.7 | [7_cross_entropy_loss.py](module3_neural_networks/foundations/7_cross_entropy_loss.py) | Quantifying how wrong the model's predictions are |
-| 3.8 | [8_full_forward_pass.py](module3_neural_networks/foundations/8_full_forward_pass.py) | Complete network: input → layers → activations → loss |
+| 3.5 | [5_relu_activation.py](module3_neural_networks/foundations/5_relu_activation.py) | ReLU — adding non-linearity so the network can learn complex patterns |
+| 3.6 | [6_softmax_activation.py](module3_neural_networks/foundations/6_softmax_activation.py) | Softmax — converting raw outputs into a probability distribution |
+| 3.7 | [7_cross_entropy_loss.py](module3_neural_networks/foundations/7_cross_entropy_loss.py) | Cross-entropy loss — quantifying how wrong the predictions are |
+| 3.8 | [8_full_forward_pass.py](module3_neural_networks/foundations/8_full_forward_pass.py) | Complete forward pass — input through layers, activations, to loss |
 
-### Phase 2 — Keras and Real Security Data
+### Phase 2 — Keras and Real Security Data (Lessons 3.9–3.12)
 
-| # | Theory | Workshop | What You Learn |
+| # | Lesson | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 3.9 | [First Neural Network](module3_neural_networks/lesson9_first_neural_network/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson9_first_neural_network/workshop/00_overview.md) | Rebuild the same network in Keras in ~10 lines |
-| 3.10 | [Dropout & Regularisation](module3_neural_networks/lesson10_dropout_regularisation/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson10_dropout_regularisation/workshop/00_overview.md) | Dropout, batch normalisation, early stopping — keeping the model from memorising |
-| 3.11 | [Convolutional Networks](module3_neural_networks/lesson11_convolutional_networks/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson11_convolutional_networks/workshop/00_overview.md) | CNNs for spatial data — applied to malware binary visualisation |
-| 3.12 | [Hyperparameter Tuning](module3_neural_networks/lesson12_hyperparameter_tuning/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson12_hyperparameter_tuning/workshop/00_overview.md) | Learning rate, batch size, architecture choices — and how to search them systematically |
-| — | **Milestone Project** | [milestone_packets.py](module3_neural_networks/milestone/milestone_packets.py) | Neural network trained on network packet feature vectors to classify malicious traffic |
+| 3.9 | [First Neural Network](module3_neural_networks/lesson9_first_neural_network/notes.md) | [4 exercises](module3_neural_networks/lesson9_first_neural_network/workshop/00_overview.md) | Rebuild the NumPy network in Keras in ~10 lines of code |
+| 3.10 | [Dropout & Regularisation](module3_neural_networks/lesson10_dropout_regularisation/notes.md) | [4 exercises](module3_neural_networks/lesson10_dropout_regularisation/workshop/00_overview.md) | Dropout, batch normalisation, early stopping — prevent memorisation |
+| 3.11 | [Convolutional Networks](module3_neural_networks/lesson11_convolutional_networks/notes.md) | [4 exercises](module3_neural_networks/lesson11_convolutional_networks/workshop/00_overview.md) | CNNs for spatial data — applied to malware binary visualisation |
+| 3.12 | [Hyperparameter Tuning](module3_neural_networks/lesson12_hyperparameter_tuning/notes.md) | [4 exercises](module3_neural_networks/lesson12_hyperparameter_tuning/workshop/00_overview.md) | Learning rate, batch size, architecture — systematic search |
 
-**Key concepts covered:** forward pass, backpropagation (conceptual), gradient descent, activation functions, loss functions, regularisation, convolutional filters, pooling, epochs, batch size
+**Milestone:** [Malicious Packet Classifier](module3_neural_networks/milestone/milestone_packets.py) — neural network trained on network packet feature vectors to classify malicious traffic.
+
+<details>
+<summary><strong>Key concepts in this module</strong></summary>
+
+Forward pass, backpropagation (conceptual), gradient descent, activation functions (ReLU, sigmoid, softmax), loss functions, dropout, batch normalisation, convolutional filters, pooling, epochs, batch size, learning rate
+</details>
 
 ---
 
 ## Module 4 — Generative AI
 
-> **Goal:** Understand how large language models work, use pre-trained models, and build a RAG-based security assistant.
+> Understand how LLMs work, use pre-trained models, and build a RAG-based security assistant.
 
-This module bridges traditional ML and modern AI. You will learn what an LLM actually is (not just how to call one), how to use open-source models from HuggingFace for security tasks, and how to build a grounded AI assistant that reasons over your own documents instead of hallucinating.
+This module bridges traditional ML and modern AI. You will learn what an LLM actually is — not just how to call one — how to use open-source models from HuggingFace for security tasks, and how to build a grounded assistant that reasons over your own documents instead of hallucinating.
 
-| # | Theory | Workshop | What You Learn |
+| # | Lesson | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 4.1 | [How LLMs Work](module4_genai/lesson1_how_llms_work/notes.md) | [Workshop (3 exercises)](module4_genai/lesson1_how_llms_work/workshop/00_overview.md) | Tokenisation, embeddings, attention — no API key required, pure NumPy |
-| 4.2 | [HuggingFace Models](module4_genai/lesson2_huggingface/notes.md) | [Workshop (3 exercises)](module4_genai/lesson2_huggingface/workshop/00_overview.md) | Zero-shot classification, sentence embeddings, semantic search over security logs |
-| 4.3 | [The LLM API](module4_genai/lesson3_llm_api/notes.md) | [Workshop (4 exercises)](module4_genai/lesson3_llm_api/workshop/00_overview.md) | System prompts, structured JSON output, multi-turn conversation — threat intel assistant |
-| 4.4 | [Retrieval-Augmented Generation](module4_genai/lesson4_rag/notes.md) | [Workshop (3 exercises)](module4_genai/lesson4_rag/workshop/00_overview.md) | Document chunking, vector retrieval, full RAG pipeline over security knowledge base |
-| — | **Milestone Project** | [milestone_security_assistant.py](module4_genai/milestone/milestone_security_assistant.py) | Interactive Q&A assistant over a knowledge base of CVEs, threat reports, and security runbooks |
+| 4.1 | [How LLMs Work](module4_genai/lesson1_how_llms_work/notes.md) | [3 exercises](module4_genai/lesson1_how_llms_work/workshop/00_overview.md) | Tokenisation, embeddings, attention — pure NumPy, no API key needed |
+| 4.2 | [HuggingFace Models](module4_genai/lesson2_huggingface/notes.md) | [3 exercises](module4_genai/lesson2_huggingface/workshop/00_overview.md) | Zero-shot classification, sentence embeddings, semantic search |
+| 4.3 | [The LLM API](module4_genai/lesson3_llm_api/notes.md) | [4 exercises](module4_genai/lesson3_llm_api/workshop/00_overview.md) | System prompts, structured JSON output, multi-turn conversation |
+| 4.4 | [Retrieval-Augmented Generation](module4_genai/lesson4_rag/notes.md) | [3 exercises](module4_genai/lesson4_rag/workshop/00_overview.md) | Document chunking, vector retrieval, full RAG pipeline |
 
-**Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, Gemini, or Ollama (local). The `llm_client.py` helper abstracts the provider — set whichever key or model you have and the code handles the rest.
+**Milestone:** [Security Analyst Assistant](module4_genai/milestone/milestone_security_assistant.py) — interactive Q&A over a knowledge base of CVEs, threat reports, and security runbooks.
 
-**Key concepts covered:** tokens and context windows, embeddings, cosine similarity, vector search, RAG pipeline, prompt engineering, system prompts, conversation state, hallucination and grounding
+> **Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, Gemini, or Ollama. The [`llm_client.py`](module4_genai/llm_client.py) helper abstracts the provider — set whichever key you have.
+
+<details>
+<summary><strong>Key concepts in this module</strong></summary>
+
+Tokens and context windows, embeddings, cosine similarity, vector search, RAG pipeline, prompt engineering, system prompts, conversation state, hallucination and grounding, structured output
+</details>
 
 ---
 
-## Repository Structure
+## Repository Map
 
 ```
 AI Basic Training/
 │
-├── assets/                         Diagrams embedded in lesson notes
-│
-├── module1_classic_ml/
+├── module1_classic_ml/                          Module 1 — Classic ML (5 lessons)
 │   ├── lesson1_what_is_ml/
-│   │   ├── notes.md                    ← Theory (read first)
+│   │   ├── notes.md                                 Theory — read first
 │   │   └── workshop/
-│   │       ├── 00_overview.md          ← Exercise overview
-│   │       ├── 01_guide_*.md           ← Per-exercise concept guide
-│   │       ├── 01_lab_*.md             ← Step-by-step lab instructions
-│   │       ├── 01_solution_*.py        ← Reference solution for exercise 1
-│   │       ├── 02_guide/lab/solution   ← (repeated for each exercise)
-│   │       └── ...
-│   ├── lesson2_linear_regression/  (same structure, 4 exercises)
-│   ├── lesson3_logistic_regression/ (same structure, 4 exercises)
-│   ├── lesson4_decision_trees/     (same structure, 4 exercises)
-│   ├── lesson5_model_evaluation/   (same structure, 5 exercises)
+│   │       ├── 00_overview.md                       Exercise overview
+│   │       ├── 01_guide_*.md / 01_lab_*.md          Guide + lab for exercise 1
+│   │       ├── 01_solution_*.py                     Reference solution
+│   │       └── ...                                  (repeated per exercise)
+│   ├── lesson2_linear_regression/                   Same structure — 4 exercises
+│   ├── lesson3_logistic_regression/                 Same structure — 4 exercises
+│   ├── lesson4_decision_trees/                      Same structure — 4 exercises
+│   ├── lesson5_model_evaluation/                    Same structure — 5 exercises
 │   └── milestone/
 │       └── milestone_phishing.py
 │
-├── module2_intermediate/
-│   ├── lesson1_feature_engineering/
-│   │   ├── notes.md
-│   │   └── workshop/              (same structure as Module 1, 4 exercises)
-│   ├── lesson2_random_forests/         (4 exercises)
-│   ├── lesson3_clustering_anomaly/     (4 exercises)
-│   ├── lesson4_overfitting_crossval/   (4 exercises)
+├── module2_intermediate/                        Module 2 — Intermediate ML (4 lessons)
+│   ├── lesson1_feature_engineering/                 4 exercises
+│   ├── lesson2_random_forests/                      4 exercises
+│   ├── lesson3_clustering_anomaly/                  4 exercises
+│   ├── lesson4_overfitting_crossval/                4 exercises
 │   └── milestone/
 │       └── milestone_intrusion.py
 │
-├── module3_neural_networks/
-│   ├── foundations/                NumPy network from scratch (Lessons 3.1–3.8)
+├── module3_neural_networks/                     Module 3 — Neural Networks (12 lessons)
+│   ├── foundations/                                  Lessons 3.1–3.8 (NumPy from scratch)
 │   │   ├── 1_basic_neuron.py
 │   │   ├── 2_neuron_layer.py
-│   │   ├── 3_dot_product.py
-│   │   ├── 4_layers_as_classes.py
-│   │   ├── 5_relu_activation.py
-│   │   ├── 6_softmax_activation.py
-│   │   ├── 7_cross_entropy_loss.py
+│   │   ├── ...
 │   │   └── 8_full_forward_pass.py
-│   ├── lesson9_first_neural_network/
-│   │   ├── notes.md
-│   │   └── workshop/              (same structure as Module 1, 4 exercises)
-│   ├── lesson10_dropout_regularisation/ (4 exercises)
-│   ├── lesson11_convolutional_networks/ (4 exercises)
-│   ├── lesson12_hyperparameter_tuning/ (4 exercises)
+│   ├── lesson9_first_neural_network/                4 exercises
+│   ├── lesson10_dropout_regularisation/             4 exercises
+│   ├── lesson11_convolutional_networks/             4 exercises
+│   ├── lesson12_hyperparameter_tuning/              4 exercises
 │   └── milestone/
 │       └── milestone_packets.py
 │
-├── module4_genai/
-│   ├── llm_client.py               Multi-provider LLM helper (Claude/OpenAI/Gemini/Ollama)
-│   ├── lesson1_how_llms_work/
-│   │   ├── notes.md
-│   │   └── workshop/              (same structure as Module 1, 3 exercises)
-│   ├── lesson2_huggingface/        (3 exercises — HuggingFace models)
-│   ├── lesson3_llm_api/            (4 exercises — requires API key)
-│   ├── lesson4_rag/                (3 exercises — requires API key for ex. 3)
+├── module4_genai/                               Module 4 — Generative AI (4 lessons)
+│   ├── llm_client.py                                Multi-provider LLM helper
+│   ├── lesson1_how_llms_work/                       3 exercises
+│   ├── lesson2_huggingface/                         3 exercises
+│   ├── lesson3_llm_api/                             4 exercises
+│   ├── lesson4_rag/                                 3 exercises
 │   └── milestone/
 │       └── milestone_security_assistant.py
 │
-└── README.md                       You are here
+├── assets/                                      Diagrams embedded in lesson notes
+└── README.md                                    This file
 ```
 
 ---
 
-## Learning Tips
+## Pacing Guide
 
-**Work through modules in order.** Each one builds on the last. Module 3 will make much more sense if you understand loss functions from Module 2.
+There are no deadlines. Each lesson is self-contained enough to pause and resume without losing context.
 
-**Read the exercise `.md` before opening the `.py`.** The guide explains the concept and the exact API you need. The `.py` file gives you the task — the `.md` gives you the tools.
+| Pace | Daily commitment | Approximate timeline |
+|------|-----------------|---------------------|
+| Intensive | 6–8 hours/day | ~2 weeks |
+| Evenings | 1–2 hours/day | 6–8 weeks |
+| Weekends | 3–4 hours/weekend | 3–4 months |
 
-**Run after each task, not at the end.** The exercises are designed to give you output after every small step. Verify each one before moving on — a small error early becomes confusing output later.
+Aim for consistency over speed. Completing one exercise per session is better than rushing through an entire module and retaining nothing.
 
-**Break things intentionally.** The best way to understand a parameter is to set it to an extreme value and see what happens. What happens if you set `max_depth=1` in a decision tree? What about `max_depth=100`?
+---
 
-**The milestones are checkpoints, not the finish line.** If a milestone runs and produces reasonable output, you are ready to move on — even if you don't fully understand every detail.
+## Tips for Success
+
+**Work through modules in order.** Each one builds on the last. Module 3 assumes you understand loss and evaluation from Modules 1–2. Module 4 assumes you understand embeddings from Module 3.
+
+**Read the theory before writing code.** The `notes.md` file for each lesson explains the concept, the intuition, and the security context. Skipping it means you will be copying code without understanding why it works.
+
+**Run your code after every step.** The exercises are designed to produce output at each stage. Verify each result before moving on — a small mistake early compounds into confusing output later.
+
+**Break things on purpose.** The best way to understand a parameter is to push it to an extreme. Set `max_depth=1` on a decision tree. Set the learning rate to `10.0`. Watch what happens. That intuition is worth more than any explanation.
+
+**Use the solutions as a reference, not a shortcut.** Try each exercise yourself first, even if you get stuck. The struggle is where learning happens. Check the solution file only after you have a working (or broken) attempt of your own.
+
+**The milestones are checkpoints, not exams.** If a milestone script runs and produces reasonable output, you have the understanding you need to continue. You do not need to master every detail before moving forward.

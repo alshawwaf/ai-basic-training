@@ -17,33 +17,45 @@
 
 Every supervised ML problem has exactly two things:
 
-```
-Features (X)  —  what you measure        (the inputs)
-Labels   (y)  —  what you want to predict (the outputs)
-```
+- **Features (X)** — what you measure about each sample (the inputs)
+- **Labels (y)** — the correct answer for each sample (the output the model learns to predict)
 
-In a digits recognition problem:
+The structure is always the same. Only the domain changes:
 
 ```
-Features  =  64 pixel brightness values  (what the image looks like)
-Label     =  the digit 0–9               (what the correct answer is)
+┌─────────────────────────────────────────────────────────────────────┐
+│  Problem                 Features (X)               Label (y)      │
+├─────────────────────────────────────────────────────────────────────┤
+│  Digit recognition       64 pixel brightness values  digit 0–9     │
+│  Phishing detection      URL length, # dots, has @   phishing 0/1  │
+│  Network intrusion       bytes, duration, SYN flags  malicious 0/1 │
+│  Malware classification  file size, entropy, imports  family name   │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-In a phishing detection problem:
+No matter the domain, the code follows the same pattern:
 
 ```
-Features  =  URL length, number of dots, has @ symbol, ...
-Label     =  phishing=1 or legitimate=0
+          ┌──────────────────┐
+          │   Raw Data       │
+          │  (logs, images,  │
+          │   URLs, packets) │
+          └────────┬─────────┘
+                   ▼
+          ┌──────────────────┐
+          │  Extract Features│   ← turn raw data into numbers
+          │  (X) and Labels  │   ← identify what you're predicting
+          │  (y)             │
+          └────────┬─────────┘
+                   ▼
+          ┌──────────────────┐
+          │  model.fit(X, y) │   ← the model finds the pattern
+          └────────┬─────────┘
+                   ▼
+          ┌──────────────────┐
+          │  model.predict() │   ← apply the pattern to new data
+          └──────────────────┘
 ```
-
-In a network intrusion problem:
-
-```
-Features  =  bytes sent, duration, unique ports, SYN flag count, ...
-Label     =  malicious=1 or benign=0
-```
-
-The structure is always the same. The domain changes; the math does not.
 
 > **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
 
@@ -108,21 +120,29 @@ That bundle is called a `Bunch` — a container object that works like a Python 
 `digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8×8 grid).
 
 ```
-  The Bunch object — what load_digits() returns
+digits = load_digits()
 
-  digits (Bunch)
-  ┌──────────────────────────────────────────────────┐
-  │  .data          ndarray (1797, 64)               │ ← flat rows for ML
-  │  .target        ndarray (1797,)                  │ ← labels 0–9
-  │  .images        ndarray (1797, 8, 8)             │ ← 8x8 grids for plotting
-  │  .target_names  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  │
-  │  .DESCR         "Optical Recognition of..."      │
-  └──────────────────────────────────────────────────┘
+digits (Bunch)
+┌─────────────────────────────────────────────────┐
+│  Field          Type / Shape        What it is   │
+├─────────────────────────────────────────────────┤
+│  .data          ndarray (1797, 64)  pixel values │  ← flat rows — feed this to the model
+│  .target        ndarray (1797,)     labels 0–9   │  ← correct answers
+│  .images        ndarray (1797,8,8)  pixel grids  │  ← 8x8 shape — use for plotting
+│  .target_names  [0, 1, 2, ... 9]   class list   │
+│  .DESCR         string              description  │
+└─────────────────────────────────────────────────┘
 
-  .data[0]   →  [0, 0, 5, 13, 9, 1, ... ]   64 values (flat)
-  .images[0] →  [[0,0,5,13,9,1,0,0],         8x8 grid (same data,
-                  [0,0,13,15,10,15,5,0],       different shape)
-                  ...]
+Same pixels, two shapes:
+
+.data[0]    →  [ 0, 0, 5, 13, 9, 1, 0, 0, 0, 0, ... ]    64 values in a flat row
+                 ↑  ↑  ↑   ↑                               (what the model sees)
+
+.images[0]  →  ┌  0  0  5 13  9  1  0  0 ┐                8 rows × 8 columns
+               │  0  0 13 15 10 15  5  0  │                (what the image looks like)
+               │  0  3 15  2  0 11  8  0  │
+               │  ...                     │
+               └  0  0  6 13 10  0  0  0  ┘
 ```
 
 > **Want to go deeper?** [NumPy ndarray — Wikipedia](https://en.wikipedia.org/wiki/NumPy)

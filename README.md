@@ -113,43 +113,7 @@ deactivate
 
 ### Step 2 — Install Dependencies
 
-Install packages as you reach each module, or install everything upfront:
-
-```bash
-# Modules 1 & 2 — Classic and Intermediate ML
-pip install pandas scikit-learn matplotlib seaborn
-
-# Module 3 — Neural Networks
-pip install tensorflow nnfs
-
-# Module 4 — Generative AI
-pip install transformers sentence-transformers anthropic openai google-generativeai ollama
-```
-
-### Step 3 — API Key (Module 4 Only)
-
-Module 4 connects to a live LLM. You need **one** of the following providers — the code auto-detects whichever key you have set.
-
-| Provider | Environment Variable | Where to Get It |
-|----------|---------------------|-----------------|
-| Claude (Anthropic) | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) |
-| OpenAI | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) |
-| Gemini (Google) | `GOOGLE_API_KEY` | [aistudio.google.com](https://aistudio.google.com) |
-| Ollama (local) | `OLLAMA_MODEL` | [ollama.com](https://ollama.com) — runs locally, no key needed |
-
-```bash
-# Set your key — Windows
-set ANTHROPIC_API_KEY=your-key-here
-
-# Set your key — Mac / Linux
-export ANTHROPIC_API_KEY=your-key-here
-
-# Or use Ollama for a fully local setup (no API key, no internet)
-set OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B    # Windows
-export OLLAMA_MODEL=huihui_ai/qwen3.5-abliterated:2B  # Mac / Linux
-```
-
-> The `llm_client.py` helper in Module 4 handles provider selection automatically. Priority: Claude > OpenAI > Gemini > Ollama.
+Each module tells you exactly what to install when you reach it. You do not need to install anything beyond the virtual environment right now — just start Module 1 and follow the instructions as you go.
 
 ---
 

@@ -104,11 +104,11 @@ Work through them in order — each exercise builds on the previous.
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_zero_shot_classification/guide.md) | [lab.md](1_zero_shot_classification/lab.md) | Classify security logs with no training — zero-shot NLI pipeline |
-| 2 | [guide.md](2_sentence_embeddings/guide.md) | [lab.md](2_sentence_embeddings/lab.md) | Encode sentences as vectors; cosine similarity; semantic distance |
-| 3 | [guide.md](3_semantic_search/guide.md) | [lab.md](3_semantic_search/lab.md) | Build a semantic search engine over a security knowledge base |
+| 1 | [lecture.md](1_zero_shot_classification/lecture.md) | [handson.md](1_zero_shot_classification/handson.md) | Classify security logs with no training — zero-shot NLI pipeline |
+| 2 | [lecture.md](2_sentence_embeddings/lecture.md) | [handson.md](2_sentence_embeddings/handson.md) | Encode sentences as vectors; cosine similarity; semantic distance |
+| 3 | [lecture.md](3_semantic_search/lecture.md) | [handson.md](3_semantic_search/handson.md) | Build a semantic search engine over a security knowledge base |
 
-**For each exercise:** read the guide first, then open the matching `_lab.md` file and follow the steps.
+**For each exercise:** read the guide first, then open the matching `_handson.md` file and follow the steps.
 
 ## Setup
 
@@ -120,7 +120,7 @@ pip install transformers sentence-transformers torch
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage4_genai/02_huggingface/1_zero_shot_classification/solve.py
+python stage4_genai/02_huggingface/1_zero_shot_classification/solution_huggingface.py
 ```
 
 ## Tips

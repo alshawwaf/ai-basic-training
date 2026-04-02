@@ -163,12 +163,12 @@ Work through them in order.
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_first_api_call/guide.md) | [lab.md](1_first_api_call/lab.md) | Make your first LLM call; understand request/response structure |
-| 2 | [guide.md](2_system_prompts/guide.md) | [lab.md](2_system_prompts/lab.md) | System prompt design; security analyst persona; tone control |
-| 3 | [guide.md](3_structured_output/guide.md) | [lab.md](3_structured_output/lab.md) | JSON output for pipeline integration; parse and validate |
-| 4 | [guide.md](4_conversation/guide.md) | [lab.md](4_conversation/lab.md) | Multi-turn conversation; maintaining context across turns |
+| 1 | [lecture.md](1_first_api_call/lecture.md) | [handson.md](1_first_api_call/handson.md) | Make your first LLM call; understand request/response structure |
+| 2 | [lecture.md](2_system_prompts/lecture.md) | [handson.md](2_system_prompts/handson.md) | System prompt design; security analyst persona; tone control |
+| 3 | [lecture.md](3_structured_output/lecture.md) | [handson.md](3_structured_output/handson.md) | JSON output for pipeline integration; parse and validate |
+| 4 | [lecture.md](4_conversation/lecture.md) | [handson.md](4_conversation/handson.md) | Multi-turn conversation; maintaining context across turns |
 
-**For each exercise:** read the guide first, then open the matching `_lab.md` file and follow the steps.
+**For each exercise:** read the guide first, then open the matching `_handson.md` file and follow the steps.
 
 ## Setup
 
@@ -183,7 +183,7 @@ set GOOGLE_API_KEY=your-key-here      # Gemini
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage4_genai/03_llm_api/1_first_api_call/solve.py
+python stage4_genai/03_llm_api/1_first_api_call/solution_llm_api.py
 ```
 
 ## Tips

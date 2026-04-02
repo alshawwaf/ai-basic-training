@@ -108,7 +108,7 @@ You have covered the concepts. Now build it yourself.
 ## Network Traffic Classifier with Decision Trees
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_how_trees_make_decisions/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_how_trees_make_decisions/solution_decision_trees.py`)
 
 ## What This Workshop Covers
 
@@ -118,16 +118,16 @@ In this workshop you will build a decision tree classifier that identifies four 
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_how_trees_make_decisions/guide.md) | [lab.md](1_how_trees_make_decisions/lab.md) | The if/else concept, Gini impurity, information gain |
-| 2 | [guide.md](2_train_and_read_the_tree/guide.md) | [lab.md](2_train_and_read_the_tree/lab.md) | DecisionTreeClassifier, plot_tree(), interpret rules |
-| 3 | [guide.md](3_feature_importance/guide.md) | [lab.md](3_feature_importance/lab.md) | .feature_importances_, which network features matter most |
-| 4 | [guide.md](4_depth_and_overfitting/guide.md) | [lab.md](4_depth_and_overfitting/lab.md) | max_depth sweep, train vs test accuracy, sweet spot |
+| 1 | [lecture.md](1_how_trees_make_decisions/lecture.md) | [handson.md](1_how_trees_make_decisions/handson.md) | The if/else concept, Gini impurity, information gain |
+| 2 | [lecture.md](2_train_and_read_the_tree/lecture.md) | [handson.md](2_train_and_read_the_tree/handson.md) | DecisionTreeClassifier, plot_tree(), interpret rules |
+| 3 | [lecture.md](3_feature_importance/lecture.md) | [handson.md](3_feature_importance/handson.md) | .feature_importances_, which network features matter most |
+| 4 | [lecture.md](4_depth_and_overfitting/lecture.md) | [handson.md](4_depth_and_overfitting/handson.md) | max_depth sweep, train vs test accuracy, sweet spot |
 
 ## Running a Solution
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage1_classic_ml/04_decision_trees/1_how_trees_make_decisions/solve.py
+python stage1_classic_ml/04_decision_trees/1_how_trees_make_decisions/solution_decision_trees.py
 ```
 
 ## Next Lesson

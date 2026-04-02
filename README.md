@@ -128,13 +128,13 @@ Every lesson follows the same three-part structure:
 01_topic_name/
   ├── README.md                Theory + exercise overview — read first
   ├── 1_first_exercise/
-  │   ├── guide.md             Concept explanation
-  │   ├── lab.md               Step-by-step instructions
-  │   └── solve.py             Reference solution (open last)
+  │   ├── lecture.md             Concept explanation
+  │   ├── handson.md               Step-by-step instructions
+  │   └── solution_*.py             Reference solution (open last)
   ├── 2_second_exercise/
-  │   ├── guide.md
-  │   ├── lab.md
-  │   └── solve.py
+  │   ├── lecture.md
+  │   ├── handson.md
+  │   └── solution_*.py
   └── ...
 ```
 
@@ -270,7 +270,7 @@ AI Basic Training/
 ├── stage1_classic_ml/                          Stage 1 — Classic ML (5 lessons)
 │   ├── 01_what_is_ml/
 │   │   ├── README.md                                Theory + exercise overview
-│   │   ├── 1_loading_data/                          guide.md, lab.md, solve.py
+│   │   ├── 1_loading_data/                          lecture.md, handson.md, solution_*.py
 │   │   ├── 2_statistics/
 │   │   ├── 3_class_balance/
 │   │   ├── 4_visualise/

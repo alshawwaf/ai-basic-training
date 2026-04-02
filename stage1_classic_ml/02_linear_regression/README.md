@@ -122,7 +122,7 @@ You have covered the concepts. Now build it yourself.
 ## Predicting Server Response Time and Detecting DoS Anomalies
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_understanding_regression/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_understanding_regression/solution_linear_regression.py`)
 
 ## What This Workshop Covers
 
@@ -132,16 +132,16 @@ In this workshop you will build a linear regression model that predicts a server
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_understanding_regression/guide.md) | [lab.md](1_understanding_regression/lab.md) | Regression vs classification, the dataset, visualising the relationship |
-| 2 | [guide.md](2_train_test_split/guide.md) | [lab.md](2_train_test_split/lab.md) | Why we split data, train_test_split(), the danger of evaluating on training data |
-| 3 | [guide.md](3_fit_and_predict/guide.md) | [lab.md](3_fit_and_predict/lab.md) | model.fit(), model.predict(), slope and intercept, visualise the line |
-| 4 | [guide.md](4_evaluate_regression/guide.md) | [lab.md](4_evaluate_regression/lab.md) | MSE, RMSE, MAE, R², interpret results, build a security baseline |
+| 1 | [lecture.md](1_understanding_regression/lecture.md) | [handson.md](1_understanding_regression/handson.md) | Regression vs classification, the dataset, visualising the relationship |
+| 2 | [lecture.md](2_train_test_split/lecture.md) | [handson.md](2_train_test_split/handson.md) | Why we split data, train_test_split(), the danger of evaluating on training data |
+| 3 | [lecture.md](3_fit_and_predict/lecture.md) | [handson.md](3_fit_and_predict/handson.md) | model.fit(), model.predict(), slope and intercept, visualise the line |
+| 4 | [lecture.md](4_evaluate_regression/lecture.md) | [handson.md](4_evaluate_regression/handson.md) | MSE, RMSE, MAE, R², interpret results, build a security baseline |
 
 ## Running a Solution
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage1_classic_ml/02_linear_regression/1_understanding_regression/solve.py
+python stage1_classic_ml/02_linear_regression/1_understanding_regression/solution_linear_regression.py
 ```
 
 ## Next Lesson

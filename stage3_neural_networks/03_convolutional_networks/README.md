@@ -92,7 +92,7 @@ You have covered the concepts. Now build it yourself.
 ## Convolutional Networks
 
 > **Read first:** [README.md](README.md)
-> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_why_dense_fails_on_images/solve.py`) — open only after finishing the exercise
+> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_why_dense_fails_on_images/solution_convolutional_networks.py`) — open only after finishing the exercise
 
 ## What This Workshop Covers
 
@@ -104,16 +104,16 @@ This workshop uses the MNIST dataset (handwritten digits, 28×28 greyscale image
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_why_dense_fails_on_images/guide.md) | [lab.md](1_why_dense_fails_on_images/lab.md) | Dense ignores spatial relationships; pixels as flat vector |
-| 2 | [guide.md](2_conv_and_pooling/guide.md) | [lab.md](2_conv_and_pooling/lab.md) | Conv2D filter sliding, MaxPooling2D downsampling, shape arithmetic |
-| 3 | [guide.md](3_build_and_train_cnn/guide.md) | [lab.md](3_build_and_train_cnn/lab.md) | Full CNN on MNIST, compare accuracy to Dense baseline |
-| 4 | [guide.md](4_malware_visualisation_context/guide.md) | [lab.md](4_malware_visualisation_context/lab.md) | Binary-to-image, malware family visual patterns, CNN relevance |
+| 1 | [lecture.md](1_why_dense_fails_on_images/lecture.md) | [handson.md](1_why_dense_fails_on_images/handson.md) | Dense ignores spatial relationships; pixels as flat vector |
+| 2 | [lecture.md](2_conv_and_pooling/lecture.md) | [handson.md](2_conv_and_pooling/handson.md) | Conv2D filter sliding, MaxPooling2D downsampling, shape arithmetic |
+| 3 | [lecture.md](3_build_and_train_cnn/lecture.md) | [handson.md](3_build_and_train_cnn/handson.md) | Full CNN on MNIST, compare accuracy to Dense baseline |
+| 4 | [lecture.md](4_malware_visualisation_context/lecture.md) | [handson.md](4_malware_visualisation_context/handson.md) | Binary-to-image, malware family visual patterns, CNN relevance |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage3_neural_networks/03_convolutional_networks/1_why_dense_fails_on_images/solve.py
+python stage3_neural_networks/03_convolutional_networks/1_why_dense_fails_on_images/solution_convolutional_networks.py
 ```
 
 ## Tips

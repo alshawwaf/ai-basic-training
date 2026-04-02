@@ -133,7 +133,7 @@ You have covered the concepts. Now build it yourself.
 ## Model Evaluation on Imbalanced Security Data
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_the_accuracy_trap/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_the_accuracy_trap/solution_model_evaluation.py`)
 
 ## What This Workshop Covers
 
@@ -143,17 +143,17 @@ In this workshop you will discover why accuracy is a dangerous metric for imbala
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_the_accuracy_trap/guide.md) | [lab.md](1_the_accuracy_trap/lab.md) | DummyClassifier, 95% accuracy that catches 0 attacks |
-| 2 | [guide.md](2_confusion_matrix/guide.md) | [lab.md](2_confusion_matrix/lab.md) | TP/TN/FP/FN for security, compute manually and with sklearn |
-| 3 | [guide.md](3_precision_recall_f1/guide.md) | [lab.md](3_precision_recall_f1/lab.md) | Precision, recall, F1, security tradeoffs |
-| 4 | [guide.md](4_roc_and_auc/guide.md) | [lab.md](4_roc_and_auc/lab.md) | ROC curve, AUC, compare three models |
-| 5 | [guide.md](5_threshold_tuning/guide.md) | [lab.md](5_threshold_tuning/lab.md) | Threshold sensitivity, pick for use case |
+| 1 | [lecture.md](1_the_accuracy_trap/lecture.md) | [handson.md](1_the_accuracy_trap/handson.md) | DummyClassifier, 95% accuracy that catches 0 attacks |
+| 2 | [lecture.md](2_confusion_matrix/lecture.md) | [handson.md](2_confusion_matrix/handson.md) | TP/TN/FP/FN for security, compute manually and with sklearn |
+| 3 | [lecture.md](3_precision_recall_f1/lecture.md) | [handson.md](3_precision_recall_f1/handson.md) | Precision, recall, F1, security tradeoffs |
+| 4 | [lecture.md](4_roc_and_auc/lecture.md) | [handson.md](4_roc_and_auc/handson.md) | ROC curve, AUC, compare three models |
+| 5 | [lecture.md](5_threshold_tuning/lecture.md) | [handson.md](5_threshold_tuning/handson.md) | Threshold sensitivity, pick for use case |
 
 ## Running a Solution
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage1_classic_ml/05_model_evaluation/1_the_accuracy_trap/solve.py
+python stage1_classic_ml/05_model_evaluation/1_the_accuracy_trap/solution_model_evaluation.py
 ```
 
 ## Next Lesson

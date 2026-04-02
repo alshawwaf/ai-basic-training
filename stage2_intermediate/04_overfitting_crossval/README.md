@@ -136,7 +136,7 @@ You have covered the concepts. Now build it yourself.
 ## Overfitting and Cross-Validation
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_overfitting_demo/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_overfitting_demo/solution_overfitting_crossval.py`)
 
 ## What This Workshop Covers
 
@@ -146,16 +146,16 @@ You will deeply understand overfitting by watching a decision tree's train-vs-te
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_overfitting_demo/guide.md) | [lab.md](1_overfitting_demo/lab.md) | Sweep tree depth, watch train vs val accuracy diverge |
-| 2 | [guide.md](2_bias_variance/guide.md) | [lab.md](2_bias_variance/lab.md) | Underfit vs good fit vs overfit — visualise all three |
-| 3 | [guide.md](3_kfold_crossval/guide.md) | [lab.md](3_kfold_crossval/lab.md) | cross_val_score, 5-fold vs 10-fold, variance reduction |
-| 4 | [guide.md](4_validation_curve/guide.md) | [lab.md](4_validation_curve/lab.md) | validation_curve(), automatic parameter sweep, plot |
+| 1 | [lecture.md](1_overfitting_demo/lecture.md) | [handson.md](1_overfitting_demo/handson.md) | Sweep tree depth, watch train vs val accuracy diverge |
+| 2 | [lecture.md](2_bias_variance/lecture.md) | [handson.md](2_bias_variance/handson.md) | Underfit vs good fit vs overfit — visualise all three |
+| 3 | [lecture.md](3_kfold_crossval/lecture.md) | [handson.md](3_kfold_crossval/handson.md) | cross_val_score, 5-fold vs 10-fold, variance reduction |
+| 4 | [lecture.md](4_validation_curve/lecture.md) | [handson.md](4_validation_curve/handson.md) | validation_curve(), automatic parameter sweep, plot |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage2_intermediate/04_overfitting_crossval/1_overfitting_demo/solve.py
+python stage2_intermediate/04_overfitting_crossval/1_overfitting_demo/solution_overfitting_crossval.py
 ```
 
 ## Next Lesson

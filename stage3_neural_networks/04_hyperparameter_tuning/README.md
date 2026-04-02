@@ -96,7 +96,7 @@ You have covered the concepts. Now build it yourself.
 ## Hyperparameter Tuning
 
 > **Read first:** [README.md](README.md)
-> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_what_are_hyperparameters/solve.py`) — open only after finishing the exercise
+> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_what_are_hyperparameters/solution_hyperparameter_tuning.py`) — open only after finishing the exercise
 
 ## What This Workshop Covers
 
@@ -108,16 +108,16 @@ This workshop reuses the same synthetic binary classification dataset from Lesso
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_what_are_hyperparameters/guide.md) | [lab.md](1_what_are_hyperparameters/lab.md) | Parameters vs hyperparameters; before/after weight inspection |
-| 2 | [guide.md](2_learning_rate_sensitivity/guide.md) | [lab.md](2_learning_rate_sensitivity/lab.md) | lr=0.001 vs 0.01 vs 0.1 — convergence, divergence, slow learning |
-| 3 | [guide.md](3_batch_size_effects/guide.md) | [lab.md](3_batch_size_effects/lab.md) | batch_size=32 vs 256 vs 1024 — gradient noise vs stability |
-| 4 | [guide.md](4_architecture_search/guide.md) | [lab.md](4_architecture_search/lab.md) | Manual grid search over units×layers, store results in DataFrame |
+| 1 | [lecture.md](1_what_are_hyperparameters/lecture.md) | [handson.md](1_what_are_hyperparameters/handson.md) | Parameters vs hyperparameters; before/after weight inspection |
+| 2 | [lecture.md](2_learning_rate_sensitivity/lecture.md) | [handson.md](2_learning_rate_sensitivity/handson.md) | lr=0.001 vs 0.01 vs 0.1 — convergence, divergence, slow learning |
+| 3 | [lecture.md](3_batch_size_effects/lecture.md) | [handson.md](3_batch_size_effects/handson.md) | batch_size=32 vs 256 vs 1024 — gradient noise vs stability |
+| 4 | [lecture.md](4_architecture_search/lecture.md) | [handson.md](4_architecture_search/handson.md) | Manual grid search over units×layers, store results in DataFrame |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage3_neural_networks/04_hyperparameter_tuning/1_what_are_hyperparameters/solve.py
+python stage3_neural_networks/04_hyperparameter_tuning/1_what_are_hyperparameters/solution_hyperparameter_tuning.py
 ```
 
 ## Tips

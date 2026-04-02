@@ -123,7 +123,7 @@ You have covered the concepts. Now build it yourself.
 ## Malware vs Benign PE File Classifier with Random Forests
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_from_tree_to_forest/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_from_tree_to_forest/solution_random_forests.py`)
 
 ## What This Workshop Covers
 
@@ -133,16 +133,16 @@ You will build a random forest classifier that distinguishes malware from benign
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_from_tree_to_forest/guide.md) | [lab.md](1_from_tree_to_forest/lab.md) | Single tree overfitting demo, bagging concept |
-| 2 | [guide.md](2_train_random_forest/guide.md) | [lab.md](2_train_random_forest/lab.md) | RandomForestClassifier, oob_score, tree vs forest accuracy |
-| 3 | [guide.md](3_feature_importance/guide.md) | [lab.md](3_feature_importance/lab.md) | Stable importances, single tree vs forest stability |
-| 4 | [guide.md](4_tune_the_forest/guide.md) | [lab.md](4_tune_the_forest/lab.md) | n_estimators sweep, max_features, learning curve |
+| 1 | [lecture.md](1_from_tree_to_forest/lecture.md) | [handson.md](1_from_tree_to_forest/handson.md) | Single tree overfitting demo, bagging concept |
+| 2 | [lecture.md](2_train_random_forest/lecture.md) | [handson.md](2_train_random_forest/handson.md) | RandomForestClassifier, oob_score, tree vs forest accuracy |
+| 3 | [lecture.md](3_feature_importance/lecture.md) | [handson.md](3_feature_importance/handson.md) | Stable importances, single tree vs forest stability |
+| 4 | [lecture.md](4_tune_the_forest/lecture.md) | [handson.md](4_tune_the_forest/handson.md) | n_estimators sweep, max_features, learning curve |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage2_intermediate/02_random_forests/1_from_tree_to_forest/solve.py
+python stage2_intermediate/02_random_forests/1_from_tree_to_forest/solution_random_forests.py
 ```
 
 ## Next Lesson

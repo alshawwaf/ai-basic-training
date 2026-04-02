@@ -118,7 +118,7 @@ You have covered the concepts. Now build it yourself.
 ## Dropout and Regularisation
 
 > **Read first:** [README.md](README.md)
-> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_demonstrate_overfitting/solve.py`) — open only after finishing the exercise
+> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_demonstrate_overfitting/solution_dropout_regularisation.py`) — open only after finishing the exercise
 
 ## What This Workshop Covers
 
@@ -130,16 +130,16 @@ This workshop reuses the same synthetic binary classification dataset from Lesso
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_demonstrate_overfitting/guide.md) | [lab.md](1_demonstrate_overfitting/lab.md) | Build large unregularised network, plot diverging loss |
-| 2 | [guide.md](2_add_dropout/guide.md) | [lab.md](2_add_dropout/lab.md) | Add Dropout(0.3), compare val loss to exercise 1 |
-| 3 | [guide.md](3_batch_normalisation/guide.md) | [lab.md](3_batch_normalisation/lab.md) | BatchNormalization, smoother curves, combine with Dropout |
-| 4 | [guide.md](4_early_stopping/guide.md) | [lab.md](4_early_stopping/lab.md) | EarlyStopping callback, patience, restore_best_weights |
+| 1 | [lecture.md](1_demonstrate_overfitting/lecture.md) | [handson.md](1_demonstrate_overfitting/handson.md) | Build large unregularised network, plot diverging loss |
+| 2 | [lecture.md](2_add_dropout/lecture.md) | [handson.md](2_add_dropout/handson.md) | Add Dropout(0.3), compare val loss to exercise 1 |
+| 3 | [lecture.md](3_batch_normalisation/lecture.md) | [handson.md](3_batch_normalisation/handson.md) | BatchNormalization, smoother curves, combine with Dropout |
+| 4 | [lecture.md](4_early_stopping/lecture.md) | [handson.md](4_early_stopping/handson.md) | EarlyStopping callback, patience, restore_best_weights |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage3_neural_networks/02_dropout_regularisation/1_demonstrate_overfitting/solve.py
+python stage3_neural_networks/02_dropout_regularisation/1_demonstrate_overfitting/solution_dropout_regularisation.py
 ```
 
 ## Tips

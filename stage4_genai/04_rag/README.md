@@ -136,9 +136,9 @@ Work through them in order — each exercise is a component of the final pipelin
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_chunking/guide.md) | [lab.md](1_chunking/lab.md) | Document chunking strategies — fixed-size, overlap, by sentence |
-| 2 | [guide.md](2_retrieval/guide.md) | [lab.md](2_retrieval/lab.md) | Encode chunks and retrieve top-k by cosine similarity |
-| 3 | [guide.md](3_rag_pipeline/guide.md) | [lab.md](3_rag_pipeline/lab.md) | Full RAG: retrieve relevant chunks + augment prompt + generate |
+| 1 | [lecture.md](1_chunking/lecture.md) | [handson.md](1_chunking/handson.md) | Document chunking strategies — fixed-size, overlap, by sentence |
+| 2 | [lecture.md](2_retrieval/lecture.md) | [handson.md](2_retrieval/handson.md) | Encode chunks and retrieve top-k by cosine similarity |
+| 3 | [lecture.md](3_rag_pipeline/lecture.md) | [handson.md](3_rag_pipeline/handson.md) | Full RAG: retrieve relevant chunks + augment prompt + generate |
 
 ## Setup
 
@@ -152,7 +152,7 @@ set ANTHROPIC_API_KEY=your-key-here
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage4_genai/04_rag/1_chunking/solve.py
+python stage4_genai/04_rag/1_chunking/solution_rag.py
 ```
 
 ## Tips

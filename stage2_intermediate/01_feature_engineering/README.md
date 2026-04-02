@@ -116,7 +116,7 @@ You have covered the concepts. Now build it yourself.
 ## Feature Engineering: From Raw Logs to ML Features
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_why_raw_logs_fail/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_why_raw_logs_fail/solution_feature_engineering.py`)
 
 ## What This Workshop Covers
 
@@ -126,16 +126,16 @@ Raw firewall and NetFlow logs contain strings, IP addresses, timestamps, and pro
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_why_raw_logs_fail/guide.md) | [lab.md](1_why_raw_logs_fail/lab.md) | What raw logs look like and why sklearn can't use them |
-| 2 | [guide.md](2_numeric_feature_extraction/guide.md) | [lab.md](2_numeric_feature_extraction/lab.md) | Derive bytes_per_second, packet_rate, duration, port risk scores |
-| 3 | [guide.md](3_categorical_encoding/guide.md) | [lab.md](3_categorical_encoding/lab.md) | One-hot encode protocol, LabelEncoder vs OneHotEncoder, dummy trap |
-| 4 | [guide.md](4_scaling_and_validation/guide.md) | [lab.md](4_scaling_and_validation/lab.md) | StandardScaler, MinMaxScaler, fit on train only, validate intuition |
+| 1 | [lecture.md](1_why_raw_logs_fail/lecture.md) | [handson.md](1_why_raw_logs_fail/handson.md) | What raw logs look like and why sklearn can't use them |
+| 2 | [lecture.md](2_numeric_feature_extraction/lecture.md) | [handson.md](2_numeric_feature_extraction/handson.md) | Derive bytes_per_second, packet_rate, duration, port risk scores |
+| 3 | [lecture.md](3_categorical_encoding/lecture.md) | [handson.md](3_categorical_encoding/handson.md) | One-hot encode protocol, LabelEncoder vs OneHotEncoder, dummy trap |
+| 4 | [lecture.md](4_scaling_and_validation/lecture.md) | [handson.md](4_scaling_and_validation/handson.md) | StandardScaler, MinMaxScaler, fit on train only, validate intuition |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage2_intermediate/01_feature_engineering/1_why_raw_logs_fail/solve.py
+python stage2_intermediate/01_feature_engineering/1_why_raw_logs_fail/solution_feature_engineering.py
 ```
 
 ## Next Lesson

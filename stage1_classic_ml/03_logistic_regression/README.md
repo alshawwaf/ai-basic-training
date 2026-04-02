@@ -120,16 +120,16 @@ In this workshop you will build a logistic regression classifier that distinguis
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_from_regression_to_classification/guide.md) | [lab.md](1_from_regression_to_classification/lab.md) | What makes it classification, the sigmoid function, probability outputs |
-| 2 | [guide.md](2_feature_engineering_urls/guide.md) | [lab.md](2_feature_engineering_urls/lab.md) | Why URL features matter for phishing detection, dataset creation and inspection |
-| 3 | [guide.md](3_train_and_evaluate/guide.md) | [lab.md](3_train_and_evaluate/lab.md) | LogisticRegression, StandardScaler, classification_report, confusion matrix |
-| 4 | [guide.md](4_threshold_tuning/guide.md) | [lab.md](4_threshold_tuning/lab.md) | predict_proba(), why 0.5 is not always right, precision-recall tradeoff |
+| 1 | [lecture.md](1_from_regression_to_classification/lecture.md) | [handson.md](1_from_regression_to_classification/handson.md) | What makes it classification, the sigmoid function, probability outputs |
+| 2 | [lecture.md](2_feature_engineering_urls/lecture.md) | [handson.md](2_feature_engineering_urls/handson.md) | Why URL features matter for phishing detection, dataset creation and inspection |
+| 3 | [lecture.md](3_train_and_evaluate/lecture.md) | [handson.md](3_train_and_evaluate/handson.md) | LogisticRegression, StandardScaler, classification_report, confusion matrix |
+| 4 | [lecture.md](4_threshold_tuning/lecture.md) | [handson.md](4_threshold_tuning/handson.md) | predict_proba(), why 0.5 is not always right, precision-recall tradeoff |
 
 ## Running a Solution
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage1_classic_ml/03_logistic_regression/1_from_regression_to_classification/solve.py
+python stage1_classic_ml/03_logistic_regression/1_from_regression_to_classification/solution_logistic_regression.py
 ```
 
 ## Next Lesson

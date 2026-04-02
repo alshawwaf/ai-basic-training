@@ -138,7 +138,7 @@ You have covered the concepts. Now build it yourself.
 ## Your First Neural Network in Keras
 
 > **Read first:** [README.md](README.md)
-> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_from_numpy_to_keras/solve.py`) — open only after finishing the exercise
+> **Reference solutions:** Each exercise has a matching solution file (e.g. `1_from_numpy_to_keras/solution_first_neural_network.py`) — open only after finishing the exercise
 
 ## What This Workshop Covers
 
@@ -150,16 +150,16 @@ This workshop uses a synthetic binary classification dataset with class imbalanc
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_from_numpy_to_keras/guide.md) | [lab.md](1_from_numpy_to_keras/lab.md) | Dense layer = matrix multiply + bias + activation |
-| 2 | [guide.md](2_build_the_network/guide.md) | [lab.md](2_build_the_network/lab.md) | Choose layers, activations, output shape |
-| 3 | [guide.md](3_compile_and_train/guide.md) | [lab.md](3_compile_and_train/lab.md) | model.fit(), history object, training curves |
-| 4 | [guide.md](4_evaluate_and_improve/guide.md) | [lab.md](4_evaluate_and_improve/lab.md) | model.evaluate(), classification report, LR baseline |
+| 1 | [lecture.md](1_from_numpy_to_keras/lecture.md) | [handson.md](1_from_numpy_to_keras/handson.md) | Dense layer = matrix multiply + bias + activation |
+| 2 | [lecture.md](2_build_the_network/lecture.md) | [handson.md](2_build_the_network/handson.md) | Choose layers, activations, output shape |
+| 3 | [lecture.md](3_compile_and_train/lecture.md) | [handson.md](3_compile_and_train/handson.md) | model.fit(), history object, training curves |
+| 4 | [lecture.md](4_evaluate_and_improve/lecture.md) | [handson.md](4_evaluate_and_improve/handson.md) | model.evaluate(), classification report, LR baseline |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage3_neural_networks/01_first_neural_network/1_from_numpy_to_keras/solve.py
+python stage3_neural_networks/01_first_neural_network/1_from_numpy_to_keras/solution_first_neural_network.py
 ```
 
 ## Tips

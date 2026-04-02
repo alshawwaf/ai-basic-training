@@ -134,17 +134,17 @@ Work through them in order — each exercise builds on the previous.
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_tokenisation/guide.md) | [lab.md](1_tokenisation/lab.md) | Text → tokens → token IDs; vocabulary and OOV handling |
-| 2 | [guide.md](2_embeddings/guide.md) | [lab.md](2_embeddings/lab.md) | Tokens → vectors; cosine similarity; semantic distance |
-| 3 | [guide.md](3_attention/guide.md) | [lab.md](3_attention/lab.md) | Attention weights as "which words matter to which"; Q/K/V intuition |
+| 1 | [lecture.md](1_tokenisation/lecture.md) | [handson.md](1_tokenisation/handson.md) | Text → tokens → token IDs; vocabulary and OOV handling |
+| 2 | [lecture.md](2_embeddings/lecture.md) | [handson.md](2_embeddings/handson.md) | Tokens → vectors; cosine similarity; semantic distance |
+| 3 | [lecture.md](3_attention/lecture.md) | [handson.md](3_attention/handson.md) | Attention weights as "which words matter to which"; Q/K/V intuition |
 
-**For each exercise:** read the guide first, then open the matching `_lab.md` file and follow the steps.
+**For each exercise:** read the guide first, then open the matching `_handson.md` file and follow the steps.
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage4_genai/01_how_llms_work/1_tokenisation/solve.py
+python stage4_genai/01_how_llms_work/1_tokenisation/solution_how_llms_work.py
 ```
 
 ## Tips

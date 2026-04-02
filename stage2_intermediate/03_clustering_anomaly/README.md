@@ -135,7 +135,7 @@ You have covered the concepts. Now build it yourself.
 ## Network Anomaly Detection with K-Means Clustering
 
 > Read first: [README.md](README.md)
-> Reference: Each exercise has a matching solution file (e.g. `1_unsupervised_framing/solve.py`)
+> Reference: Each exercise has a matching solution file (e.g. `1_unsupervised_framing/solution_clustering_anomaly.py`)
 
 ## What This Workshop Covers
 
@@ -145,16 +145,16 @@ You will apply K-Means clustering to unlabelled network traffic to discover beha
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_unsupervised_framing/guide.md) | [lab.md](1_unsupervised_framing/lab.md) | No labels available, what clustering finds |
-| 2 | [guide.md](2_kmeans_and_visualisation/guide.md) | [lab.md](2_kmeans_and_visualisation/lab.md) | KMeans, PCA to 2D, colour-coded cluster plot |
-| 3 | [guide.md](3_choosing_k/guide.md) | [lab.md](3_choosing_k/lab.md) | Elbow method, silhouette score |
-| 4 | [guide.md](4_anomaly_scoring/guide.md) | [lab.md](4_anomaly_scoring/lab.md) | Distance from centroid, threshold, flag top anomalies |
+| 1 | [lecture.md](1_unsupervised_framing/lecture.md) | [handson.md](1_unsupervised_framing/handson.md) | No labels available, what clustering finds |
+| 2 | [lecture.md](2_kmeans_and_visualisation/lecture.md) | [handson.md](2_kmeans_and_visualisation/handson.md) | KMeans, PCA to 2D, colour-coded cluster plot |
+| 3 | [lecture.md](3_choosing_k/lecture.md) | [handson.md](3_choosing_k/handson.md) | Elbow method, silhouette score |
+| 4 | [lecture.md](4_anomaly_scoring/lecture.md) | [handson.md](4_anomaly_scoring/handson.md) | Distance from centroid, threshold, flag top anomalies |
 
 ## Running an Exercise
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python stage2_intermediate/03_clustering_anomaly/1_unsupervised_framing/solve.py
+python stage2_intermediate/03_clustering_anomaly/1_unsupervised_framing/solution_clustering_anomaly.py
 ```
 
 ## Next Lesson

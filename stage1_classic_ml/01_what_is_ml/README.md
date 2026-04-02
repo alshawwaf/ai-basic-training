@@ -211,9 +211,9 @@ You will build each piece yourself, step by step, across 5 focused exercises.
 
 Each exercise has three files:
 
-- **guide.md** — explains the concept and the methods you need
-- **lab.md** — step-by-step instructions to build your script from scratch
-- **solve.py** — reference implementation to compare against when you are done
+- **lecture.md** — explains the concept and the methods you need
+- **handson.md** — step-by-step instructions to build your script from scratch
+- **solution_what_is_ml.py** — reference implementation to compare against when you are done
 
 Every lab shows you the **expected output** at each step. Run your script after each task and verify your output matches before moving on.
 
@@ -225,13 +225,13 @@ Work through them in order — each one builds on the previous.
 
 | # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
-| 1 | [guide.md](1_loading_data/guide.md) | [lab.md](1_loading_data/lab.md) | Loading a dataset — Bunch, DataFrame, features vs labels |
-| 2 | [guide.md](2_statistics/guide.md) | [lab.md](2_statistics/lab.md) | Shape and statistics — `.describe()`, missing values, zero-variance features |
-| 3 | [guide.md](3_class_balance/guide.md) | [lab.md](3_class_balance/lab.md) | Class balance — the naive accuracy trap, imbalance ratio |
-| 4 | [guide.md](4_visualise/guide.md) | [lab.md](4_visualise/lab.md) | Visualising data — image grids, average prototypes |
-| 5 | [guide.md](5_what_model_sees/guide.md) | [lab.md](5_what_model_sees/lab.md) | What the model sees — number grids, correlations, security analogy |
+| 1 | [lecture.md](1_loading_data/lecture.md) | [handson.md](1_loading_data/handson.md) | Loading a dataset — Bunch, DataFrame, features vs labels |
+| 2 | [lecture.md](2_statistics/lecture.md) | [handson.md](2_statistics/handson.md) | Shape and statistics — `.describe()`, missing values, zero-variance features |
+| 3 | [lecture.md](3_class_balance/lecture.md) | [handson.md](3_class_balance/handson.md) | Class balance — the naive accuracy trap, imbalance ratio |
+| 4 | [lecture.md](4_visualise/lecture.md) | [handson.md](4_visualise/handson.md) | Visualising data — image grids, average prototypes |
+| 5 | [lecture.md](5_what_model_sees/lecture.md) | [handson.md](5_what_model_sees/handson.md) | What the model sees — number grids, correlations, security analogy |
 
-**For each exercise:** read the guide first, then open the matching `_lab.md` file and follow the steps.
+**For each exercise:** read the guide first, then open the matching `_handson.md` file and follow the steps.
 
 ---
 
@@ -240,7 +240,7 @@ Work through them in order — each one builds on the previous.
 Make sure your virtual environment is active, then from the repo root:
 
 ```bash
-python stage1_classic_ml/01_what_is_ml/1_loading_data/solve.py
+python stage1_classic_ml/01_what_is_ml/1_loading_data/solution_what_is_ml.py
 ```
 
 Replace the filename with whichever exercise you are working on.

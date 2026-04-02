@@ -74,12 +74,20 @@ Labels   (y) shape: (1797,)
 
 ## Step 5: Wrap the data in a DataFrame
 
-A DataFrame gives you named columns and easy inspection. Add this to your file:
+So far the data lives in a NumPy array — just rows of numbers with no column names. A **DataFrame** (from the `pandas` library) adds column names and gives you powerful inspection methods like `.head()`, `.describe()`, and `.shape`.
+
+Add this to your file:
 
 ```python
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
+```
 
+This creates a table with 64 columns named `pixel_0` through `pixel_63` (one per pixel in the 8x8 image) plus a `target` column holding the digit label (0–9).
+
+Printing all 65 columns would flood the terminal, so we pick a few to preview. Add this to your file:
+
+```python
 preview_cols = ["pixel_21", "pixel_28", "pixel_36", "pixel_43", "target"]
 print("\nFirst 5 rows (selected columns):")
 print(df[preview_cols].head().to_string())
@@ -87,7 +95,18 @@ print(f"\nFull DataFrame shape: {df.shape}")
 print(f"Columns: pixel_0 ... pixel_63, target  ({df.shape[1]} total)")
 ```
 
-We pick centre pixels (21, 28, 36, 43) because edge pixels are mostly zero — the handwriting sits in the middle of the 8x8 grid.
+**Why these columns?** Each image is an 8x8 grid — 64 pixels numbered left-to-right, top-to-bottom. Pixels at the edges (0, 7, 56, 63) are almost always zero because handwriting sits in the centre. Pixels 21, 28, 36, and 43 are in the middle rows where the ink actually is, so they show meaningful variation across different digits.
+
+```
+ 0  1  2  3  4  5  6  7        ← top row (mostly blank)
+ 8  9 10 11 12 13 14 15
+16 17 18 19 20 [21] 22 23      ← pixel 21
+24 25 26 27 [28] 29 30 31      ← pixel 28
+32 33 34 35 [36] 37 38 39      ← pixel 36
+40 41 42 43 [44] 45 46 47      ← pixel 43 (one row up)
+48 49 50 51 52 53 54 55
+56 57 58 59 60 61 62 63        ← bottom row (mostly blank)
+```
 
 Run your file. You should see:
 ```
@@ -102,6 +121,8 @@ First 5 rows (selected columns):
 Full DataFrame shape: (1797, 65)
 Columns: pixel_0 ... pixel_63, target  (65 total)
 ```
+
+Notice how each digit has a different pattern of pixel intensities — that is exactly what the model will learn from.
 
 ---
 

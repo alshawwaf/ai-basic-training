@@ -32,20 +32,20 @@ Stage 4 is about **generative models**: given a prompt/context, *produce* meanin
 
 ## Lessons
 
-### Lesson 4.1 — [How LLMs Work](lesson1_how_llms_work/1_how_llms_work.md)
-**Workshop:** [lesson1_how_llms_work/workshop/1_lab_guide.md](lesson1_how_llms_work/workshop/1_lab_guide.md)
+### Lesson 4.1 — [How LLMs Work](lesson1_how_llms_work/notes.md)
+**Workshop:** [lesson1_how_llms_work/workshop/00_overview.md](lesson1_how_llms_work/workshop/00_overview.md)
 Tokenisation, embeddings, and next-token prediction — the machinery behind ChatGPT/Claude.
 
-### Lesson 4.2 — [HuggingFace Pre-trained Models](lesson2_huggingface/2_huggingface_pretrained_models.md)
-**Workshop:** [lesson2_huggingface/workshop/1_lab_guide.md](lesson2_huggingface/workshop/1_lab_guide.md)
+### Lesson 4.2 — [HuggingFace Pre-trained Models](lesson2_huggingface/notes.md)
+**Workshop:** [lesson2_huggingface/workshop/00_overview.md](lesson2_huggingface/workshop/00_overview.md)
 Use transformer models out-of-the-box for text classification, NER, and summarisation.
 
-### Lesson 4.3 — [The Claude API](lesson3_llm_api/3_claude_api.md)
-**Workshop:** [lesson3_llm_api/workshop/1_lab_guide.md](lesson3_llm_api/workshop/1_lab_guide.md)
+### Lesson 4.3 — [The Claude API](lesson3_llm_api/notes.md)
+**Workshop:** [lesson3_llm_api/workshop/00_overview.md](lesson3_llm_api/workshop/00_overview.md)
 Build a conversational threat intelligence assistant using Anthropic's Claude.
 
-### Lesson 4.4 — [Retrieval-Augmented Generation](lesson4_rag/4_retrieval_augmented_generation.md)
-**Workshop:** [lesson4_rag/workshop/1_lab_guide.md](lesson4_rag/workshop/1_lab_guide.md)
+### Lesson 4.4 — [Retrieval-Augmented Generation](lesson4_rag/notes.md)
+**Workshop:** [lesson4_rag/workshop/00_overview.md](lesson4_rag/workshop/00_overview.md)
 Ground the model's answers in your own security documents to reduce hallucination.
 
 ### Milestone — [Security Analyst Assistant](milestone/milestone_security_assistant.py)

@@ -47,10 +47,10 @@ Loss measures how wrong the model is. Training = minimising loss via backpropaga
 | 3.6 | [6_softmax_activation.py](foundations/6_softmax_activation.py) | Softmax activation |
 | 3.7 | [7_cross_entropy_loss.py](foundations/7_cross_entropy_loss.py) | Cross-entropy loss |
 | 3.8 | [8_full_forward_pass.py](foundations/8_full_forward_pass.py) | Full network + loss |
-| 3.9 | [9_first_neural_network.md](lesson9_first_neural_network/9_first_neural_network.md) | Building with Keras — [workshop](lesson9_first_neural_network/workshop/1_lab_guide.md) |
-| 3.10 | [10_dropout_and_regularisation.md](lesson10_dropout_regularisation/10_dropout_and_regularisation.md) | Dropout + regularisation — [workshop](lesson10_dropout_regularisation/workshop/1_lab_guide.md) |
-| 3.11 | [11_convolutional_networks.md](lesson11_convolutional_networks/11_convolutional_networks.md) | Convolutional networks — [workshop](lesson11_convolutional_networks/workshop/1_lab_guide.md) |
-| 3.12 | [12_hyperparameter_tuning.md](lesson12_hyperparameter_tuning/12_hyperparameter_tuning.md) | Tuning your network — [workshop](lesson12_hyperparameter_tuning/workshop/1_lab_guide.md) |
+| 3.9 | [First Neural Network](lesson9_first_neural_network/notes.md) | Building with Keras — [workshop](lesson9_first_neural_network/workshop/00_overview.md) |
+| 3.10 | [Dropout & Regularisation](lesson10_dropout_regularisation/notes.md) | Dropout + regularisation — [workshop](lesson10_dropout_regularisation/workshop/00_overview.md) |
+| 3.11 | [Convolutional Networks](lesson11_convolutional_networks/notes.md) | Convolutional networks — [workshop](lesson11_convolutional_networks/workshop/00_overview.md) |
+| 3.12 | [Hyperparameter Tuning](lesson12_hyperparameter_tuning/notes.md) | Tuning your network — [workshop](lesson12_hyperparameter_tuning/workshop/00_overview.md) |
 | Milestone | [milestone_packets.py](milestone/milestone_packets.py) | Neural network packet classifier |
 
 ---

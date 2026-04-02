@@ -26,20 +26,20 @@ This is where **unsupervised learning** comes in — the model finds unusual pat
 
 ## Lessons
 
-### Lesson 2.1 — [Feature Engineering](lesson1_feature_engineering/1_feature_engineering.md)
-**Workshop:** [lesson1_feature_engineering/workshop/1_lab_guide.md](lesson1_feature_engineering/workshop/1_lab_guide.md)
+### Lesson 2.1 — [Feature Engineering](lesson1_feature_engineering/notes.md)
+**Workshop:** [lesson1_feature_engineering/workshop/00_overview.md](lesson1_feature_engineering/workshop/00_overview.md)
 Turn raw log lines into ML-ready numerical features.
 
-### Lesson 2.2 — [Random Forests](lesson2_random_forests/2_random_forests.md)
-**Workshop:** [lesson2_random_forests/workshop/1_lab_guide.md](lesson2_random_forests/workshop/1_lab_guide.md)
+### Lesson 2.2 — [Random Forests](lesson2_random_forests/notes.md)
+**Workshop:** [lesson2_random_forests/workshop/00_overview.md](lesson2_random_forests/workshop/00_overview.md)
 Ensemble of decision trees — more accurate and less prone to overfitting.
 
-### Lesson 2.3 — [Clustering & Anomaly Detection](lesson3_clustering_anomaly/3_clustering_anomaly_detection.md)
-**Workshop:** [lesson3_clustering_anomaly/workshop/1_lab_guide.md](lesson3_clustering_anomaly/workshop/1_lab_guide.md)
+### Lesson 2.3 — [Clustering & Anomaly Detection](lesson3_clustering_anomaly/notes.md)
+**Workshop:** [lesson3_clustering_anomaly/workshop/00_overview.md](lesson3_clustering_anomaly/workshop/00_overview.md)
 Find anomalous network behaviour without needing attack labels.
 
-### Lesson 2.4 — [Overfitting & Cross-Validation](lesson4_overfitting_crossval/4_overfitting_cross_validation.md)
-**Workshop:** [lesson4_overfitting_crossval/workshop/1_lab_guide.md](lesson4_overfitting_crossval/workshop/1_lab_guide.md)
+### Lesson 2.4 — [Overfitting & Cross-Validation](lesson4_overfitting_crossval/notes.md)
+**Workshop:** [lesson4_overfitting_crossval/workshop/00_overview.md](lesson4_overfitting_crossval/workshop/00_overview.md)
 Reliably estimate real-world model performance.
 
 ### Milestone — [Network Intrusion Detector](milestone/milestone_intrusion.py)

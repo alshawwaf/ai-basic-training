@@ -147,7 +147,7 @@ Each lesson has three parts:
 
 | File / Folder | Role |
 |---------------|------|
-| `notes.md` (or `N_topic.md`) | **Read this first.** Explains the concept in plain English with analogies and security context. Ends with a link to the workshop. |
+| `notes.md` | **Read this first.** Explains the concept in plain English with analogies and security context. Ends with a link to the workshop. |
 | `workshop/` | **Do this next.** A guided set of exercises you complete yourself. Each exercise has a guide (`.md`) and a lab (`.md`) with step-by-step instructions to build your script. |
 | `_solution_` files | **Open last.** Each exercise has a matching solution file — compare against your own after finishing. |
 
@@ -191,10 +191,10 @@ Real security data is never clean. Logs have missing fields, features need to be
 
 | # | Theory | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 2.1 | [Feature Engineering](module2_intermediate/lesson1_feature_engineering/1_feature_engineering.md) | [Workshop (4 exercises)](module2_intermediate/lesson1_feature_engineering/workshop/1_lab_guide.md) | Extracting useful signals from raw firewall and NetFlow logs |
-| 2.2 | [Random Forests](module2_intermediate/lesson2_random_forests/2_random_forests.md) | [Workshop (4 exercises)](module2_intermediate/lesson2_random_forests/workshop/1_lab_guide.md) | Ensemble of decision trees — malware vs. benign file classifier |
-| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/lesson3_clustering_anomaly/3_clustering_anomaly_detection.md) | [Workshop (4 exercises)](module2_intermediate/lesson3_clustering_anomaly/workshop/1_lab_guide.md) | k-Means clustering to find anomalous network connections without any labels |
-| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/lesson4_overfitting_crossval/4_overfitting_cross_validation.md) | [Workshop (4 exercises)](module2_intermediate/lesson4_overfitting_crossval/workshop/1_lab_guide.md) | Why models fail in production, k-fold cross-validation, the bias-variance tradeoff |
+| 2.1 | [Feature Engineering](module2_intermediate/lesson1_feature_engineering/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson1_feature_engineering/workshop/00_overview.md) | Extracting useful signals from raw firewall and NetFlow logs |
+| 2.2 | [Random Forests](module2_intermediate/lesson2_random_forests/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson2_random_forests/workshop/00_overview.md) | Ensemble of decision trees — malware vs. benign file classifier |
+| 2.3 | [Clustering & Anomaly Detection](module2_intermediate/lesson3_clustering_anomaly/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson3_clustering_anomaly/workshop/00_overview.md) | k-Means clustering to find anomalous network connections without any labels |
+| 2.4 | [Overfitting & Cross-Validation](module2_intermediate/lesson4_overfitting_crossval/notes.md) | [Workshop (4 exercises)](module2_intermediate/lesson4_overfitting_crossval/workshop/00_overview.md) | Why models fail in production, k-fold cross-validation, the bias-variance tradeoff |
 | — | **Milestone Project** | [milestone_intrusion.py](module2_intermediate/milestone/milestone_intrusion.py) | Network intrusion detector trained and evaluated on KDD Cup-style connection data |
 
 **Key concepts covered:** one-hot encoding, normalisation, missing value handling, ensemble methods, feature importance, unsupervised learning, silhouette score, regularisation
@@ -226,10 +226,10 @@ These lessons work through the mathematics and mechanics of a neural network fro
 
 | # | Theory | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 3.9 | [First Neural Network](module3_neural_networks/lesson9_first_neural_network/9_first_neural_network.md) | [Workshop (4 exercises)](module3_neural_networks/lesson9_first_neural_network/workshop/1_lab_guide.md) | Rebuild the same network in Keras in ~10 lines |
-| 3.10 | [Dropout & Regularisation](module3_neural_networks/lesson10_dropout_regularisation/10_dropout_and_regularisation.md) | [Workshop (4 exercises)](module3_neural_networks/lesson10_dropout_regularisation/workshop/1_lab_guide.md) | Dropout, batch normalisation, early stopping — keeping the model from memorising |
-| 3.11 | [Convolutional Networks](module3_neural_networks/lesson11_convolutional_networks/11_convolutional_networks.md) | [Workshop (4 exercises)](module3_neural_networks/lesson11_convolutional_networks/workshop/1_lab_guide.md) | CNNs for spatial data — applied to malware binary visualisation |
-| 3.12 | [Hyperparameter Tuning](module3_neural_networks/lesson12_hyperparameter_tuning/12_hyperparameter_tuning.md) | [Workshop (4 exercises)](module3_neural_networks/lesson12_hyperparameter_tuning/workshop/1_lab_guide.md) | Learning rate, batch size, architecture choices — and how to search them systematically |
+| 3.9 | [First Neural Network](module3_neural_networks/lesson9_first_neural_network/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson9_first_neural_network/workshop/00_overview.md) | Rebuild the same network in Keras in ~10 lines |
+| 3.10 | [Dropout & Regularisation](module3_neural_networks/lesson10_dropout_regularisation/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson10_dropout_regularisation/workshop/00_overview.md) | Dropout, batch normalisation, early stopping — keeping the model from memorising |
+| 3.11 | [Convolutional Networks](module3_neural_networks/lesson11_convolutional_networks/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson11_convolutional_networks/workshop/00_overview.md) | CNNs for spatial data — applied to malware binary visualisation |
+| 3.12 | [Hyperparameter Tuning](module3_neural_networks/lesson12_hyperparameter_tuning/notes.md) | [Workshop (4 exercises)](module3_neural_networks/lesson12_hyperparameter_tuning/workshop/00_overview.md) | Learning rate, batch size, architecture choices — and how to search them systematically |
 | — | **Milestone Project** | [milestone_packets.py](module3_neural_networks/milestone/milestone_packets.py) | Neural network trained on network packet feature vectors to classify malicious traffic |
 
 **Key concepts covered:** forward pass, backpropagation (conceptual), gradient descent, activation functions, loss functions, regularisation, convolutional filters, pooling, epochs, batch size
@@ -244,10 +244,10 @@ This module bridges traditional ML and modern AI. You will learn what an LLM act
 
 | # | Theory | Workshop | What You Learn |
 |---|--------|----------|----------------|
-| 4.1 | [How LLMs Work](module4_genai/lesson1_how_llms_work/1_how_llms_work.md) | [Workshop (3 exercises)](module4_genai/lesson1_how_llms_work/workshop/1_lab_guide.md) | Tokenisation, embeddings, attention — no API key required, pure NumPy |
-| 4.2 | [HuggingFace Models](module4_genai/lesson2_huggingface/2_huggingface_pretrained_models.md) | [Workshop (3 exercises)](module4_genai/lesson2_huggingface/workshop/1_lab_guide.md) | Zero-shot classification, sentence embeddings, semantic search over security logs |
-| 4.3 | [The LLM API](module4_genai/lesson3_llm_api/3_claude_api.md) | [Workshop (4 exercises)](module4_genai/lesson3_llm_api/workshop/1_lab_guide.md) | System prompts, structured JSON output, multi-turn conversation — threat intel assistant |
-| 4.4 | [Retrieval-Augmented Generation](module4_genai/lesson4_rag/4_retrieval_augmented_generation.md) | [Workshop (3 exercises)](module4_genai/lesson4_rag/workshop/1_lab_guide.md) | Document chunking, vector retrieval, full RAG pipeline over security knowledge base |
+| 4.1 | [How LLMs Work](module4_genai/lesson1_how_llms_work/notes.md) | [Workshop (3 exercises)](module4_genai/lesson1_how_llms_work/workshop/00_overview.md) | Tokenisation, embeddings, attention — no API key required, pure NumPy |
+| 4.2 | [HuggingFace Models](module4_genai/lesson2_huggingface/notes.md) | [Workshop (3 exercises)](module4_genai/lesson2_huggingface/workshop/00_overview.md) | Zero-shot classification, sentence embeddings, semantic search over security logs |
+| 4.3 | [The LLM API](module4_genai/lesson3_llm_api/notes.md) | [Workshop (4 exercises)](module4_genai/lesson3_llm_api/workshop/00_overview.md) | System prompts, structured JSON output, multi-turn conversation — threat intel assistant |
+| 4.4 | [Retrieval-Augmented Generation](module4_genai/lesson4_rag/notes.md) | [Workshop (3 exercises)](module4_genai/lesson4_rag/workshop/00_overview.md) | Document chunking, vector retrieval, full RAG pipeline over security knowledge base |
 | — | **Milestone Project** | [milestone_security_assistant.py](module4_genai/milestone/milestone_security_assistant.py) | Interactive Q&A assistant over a knowledge base of CVEs, threat reports, and security runbooks |
 
 **Multi-provider support:** All Module 4 scripts work with Claude, OpenAI, Gemini, or Ollama (local). The `llm_client.py` helper abstracts the provider — set whichever key or model you have and the code handles the rest.
@@ -281,7 +281,9 @@ AI Basic Training/
 │       └── milestone_phishing.py
 │
 ├── module2_intermediate/
-│   ├── lesson1_feature_engineering/    (4 exercises)
+│   ├── lesson1_feature_engineering/
+│   │   ├── notes.md
+│   │   └── workshop/              (same structure as Module 1, 4 exercises)
 │   ├── lesson2_random_forests/         (4 exercises)
 │   ├── lesson3_clustering_anomaly/     (4 exercises)
 │   ├── lesson4_overfitting_crossval/   (4 exercises)
@@ -298,7 +300,9 @@ AI Basic Training/
 │   │   ├── 6_softmax_activation.py
 │   │   ├── 7_cross_entropy_loss.py
 │   │   └── 8_full_forward_pass.py
-│   ├── lesson9_first_neural_network/   (4 exercises)
+│   ├── lesson9_first_neural_network/
+│   │   ├── notes.md
+│   │   └── workshop/              (same structure as Module 1, 4 exercises)
 │   ├── lesson10_dropout_regularisation/ (4 exercises)
 │   ├── lesson11_convolutional_networks/ (4 exercises)
 │   ├── lesson12_hyperparameter_tuning/ (4 exercises)
@@ -307,7 +311,9 @@ AI Basic Training/
 │
 ├── module4_genai/
 │   ├── llm_client.py               Multi-provider LLM helper (Claude/OpenAI/Gemini/Ollama)
-│   ├── lesson1_how_llms_work/      (3 exercises — no API key required)
+│   ├── lesson1_how_llms_work/
+│   │   ├── notes.md
+│   │   └── workshop/              (same structure as Module 1, 3 exercises)
 │   ├── lesson2_huggingface/        (3 exercises — HuggingFace models)
 │   ├── lesson3_llm_api/            (4 exercises — requires API key)
 │   ├── lesson4_rag/                (3 exercises — requires API key for ex. 3)

@@ -22,16 +22,12 @@ Every supervised ML problem has exactly two things:
 
 The structure is always the same. Only the domain changes:
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│  Problem                   Features (X)                  Label (y)         │
-├────────────────────────────────────────────────────────────────────────────┤
-│  Digit recognition         64 pixel brightness values    digit 0-9         │
-│  Phishing detection        URL length, # dots, has @     phishing 0/1      │
-│  Network intrusion         bytes, duration, SYN flags    malicious 0/1     │
-│  Malware classification    file size, entropy, imports   family name       │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+| Problem | Features (X) | Label (y) |
+|---------|--------------|-----------|
+| Digit recognition | 64 pixel brightness values | digit 0-9 |
+| Phishing detection | URL length, # dots, has @ | phishing 0/1 |
+| Network intrusion | bytes, duration, SYN flags | malicious 0/1 |
+| Malware classification | file size, entropy, imports | family name |
 
 No matter the domain, the code follows the same pattern:
 

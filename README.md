@@ -38,19 +38,14 @@ Everything is self-paced. There are no deadlines, no quizzes, and no abstract to
 
 The four stages follow a deliberate progression. Each one builds on the concepts and intuition developed in the previous stage.
 
-```
-Stage 1                 Stage 2                 Stage 3                 Stage 4
-Classic ML              Intermediate ML         Neural Networks         Generative AI
-─────────────────────── ─────────────────────── ─────────────────────── ───────────────────────
- Supervised learning     Feature engineering     Neurons & layers        Tokenisation
- Linear regression       Random Forests          Activations & loss      Embeddings & attention
- Logistic regression     Clustering              Keras & CNNs            LLM APIs
- Decision trees          Cross-validation        Hyperparameter tuning   RAG pipelines
- Model evaluation        Anomaly detection       Regularisation          Prompt engineering
-─────────────────────── ─────────────────────── ─────────────────────── ───────────────────────
-         Project:                Project:                Project:                Project:
-  Phishing Classifier   Intrusion Detector      Packet Classifier      Security Assistant
-```
+| | Stage 1 — Classic ML | Stage 2 — Intermediate ML | Stage 3 — Neural Networks | Stage 4 — Generative AI |
+|---|---|---|---|---|
+| **Topics** | Supervised learning | Feature engineering | Neurons & layers | Tokenisation |
+| | Linear regression | Random Forests | Activations & loss | Embeddings & attention |
+| | Logistic regression | Clustering | Keras & CNNs | LLM APIs |
+| | Decision trees | Cross-validation | Hyperparameter tuning | RAG pipelines |
+| | Model evaluation | Anomaly detection | Regularisation | Prompt engineering |
+| **Project** | Phishing Classifier | Intrusion Detector | Packet Classifier | Security Assistant |
 
 > Each stage ends with a **project** — a complete, working application you build from scratch and can run end-to-end.
 
@@ -262,7 +257,8 @@ Tokens and context windows, embeddings, cosine similarity, vector search, RAG pi
 
 ---
 
-## Repository Map
+<details>
+<summary><strong>Repository Map</strong></summary>
 
 ```
 AI Basic Training/
@@ -313,6 +309,8 @@ AI Basic Training/
 └── README.md                                    This file
 ```
 
+</details>
+
 ---
 
 ## Pacing Guide
@@ -329,7 +327,8 @@ Aim for consistency over speed. Completing one exercise per session is better th
 
 ---
 
-## Tips for Success
+<details>
+<summary><strong>Tips for Success</strong></summary>
 
 **Work through stages in order.** Each one builds on the last. Stage 3 assumes you understand loss and evaluation from Stages 1–2. Stage 4 assumes you understand embeddings from Stage 3.
 
@@ -342,3 +341,5 @@ Aim for consistency over speed. Completing one exercise per session is better th
 **Use the solutions as a reference, not a shortcut.** Try each exercise yourself first, even if you get stuck. The struggle is where learning happens. Check the solution file only after you have a working (or broken) attempt of your own.
 
 **The projects are checkpoints, not exams.** If a project script runs and produces reasonable output, you have the understanding you need to continue. You do not need to master every detail before moving forward.
+
+</details>

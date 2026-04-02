@@ -18,7 +18,7 @@ You will build each piece yourself, step by step, across 5 focused exercises.
 
 Each exercise has three files:
 
-- **Guide** (`_guide_`) — explains the concept and the API you need
+- **Guide** (`_guide_`) — explains the concept and the methods you need
 - **Lab** (`_lab_`) — step-by-step instructions to build your script from scratch
 - **Solution** (`_solution_`) — reference implementation to compare against when you are done
 

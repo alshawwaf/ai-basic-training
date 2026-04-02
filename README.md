@@ -141,7 +141,7 @@ notes.md                Read first — explains the concept in plain English wit
 1. **Read** the theory (`notes.md`) — understand the concept before writing code
 2. **Open** the workshop overview (`00_overview.md`) — see what you will build
 3. **For each exercise:**
-   - Read the **guide** — it explains the concept and the API you need
+   - Read the **guide** — it explains the concept and the methods you need
    - Follow the **lab** — step-by-step instructions to build your script
    - Run your script and verify output matches expected results
    - Compare against the **solution** file when you are done

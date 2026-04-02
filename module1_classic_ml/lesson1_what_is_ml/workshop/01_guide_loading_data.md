@@ -23,14 +23,14 @@ Every supervised ML problem has exactly two things:
 The structure is always the same. Only the domain changes:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  Problem                 Features (X)               Label (y)      │
-├─────────────────────────────────────────────────────────────────────┤
-│  Digit recognition       64 pixel brightness values  digit 0–9     │
-│  Phishing detection      URL length, # dots, has @   phishing 0/1  │
-│  Network intrusion       bytes, duration, SYN flags  malicious 0/1 │
-│  Malware classification  file size, entropy, imports  family name   │
-└─────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Problem                   Features (X)                  Label (y)         │
+├────────────────────────────────────────────────────────────────────────────┤
+│  Digit recognition         64 pixel brightness values    digit 0-9         │
+│  Phishing detection        URL length, # dots, has @     phishing 0/1      │
+│  Network intrusion         bytes, duration, SYN flags    malicious 0/1     │
+│  Malware classification    file size, entropy, imports   family name       │
+└────────────────────────────────────────────────────────────────────────────┘
 ```
 
 No matter the domain, the code follows the same pattern:
@@ -123,15 +123,15 @@ That bundle is called a `Bunch` — a container object that works like a Python 
 digits = load_digits()
 
 digits (Bunch)
-┌─────────────────────────────────────────────────┐
-│  Field          Type / Shape        What it is   │
-├─────────────────────────────────────────────────┤
-│  .data          ndarray (1797, 64)  pixel values │  ← flat rows — feed this to the model
-│  .target        ndarray (1797,)     labels 0–9   │  ← correct answers
-│  .images        ndarray (1797,8,8)  pixel grids  │  ← 8x8 shape — use for plotting
-│  .target_names  [0, 1, 2, ... 9]   class list   │
-│  .DESCR         string              description  │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Field             Type / Shape          What it is      │
+├──────────────────────────────────────────────────────────┤
+│  .data             ndarray (1797, 64)    pixel values    │  ← flat rows - feed this to the model
+│  .target           ndarray (1797,)       labels 0-9      │  ← correct answers
+│  .images           ndarray (1797,8,8)    pixel grids     │  ← 8x8 shape - use for plotting
+│  .target_names     [0, 1, 2, ... 9]      class list      │
+│  .DESCR            string                description     │
+└──────────────────────────────────────────────────────────┘
 
 Same pixels, two shapes:
 

@@ -186,11 +186,17 @@ This is how you slice a dataset down to a single class — useful when you want 
 
 **How column names appear:**
 
-The raw ndarray has no column names — just numbered positions. When you pass `columns=[...]` to `pd.DataFrame()`, pandas attaches a name to each column. After that, you can refer to columns by name instead of by number:
+The raw ndarray has no column names — just numbered positions. When you create a DataFrame, two things happen:
+
+1. `columns=[f"pixel_{i}" for i in range(64)]` — gives each of the 64 data columns a name (`pixel_0`, `pixel_1`, ... `pixel_63`)
+2. `df["target"] = digits.target` — creates a new 65th column called `target` and fills it with the labels
 
 ```python
-df = pd.DataFrame(raw_data, columns=column_names)
-df["target"] = labels
+# Step 1: wrap the pixel data and name the columns
+df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
+
+# Step 2: add the labels as a new column
+df["target"] = digits.target
 ```
 
 ```

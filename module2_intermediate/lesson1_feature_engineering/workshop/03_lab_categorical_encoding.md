@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_categorical_encoding.py` in this folder.
+Create a new file called `03_categorical_encoding.py` in this folder.
 
 ---
 
@@ -178,7 +178,7 @@ for name, X in [("LabelEncoded", X_label), ("OneHotEncoded", X_ohe)]:
     acc = m.score(X_te, y_te)
     print(f"{name:18s} accuracy: {acc:.3f}")
 
-print("\n--- Exercise 3 complete. Move to exercise4_scaling_and_validation.py ---")
+print("\n--- Exercise 3 complete. Move to 04_scaling_and_validation.py ---")
 ```
 
 Run your file. You should see:

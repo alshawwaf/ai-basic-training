@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_conversation.py` in this folder.
+Create a new file called `04_conversation.py` in this folder.
 
 ---
 

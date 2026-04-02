@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_statistics.py` in this folder.
+Create a new file called `02_statistics.py` in this folder.
 
 ---
 
@@ -104,7 +104,7 @@ Total missing values: 0
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 2 complete. Move to exercise3_class_balance.py ---")
+print("\n--- Exercise 2 complete. Move to 03_class_balance.py ---")
 ```
 
 ---

@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_train_random_forest.py` in this folder.
+Create a new file called `02_train_random_forest.py` in this folder.
 
 ---
 
@@ -179,7 +179,7 @@ fn = results[results['actual'] == 1].nsmallest(5, 'P_malware')
 print("\nTop 5 hard-to-detect malware (low P_malware):")
 print(fn[['file_entropy', 'has_packer_sig', 'P_malware']].to_string(index=False))
 
-print("\n--- Exercise 2 complete. Move to exercise3_feature_importance.py ---")
+print("\n--- Exercise 2 complete. Move to 03_feature_importance.py ---")
 ```
 
 ---

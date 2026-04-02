@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_learning_rate_sensitivity.py` in this folder.
+Create a new file called `02_learning_rate_sensitivity.py` in this folder.
 
 ---
 
@@ -54,7 +54,7 @@ def build_model(learning_rate):
         metrics=['accuracy'],
     )
     return m
-print("\n--- Exercise 2 complete. Move to exercise3_batch_size_effects.py ---")
+print("\n--- Exercise 2 complete. Move to 03_batch_size_effects.py ---")
 ```
 
 ---
@@ -117,7 +117,7 @@ Print the loss at epochs 1, 5, 10, 20, 30 for all three runs side by side. Forma
 Add this to your file:
 
 ```python
-print("\n--- Exercise 2 complete. Move to exercise3_batch_size_effects.py ---")
+print("\n--- Exercise 2 complete. Move to 03_batch_size_effects.py ---")
 ```
 
 ---

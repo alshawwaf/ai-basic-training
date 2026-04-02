@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_bias_variance.py` in this folder.
+Create a new file called `02_bias_variance.py` in this folder.
 
 ---
 
@@ -157,7 +157,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Learning curves")
 print("=" * 60)
-print("\n--- Exercise 2 complete. Move to exercise3_kfold_crossval.py ---")
+print("\n--- Exercise 2 complete. Move to 03_kfold_crossval.py ---")
 fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
 for ax, (depth, label) in zip(axes, configs):
     m = DecisionTreeClassifier(max_depth=depth, random_state=42)

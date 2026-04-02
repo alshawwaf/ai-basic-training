@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_unsupervised_framing.py` in this folder.
+Create a new file called `01_unsupervised_framing.py` in this folder.
 
 ---
 
@@ -173,7 +173,7 @@ expected = {
 }
 for name, desc in expected.items():
     print(f"  {name:22s}: {desc}")
-print("\n--- Exercise 1 complete. Move to exercise2_kmeans_and_visualisation.py ---")
+print("\n--- Exercise 1 complete. Move to 02_kmeans_and_visualisation.py ---")
 a) DoS cluster: top-left (high connection_rate ~200, low bytes_sent ~200)
 b) Exfil cluster: bottom-right (low rate ~8, very high bytes_sent ~80000)
 c) Port scan: middle-left (moderate rate ~25, very low bytes ~500)

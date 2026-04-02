@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_choosing_k.py` in this folder.
+Create a new file called `03_choosing_k.py` in this folder.
 
 ---
 
@@ -166,7 +166,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Silhouette diagram for K=4")
 print("=" * 60)
-print("\n--- Exercise 3 complete. Move to exercise4_anomaly_scoring.py ---")
+print("\n--- Exercise 3 complete. Move to 04_anomaly_scoring.py ---")
 from sklearn.metrics import silhouette_samples
 sample_idx = np.random.choice(len(X_scaled), 500, replace=False)
 X_samp = X_scaled[sample_idx]

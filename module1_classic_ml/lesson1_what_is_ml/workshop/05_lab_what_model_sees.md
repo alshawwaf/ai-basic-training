@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise5_what_model_sees.py` in this folder.
+Create a new file called `05_what_model_sees.py` in this folder.
 
 ---
 

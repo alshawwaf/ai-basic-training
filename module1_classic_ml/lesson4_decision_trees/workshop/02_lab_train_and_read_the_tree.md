@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_train_and_read_the_tree.py` in this folder.
+Create a new file called `02_train_and_read_the_tree.py` in this folder.
 
 ---
 

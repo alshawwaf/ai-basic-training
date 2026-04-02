@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_the_accuracy_trap.py` in this folder.
+Create a new file called `01_the_accuracy_trap.py` in this folder.
 
 ---
 

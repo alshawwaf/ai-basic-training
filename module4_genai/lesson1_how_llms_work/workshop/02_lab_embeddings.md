@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_embeddings.py` in this folder.
+Create a new file called `02_embeddings.py` in this folder.
 
 ---
 
@@ -150,7 +150,7 @@ print(f"\nTop 5 words most similar to 'attack':")
 for rank, (word, score) in enumerate(most_similar("attack"), 1):
     print(f"  {rank}. {word:<12} {score:.4f}")
 
-print("\n--- Exercise 2 complete. Move to exercise3_attention.py ---")
+print("\n--- Exercise 2 complete. Move to 03_attention.py ---")
 ```
 
 Run your file. You should see:
@@ -162,7 +162,7 @@ Top 5 words most similar to 'attack':
   4. scan          0.9935
   5. detected      0.9927
 
---- Exercise 2 complete. Move to exercise3_attention.py ---
+--- Exercise 2 complete. Move to 03_attention.py ---
 ```
 
 ---

@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_tokenisation.py` in this folder.
+Create a new file called `01_tokenisation.py` in this folder.
 
 ---
 
@@ -140,7 +140,7 @@ print(f"Decoded  : {oov_decoded}")
 print("Note: ransomware, encrypted, all, files, on → all become <UNK> (ID 0). "
       "The model cannot distinguish between these unknown words.")
 
-print("\n--- Exercise 1 complete. Move to exercise2_embeddings.py ---")
+print("\n--- Exercise 1 complete. Move to 02_embeddings.py ---")
 ```
 
 Run your file. You should see:
@@ -150,7 +150,7 @@ Encoded  : [1, 0, 0, 0, 0, 0, 1, 15, 19]
 Decoded  : the <UNK> <UNK> <UNK> <UNK> <UNK> the endpoint <EOS>
 Note: ransomware, encrypted, all, files, on → all become <UNK> (ID 0). The model cannot distinguish between these unknown words.
 
---- Exercise 1 complete. Move to exercise2_embeddings.py ---
+--- Exercise 1 complete. Move to 02_embeddings.py ---
 ```
 
 ---

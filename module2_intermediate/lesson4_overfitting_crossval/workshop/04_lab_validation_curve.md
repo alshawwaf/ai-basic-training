@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_validation_curve.py` in this folder.
+Create a new file called `04_validation_curve.py` in this folder.
 
 ---
 

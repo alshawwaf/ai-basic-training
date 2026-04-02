@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_why_raw_logs_fail.py` in this folder.
+Create a new file called `01_why_raw_logs_fail.py` in this folder.
 
 ---
 
@@ -195,7 +195,7 @@ counts = raw_df['src_is_private'].value_counts()
 print(f"Private source IPs:  {counts.get(True, 0):3d} ({counts.get(True,0)/n*100:.0f}%)")
 print(f"Public source IPs:   {counts.get(False, 0):3d} ({counts.get(False,0)/n*100:.0f}%)")
 
-print("\n--- Exercise 1 complete. Move to exercise2_numeric_feature_extraction.py ---")
+print("\n--- Exercise 1 complete. Move to 02_numeric_feature_extraction.py ---")
 ```
 
 Run your file. You should see:

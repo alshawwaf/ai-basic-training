@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_batch_size_effects.py` in this folder.
+Create a new file called `03_batch_size_effects.py` in this folder.
 
 ---
 
@@ -81,7 +81,7 @@ Print a table showing all three results side by side, including: - batch_size - 
 Add this to your file:
 
 ```python
-print("\n--- Exercise 3 complete. Move to exercise4_architecture_search.py ---")
+print("\n--- Exercise 3 complete. Move to 04_architecture_search.py ---")
 ```
 
 ---

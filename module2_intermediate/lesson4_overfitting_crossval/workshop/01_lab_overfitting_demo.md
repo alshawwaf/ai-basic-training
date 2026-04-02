@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_overfitting_demo.py` in this folder.
+Create a new file called `01_overfitting_demo.py` in this folder.
 
 ---
 
@@ -139,7 +139,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Gap at key depths")
 print("=" * 60)
-print("\n--- Exercise 1 complete. Move to exercise2_bias_variance.py ---")
+print("\n--- Exercise 1 complete. Move to 02_bias_variance.py ---")
 key_depths = [1, 5, 10, 20]
 print(f"{'Depth':>5} | {'Train':>7} | {'Val':>7} | {'Gap':>8}")
 print("-" * 36)

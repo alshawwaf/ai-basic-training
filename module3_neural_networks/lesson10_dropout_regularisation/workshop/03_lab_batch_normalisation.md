@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_batch_normalisation.py` in this folder.
+Create a new file called `03_batch_normalisation.py` in this folder.
 
 ---
 
@@ -155,7 +155,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Asymmetric BatchNorm placement")
 print("=" * 60)
-print("\n--- Exercise 3 complete. Move to exercise4_early_stopping.py ---")
+print("\n--- Exercise 3 complete. Move to 04_early_stopping.py ---")
 model_asym = keras.Sequential([
     keras.layers.Dense(256, activation='relu', input_shape=(10,)),
     keras.layers.BatchNormalization(),

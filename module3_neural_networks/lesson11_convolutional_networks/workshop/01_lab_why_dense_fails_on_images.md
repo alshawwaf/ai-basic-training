@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_why_dense_fails_on_images.py` in this folder.
+Create a new file called `01_why_dense_fails_on_images.py` in this folder.
 
 ---
 
@@ -120,7 +120,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Dense model survives pixel shuffle")
 print("=" * 60)
-print("\n--- Exercise 1 complete. Move to exercise2_conv_and_pooling.py ---")
+print("\n--- Exercise 1 complete. Move to 02_conv_and_pooling.py ---")
 perm = np.random.permutation(784)
 X_train_shuffled = X_train_flat[:, perm]
 X_test_shuffled  = X_test_flat[:, perm]

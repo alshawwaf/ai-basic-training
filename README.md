@@ -97,7 +97,8 @@ A virtual environment isolates this project's packages from the rest of your sys
 
 ```bash
 # Create the environment (one-time setup)
-python -m venv venv
+python -m venv venv        # Windows
+python3 -m venv venv       # Mac / Linux
 
 # Activate — Windows
 venv\Scripts\activate
@@ -105,6 +106,8 @@ venv\Scripts\activate
 # Activate — Mac / Linux
 source venv/bin/activate
 ```
+
+> **Mac / Linux note:** On most Mac and Linux systems, the command is `python3`, not `python`. If `python --version` shows Python 2 or "command not found", use `python3` instead for all commands throughout this curriculum.
 
 Your terminal prompt will show `(venv)` when the environment is active. To deactivate when you are done:
 

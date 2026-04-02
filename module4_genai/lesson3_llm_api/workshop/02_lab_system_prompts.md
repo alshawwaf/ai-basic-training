@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_system_prompts.py` in this folder.
+Create a new file called `02_system_prompts.py` in this folder.
 
 ---
 
@@ -155,7 +155,7 @@ injection_resp = client.chat(
 print("\n=== Injection attempt result ===")
 print(injection_resp)
 
-print("\n--- Exercise 2 complete. Move to exercise3_structured_output.py ---")
+print("\n--- Exercise 2 complete. Move to 03_structured_output.py ---")
 ```
 
 Run your file. The model should respond to the security role rather than following the injection instruction.

@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_first_api_call.py` in this folder.
+Create a new file called `01_first_api_call.py` in this folder.
 
 > Requires at least one API key set in your environment:
 > - `set ANTHROPIC_API_KEY=...` (Claude — recommended)
@@ -128,7 +128,7 @@ for limit in [50, 400]:
     print(f"\n--- max_tokens={limit} ---")
     print(resp)
 
-print("\n--- Exercise 1 complete. Move to exercise2_system_prompts.py ---")
+print("\n--- Exercise 1 complete. Move to 02_system_prompts.py ---")
 ```
 
 Run your file. The 50-token response will be cut short; the 400-token response will be complete.

@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_roc_and_auc.py` in this folder.
+Create a new file called `04_roc_and_auc.py` in this folder.
 
 ---
 

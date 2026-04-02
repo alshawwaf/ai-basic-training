@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_sentence_embeddings.py` in this folder.
+Create a new file called `02_sentence_embeddings.py` in this folder.
 
 > Requires: `pip install sentence-transformers`
 
@@ -134,7 +134,7 @@ print(f"\nBatch encoding : {batch_time:.3f}s")
 print(f"Single encoding: {single_time:.3f}s")
 print(f"Batch encoding is {speedup:.1f}x faster")
 
-print("\n--- Exercise 2 complete. Move to exercise3_semantic_search.py ---")
+print("\n--- Exercise 2 complete. Move to 03_semantic_search.py ---")
 ```
 
 Run your file. You should see output similar to:
@@ -143,7 +143,7 @@ Batch encoding : 0.312s
 Single encoding: 1.874s
 Batch encoding is 6.0x faster
 
---- Exercise 2 complete. Move to exercise3_semantic_search.py ---
+--- Exercise 2 complete. Move to 03_semantic_search.py ---
 ```
 
 ---

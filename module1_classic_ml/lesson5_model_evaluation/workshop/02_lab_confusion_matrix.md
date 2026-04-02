@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_confusion_matrix.py` in this folder.
+Create a new file called `02_confusion_matrix.py` in this folder.
 
 ---
 
@@ -168,7 +168,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Heatmap visualisation")
 print("=" * 60)
-print("\n--- Exercise 2 complete. Move to exercise3_precision_recall_f1.py ---")
+print("\n--- Exercise 2 complete. Move to 03_precision_recall_f1.py ---")
 if HAS_SEABORN:
     labels = [['TN', 'FP'], ['FN', 'TP']]
     pcts   = cm / cm.sum() * 100

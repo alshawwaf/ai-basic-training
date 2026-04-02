@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_scaling_and_validation.py` in this folder.
+Create a new file called `04_scaling_and_validation.py` in this folder.
 
 ---
 

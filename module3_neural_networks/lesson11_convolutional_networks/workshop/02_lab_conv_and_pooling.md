@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_conv_and_pooling.py` in this folder.
+Create a new file called `02_conv_and_pooling.py` in this folder.
 
 ---
 

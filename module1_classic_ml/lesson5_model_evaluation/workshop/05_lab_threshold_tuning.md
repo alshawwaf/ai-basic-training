@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise5_threshold_tuning.py` in this folder.
+Create a new file called `05_threshold_tuning.py` in this folder.
 
 ---
 

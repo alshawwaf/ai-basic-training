@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_tune_the_forest.py` in this folder.
+Create a new file called `04_tune_the_forest.py` in this folder.
 
 ---
 

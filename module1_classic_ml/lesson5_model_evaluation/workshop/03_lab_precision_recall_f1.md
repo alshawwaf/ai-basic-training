@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_precision_recall_f1.py` in this folder.
+Create a new file called `03_precision_recall_f1.py` in this folder.
 
 ---
 

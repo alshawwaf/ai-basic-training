@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_fit_and_predict.py` in this folder.
+Create a new file called `03_fit_and_predict.py` in this folder.
 
 ---
 
@@ -137,7 +137,7 @@ plt.show()
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 3 complete. Move to exercise4_evaluate_regression.py ---")
+print("\n--- Exercise 3 complete. Move to 04_evaluate_regression.py ---")
 ```
 
 ---

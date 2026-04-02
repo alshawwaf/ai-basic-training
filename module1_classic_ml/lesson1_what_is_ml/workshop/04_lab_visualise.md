@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_visualise.py` in this folder.
+Create a new file called `04_visualise.py` in this folder.
 
 ---
 
@@ -94,7 +94,7 @@ Run your file and look at which digit pairs have the most similar prototypes. Co
 ## Step 6: Add the completion message
 
 ```python
-print("\n--- Exercise 4 complete. Move to exercise5_what_model_sees.py ---")
+print("\n--- Exercise 4 complete. Move to 05_what_model_sees.py ---")
 ```
 
 ---

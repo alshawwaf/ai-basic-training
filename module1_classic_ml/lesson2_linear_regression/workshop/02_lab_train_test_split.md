@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_train_test_split.py` in this folder.
+Create a new file called `02_train_test_split.py` in this folder.
 
 ---
 
@@ -113,7 +113,7 @@ A gap of 0.004 is very small — the model generalises well.
 ## Step 6: Add the completion message
 
 ```python
-print("\n--- Exercise 2 complete. Move to exercise3_fit_and_predict.py ---")
+print("\n--- Exercise 2 complete. Move to 03_fit_and_predict.py ---")
 ```
 
 ---

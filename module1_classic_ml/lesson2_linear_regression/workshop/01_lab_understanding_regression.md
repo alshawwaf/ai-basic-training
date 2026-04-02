@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_understanding_regression.py` in this folder.
+Create a new file called `01_understanding_regression.py` in this folder.
 
 ---
 
@@ -92,7 +92,7 @@ Run your file. You should see a clear upward trend with noise around a straight 
 ## Step 6: Add the completion message
 
 ```python
-print("\n--- Exercise 1 complete. Move to exercise2_train_test_split.py ---")
+print("\n--- Exercise 1 complete. Move to 02_train_test_split.py ---")
 ```
 
 ---

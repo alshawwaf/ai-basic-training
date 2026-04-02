@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_feature_importance.py` in this folder.
+Create a new file called `03_feature_importance.py` in this folder.
 
 ---
 
@@ -183,7 +183,7 @@ print(f"Full model (7 features):  {acc_full:.3f}")
 print(f"Top-4 model (4 features): {acc_top4:.3f}")
 print(f"Accuracy drop:            {acc_full - acc_top4:.3f}")
 
-print("\n--- Exercise 3 complete. Move to exercise4_tune_the_forest.py ---")
+print("\n--- Exercise 3 complete. Move to 04_tune_the_forest.py ---")
 ```
 
 Run your file. You should see:

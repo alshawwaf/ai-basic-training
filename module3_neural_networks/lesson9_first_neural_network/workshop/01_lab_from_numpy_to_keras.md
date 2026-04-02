@@ -4,9 +4,21 @@
 
 ---
 
+## Step 0: Install the required packages
+
+If you haven't already, activate your virtual environment and install the libraries used throughout Module 3:
+
+```bash
+pip install tensorflow nnfs
+```
+
+> You only need to do this once. If you have already installed these packages, skip to Step 1.
+
+---
+
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_from_numpy_to_keras.py` in this folder.
+Create a new file called `01_from_numpy_to_keras.py` in this folder.
 
 ---
 
@@ -137,7 +149,7 @@ for config in configs:
     m = keras.Sequential(layers)
     print(f"Architecture {[u for u,a in config]}: {m.count_params():,} params")
 
-print("\n--- Exercise 1 complete. Move to exercise2_build_the_network.py ---")
+print("\n--- Exercise 1 complete. Move to 02_build_the_network.py ---")
 ```
 
 Run your file. You should see:

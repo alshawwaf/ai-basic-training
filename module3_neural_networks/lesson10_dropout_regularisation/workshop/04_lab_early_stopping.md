@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise4_early_stopping.py` in this folder.
+Create a new file called `04_early_stopping.py` in this folder.
 
 ---
 

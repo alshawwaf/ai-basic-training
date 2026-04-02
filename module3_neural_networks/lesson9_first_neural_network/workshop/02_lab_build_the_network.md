@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_build_the_network.py` in this folder.
+Create a new file called `02_build_the_network.py` in this folder.
 
 ---
 
@@ -148,7 +148,7 @@ model3.compile(optimizer='adam',
 model3.summary()
 print(f"Output layer for 3-class: {model3.layers[-1].units} units (softmax)")
 
-print("\n--- Exercise 2 complete. Move to exercise3_compile_and_train.py ---")
+print("\n--- Exercise 2 complete. Move to 03_compile_and_train.py ---")
 ```
 
 Run your file. You should see:

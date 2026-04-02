@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_class_balance.py` in this folder.
+Create a new file called `03_class_balance.py` in this folder.
 
 ---
 
@@ -135,7 +135,7 @@ Run your file. You should see a horizontal bar for each digit class, all approxi
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 3 complete. Move to exercise4_visualise.py ---")
+print("\n--- Exercise 3 complete. Move to 04_visualise.py ---")
 ```
 
 ---

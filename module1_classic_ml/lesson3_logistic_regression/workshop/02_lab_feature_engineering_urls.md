@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_feature_engineering_urls.py` in this folder.
+Create a new file called `02_feature_engineering_urls.py` in this folder.
 
 ---
 

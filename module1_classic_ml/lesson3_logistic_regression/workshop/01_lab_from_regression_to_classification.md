@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_from_regression_to_classification.py` in this folder.
+Create a new file called `01_from_regression_to_classification.py` in this folder.
 
 ---
 

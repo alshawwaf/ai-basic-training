@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_compile_and_train.py` in this folder.
+Create a new file called `03_compile_and_train.py` in this folder.
 
 ---
 
@@ -155,7 +155,7 @@ print(f"Best val accuracy: {max(val_accs):.4f} at epoch {best_epoch}")
 print(f"Final val accuracy: {val_accs[-1]:.4f}")
 print(f"Difference (overtraining effect): {max(val_accs) - val_accs[-1]:.4f}")
 
-print("\n--- Exercise 3 complete. Move to exercise4_evaluate_and_improve.py ---")
+print("\n--- Exercise 3 complete. Move to 04_evaluate_and_improve.py ---")
 ```
 
 Run your file. You should see approximately:

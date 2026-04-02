@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_structured_output.py` in this folder.
+Create a new file called `03_structured_output.py` in this folder.
 
 ---
 
@@ -151,7 +151,7 @@ for r in results:
         continue
     print(f"  {r['severity']:<10} | {r['technique_id']:<10} | {r['confidence']:.2f} | {r['summary'][:55]}")
 
-print("\n--- Exercise 3 complete. Move to exercise4_conversation.py ---")
+print("\n--- Exercise 3 complete. Move to 04_conversation.py ---")
 ```
 
 Run your file. You should see:
@@ -163,7 +163,7 @@ Severity   | Technique  | Conf | Summary
   Low        | none       | 0.45 | Scheduled backup task completed without errors
   High       | T1046      | 0.88 | Network port scan from internal host across /24 subnet
 
---- Exercise 3 complete. Move to exercise4_conversation.py ---
+--- Exercise 3 complete. Move to 04_conversation.py ---
 ```
 
 ---

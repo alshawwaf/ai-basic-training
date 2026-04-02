@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_how_trees_make_decisions.py` in this folder.
+Create a new file called `01_how_trees_make_decisions.py` in this folder.
 
 ---
 

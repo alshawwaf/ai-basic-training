@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_build_and_train_cnn.py` in this folder.
+Create a new file called `03_build_and_train_cnn.py` in this folder.
 
 ---
 
@@ -123,7 +123,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — 3-conv-layer CNN")
 print("=" * 60)
-print("\n--- Exercise 3 complete. Move to exercise4_malware_visualisation_context.py ---")
+print("\n--- Exercise 3 complete. Move to 04_malware_visualisation_context.py ---")
 model_deep = keras.Sequential([
     keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
     keras.layers.MaxPooling2D((2,2)),

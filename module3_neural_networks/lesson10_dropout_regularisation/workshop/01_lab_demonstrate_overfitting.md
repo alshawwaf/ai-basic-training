@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_demonstrate_overfitting.py` in this folder.
+Create a new file called `01_demonstrate_overfitting.py` in this folder.
 
 ---
 
@@ -140,7 +140,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Even deeper network, bigger overfit")
 print("=" * 60)
-print("\n--- Exercise 1 complete. Move to exercise2_add_dropout.py ---")
+print("\n--- Exercise 1 complete. Move to 02_add_dropout.py ---")
 model_deep = keras.Sequential([
     keras.layers.Dense(256, activation='relu', input_shape=(10,)),
     keras.layers.Dense(256, activation='relu'),

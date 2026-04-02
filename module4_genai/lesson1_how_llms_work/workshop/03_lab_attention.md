@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_attention.py` in this folder.
+Create a new file called `03_attention.py` in this folder.
 
 ---
 

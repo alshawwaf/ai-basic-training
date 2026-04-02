@@ -4,9 +4,21 @@
 
 ---
 
+## Step 0: Install the required packages
+
+If you haven't already, activate your virtual environment and install the libraries used throughout Module 4:
+
+```bash
+pip install transformers sentence-transformers anthropic openai google-generativeai ollama
+```
+
+> You only need to do this once. If you have already installed these packages, skip to Step 1.
+
+---
+
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_zero_shot_classification.py` in this folder.
+Create a new file called `01_zero_shot_classification.py` in this folder.
 
 > First run downloads model weights (~550 MB). Subsequent runs use the local cache at `~/.cache/huggingface/`.
 
@@ -115,7 +127,7 @@ result_ml = classifier(LOGS[4], candidate_labels=CANDIDATE_LABELS, multi_label=T
 for label, score in zip(result_ml["labels"], result_ml["scores"]):
     print(f"  {label:<25} {score:.4f}")
 
-print("\n--- Exercise 1 complete. Move to exercise2_sentence_embeddings.py ---")
+print("\n--- Exercise 1 complete. Move to 02_sentence_embeddings.py ---")
 ```
 
 Run your file. You should see all four labels with independent scores (note they no longer sum to 1.0):
@@ -126,7 +138,7 @@ Multi-label classification for Log 5 (CPU spike):
   normal traffic            0.1023
   configuration change      0.0812
 
---- Exercise 1 complete. Move to exercise2_sentence_embeddings.py ---
+--- Exercise 1 complete. Move to 02_sentence_embeddings.py ---
 ```
 
 ---

@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_add_dropout.py` in this folder.
+Create a new file called `02_add_dropout.py` in this folder.
 
 ---
 
@@ -174,7 +174,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Dropout is OFF during prediction")
 print("=" * 60)
-print("\n--- Exercise 2 complete. Move to exercise3_batch_normalisation.py ---")
+print("\n--- Exercise 2 complete. Move to 03_batch_normalisation.py ---")
 sample = X_test[:3]
 preds = [model.predict(sample, verbose=0).flatten().round(4) for _ in range(5)]
 print("5 repeated predictions on same input (Dropout should be OFF):")

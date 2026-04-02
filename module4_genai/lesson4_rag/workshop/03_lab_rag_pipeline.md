@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_rag_pipeline.py` in this folder.
+Create a new file called `03_rag_pipeline.py` in this folder.
 
 > Requires: `pip install sentence-transformers`
 > Requires at least one API key: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or `GOOGLE_API_KEY`.

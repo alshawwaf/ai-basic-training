@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_numeric_feature_extraction.py` in this folder.
+Create a new file called `02_numeric_feature_extraction.py` in this folder.
 
 ---
 
@@ -184,7 +184,7 @@ print(f"Mean bytes/sec during business hours: {biz:.0f}")
 print(f"Mean bytes/sec off hours:             {off_hrs:.0f}")
 print(f"(Higher off-hours activity may indicate malicious behaviour)")
 
-print("\n--- Exercise 2 complete. Move to exercise3_categorical_encoding.py ---")
+print("\n--- Exercise 2 complete. Move to 03_categorical_encoding.py ---")
 ```
 
 ---

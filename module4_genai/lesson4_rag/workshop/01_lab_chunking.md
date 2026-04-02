@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_chunking.py` in this folder.
+Create a new file called `01_chunking.py` in this folder.
 
 > No API key or external libraries required — this exercise uses only the Python standard library.
 
@@ -151,7 +151,7 @@ for name, chunks in strategies.items():
     print(f"\n  [{name}] score={best_score}")
     print(f"  {best_chunk[:150]}...")
 
-print("\n--- Exercise 1 complete. Move to exercise2_retrieval.py ---")
+print("\n--- Exercise 1 complete. Move to 02_retrieval.py ---")
 ```
 
 Run your file. The detection-focused chunk should score highest across all three strategies.

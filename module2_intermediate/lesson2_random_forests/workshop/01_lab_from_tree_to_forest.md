@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_from_tree_to_forest.py` in this folder.
+Create a new file called `01_from_tree_to_forest.py` in this folder.
 
 ---
 
@@ -182,7 +182,7 @@ print(f"OOB score:   {oob:.3f}")
 print(f"Test score:  {test:.3f}")
 print(f"Difference:  {abs(oob - test):.3f}  <- small = OOB is reliable")
 
-print("\n--- Exercise 1 complete. Move to exercise2_train_random_forest.py ---")
+print("\n--- Exercise 1 complete. Move to 02_train_random_forest.py ---")
 ```
 
 Run your file. You should see:

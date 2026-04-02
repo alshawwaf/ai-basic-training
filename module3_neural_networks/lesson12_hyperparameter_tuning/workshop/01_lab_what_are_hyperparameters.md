@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_what_are_hyperparameters.py` in this folder.
+Create a new file called `01_what_are_hyperparameters.py` in this folder.
 
 ---
 
@@ -180,7 +180,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Reproducibility with random seeds")
 print("=" * 60)
-print("\n--- Exercise 1 complete. Move to exercise2_learning_rate_sensitivity.py ---")
+print("\n--- Exercise 1 complete. Move to 02_learning_rate_sensitivity.py ---")
 def make_model_and_train():
     m = keras.Sequential([
         keras.layers.Dense(32, activation='relu', input_shape=(10,)),

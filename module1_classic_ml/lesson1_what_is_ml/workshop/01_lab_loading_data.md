@@ -4,9 +4,21 @@
 
 ---
 
+## Step 0: Install the required packages
+
+If you haven't already, activate your virtual environment and install the libraries used throughout Modules 1 and 2:
+
+```bash
+pip install pandas scikit-learn matplotlib seaborn
+```
+
+> You only need to do this once. If you have already installed these packages, skip to Step 1.
+
+---
+
 ## Step 1: Create your script file
 
-Create a new file called `exercise1_loading_data.py` in this folder.
+Create a new file called `01_loading_data.py` in this folder.
 
 ---
 
@@ -108,7 +120,7 @@ First 10 pixel values: [ 0.  0.  5. 13.  9.  1.  0.  0.  0.  0.]
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 1 complete. Move to exercise2_statistics.py ---")
+print("\n--- Exercise 1 complete. Move to 02_statistics.py ---")
 ```
 
 ---

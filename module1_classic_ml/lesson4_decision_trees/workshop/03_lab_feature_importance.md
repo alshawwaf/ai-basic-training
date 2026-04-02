@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise3_feature_importance.py` in this folder.
+Create a new file called `03_feature_importance.py` in this folder.
 
 ---
 
@@ -184,7 +184,7 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Security interpretation")
 print("=" * 60)
-print("\n--- Exercise 3 complete. Move to exercise4_depth_and_overfitting.py ---")
+print("\n--- Exercise 3 complete. Move to 04_depth_and_overfitting.py ---")
 interpretations = {
   "connection_rate":    "Highest importance — DoS is identified by extreme rate.",
   "bytes_sent":         "Separates exfil (very high) from port scans (very low).",

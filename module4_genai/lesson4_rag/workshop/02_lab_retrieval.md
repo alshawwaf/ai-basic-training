@@ -6,7 +6,7 @@
 
 ## Step 1: Create your script file
 
-Create a new file called `exercise2_retrieval.py` in this folder.
+Create a new file called `02_retrieval.py` in this folder.
 
 > Requires: `pip install sentence-transformers`
 > No API key required.
@@ -202,7 +202,7 @@ for query, correct in CORRECT_DOCS.items():
 mrr = sum(reciprocal_ranks) / len(reciprocal_ranks)
 print(f"\nMean Reciprocal Rank (MRR): {mrr:.4f}  (target >= 0.80)")
 
-print("\n--- Exercise 2 complete. Move to exercise3_rag_pipeline.py ---")
+print("\n--- Exercise 2 complete. Move to 03_rag_pipeline.py ---")
 ```
 
 Run your file. You should see an MRR at or above 0.80.

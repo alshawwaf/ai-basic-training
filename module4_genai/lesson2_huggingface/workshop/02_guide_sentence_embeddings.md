@@ -75,41 +75,9 @@ Compare `model.encode(texts)` vs `model.encode(texts, batch_size=1)` on 100 sent
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Model: all-MiniLM-L6-v2
-Encoded 6 sentences. Shape: (6, 384)
-```
-
-**Task 2**
-```
-Similarity matrix (6×6):
-Row 0: [1.00  0.15  0.68  0.07  0.61  0.09]
-Row 1: [0.15  1.00  0.12  0.55  0.10  0.48]
-Row 2: [0.68  0.12  1.00  0.09  0.58  0.11]
-Row 3: [0.07  0.55  0.09  1.00  0.08  0.52]
-Row 4: [0.61  0.10  0.58  0.08  1.00  0.07]
-Row 5: [0.09  0.48  0.11  0.52  0.07  1.00]
-```
-(Attack entries cluster in rows 0, 2, 4; benign entries in rows 1, 3, 5.)
-
-**Task 3**
-```
-Query: Suspicious outbound connection after script execution
-  1st: Outbound connection to C2 server after PowerShell one-liner (0.8923)
-  2nd: Lateral movement detected: SMB login from WORKSTATION-042  (0.6712)
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_sentence_embeddings.md](02_lab_sentence_embeddings.md)
-
----
-
 ## Next
 
 [03_guide_semantic_search.md](03_guide_semantic_search.md) — build a full semantic search engine over a security knowledge base.

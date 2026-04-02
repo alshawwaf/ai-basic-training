@@ -84,30 +84,9 @@ Build a simple `while True` input loop that lets you type questions. Maintain th
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 2**
-```
-=== Incident Investigation ===
-
-[Turn 1] User: We've detected unusual outbound traffic from WORKSTATION-042...
-[Turn 1] Analyst: This could indicate several threats. Unusual outbound traffic...
-
-[Turn 2] User: Logs show powershell.exe spawned by winword.exe with encoded commands.
-[Turn 2] Analyst: This significantly narrows the picture. A macro-enabled Word document...
-
-[Turn 3] User: The endpoint connected to 185.219.47.33:443 immediately after.
-[Turn 3] Analyst: This is a critical finding. The C2 connection confirms...
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [04_lab_conversation.md](04_lab_conversation.md)
-
----
-
 ## Workshop Complete
 
 Compare your code against the matching `_solution_` files, then move to:

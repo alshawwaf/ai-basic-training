@@ -152,48 +152,6 @@ df.isnull().sum().sum()     # total
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Samples  : 1797
-Features : 64
-Classes  : [0 1 2 3 4 5 6 7 8 9]
-```
-
-**Task 2**
-```
-Pixel value range: min=0, max=16
-(0 = white background, 16 = maximum ink density)
-```
-
-**Task 3** (approximate)
-```
-        pixel_0  pixel_10  pixel_32  pixel_63  target
-count   1797.00   1797.00   1797.00   1797.00 1797.00
-mean       0.00      5.77      5.19      0.00    4.49
-std        0.00      4.35      4.54      0.00    2.87
-min        0.00      0.00      0.00      0.00    0.00
-25%        0.00      2.00      0.00      0.00    2.00
-50%        0.00      6.00      5.00      0.00    4.00
-75%        0.00     10.00      9.00      0.00    7.00
-max        0.00     16.00     16.00      0.00    9.00
-```
-
-**Task 4**
-```
-Missing values per column (first 5):
-pixel_0    0
-pixel_1    0
-pixel_2    0
-pixel_3    0
-pixel_4    0
-
-Total missing values: 0
-```
-
----
-
 ## Common Mistakes
 
 **All `std` values show as `0.00` for every column**
@@ -204,12 +162,9 @@ You may have called `.describe()` on the wrong variable. Make sure you are descr
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_statistics.md](02_lab_statistics.md)
-
----
-
 ## Next
 
 [03_guide_class_balance.md](03_guide_class_balance.md) — the most dangerous problem in security ML: class imbalance and the naive accuracy trap.

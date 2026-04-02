@@ -72,47 +72,6 @@ Encode a sentence containing words not in your vocabulary. How does the model's 
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Vocabulary (20 tokens):
-  0: <UNK>
-  1: the
-  2: network
-  3: connection
-  4: is
-  5: suspicious
-  6: malicious
-  7: benign
-  8: port
-  9: scan
- 10: firewall
- 11: blocked
- 12: allowed
- 13: traffic
- 14: alert
- 15: endpoint
- 16: detected
- 17: attack
- 18: normal
- 19: <EOS>
-```
-
-**Task 2**
-```
-"the network connection is suspicious" → [1, 2, 3, 4, 5, 19]
-"port scan detected on endpoint"       → [8, 9, 16, 0, 15, 19]
-```
-
-**Task 3**
-```
-[1, 2, 3, 4, 5, 19] → "the network connection is suspicious <EOS>"
-Round-trip successful: True
-```
-
----
-
 ## Common Mistakes
 
 **`KeyError` when encoding**
@@ -123,12 +82,9 @@ Make sure your reverse vocabulary (ID→word) matches your forward vocabulary ex
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_tokenisation.md](01_lab_tokenisation.md)
-
----
-
 ## Next
 
 [02_guide_embeddings.md](02_guide_embeddings.md) — how token IDs become high-dimensional vectors and how similarity works.

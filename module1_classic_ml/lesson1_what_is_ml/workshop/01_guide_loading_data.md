@@ -179,40 +179,6 @@ Print the label and first 10 pixel values of the very first row.
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Dataset loaded.
-Type: <class 'sklearn.utils._bunch.Bunch'>
-Fields available: ['data', 'target', 'frame', 'feature_names', 'target_names', 'images', 'DESCR']
-```
-
-**Task 2**
-```
-Features (X) shape: (1797, 64)
-Labels   (y) shape: (1797,)
-```
-
-**Task 3**
-```
-First 3 rows of the DataFrame:
-   pixel_0  pixel_1  pixel_2  ...  pixel_63  target
-0      0.0      0.0      5.0  ...       0.0       0
-1      0.0      0.0      0.0  ...       0.0       1
-2      0.0      0.0      0.0  ...       0.0       2
-
-DataFrame shape: (1797, 65)
-```
-
-**Task 4**
-```
-First sample — label: 0
-First 10 pixel values: [ 0.  0.  5. 13.  9.  1.  0.  0.  0.  0.]
-```
-
----
-
 ## Common Mistakes
 
 **`NameError: name 'digits' is not defined`**
@@ -226,11 +192,9 @@ You haven't added the target column yet. The line `df["target"] = digits.target`
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_loading_data.md](01_lab_loading_data.md)
-
-Fill in each `# >>> YOUR CODE HERE` block, run after each task, and verify your output matches.
 
 ---
 

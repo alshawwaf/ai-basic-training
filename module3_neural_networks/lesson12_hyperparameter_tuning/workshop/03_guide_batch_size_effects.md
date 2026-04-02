@@ -93,18 +93,6 @@ batch_size | val_accuracy | train_time(s) | updates/epoch
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-batch_size=  32 | val_accuracy: ~0.91 | time: ~4.0s | updates/epoch: 50
-batch_size= 512 | val_accuracy: ~0.90 | time: ~1.5s | updates/epoch: 3
-batch_size=1600 | val_accuracy: ~0.88 | time: ~0.8s | updates/epoch: 1
-```
-
-Actual times depend on your hardware. The relative ranking (32 slowest, full-batch fastest) should hold.
-
----
-
 ## Common Mistakes
 
 **All three give the same accuracy**
@@ -118,12 +106,9 @@ On CPU, very small batches have overhead per update. On GPU the relationship is 
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_batch_size_effects.md](03_lab_batch_size_effects.md)
-
----
-
 ## Next
 
 [04_guide_architecture_search.md](04_guide_architecture_search.md) — manual grid search over network depth and width.

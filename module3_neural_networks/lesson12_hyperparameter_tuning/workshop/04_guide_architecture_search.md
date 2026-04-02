@@ -100,28 +100,6 @@ Plot val_accuracy as a heatmap with depth on one axis and units on the other.
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-Architecture search results (sorted by val_accuracy):
- units  depth  val_acc  params
-   128      2   0.9200   10625
-    64      2   0.9150    4929
-   128      1   0.9100    5505
-    64      1   0.9050    2625
-    32      2   0.8950    1633
-   128      3   0.9150   26945
-    64      3   0.9100   12609
-    32      3   0.8900    4289
-    32      1   0.8850     993
-
-Best architecture: units=128, depth=2, val_accuracy=0.920
-```
-
-Exact values will vary between runs. What matters is identifying that depth=2 tends to outperform depth=1 (underfitting) and depth=3 (over-parameterised for this problem).
-
----
-
 ## Common Mistakes
 
 **Loop takes too long**

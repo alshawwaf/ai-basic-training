@@ -115,25 +115,6 @@ Rebuild with a 5×5 kernel. Compare output shapes and parameter counts. Larger k
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1 (model.summary):
-conv2d    (None, 26, 26, 32)    320
-max_pool  (None, 13, 13, 32)      0
-
-TASK 2:
-Conv2D(32,(3,3)) parameters: 320
-Dense(32) parameters:        25,120
-Dense uses 79× more parameters!
-
-TASK 4 (BONUS):
-3×3 kernel: output=26×26, params=320
-5×5 kernel: output=24×24, params=832
-```
-
----
-
 ## Common Mistakes
 
 - **Confusing filter count with parameter count**: 32 filters does NOT mean 32 parameters. Each filter has `kernel_h × kernel_w × channels` parameters, giving `320` total for Conv2D(32,(3,3)) on greyscale.
@@ -141,7 +122,7 @@ TASK 4 (BONUS):
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_conv_and_pooling.md](02_lab_conv_and_pooling.md)
 

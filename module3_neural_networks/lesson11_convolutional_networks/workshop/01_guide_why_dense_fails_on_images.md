@@ -66,23 +66,6 @@ Apply a random permutation to all pixels in all images (same permutation for tra
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Dense baseline test accuracy (3 epochs): ~0.970
-
-TASK 2:
-Total params: 101,770
-Manual: (784×128)+128 + (128×10)+10 = 100,480 + 1,290 = 101,770
-
-TASK 4 (BONUS):
-Dense on normal pixels:   ~0.970
-Dense on shuffled pixels: ~0.968  (nearly identical!)
-```
-
----
-
 ## Common Mistakes
 
 - **Not reshaping the output correctly**: `model.evaluate()` returns a tuple `(loss, metric)` — unpack both or use `_` for the loss.
@@ -90,7 +73,7 @@ Dense on shuffled pixels: ~0.968  (nearly identical!)
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_why_dense_fails_on_images.md](01_lab_why_dense_fails_on_images.md)
 

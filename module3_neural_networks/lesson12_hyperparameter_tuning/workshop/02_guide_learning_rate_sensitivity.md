@@ -100,25 +100,6 @@ Plot the training loss curves for all three runs on one figure. Title the lines 
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1 (lr=0.001)**
-```
-lr=0.001  | val_accuracy: ~0.91  | Loss: smooth descent to ~0.20
-```
-
-**Task 2 (lr=0.1)**
-```
-lr=0.100  | val_accuracy: ~0.78  | Loss: erratic, oscillates
-```
-
-**Task 3 (lr=0.00001)**
-```
-lr=0.00001 | val_accuracy: ~0.62  | Loss: barely moved from initial value
-```
-
----
-
 ## Common Mistakes
 
 **`NaN` in loss from epoch 1**
@@ -132,12 +113,9 @@ Neural network training has randomness. Set `tf.random.set_seed(42)` and `np.ran
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_learning_rate_sensitivity.md](02_lab_learning_rate_sensitivity.md)
-
----
-
 ## Next
 
 [03_guide_batch_size_effects.md](03_guide_batch_size_effects.md) — how batch size controls gradient noise and training stability.

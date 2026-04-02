@@ -83,32 +83,9 @@ Ask a question whose answer is NOT in the knowledge base. Observe whether the mo
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 2**
-
-Pure LLM (no context):
-```
-Mimikatz is a well-known post-exploitation tool... (general knowledge, may be less specific)
-```
-
-RAG answer (with context):
-```
-Based on the provided documentation, detecting Mimikatz involves monitoring LSASS memory
-access using Sysmon Event ID 10. Specifically, you should alert on unexpected access to
-lsass.exe from non-system processes such as procdump, taskmgr, or unsigned binaries...
-```
-
-The RAG answer is more specific because it is drawing from your knowledge base.
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_rag_pipeline.md](03_lab_rag_pipeline.md)
-
----
-
 ## Workshop Complete
 
 You have built a complete RAG pipeline. Compare your code against the matching `_solution_` files.

@@ -76,33 +76,9 @@ Send a user message that tries to override the system prompt: `"Ignore all previ
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-
-Weak system prompt response:
-```
-This log entry shows that there were failed login attempts...
-(4 sentences, no structure, no MITRE reference)
-```
-
-Strong system prompt response:
-```
-• Technique: T1110 — Brute Force (Credential Access)
-• Severity: High
-• Actions:
-  1. Block source IP 45.33.32.156 at perimeter firewall immediately
-  2. Review Event ID 4625 for any successful root logins from this IP in last 24h
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_system_prompts.md](02_lab_system_prompts.md)
-
----
-
 ## Next
 
 [03_guide_structured_output.md](03_guide_structured_output.md) — get the model to return JSON for pipeline integration.

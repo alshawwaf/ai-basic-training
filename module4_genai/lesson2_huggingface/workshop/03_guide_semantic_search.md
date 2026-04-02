@@ -79,34 +79,9 @@ Modify `search()` to accept `min_score`. Only return results above that threshol
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 3**
-```
-Query: how do I detect mimikatz credential dumping?
-  0.8923 | Mimikatz Credential Theft
-  0.6102 | Lateral Movement Detection
-  0.4234 | Network Segmentation for Defence
-
-Query: what should I do when ransomware hits?
-  0.9234 | Ransomware Incident Response Playbook
-  0.5123 | Network Segmentation for Defence
-  0.4512 | Lateral Movement Detection
-
-Query: how to prevent attackers from moving between systems?
-  0.8412 | Network Segmentation for Defence
-  0.7234 | Lateral Movement Detection
-  0.4123 | Ransomware Incident Response Playbook
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_semantic_search.md](03_lab_semantic_search.md)
-
----
-
 ## Workshop Complete
 
 Compare your code against the matching `_solution_` files, then move to:

@@ -117,27 +117,6 @@ Train the same architecture for 100 epochs. Use `np.argmax()` on `val_accuracy` 
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1 (last few epochs):
-Epoch 18/20: loss: 0.152 — accuracy: 0.952 — val_loss: 0.172 — val_accuracy: 0.941
-Epoch 19/20: loss: 0.149 — accuracy: 0.952 — val_loss: 0.171 — val_accuracy: 0.941
-Epoch 20/20: loss: 0.147 — accuracy: 0.953 — val_loss: 0.170 — val_accuracy: 0.941
-
-TASK 2:
-Final train accuracy: ~0.953
-Final val accuracy:   ~0.941
-Overfit gap: ~0.012
-
-TASK 4 (BONUS):
-Best val accuracy: ~0.946 at epoch ~18
-Final val accuracy: ~0.939
-Difference (overtraining effect): ~0.007
-```
-
----
-
 ## Common Mistakes
 
 - **Not storing the return value of model.fit()**: `model.fit(...)` without assignment — you lose the history and can't plot curves.
@@ -147,7 +126,7 @@ Difference (overtraining effect): ~0.007
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_compile_and_train.md](03_lab_compile_and_train.md)
 

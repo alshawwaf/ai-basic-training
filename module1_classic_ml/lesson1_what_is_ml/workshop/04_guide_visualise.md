@@ -154,28 +154,6 @@ Compute the mean absolute difference between every pair of average images. The p
 
 ---
 
-## Expected Outputs at a Glance
-
-**Tasks 1, 2, 3** — these produce plot windows, not text. You should see a clean grid of digit images.
-
-**What to look for in Task 2:**
-- Compare the two examples of each digit. Some will look noticeably different from each other.
-- Digits with highly variable examples (like 8 or 4) are harder to classify correctly.
-
-**What to look for in Task 3:**
-- Prototypes that look similar: 1 and 7, 3 and 8, 4 and 9 are common problem pairs in this dataset.
-- Write down your predictions — you will test them against the confusion matrix in Lesson 1.5.
-
-**Task 4 (Bonus)** — approximate expected output:
-```
-3 most visually similar digit pairs (lower = more similar):
-  Digits 3 vs 8 : mean abs difference = 1.21
-  Digits 1 vs 7 : mean abs difference = 1.38
-  Digits 4 vs 9 : mean abs difference = 1.52
-```
-
----
-
 ## Common Mistakes
 
 **`IndexError: index 2 is out of bounds for axis 0 with size 2`**
@@ -189,12 +167,9 @@ The directory in the save path must already exist. Run from the repo root so the
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [04_lab_visualise.md](04_lab_visualise.md)
-
----
-
 ## Next
 
 [05_guide_what_model_sees.md](05_guide_what_model_sees.md) — print raw number grids, understand which features matter, and connect digits to real security data.

@@ -110,29 +110,6 @@ Create a 3-class dataset and rebuild the model with `Dense(3, softmax)` as the o
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1 (model.summary() key lines):
- dense (Dense)          (None, 64)    704
- dense_1 (Dense)        (None, 32)    2080
- dense_2 (Dense)        (None, 1)     33
- Total params: 2,817
-
-TASK 2:
-Dense(64): (10×64)+64   = 704
-Dense(32): (64×32)+32   = 2080
-Dense(1):  (32×1)+1     = 33
-Total:                    2817
-
-TASK 3:
-Model compiled successfully.
-Optimizer: Adam
-Loss: binary_crossentropy
-```
-
----
-
 ## Common Mistakes
 
 - **Using sigmoid on hidden layers**: Sigmoid in hidden layers causes vanishing gradients during training. Use relu for hidden layers, sigmoid only on binary output.
@@ -142,7 +119,7 @@ Loss: binary_crossentropy
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_build_the_network.md](02_lab_build_the_network.md)
 

@@ -103,26 +103,9 @@ For a query "how to detect mimikatz", show which chunk from each strategy is mos
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Fixed-size chunks (size=50): 4 chunks
-  Chunk 1: Extracts plaintext passwords and NTLM hashes from Windows LSASS memory.
-            Techniques: sekurlsa::logonpasswords, lsadump::dcsync, Golden Ticket attacks.
-            Detection: LSASS memory access by...
-  Chunk 2: ...non-system processes (Sysmon Event 10).
-            Mitigations: Credential Guard, disable WDigest...
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_chunking.md](01_lab_chunking.md)
-
----
-
 ## Next
 
 [02_guide_retrieval.md](02_guide_retrieval.md) — encode chunks and retrieve the most relevant ones for a query.

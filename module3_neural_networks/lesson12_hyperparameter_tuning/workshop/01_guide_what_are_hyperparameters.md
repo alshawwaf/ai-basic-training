@@ -76,26 +76,6 @@ Train the same model twice without a seed — results differ slightly. Then trai
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Layer 1 weights BEFORE: [~0.001 to 0.3 range, random]
-Layer 1 weights AFTER:  [clearly different values]
-Weights changed: True
-
-TASK 3:
-Model A (Dense(8),   lr=0.001): ~0.910
-Model B (Dense(64,32), lr=0.01): ~0.940
-Different hyperparameters → ~3% accuracy difference
-
-TASK 4 (BONUS):
-Without seed: 0.9350, 0.9375 — same? False
-With seed:    0.9350, 0.9350 — same? True
-```
-
----
-
 ## Common Mistakes
 
 - **Confusing "parameters" with "hyperparameters" in documentation**: Keras docs often use "params" to mean the learned weights. Hyperparameters are always specified by the user in the function call.
@@ -103,7 +83,7 @@ With seed:    0.9350, 0.9350 — same? True
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_what_are_hyperparameters.md](01_lab_what_are_hyperparameters.md)
 

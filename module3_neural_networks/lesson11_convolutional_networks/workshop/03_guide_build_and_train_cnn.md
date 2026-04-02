@@ -82,22 +82,6 @@ Add a third `Conv2D(64,(3,3))` before the Flatten. Check `model.summary()` to ve
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1 (model.summary totals):
-Total params: ~225,034
-
-TASK 2:
-CNN test accuracy (5 epochs):   ~0.990
-Dense baseline (3 epochs):      0.970
-CNN improvement:                +0.020
-
-(CNN uses fewer well-organised parameters and achieves higher accuracy)
-```
-
----
-
 ## Common Mistakes
 
 - **Forgetting Flatten() before Dense**: Keras will raise a shape error — Dense expects 1D input, Conv2D output is 3D.
@@ -106,7 +90,7 @@ CNN improvement:                +0.020
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_build_and_train_cnn.md](03_lab_build_and_train_cnn.md)
 

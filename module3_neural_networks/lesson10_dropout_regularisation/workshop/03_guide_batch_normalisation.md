@@ -94,24 +94,6 @@ Remove BatchNorm from the middle layer only. Measure the standard deviation of t
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Final val_loss: ~0.165
-Final val_acc:  ~0.944
-
-TASK 3:
-BatchNorm only  val_acc: ~0.944
-Combined BN+DO  val_acc: ~0.946
-
-TASK 4 (BONUS):
-Full BN train loss std (first 20 epochs): ~0.012
-Asymm train loss std (first 20 epochs):   ~0.025
-```
-
----
-
 ## Common Mistakes
 
 - **Placing BatchNorm after the output layer**: The sigmoid output needs to remain in [0,1]. BatchNorm would distort this distribution. Only use BatchNorm in hidden layers.
@@ -120,7 +102,7 @@ Asymm train loss std (first 20 epochs):   ~0.025
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_batch_normalisation.md](03_lab_batch_normalisation.md)
 

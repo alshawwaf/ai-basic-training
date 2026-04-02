@@ -91,27 +91,6 @@ Add a third hidden layer and compare AUC. On simple tabular datasets, deeper doe
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Test loss:     ~0.170
-Test accuracy: ~0.940
-
-TASK 2 (classification_report):
-              precision    recall  f1-score   support
-      benign       0.96      0.97      0.97       362
-      attack       0.73      0.68      0.71        38
-    accuracy                           0.94       400
-
-TASK 3:
-Logistic Regression AUC: ~0.972
-Neural Network AUC:      ~0.974
-(Difference is small — both are competitive)
-```
-
----
-
 ## Common Mistakes
 
 - **Evaluating on training data**: Always call `model.evaluate(X_test, y_test)` — not `X_train`.
@@ -121,7 +100,7 @@ Neural Network AUC:      ~0.974
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [04_lab_evaluate_and_improve.md](04_lab_evaluate_and_improve.md)
 

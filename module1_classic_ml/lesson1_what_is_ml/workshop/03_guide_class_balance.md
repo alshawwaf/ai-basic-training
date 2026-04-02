@@ -152,56 +152,6 @@ Loop over the class counts. For each class, print a bar of `#` characters propor
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Samples per class:
-0    178
-1    182
-2    177
-3    183
-4    181
-5    182
-6    181
-7    179
-8    174
-9    180
-```
-
-**Task 2**
-```
-Majority class: 183 samples
-Minority class: 174 samples
-Imbalance ratio: 1.05 : 1
-This dataset is well balanced.
-```
-
-**Task 3**
-```
---- Simulated Security Dataset ---
-Normal connections :  950  (95.0%)
-Attack connections :   50   (5.0%)
-
-A naive model (always predicts 'normal'):
-  Accuracy       : 95.0%   <- looks great!
-  Attacks caught :  0.0%   <- completely useless
-
-This is why accuracy alone is a dangerous metric in security.
-```
-
-**Task 4** (approximate)
-```
-Class distribution:
-0 | ########################################################## (178)
-1 | ############################################################  (182)
-...
-8 | ####################################################### (174)
-9 | ########################################################## (180)
-```
-
----
-
 ## The Bigger Picture
 
 This lesson uses a balanced dataset intentionally — it lets you learn the workflow without fighting imbalance at the same time. Starting in **Module 2** you will work with real imbalanced datasets.
@@ -210,12 +160,9 @@ In every lesson from this point on, the first check after loading data is: what 
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_class_balance.md](03_lab_class_balance.md)
-
----
-
 ## Next
 
 [04_guide_visualise.md](04_guide_visualise.md) — plotting sample images, average class prototypes, and predicting where your model will struggle before it is even trained.

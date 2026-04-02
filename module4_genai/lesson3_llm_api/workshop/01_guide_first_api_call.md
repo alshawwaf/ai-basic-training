@@ -87,35 +87,9 @@ Make the same request with `max_tokens=50` and `max_tokens=400`. Observe how the
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Provider: claude
-Client loaded successfully.
-```
-
-**Task 2**
-```
-Q: What is lateral movement in 2 sentences?
-A: Lateral movement refers to techniques attackers use to progressively move through a network
-   after gaining initial access, expanding their foothold toward high-value targets...
-```
-
-**Task 3**
-```
-Log: Failed login for root from 45.33.32.156 (198 attempts in 60 seconds)
-Analysis: This log entry indicates a brute-force SSH attack...
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_first_api_call.md](01_lab_first_api_call.md)
-
----
-
 ## Next
 
 [02_guide_system_prompts.md](02_guide_system_prompts.md) — design system prompts for a security analyst persona.

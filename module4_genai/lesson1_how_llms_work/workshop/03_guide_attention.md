@@ -94,27 +94,6 @@ Print the attention matrix as a formatted number grid with word labels on both a
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 2**
-```
-Attention — what each word attends to most:
-  "the"        → attends most to: "the"        (0.80)
-  "firewall"   → attends most to: "firewall"   (0.65)
-  "blocked"    → attends most to: "firewall"   (0.45)
-  "malicious"  → attends most to: "malicious"  (0.70)
-  "connection" → attends most to: "blocked"    (0.30)
-```
-
-**Task 3**
-```
-Context vector for "blocked" (weighted sum of value vectors):
-  [0.604  0.519  -0.234  0.481  0.235]
-  Top contributors: firewall (0.45), malicious (0.28)
-```
-
----
-
 ## Common Mistakes
 
 **Row doesn't sum to 1.0**
@@ -125,12 +104,9 @@ Value vectors have shape `(embedding_dim,)`. Use `attention[2] @ values` for the
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_attention.md](03_lab_attention.md)
-
----
-
 ## Workshop Complete
 
 Compare your code against the matching `_solution_` files, then move to:

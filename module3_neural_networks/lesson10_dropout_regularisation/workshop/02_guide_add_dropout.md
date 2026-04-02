@@ -79,26 +79,6 @@ Make 5 identical `model.predict()` calls on the same input. All outputs should b
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-Baseline (no dropout): val_loss=~0.22, val_acc=~0.938
-
-TASK 1:
-With Dropout(0.3): val_loss=~0.16, val_acc=~0.945
-
-TASK 3:
-  Rate | Val Accuracy
-  0.1  |  ~0.942
-  0.3  |  ~0.945
-  0.5  |  ~0.940
-
-TASK 4 (BONUS):
-5 repeated predictions: all identical = True
-```
-
----
-
 ## Common Mistakes
 
 - **Adding Dropout AFTER the output layer**: The output layer should not have Dropout — it changes the predicted probabilities at inference time.
@@ -107,7 +87,7 @@ TASK 4 (BONUS):
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_add_dropout.md](02_lab_add_dropout.md)
 

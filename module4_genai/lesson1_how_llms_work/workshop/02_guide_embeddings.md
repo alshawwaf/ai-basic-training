@@ -82,36 +82,9 @@ For a given query word, compute cosine similarity against all vocabulary words a
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 3**
-```
-Cosine similarities:
-  malicious vs suspicious : 0.9834
-  malicious vs benign     : -0.8765
-  firewall  vs traffic    : 0.4523
-```
-
-**Task 4 (Bonus)**
-```
-Top 5 words most similar to "attack":
-  1. malicious   0.9712
-  2. suspicious  0.9523
-  3. detected    0.7834
-  4. alert       0.7102
-  5. scan        0.6891
-```
-
-(Values vary based on the embedding matrix you define.)
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_embeddings.md](02_lab_embeddings.md)
-
----
-
 ## Next
 
 [03_guide_attention.md](03_guide_attention.md) — the attention mechanism: which words matter to which.

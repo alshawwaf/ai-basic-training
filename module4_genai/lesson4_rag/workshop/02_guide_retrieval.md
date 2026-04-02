@@ -81,30 +81,9 @@ For each query, compute the reciprocal rank (1/rank) of the first relevant resul
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Chunked 6 documents → 28 chunks
-Vector index shape: (28, 384)
-```
-
-**Task 3**
-```
-Query: "how to detect LSASS memory access?"
-  0.8923 | Detection relies on monitoring LSASS memory access by non-system...
-  0.7102 | Sysmon Event ID 10 unexpected access to lsass.exe...
-  0.5834 | Mitigations include enabling Windows Credential Guard...
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [02_lab_retrieval.md](02_lab_retrieval.md)
-
----
-
 ## Next
 
 [03_guide_rag_pipeline.md](03_guide_rag_pipeline.md) — combine retrieval with LLM generation for grounded answers.

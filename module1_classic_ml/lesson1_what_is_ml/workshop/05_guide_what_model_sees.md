@@ -180,36 +180,6 @@ plt.imshow(corr_grid, cmap="hot")
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 1**
-```
-Image index 0 — label: 0
- 0  0  5 13  9  1  0  0
- 0  0 13 15 10 15  5  0
- 0  3 15  2  0 11  8  0
- 0  4 12  0  0  8  8  0
- 0  5  8  0  0  9  8  0
- 0  4 11  0  1 12  7  0
- 0  2 14  5 10 12  0  0
- 0  0  6 13 10  0  0  0
-```
-
-**Task 3** (approximate)
-```
-Top 10 pixels most correlated with digit label:
-pixel_43    0.55
-pixel_34    0.53
-pixel_26    0.52
-pixel_27    0.50
-pixel_36    0.48
-...
-pixel_0     0.00
-pixel_63    0.00
-```
-
----
-
 ## Connecting It All
 
 After completing all 5 exercises, you have done the full EDA cycle:
@@ -224,12 +194,9 @@ This is not a one-time exercise. This is how every ML project begins — every s
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [05_lab_what_model_sees.md](05_lab_what_model_sees.md)
-
----
-
 ## Workshop Complete
 
 When all 5 exercises run cleanly, compare your code against the matching `_solution_` file for each exercise.

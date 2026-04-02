@@ -105,33 +105,6 @@ Run the same analysis for `RandomForestClassifier` sweeping `n_estimators`. Obse
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
- Depth | Train mean |   Val mean
-------------------------------------
-     1 |      0.648 |      0.643
-     2 |      0.884 |      0.881
-     3 |      0.945 |      0.935
-     5 |      0.989 |      0.967
-    10 |      1.000 |      0.962
-    20 |      1.000 |      0.961
-
-TASK 3:
-Best depth: 5
-  Train accuracy: 0.989
-  Val accuracy:   0.967
-  Overfit gap:    0.022
-
-At depth=20:
-  Train accuracy: 1.000
-  Val accuracy:   0.961
-  Overfit gap:    0.039
-```
-
----
-
 ## Common Mistakes
 
 - **Passing X (all data) instead of X_train**: `validation_curve` should only see training data. The test set must remain untouched for final evaluation.
@@ -141,7 +114,7 @@ At depth=20:
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [04_lab_validation_curve.md](04_lab_validation_curve.md)
 

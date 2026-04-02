@@ -95,30 +95,6 @@ Train with patience=1, 5, and 20. Print a table of epochs run and final val_accu
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Restoring model weights from the end of the best epoch.
-Stopped at epoch: ~25-35  (out of 200)
-Final val_loss: ~0.160
-Final val_acc:  ~0.945
-
-TASK 3:
-Scheduled epochs: 200
-Epochs ran:       ~30
-Epochs saved:     ~170
-Estimated time saved: ~51 seconds
-
-TASK 4 (BONUS):
-  Patience | Epochs ran | Val accuracy
-         1 |          8 |       ~0.930
-         5 |         30 |       ~0.945
-        20 |         55 |       ~0.943
-```
-
----
-
 ## Common Mistakes
 
 - **Monitoring train loss instead of val_loss**: If you monitor `loss` instead of `val_loss`, early stopping triggers when train loss stops improving — which may never happen (train loss keeps falling with overfitting). Always monitor `val_loss`.
@@ -128,7 +104,7 @@ TASK 4 (BONUS):
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [04_lab_early_stopping.md](04_lab_early_stopping.md)
 

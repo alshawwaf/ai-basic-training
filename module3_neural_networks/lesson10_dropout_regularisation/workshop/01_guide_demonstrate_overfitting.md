@@ -78,22 +78,6 @@ Add 2 more Dense(256) layers (5 total) and compare the final gap. Deeper without
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Total parameters: 133,633
-Final train accuracy: ~0.990
-Final val accuracy:   ~0.938
-
-TASK 3:
-Train accuracy:  ~0.990  | Val accuracy:  ~0.938
-Accuracy gap (train - val): ~0.052
-Loss gap (val - train):     ~0.110
-```
-
----
-
 ## Common Mistakes
 
 - **Training for too few epochs**: With only 10 epochs you may not see divergence. Use 50.
@@ -102,7 +86,7 @@ Loss gap (val - train):     ~0.110
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_demonstrate_overfitting.md](01_lab_demonstrate_overfitting.md)
 

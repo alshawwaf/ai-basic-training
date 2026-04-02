@@ -102,26 +102,9 @@ Wrap the JSON parsing in a try/except. If parsing fails, print the raw response 
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 3**
-```
-Severity  | Technique | Confidence | Summary
-----------+-----------+------------+--------------------------------------------------
-High      | T1110     |   0.95     | SSH brute-force attack targeting root account
-Critical  | T1059.001 |   0.92     | PowerShell encoded command execution
-Low       | none      |   0.45     | Normal scheduled task completion
-High      | T1046     |   0.88     | Network port scan from internal host
-```
-
----
-
-## Now Open the Exercise File
+## Now Open the Lab
 
 [03_lab_structured_output.md](03_lab_structured_output.md)
-
----
-
 ## Next
 
 [04_guide_conversation.md](04_guide_conversation.md) — maintain context across multiple turns.

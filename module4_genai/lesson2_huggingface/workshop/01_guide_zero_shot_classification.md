@@ -76,30 +76,6 @@ Use `multi_label=True` to allow multiple labels simultaneously. Compare scores w
 
 ---
 
-## Expected Outputs at a Glance
-
-**Task 3**
-```
-Log 1: Outbound LDAP connection to 185.219.47.33 immediately...
-  → malicious activity (0.9123)
-
-Log 2: User jsmith authenticated successfully from 10.0.1.50...
-  → normal traffic (0.8234)
-
-Log 3: nmap -sS -O scan detected from 10.0.1.200 targeting...
-  → malicious activity (0.7845)
-
-Log 4: Firewall rule updated by admin: allow port 443 outbound...
-  → configuration change (0.7231)
-
-Log 5: CPU utilisation 99% on DB-01 sustained for 45 minutes...
-  → system anomaly (0.6512)
-```
-
-(Exact scores vary by model version.)
-
----
-
 ## Common Mistakes
 
 **`OSError: We couldn't connect to huggingface.co`**
@@ -113,12 +89,9 @@ Descriptive labels work better than generic ones. "malicious network activity" o
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_zero_shot_classification.md](01_lab_zero_shot_classification.md)
-
----
-
 ## Next
 
 [02_guide_sentence_embeddings.md](02_guide_sentence_embeddings.md) — encode sentences as vectors and measure semantic similarity.

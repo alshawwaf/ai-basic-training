@@ -102,30 +102,6 @@ Build three models with very different sizes and compare parameter counts. Notic
 
 ---
 
-## Expected Outputs at a Glance
-
-```
-TASK 1:
-Total params: 49  (40 in layer 1, 9 in layer 2)
-
-TASK 2:
-Layer 1 (Dense 8):  (4 × 8) + 8 = 40
-Layer 2 (Dense 1):  (8 × 1) + 1 = 9
-Total: 49  Match: True
-
-TASK 3:
-Input shape:   (3, 4)
-Output shape:  (3, 1)
-All values between 0 and 1: True
-
-TASK 4 (BONUS):
-Architecture [4, 1]:          ~51 params
-Architecture [64, 32, 1]:   ~2,625 params
-Architecture [256, 128, 64, 1]: ~67,393 params
-```
-
----
-
 ## Common Mistakes
 
 - **Forgetting `input_shape` on the first layer**: Keras needs to know the input dimensions to build the weight matrix. Without it, `model.summary()` shows "?" for output shapes.
@@ -134,7 +110,7 @@ Architecture [256, 128, 64, 1]: ~67,393 params
 
 ---
 
-## Now Open the Exercise File
+## Now Open the Lab
 
 [01_lab_from_numpy_to_keras.md](01_lab_from_numpy_to_keras.md)
 

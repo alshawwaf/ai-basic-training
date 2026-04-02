@@ -31,6 +31,32 @@ top-k scores → return ranked documents
 
 Phase 2 is fast because document embeddings were computed in Phase 1. Only the query needs encoding at runtime.
 
+```
+Semantic Search: Two-Phase Architecture
+───────────────────────────────────────────────────────────────
+PHASE 1 — Indexing (offline, done once)
+
+ Doc 1 ──►┐                    ┌───────────────────────────┐
+ Doc 2 ──►┤  model.encode()    │ Embedding Matrix (N × 384)│
+ Doc 3 ──►┤ ─────────────────► │ [0.23, -0.45, 0.87, ...] │ doc 1
+ ...   ──►┤                    │ [0.11,  0.55, 0.02, ...] │ doc 2
+ Doc N ──►┘                    │ [...]                     │
+                               └───────────────────────────┘
+
+PHASE 2 — Query (real-time)
+
+ "how to stop          model.encode()    cosine_similarity()
+  credential theft" ─────────────────► [0.18, 0.52, ...]
+                                              │
+                                              ▼
+                                  scores: [0.34, 0.89, 0.71, ...]
+                                              │
+                                         argsort + top-k
+                                              │
+                                              ▼
+                                  Doc 2 (0.89), Doc 3 (0.71), ...
+```
+
 ---
 
 ## Concept: Why Semantic Beats Keyword Search
@@ -47,6 +73,21 @@ Semantic search finds:
 ```
 
 Semantic search understands intent. Keyword search matches strings.
+
+```
+Keyword vs Semantic Search
+──────────────────────────────────────────────────────
+ Query: "how to stop credential theft"
+
+ Keyword search                 Semantic search
+ ─────────────────              ────────────────────
+ looks for exact words:         looks for meaning:
+ "credential" AND "theft"       ● Mimikatz detection
+       │                        ● DCSync attacks
+       ▼                        ● LSASS memory dumping
+ only docs with those words     ● Pass-the-Hash defense
+ (misses related concepts)      (finds related concepts!)
+```
 
 ---
 

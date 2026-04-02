@@ -33,6 +33,38 @@ reply2 = client.chat(system=..., messages=messages, max_tokens=200)
 
 This is why the conversation list grows with each turn. You are sending the entire conversation to the model every time.
 
+```
+Conversation State: messages list grows each turn
+──────────────────────────────────────────────────────────
+ Turn 1 — you send:
+ ┌────────────────────────────────────────────┐
+ │ messages = [                               │
+ │   {user: "What is lateral movement?"}      │
+ │ ]                                          │
+ └────────────────────────────────────────────┘
+
+ Turn 2 — you send the FULL history:
+ ┌────────────────────────────────────────────┐
+ │ messages = [                               │
+ │   {user: "What is lateral movement?"}      │  ← turn 1
+ │   {assistant: "Lateral movement is..."}    │  ← reply 1
+ │   {user: "How do I detect it?"}            │  ← turn 2
+ │ ]                                          │
+ └────────────────────────────────────────────┘
+
+ Turn 3 — even bigger:
+ ┌────────────────────────────────────────────┐
+ │ messages = [                               │
+ │   {user: "What is lateral movement?"}      │
+ │   {assistant: "Lateral movement is..."}    │
+ │   {user: "How do I detect it?"}            │
+ │   {assistant: "Common detection..."}       │
+ │   {user: "Show me a Sigma rule"}           │  ← turn 3
+ │ ]                                          │
+ └────────────────────────────────────────────┘
+  The list keeps growing ───► eventually hits context limit
+```
+
 ---
 
 ## Concept: Context Window Limits
@@ -65,6 +97,21 @@ Model: [assesses C2 communication, recommends isolation and threat hunting]
 ```
 
 Each turn adds context. The model's later responses are informed by the full incident picture.
+
+```
+Incident Investigation — context builds progressively
+──────────────────────────────────────────────────────
+ Turn 1: "unusual outbound traffic from WORKSTATION-042"
+              │
+              ▼  model sees: traffic anomaly
+ Turn 2: + "powershell.exe spawned by winword.exe"
+              │
+              ▼  model sees: macro execution → initial access
+ Turn 3: + "connected to 185.219.47.33:443"
+              │
+              ▼  model sees: full kill chain
+                 (phishing → execution → C2 communication)
+```
 
 ---
 

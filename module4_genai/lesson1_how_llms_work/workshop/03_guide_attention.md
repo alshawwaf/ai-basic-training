@@ -59,6 +59,29 @@ Think of it as a search engine:
 - **Key**: each word advertising "here is what I'm about"
 - **Value**: what each word actually contributes to the output
 
+```
+Query-Key-Value Flow for one position
+──────────────────────────────────────────────────────────
+ "blocked" embedding
+       │
+       ├──── × W_Q ───► Q  ("what am I looking for?")
+       │                 │
+       │          ┌──────┴──────┐
+       │          ▼             ▼
+       │     Q · K_firewall  Q · K_malicious  ...
+       │          │             │
+       │          ▼             ▼
+       │        softmax across all positions
+       │          │             │
+       │        0.45          0.28         ← attention scores
+       │          │             │
+       │          ▼             ▼
+       │     0.45 × V_firewall + 0.28 × V_malicious + ...
+       │                    │
+       ▼                    ▼
+                   context vector for "blocked"
+```
+
 ---
 
 ## Concept: The Attention Matrix
@@ -75,6 +98,18 @@ connection[0.04  0.12     0.30     0.25       0.29  ]
 ```
 
 Rows sum to 1.0 (softmax output).
+
+```
+Attention Matrix (5 × 5) — reading the "blocked" row
+──────────────────────────────────────────────────────
+              the  firewall  blocked  malicious  connection
+            ┌─────┬─────────┬────────┬──────────┬──────────┐
+ blocked    │ 0.03│  0.45   │  0.00  │   0.28   │   0.24   │ = 1.0
+            └─────┴────▲────┴────────┴────▲─────┴──────────┘
+                       │                  │
+                  strongest           second-strongest
+                  ("who blocked?")    ("what was blocked?")
+```
 
 ---
 

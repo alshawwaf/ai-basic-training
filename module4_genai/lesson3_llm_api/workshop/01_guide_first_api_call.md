@@ -33,6 +33,20 @@ Three parameters control every call:
 - **`messages`**: The conversation history — list of `{"role": ..., "content": ...}` dicts.
 - **`max_tokens`**: Hard upper limit on output tokens. 100 tokens ≈ 75 words.
 
+```
+API Call Flow
+──────────────────────────────────────────────────────
+ Your Python code                      LLM Provider
+┌──────────────────────┐              ┌─────────────┐
+│ system: "You are..." │              │             │
+│ messages: [          │  ── HTTPS ──►│  LLM Model  │
+│   {user: "Hello!"}   │              │             │
+│ ]                    │              └──────┬──────┘
+│ max_tokens: 200      │                     │
+└──────────────────────┘              ◄──────┘
+                                     response (string)
+```
+
 ---
 
 ## Concept: What Are Tokens?
@@ -50,6 +64,19 @@ LLMs don't process characters or words — they process **tokens**. A token is r
 ```
 
 Pricing and context limits are measured in tokens. GPT-4 context window = 128,000 tokens ≈ 100,000 words.
+
+```
+Tokenisation of a sentence
+──────────────────────────────────────────────────────
+ "Analyse this log entry for threats"
+      │       │     │     │      │     │
+      ▼       ▼     ▼     ▼      ▼     ▼
+  ["Analyse"," this"," log"," entry"," for"," threats"]
+      │       │     │     │      │     │
+      ▼       ▼     ▼     ▼      ▼     ▼
+     token   token token token  token  token
+                   = 6 tokens total
+```
 
 ---
 

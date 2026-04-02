@@ -27,6 +27,23 @@ But chunking is not just a technical constraint — it also determines retrieval
 
 **Rule of thumb:** 100–300 words per chunk, with 20–50 word overlap.
 
+```
+Long Document ───► Chunks
+──────────────────────────────────────────────────────
+ Original document (800 words)
+┌────────────────────────────────────────────────────┐
+│ word 1 ... word 100 ... word 200 ... word 300 ...  │
+│ ... word 400 ... word 500 ... word 600 ... word 800│
+└────────────────────────────────────────────────────┘
+                      │
+                      ▼  split into chunks
+ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+ │ Chunk 1      │ │ Chunk 2      │ │ Chunk 3      │ ...
+ │ words 1-100  │ │ words 101-200│ │ words 201-300│
+ └──────────────┘ └──────────────┘ └──────────────┘
+  each chunk is small enough to embed (128-512 tokens)
+```
+
 ---
 
 ## Concept: Fixed-Size Chunking
@@ -46,6 +63,17 @@ def chunk_fixed(text, chunk_size=100):
 
 Problem: a sentence may be cut in half, losing meaning at chunk boundaries.
 
+```
+Fixed-Size Chunking (no overlap) — boundary problem
+──────────────────────────────────────────────────────
+ ┌──── Chunk 1 ─────┐┌──── Chunk 2 ─────┐
+ │ ... detection     ││ relies on Sysmon │
+ │ of LSASS access   ││ Event ID 10 ...  │
+ └───────────────────┘└──────────────────┘
+        ▲ sentence is cut here ▲
+        key fact split across two chunks!
+```
+
 ---
 
 ## Concept: Overlap Chunking
@@ -62,6 +90,24 @@ def chunk_overlap(text, chunk_size=100, overlap=20):
         if len(chunk.split()) >= 10:
             chunks.append(chunk)
     return chunks
+```
+
+```
+Overlap Chunking — boundary facts preserved
+──────────────────────────────────────────────────────
+ chunk_size=100, overlap=20
+
+ ┌──────── Chunk 1 (words 1-100) ────────┐
+ │ ... detection of LSASS access         │
+ │      relies on Sysmon Event ID 10 ... │
+ └───────────────────────┬───────────────┘
+                         │ overlap zone
+ ┌───────────────────────┼───────────────┐
+ │ ... relies on Sysmon  │Event ID 10    │
+ │      for detecting... │               │
+ └──────── Chunk 2 (words 81-180) ───────┘
+            ▲
+   words 81-100 appear in BOTH chunks
 ```
 
 ---

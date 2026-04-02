@@ -23,6 +23,24 @@ The system prompt is a persistent instruction that frames the model's role befor
 - **Scope**: what it should and should not do ("Only answer security questions")
 - **Context**: what it knows ("You are analysing logs from our AWS environment")
 
+```
+How system + user + assistant messages stack up
+──────────────────────────────────────────────────────
+┌──────────────────────────────────────────────┐
+│ SYSTEM  (hidden from end user)               │
+│ "You are a senior SOC analyst. Be concise."  │
+├──────────────────────────────────────────────┤
+│ USER                                         │
+│ "Analyse this log entry: ..."                │
+├──────────────────────────────────────────────┤
+│ ASSISTANT                                    │
+│ (model generates response here, shaped by    │
+│  the system prompt above)                    │
+└──────────────────────────────────────────────┘
+  The system prompt is always at the top, influencing
+  every assistant response in the conversation.
+```
+
 ---
 
 ## Concept: Bad vs Good System Prompts

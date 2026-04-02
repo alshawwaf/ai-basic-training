@@ -27,6 +27,22 @@ Sentence embeddings encode the **entire sentence** into one vector that captures
 
 Semantic similarity → close vectors. Semantic difference → distant vectors.
 
+```
+Sentence Embedding: entire sentence ───► one vector
+─────────────────────────────────────────────────────
+ Sentence                             384-dim vector
+┌────────────────────────────────┐   ┌──────────────┐
+│"System was compromised via     │──►│ [0.23, -0.45,│
+│ phishing"                      │   │  0.87, ...]  │
+├────────────────────────────────┤   ├──────────────┤
+│"Spear-phishing email led to   │──►│ [0.21, -0.42,│  ← similar!
+│ the breach"                    │   │  0.89, ...]  │
+├────────────────────────────────┤   ├──────────────┤
+│"Pizza delivery takes 30 min"  │──►│[-0.55,  0.31,│  ← very different
+│                                │   │ -0.12, ...]  │
+└────────────────────────────────┘   └──────────────┘
+```
+
 ---
 
 ## Concept: The SentenceTransformer Model
@@ -56,6 +72,17 @@ Practical thresholds for security text:
 - `> 0.85` → nearly identical meaning
 - `0.60–0.85` → related topic, different specifics
 - `< 0.40` → likely unrelated
+
+```
+Cosine Similarity Matrix (N × N)
+──────────────────────────────────────────────────────
+              Sent A    Sent B    Sent C
+           ┌─────────┬─────────┬─────────┐
+  Sent A   │  1.00   │  0.91   │  0.12   │
+  Sent B   │  0.91   │  1.00   │  0.15   │  ← A and B are similar
+  Sent C   │  0.12   │  0.15   │  1.00   │  ← C is unrelated
+           └─────────┴─────────┴─────────┘
+```
 
 ---
 

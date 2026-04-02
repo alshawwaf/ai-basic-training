@@ -39,6 +39,25 @@ The log entry indicates a brute-force attack. The severity is high because there
 
 The JSON version can be consumed directly by a SIEM, ticketing system, or automated response playbook.
 
+```
+Structured Output Flow
+──────────────────────────────────────────────────────────
+ Log entry            LLM (with JSON           Downstream
+                      system prompt)            system
+┌───────────────┐    ┌──────────────┐    ┌──────────────┐
+│"198 failed     │    │              │    │              │
+│ logins in 60s  │───►│  LLM Model   │───►│  json.loads()│
+│ from 45.33..." │    │              │    │       │      │
+└───────────────┘    └──────────────┘    └───────┼──────┘
+                      responds with JSON         │
+                                                 ▼
+                                          ┌─────────────┐
+                                          │ SIEM / SOAR  │
+                                          │ ticket system│
+                                          │ playbook     │
+                                          └─────────────┘
+```
+
 ---
 
 ## Concept: How to Request JSON Output
@@ -61,6 +80,14 @@ Then parse with:
 ```python
 import json
 data = json.loads(response)
+```
+
+```
+Prompt ───► Model ───► JSON string ───► json.loads() ───► Python dict
+                       '{"threat_type":       │
+                         "brute_force",       ▼
+                         "severity":     data["severity"]  →  "High"
+                         "High",...}'    data["confidence"] →  0.92
 ```
 
 ---

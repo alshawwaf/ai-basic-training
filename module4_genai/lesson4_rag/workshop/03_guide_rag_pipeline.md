@@ -32,6 +32,31 @@ The key insight: the LLM is not memorising your security knowledge — it is rea
 - The model cites specific information from the retrieved chunks
 - Answers are more accurate and auditable
 
+```
+Full RAG Pipeline
+──────────────────────────────────────────────────────────────
+ User question: "How do I detect Mimikatz?"
+        │
+        ▼
+ ┌─────────────┐   encode query    ┌───────────────────────┐
+ │  RETRIEVE    │ ────────────────► │ Vector Index (N chunks)│
+ │              │ ◄─── top-k ───── │                       │
+ └──────┬──────┘                   └───────────────────────┘
+        │ top 3 chunks
+        ▼
+ ┌─────────────┐   stuff chunks into system prompt
+ │  AUGMENT     │ ──► "CONTEXT:\n[chunk1]\n[chunk2]\n[chunk3]"
+ └──────┬──────┘
+        │ augmented prompt + user question
+        ▼
+ ┌─────────────┐
+ │  GENERATE   │ ──► LLM reads context + answers
+ └──────┬──────┘
+        │
+        ▼
+ Grounded answer (based on your KB, not hallucination)
+```
+
 ---
 
 ## Concept: The Augmented Prompt
@@ -49,6 +74,30 @@ CONTEXT:
 ```
 
 The context section is the retrieved chunks. The LLM sees both the original question and the retrieved knowledge.
+
+```
+The Augmented Prompt — what the LLM actually sees
+──────────────────────────────────────────────────────
+┌─────────────────────────────────────────────────┐
+│ SYSTEM:                                         │
+│ "You are a security analyst assistant.          │
+│  Answer using ONLY the context below.           │
+│                                                 │
+│  CONTEXT:                                       │
+│  [mimikatz]                                     │
+│  Mimikatz uses sekurlsa::logonpasswords to...   │
+│                                                 │
+│  [lsass-detection]                              │
+│  Detection relies on monitoring LSASS memory    │
+│  access via Sysmon Event ID 10..."              │
+├─────────────────────────────────────────────────┤
+│ USER:                                           │
+│ "How do I detect Mimikatz?"                     │
+├─────────────────────────────────────────────────┤
+│ ASSISTANT:                                      │
+│ (LLM generates answer from the context above)   │
+└─────────────────────────────────────────────────┘
+```
 
 ---
 

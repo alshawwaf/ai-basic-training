@@ -35,6 +35,21 @@ A tokeniser converts text to a sequence of integers:
 "Hello world" → ["Hello", " world"] → [9906, 1917]
 ```
 
+```
+Tokenisation Pipeline
+─────────────────────────────────────────────────────────────────
+ Raw text              Tokens                 Token IDs
+┌─────────────┐      ┌──────────┐      ┌──────────────────────┐
+│"Hello world"│ ───► │ "Hello"  │ ───► │  9906                │
+│             │      │ " world" │      │  1917                │
+└─────────────┘      └──────────┘      └──────────────────────┘
+  (string)         (subword pieces)    (integers for the model)
+                                              │
+                                              ▼
+                                       Embedding Layer
+                                    (vector per token)
+```
+
 Each integer is a **token ID** — an index into the model's vocabulary. The model's embedding layer converts each ID into a high-dimensional vector.
 
 Real GPT-4 vocabulary: ~100,000 tokens.
@@ -53,6 +68,15 @@ LLMs add special tokens that carry structural meaning:
 | `<EOS>` (End Of Sequence) | Tells the model to stop generating |
 | `<PAD>` | Fills shorter sequences in a batch to equal length |
 | `<UNK>` | Replaces unknown tokens not in vocabulary |
+
+```
+Sequence with special tokens
+┌─────┬───────┬───────┬─────┬─────┬─────┐
+│<BOS>│ Hello │ world │<EOS>│<PAD>│<PAD>│
+└─────┴───────┴───────┴─────┴─────┴─────┘
+  ↑     actual content   ↑     padding
+  start                  stop   (batch alignment)
+```
 
 ---
 

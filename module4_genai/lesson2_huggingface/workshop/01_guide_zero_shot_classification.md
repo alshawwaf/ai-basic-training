@@ -32,6 +32,28 @@ result = classifier(
 
 The model has never seen your labels before. It uses its general understanding of language to assess how well each label fits the input text.
 
+```
+Zero-Shot Classification Flow
+──────────────────────────────────────────────────────────────
+ Input text                          Candidate labels
+┌──────────────────────────────┐    ┌─────────────────────┐
+│ "Outbound connection from    │    │ "malicious activity" │
+│  workstation to 185.234..."  │    │ "normal traffic"     │
+└──────────────┬───────────────┘    │ "configuration change│
+               │                    └──────────┬──────────┘
+               ▼                               │
+        ┌──────────────────────────────────────┐
+        │     NLI Model (BART-large-MNLI)      │
+        │   "does text entail each label?"      │
+        └──────────────────┬───────────────────┘
+                           ▼
+                ┌──────────────────────┐
+                │ malicious activity 0.87│ ← top
+                │ normal traffic     0.09│
+                │ config change      0.04│
+                └──────────────────────┘
+```
+
 ---
 
 ## Concept: How It Works — Natural Language Inference
@@ -45,6 +67,24 @@ Hypothesis: "This is an example of malicious activity"
 ```
 
 The entailment score becomes the classification probability. This works because NLI models were trained to reason about whether one statement follows from another.
+
+```
+NLI Scoring for one label
+──────────────────────────────────────────────────────
+ Premise:    "Outbound connection to suspicious IP..."
+ Hypothesis: "This is an example of malicious activity"
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │    NLI Model    │
+                  └────────┬────────┘
+                           ▼
+              ┌─────────────────────────┐
+              │ ENTAILMENT:     0.87    │ ───► score for this label
+              │ NEUTRAL:        0.09    │
+              │ CONTRADICTION:  0.04    │
+              └─────────────────────────┘
+```
 
 ---
 

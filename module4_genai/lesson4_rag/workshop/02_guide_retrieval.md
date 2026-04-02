@@ -31,6 +31,32 @@ Retrieve: cosine_similarity(query_vector, index) → scores (N,)
 
 This is **Phase 1 + Phase 2** of the RAG pipeline — everything except the final LLM generation step.
 
+```
+Vector Retrieval — query embedding vs chunk embeddings
+──────────────────────────────────────────────────────────
+ Query: "how to detect LSASS dumping"
+              │
+        model.encode()
+              │
+              ▼
+ Query vector: [0.45, 0.12, -0.33, ...]   (1 × 384)
+              │
+              │  cosine_similarity against index
+              ▼
+ ┌──────────────────────────────────────────────────┐
+ │ Chunk  1: [0.10, -0.55, 0.22, ...]  score: 0.31 │
+ │ Chunk  2: [0.43,  0.15, -0.30, ...] score: 0.92 │ ← top match!
+ │ Chunk  3: [0.38,  0.08, -0.28, ...] score: 0.78 │
+ │ ...                                              │
+ │ Chunk  N: [-0.12, 0.60,  0.05, ...] score: 0.15 │
+ └──────────────────────────────────────────────────┘
+              │
+         argsort + top-k
+              │
+              ▼
+     Return: Chunk 2, Chunk 3, Chunk 5 ...
+```
+
 ---
 
 ## Concept: Top-k vs Threshold Retrieval
@@ -44,6 +70,20 @@ This is **Phase 1 + Phase 2** of the RAG pipeline — everything except the fina
 - May return 0 results if the query is outside the knowledge base scope
 
 For RAG, top-k=3 with threshold filtering is a good default.
+
+```
+Top-k vs Threshold Retrieval
+──────────────────────────────────────────────────────
+ All scores: [0.92, 0.78, 0.45, 0.31, 0.15, 0.08]
+
+ Top-k (k=3):          Threshold (min=0.60):
+ ┌────────────────┐     ┌────────────────┐
+ │ 0.92  Chunk 2  │     │ 0.92  Chunk 2  │
+ │ 0.78  Chunk 3  │     │ 0.78  Chunk 3  │
+ │ 0.45  Chunk 5  │ ←   └────────────────┘
+ └────────────────┘  may be irrelevant     only 2 results
+  always 3 results   but always returned   (both relevant)
+```
 
 ---
 

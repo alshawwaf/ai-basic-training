@@ -35,6 +35,20 @@ Machine learning problems divide into two broad types depending on what you are 
 
 The rule of thumb: if you can put your output on a number line and care about *how far off* you are, use regression. If you only care about *which bucket* the output falls into, use classification.
 
+```
+  Regression output                 Classification output
+
+  ◄────────────────────────►        ┌─────────┬─────────┐
+  0 ms         150 ms    300 ms     │ "attack"│ "benign"│
+       ▲                            └─────────┴─────────┘
+       │ predicted: 145.2 ms           predicted: "attack"
+       │ actual:    148.0 ms
+       │ error:       2.8 ms         Either right or wrong bucket.
+                                     No concept of "how far off."
+  Continuous number line.
+  Error = distance from truth.
+```
+
 ---
 
 ## Concept: The Server Response Time Dataset
@@ -76,6 +90,24 @@ A scatter plot of `requests_per_second` (x-axis) vs `response_time_ms` (y-axis) 
 - **Outliers** — individual points far from the main cloud; investigate before trusting them
 
 For our server data you should see a clear positive trend with some Gaussian noise around a straight line.
+
+```
+  response_time_ms
+  300 │                          · ·
+      │                       ·  ·
+  250 │                    ·  ·
+      │                 · · ·
+  200 │              ·  ·              ← points cluster around
+      │           · · ·                 a straight line
+  150 │        ·  · ·
+      │      · · ·
+  100 │   ·  · ·
+      │  · ·
+   50 │ ·
+      └──────────────────────────────
+       0   25   50   75  100  125  150
+                requests_per_second
+```
 
 ---
 

@@ -34,6 +34,25 @@ X_test_scaled  = scaler.transform(X_test)         # transforms only (no fit!)
 
 If you fit the scaler on `X_test` or the full dataset, you leak information about the test distribution into the model.
 
+```
+  Correct scaling workflow
+
+  ┌───────────────┐          ┌───────────────┐
+  │   X_train     │          │    X_test      │
+  │ (raw values)  │          │  (raw values)  │
+  └───────┬───────┘          └───────┬────────┘
+          │                          │
+   fit_transform()             transform() only
+   (learn mean/std             (use train's
+    AND scale)                  mean/std)
+          │                          │
+          ▼                          ▼
+  ┌───────────────┐          ┌───────────────┐
+  │ X_train_scaled│          │ X_test_scaled │
+  │  mean≈0 std≈1 │          │ (same scale)  │
+  └───────────────┘          └───────────────┘
+```
+
 ---
 
 ## Concept: Classification Report
@@ -77,6 +96,26 @@ Actual: Phishing          FN                       TP
 | TP | True Positive | Phishing URL correctly caught |
 
 A good phishing detector **minimises FN** (missed phishing) even at the cost of higher FP (more analyst work).
+
+```
+  Confusion matrix — security perspective
+
+                         Predicted
+                    Legit        Phishing
+                ┌────────────┬────────────┐
+  Actual Legit  │  TN = 93   │  FP = 7    │  FP: analyst wastes time
+                │  (correct) │  (false    │  investigating legit URL
+                │            │   alarm)   │
+                ├────────────┼────────────┤
+  Actual Phish  │  FN = 9    │  TP = 91   │  TP: phishing caught!
+                │  (MISSED   │  (correct) │
+                │   ATTACK!) │            │
+                └────────────┴────────────┘
+                      ▲
+                      │
+               Most dangerous cell:
+               FN = real phishing slipped through
+```
 
 ---
 

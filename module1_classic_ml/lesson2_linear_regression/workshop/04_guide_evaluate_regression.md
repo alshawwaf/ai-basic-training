@@ -50,6 +50,23 @@ A **residual** is `actual - predicted`. Examining residuals reveals:
 
 In the security context, **large positive residuals** (actual >> predicted) are the most interesting: they mean the server is slower than expected, which could indicate an attack.
 
+```
+  Residual analysis — what the gaps tell you
+
+  response_time
+      │    ·                  · ← large positive residual
+      │       ·  ·        · /     (actual >> predicted)
+      │     · ──·──── · ──/──── predicted line
+      │    · /·   ·  ·
+      │  · / ·            · ← large negative residual
+      │  /                      (actual << predicted)
+      └──────────────────────── requests_per_second
+
+  residual = actual - predicted
+  positive = server slower than expected  → investigate!
+  negative = server faster than expected  → normal variation
+```
+
 ---
 
 ## Concept: Building a Security Baseline
@@ -68,6 +85,26 @@ This is a statistical process control approach — the same idea as control char
 Normal zone:     predicted ± 2σ
 Warning zone:    predicted ± 3σ
 Alert threshold: residual > 3σ  →  possible DoS / resource exhaustion
+```
+
+```
+  Security baseline — anomaly detection via residuals
+
+  response_time
+      │
+      │  · · · · · · · · ·          ← ALERT ZONE (> 3σ above)
+      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  3σ threshold
+      │  · · · · · · · · · ·        ← WARNING ZONE
+      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  2σ threshold
+      │  · · · · · · · · · · · ·
+      │════════════════════════════  predicted (regression line)
+      │  · · · · · · · · · · · ·
+      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  -2σ
+      │  · · · · · · · · · ·
+      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  -3σ
+      └──────────────────────────── requests_per_second
+
+  Observations above the 3σ line trigger an alert.
 ```
 
 ---

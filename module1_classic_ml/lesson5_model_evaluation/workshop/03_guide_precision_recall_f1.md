@@ -27,6 +27,24 @@ These two metrics pull in opposite directions:
 - To increase recall: lower the decision threshold → more alerts → more true positives → but also more false alarms → lower precision
 - To increase precision: raise the threshold → fewer, more confident alerts → fewer true positives → lower recall
 
+```
+  Precision and Recall — which cells they use
+
+                       Predicted
+                   Benign       Attack
+              ┌────────────┬────────────┐
+  Actual      │            │    FP      │─── Precision = TP / (TP + FP)
+  Benign      │    TN      │            │    "Of all alerts, how many
+              ├────────────┼────────────┤     were real attacks?"
+  Actual      │            │    TP      │
+  Attack      │    FN      │            │─── Recall = TP / (TP + FN)
+              └────────────┴────────────┘    "Of all real attacks, how
+                                              many did we catch?"
+
+  F1 = 2 * Precision * Recall / (Precision + Recall)
+       balances both; punishes if either is low
+```
+
 ---
 
 ## Concept: F1 Score

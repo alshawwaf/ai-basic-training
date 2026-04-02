@@ -30,6 +30,27 @@ Phishing URLs share structural patterns that differ measurably from legitimate o
 
 These features are **binary** (0/1) or **integer counts** — all numeric, so sklearn can use them directly without encoding.
 
+```
+  From a raw URL to a feature vector
+
+  Input:  http://192.168.1.1/secure-login-paypal@evil.com/redirect?token=abc123
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  Feature extraction                                      │
+  │                                                          │
+  │  url_length ────────► 62                                 │
+  │  num_dots ──────────► 4                                  │
+  │  has_at_symbol ─────► 1                                  │
+  │  uses_https ────────► 0                                  │
+  │  num_subdomains ────► 3                                  │
+  │  has_ip_address ────► 1                                  │
+  │  num_hyphens ───────► 2                                  │
+  │  path_length ───────► 31                                 │
+  └──────────────────────────────────────────────────────────┘
+
+  Output: [62, 4, 1, 0, 3, 1, 2, 31]  ← one row for the model
+```
+
 ---
 
 ## Concept: Synthetic Datasets
@@ -67,6 +88,20 @@ Plotting the distribution of each feature split by class reveals which features 
 - **Binary features** → use bar charts or proportion tables
 
 A quick technique: `df.groupby('is_phishing').mean()` shows the average feature value for each class — a table that immediately reveals which features differ most between phishing and legitimate.
+
+```
+  Feature distributions — well-separated vs overlapping
+
+  url_length                        uses_https
+  (well-separated = strong)         (overlapping = weak)
+
+  Legit:  ████████░░░░░░░░          Legit:  ░░░░░████████████
+  Phish:  ░░░░░░░░░████████         Phish:  ░░░░░░░░░████████
+          ◄── short  long ──►               ◄── no    yes ──►
+
+  Big gap between peaks             Peaks overlap heavily
+  → strong predictor                → weaker predictor alone
+```
 
 ---
 

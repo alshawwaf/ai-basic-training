@@ -23,6 +23,22 @@ For simple linear regression (one feature):
 y_predicted = slope * x + intercept
 ```
 
+```
+  What .fit() finds — the best line through the data
+
+  response_time
+  300 │             ·  ·       · ·
+      │          ·  · ·  ·  ·
+  200 │       · ·─────────────────── ← best-fit line
+      │    · ·───·  ·
+  100 │  ·───· ·          residual = actual - predicted
+      │──·                    │
+      └───────────────────────┼──── requests_per_second
+                              ▼
+              .fit() minimises the sum of all
+              squared residuals (vertical gaps)
+```
+
 Mathematically, sklearn solves:
 
 ```
@@ -53,6 +69,28 @@ response_time_ms = slope * requests_per_second + intercept
 - Each additional request per second adds ~1.82 ms
 - At 100 rps: 1.82 × 100 + 29.5 = 211.5 ms predicted
 
+```
+  response_time = 1.82 * requests_per_second + 29.5
+
+  ms
+  350 │                              /
+      │                            /
+  300 │                          /  ← slope = 1.82 ms per extra rps
+      │                        /
+  250 │                      /
+      │                    /
+  200 │                  /
+      │                /
+  150 │              /
+      │            /
+  100 │          /
+      │        /
+   50 │      /
+  29.5│..../ ← intercept (baseline overhead at 0 rps)
+      └──────────────────────────────────
+       0    25   50   75  100  125  150  rps
+```
+
 This is far more interpretable than a black-box model — and that interpretability is why linear regression remains a valuable baseline.
 
 ---
@@ -70,6 +108,16 @@ predicted_ms = model.predict(new_load)
 You can also predict for the entire test set:
 ```python
 y_pred = model.predict(X_test)    # returns an array of predictions
+```
+
+```
+  model.predict() pipeline
+
+  ┌────────────────┐     ┌─────────────────────────┐     ┌──────────────┐
+  │   New X value  │────►│ slope * X + intercept    │────►│  Prediction  │
+  │   [[150]]      │     │ 1.82 * 150 + 29.5       │     │   302.5 ms   │
+  └────────────────┘     └─────────────────────────┘     └──────────────┘
+       input                  learned equation               output
 ```
 
 The predictions are point estimates — no uncertainty bounds. Later you will learn about prediction intervals.

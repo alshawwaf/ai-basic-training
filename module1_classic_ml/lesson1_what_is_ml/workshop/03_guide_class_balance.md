@@ -30,6 +30,19 @@ This is the rule in security ML, not the exception:
 
 You will almost never encounter a naturally balanced security dataset in the real world. You must always check.
 
+```
+  Balanced dataset (digits)       Imbalanced dataset (intrusion)
+
+  Class 0: ████████  178          Normal:  ████████████████████  9900
+  Class 1: ████████  178          Attack:  █  100
+  Class 2: ████████  177
+  ...                             ratio = 99 : 1
+  Class 9: ████████  180
+
+  ratio ≈ 1 : 1                  The model can "cheat" by always
+                                 predicting normal → 99% accuracy
+```
+
 ---
 
 ## Concept: The Naive Accuracy Trap
@@ -48,6 +61,18 @@ If 95% of your data is labelled "normal," this strategy scores 95% — and catch
 This is called the **naive baseline** — the score an unintelligent model achieves by always predicting the majority class. Any model you train must score meaningfully higher than this to be worth using.
 
 The trap is easy to fall into:
+
+```
+  The Accuracy Trap — step by step
+
+  Train model ──► See 95% accuracy ──► "Looks great!" ──► Deploy
+                                                            │
+                        ┌───────────────────────────────────┘
+                        ▼
+                  Every attack goes undetected
+                  Recall on attacks = 0%
+```
+
 - You train a model
 - You see 95% accuracy
 - You conclude the model is excellent

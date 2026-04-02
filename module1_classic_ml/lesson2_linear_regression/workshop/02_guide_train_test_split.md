@@ -38,6 +38,26 @@ Full dataset (500 rows)
 └── Test set      (20% = 100 rows)  ← model evaluated on this, ONCE, at the end
 ```
 
+```
+  ┌──────────────────────────────────────────────────┐
+  │                Full dataset (500 rows)            │
+  └──────────────────────────────────────────────────┘
+                         │
+              train_test_split(test_size=0.2)
+                         │
+           ┌─────────────┴──────────────┐
+           ▼                            ▼
+  ┌────────────────────────┐   ┌──────────────┐
+  │  Training set (400)    │   │ Test set(100)│
+  │  model.fit(X_train,    │   │ LOCKED until │
+  │           y_train)     │   │ final eval   │
+  └────────────────────────┘   └──────────────┘
+           │                            │
+           ▼                            ▼
+     Model learns               model.score(X_test,
+     patterns here                       y_test)
+```
+
 sklearn provides `train_test_split()`:
 
 ```python
@@ -80,6 +100,24 @@ Data leakage means information from the test set "leaks" into the training proce
 | Label leakage | Features derived from the target | Audit feature construction |
 
 In a security context, data leakage can make a model look 99% accurate on your benchmark but fail completely on live traffic.
+
+```
+  Data leakage — what NOT to do
+
+  ┌─────────────────────────────┐
+  │      Full dataset           │
+  │  ┌────────┐  ┌──────────┐  │
+  │  │ Train  │  │  Test    │  │
+  │  └───┬────┘  └────┬─────┘  │
+  └──────┼────────────┼────────┘
+         │            │
+    scaler.fit()  scaler.fit()    ← WRONG: test stats leak in
+         │            │
+    ┌────▼────────────▼────┐
+    │  Model sees test     │      Result: 99% accuracy in lab,
+    │  distribution info   │      fails on real traffic
+    └──────────────────────┘
+```
 
 ---
 

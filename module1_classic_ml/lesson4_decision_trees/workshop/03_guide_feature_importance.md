@@ -23,6 +23,21 @@ feature_importances_ = [0.52, 0.28, 0.09, 0.07, 0.03, 0.01]
                   most important                  least important
 ```
 
+```
+  Feature importance — which features drive predictions
+
+  connection_rate   ████████████████████████████  0.524
+  bytes_sent        ██████████████               0.283
+  unique_dest_ports ██████                       0.107
+  duration_seconds  ███                          0.052
+  failed_conns      ██                           0.024
+  bytes_received    █                            0.010
+                    └──────────────────────────┘
+                    0.0        0.25         0.5
+
+  Sum = 1.0 (importances are normalised)
+```
+
 This is also called the **Mean Decrease in Impurity (MDI)**. A feature that appears near the root (where it improves the split most) accumulates more importance.
 
 **What it does NOT tell you:**
@@ -59,6 +74,21 @@ model_small = DecisionTreeClassifier(max_depth=4).fit(X_train_small, y_train)
 ```
 
 If the accuracy drop is small (< 2%), the simpler model is often preferred in production.
+
+```
+  Feature selection — keep top-3, retrain
+
+  Full model (6 features)          Top-3 model (3 features)
+  ┌────────────────────────┐       ┌────────────────────────┐
+  │ connection_rate    0.52│       │ connection_rate    0.52│
+  │ bytes_sent         0.28│──────►│ bytes_sent         0.28│
+  │ unique_dest_ports  0.11│       │ unique_dest_ports  0.11│
+  │ duration_seconds   0.05│       └────────────────────────┘
+  │ failed_connections 0.02│        Accuracy: 95.1% (-1.1%)
+  │ bytes_received     0.01│
+  └────────────────────────┘       Simpler, faster, nearly
+   Accuracy: 96.2%                 as accurate → prefer this
+```
 
 ---
 

@@ -47,6 +47,19 @@ And it is actually fed this — a flat, single row:
 [0, 0, 5, 13, 9, 1, 0, 0, 0, 0, 13, 15, 10, 15, 5, 0, 0, 3, 15, 2, ...]
 ```
 
+```
+  How the 8x8 image becomes a flat input row:
+
+  8x8 grid                     flatten                 model input
+  ┌─────────────────┐          ───────►     ┌─────────────────────────────────┐
+  │ 0  0  5 13  9  1│                       │ 0  0  5 13  9  1  0  0  0  0  │
+  │ 0  0 13 15 10 15│   row 0 ++ row 1      │13 15 10 15  5  0  0  3 15  2  │
+  │ 0  3 15  2  0 11│   ++ row 2 ++ ...     │ 0 11  8  0 ... (64 values)    │
+  │ ...             │                       └─────────────────────────────────┘
+  └─────────────────┘                         one row = one sample
+    shape: (8, 8)                             shape: (64,)
+```
+
 64 numbers. That is the complete input. No concept of "up", "down", "left", "right." No idea that these are pixels. No visual intuition of any kind.
 
 The model learns to map these 64 numbers to the correct digit label purely through exposure to thousands of labelled examples. This is both the power and the limitation of classical ML.
@@ -76,6 +89,19 @@ The table below maps the digits domain to the security domain:
 | Class balance | ~178 per class | Often 99:1 or worse |
 
 The algorithm — logistic regression, decision tree, random forest — operates identically regardless of domain. You load the numbers, split them, fit the model, evaluate. The domain expertise comes in when you decide which numbers to include and how to engineer them.
+
+```
+  The universal ML pipeline — same for any domain
+
+  ┌──────────────┐     ┌───────────┐     ┌──────────┐     ┌────────────┐
+  │  Raw data    │────►│ Numeric   │────►│  Model   │────►│ Prediction │
+  │ (images,     │     │ features  │     │ .fit()   │     │ .predict() │
+  │  logs, URLs) │     │ (flat row │     │          │     │            │
+  │              │     │  of nums) │     │          │     │ digit: 0   │
+  └──────────────┘     └───────────┘     └──────────┘     └────────────┘
+       domain              math              math             domain
+      knowledge          agnostic          agnostic         knowledge
+```
 
 ---
 

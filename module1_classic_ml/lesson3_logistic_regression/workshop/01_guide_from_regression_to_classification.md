@@ -48,6 +48,27 @@ Where `z = w₀ + w₁x₁ + w₂x₂ + ...` is the linear combination of featur
 
 The sigmoid produces an **S-curve**: near 0 for very negative z, near 1 for very positive z, passing through 0.5 at z=0.
 
+```
+  The Sigmoid (S-curve)
+
+  P(phishing)
+  1.0 │                          ─────────
+      │                        /
+  0.8 │                      /
+      │                    /
+  0.5 │─ ─ ─ ─ ─ ─ ─ ─ ×  ← decision boundary (default threshold)
+      │                /
+  0.2 │              /
+      │            /
+  0.0 │───────────
+      └────────────────────────────────
+      -5    -3    -1    0    1    3    5
+                     z (linear score)
+
+  z < 0 → P < 0.5 → predict legitimate
+  z > 0 → P > 0.5 → predict phishing
+```
+
 ---
 
 ## Concept: From Probability to Class Label
@@ -78,6 +99,18 @@ Despite the name, logistic regression is a **classification** algorithm. It:
 3. Classifies based on threshold: `1 if p >= 0.5 else 0`
 
 The model learns the weights `w` during training by maximising the likelihood of the observed labels — a process called **maximum likelihood estimation** (equivalent to minimising log-loss).
+
+```
+  Logistic regression pipeline
+
+  ┌──────────────────┐     ┌─────────────────┐     ┌───────┐     ┌───────────┐
+  │ Features         │     │ Linear score    │     │Sigmoid│     │ Decision  │
+  │ url_length=120   │────►│ z = w0 + w1*120 │────►│ σ(z)  │────►│ p >= 0.5? │
+  │ num_dots=5       │     │     + w2*5 +... │     │= 0.89 │     │  YES → 1  │
+  │ has_at=1         │     │     = 2.1       │     │       │     │ (phishing)│
+  └──────────────────┘     └─────────────────┘     └───────┘     └───────────┘
+       raw inputs            weighted sum          probability      class label
+```
 
 ---
 

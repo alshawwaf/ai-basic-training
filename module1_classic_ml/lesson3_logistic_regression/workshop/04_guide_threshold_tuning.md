@@ -41,6 +41,26 @@ When you raise the threshold:
 
 This is a **fundamental tradeoff** — you cannot have both perfect precision and perfect recall simultaneously (unless your model is perfect).
 
+```
+  The precision-recall tradeoff as you slide the threshold
+
+  threshold = 0.2 (low)              threshold = 0.7 (high)
+
+  ┌────────────────────┐             ┌────────────────────┐
+  │ Flag as phishing   │             │ Flag as phishing   │
+  │ if P >= 0.2        │             │ if P >= 0.7        │
+  │                    │             │                    │
+  │ Recall:   HIGH     │             │ Recall:   LOW      │
+  │ (catch almost all) │             │ (miss some)        │
+  │                    │             │                    │
+  │ Precision: LOW     │             │ Precision: HIGH    │
+  │ (many false alarms)│             │ (few false alarms) │
+  └────────────────────┘             └────────────────────┘
+
+       ◄── lower threshold    higher threshold ──►
+       more alerts, more FP   fewer alerts, more FN
+```
+
 | Priority | Preferred threshold | Effect |
 |---------|--------------------|-|
 | Catch every phishing URL (security-first) | Low (0.2–0.3) | High recall, lower precision |

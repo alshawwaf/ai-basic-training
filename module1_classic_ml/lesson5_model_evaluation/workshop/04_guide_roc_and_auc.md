@@ -29,6 +29,29 @@ At every possible threshold, you get one (FPR, TPR) point. Connecting all those 
 
 A good classifier's curve bulges toward the upper-left corner.
 
+```
+  ROC curve — what it looks like
+
+  TPR (Recall)
+  1.0 │ ·  ·  ·  ·  ·  ─────── perfect (AUC=1.0)
+      │              /·
+  0.8 │           /  ·
+      │         /   ·    ← good model (AUC=0.95)
+  0.6 │       /   ·
+      │     /    ·
+  0.4 │    /   ·  ·  ·  ·  ·  · random (AUC=0.5)
+      │   /  ·
+  0.2 │  / ·           ← goal: curve hugs upper-left
+      │ /·
+  0.0 │·
+      └──────────────────────────
+      0.0  0.2  0.4  0.6  0.8  1.0
+               FPR (False Positive Rate)
+
+  (0,1) = perfect: all attacks caught, zero false alarms
+  diagonal = random: no better than flipping a coin
+```
+
 ---
 
 ## Concept: AUC — Area Under the ROC Curve
@@ -54,6 +77,19 @@ AUC is the area under the ROC curve, ranging from 0 to 1.
 AUC evaluates the model across **all possible thresholds**, not just the default 0.5. This means it is not affected by class imbalance — a model that always predicts "benign" has AUC = 0.5, not 0.95.
 
 AUC is threshold-independent, making it useful for comparing models before you have decided on an operational threshold.
+
+```
+  Why AUC beats accuracy for imbalanced data
+
+  Model A (DummyClassifier):       Model B (LogisticRegression):
+  Always predicts "benign"         Learns real patterns
+
+  Accuracy: 0.95  ← misleading    Accuracy: 0.98
+  AUC:      0.50  ← exposes it    AUC:      0.98  ← genuine skill
+
+  AUC = 0.5 means "no better than random"
+  regardless of class imbalance
+```
 
 ---
 

@@ -107,6 +107,24 @@ That bundle is called a `Bunch` — a container object that works like a Python 
 
 `digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8×8 grid).
 
+```
+  The Bunch object — what load_digits() returns
+
+  digits (Bunch)
+  ┌──────────────────────────────────────────────────┐
+  │  .data          ndarray (1797, 64)               │ ← flat rows for ML
+  │  .target        ndarray (1797,)                  │ ← labels 0–9
+  │  .images        ndarray (1797, 8, 8)             │ ← 8x8 grids for plotting
+  │  .target_names  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  │
+  │  .DESCR         "Optical Recognition of..."      │
+  └──────────────────────────────────────────────────┘
+
+  .data[0]   →  [0, 0, 5, 13, 9, 1, ... ]   64 values (flat)
+  .images[0] →  [[0,0,5,13,9,1,0,0],         8x8 grid (same data,
+                  [0,0,13,15,10,15,5,0],       different shape)
+                  ...]
+```
+
 > **Want to go deeper?** [NumPy ndarray — Wikipedia](https://en.wikipedia.org/wiki/NumPy)
 
 ---
@@ -127,6 +145,27 @@ The pattern is the same for every dataset you will ever load:
 ```python
 df = pd.DataFrame(raw_data, columns=column_names)
 df["target"] = labels
+```
+
+```
+  Wrapping raw arrays into a DataFrame
+
+  digits.data (ndarray)              digits.target (ndarray)
+  ┌──────────────────────┐           ┌───┐
+  │ 0  0  5 13 ... (×64) │           │ 0 │
+  │ 0  0  0 12 ... (×64) │           │ 1 │
+  │ ...   (1797 rows)    │           │...│
+  └──────────┬───────────┘           └─┬─┘
+             │                         │
+             ▼                         ▼
+  ┌──────────────────────────────────────┐
+  │ DataFrame  (1797 rows × 65 cols)     │
+  │ pixel_0  pixel_1 ... pixel_63 target │
+  │    0        0    ...    0       0    │
+  │    0        0    ...    0       1    │
+  │   ...                               │
+  └──────────────────────────────────────┘
+     64 feature columns + 1 target column
 ```
 
 > **Want to go deeper?** [pandas — Wikipedia](https://en.wikipedia.org/wiki/Pandas_(software))

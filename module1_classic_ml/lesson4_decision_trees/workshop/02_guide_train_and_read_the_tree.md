@@ -76,6 +76,28 @@ class = benign              ← majority class at this node
 
 The **root node** is the first split — the single most informative feature/threshold. Nodes near the root are always more important than nodes near the leaves.
 
+```
+  Reading the tree — node anatomy
+
+            ┌─────────────────────────────┐
+            │ connection_rate <= 55.3      │ ← split question
+            │ gini = 0.423                │ ← impurity
+            │ samples = 800               │ ← how many reached here
+            │ value = [310, 290, 90, 110] │ ← class counts
+            │ class = benign              │ ← majority class
+            └──────────┬──────────────────┘
+                       │
+            ┌──── YES ─┴─ NO ────┐
+            ▼                    ▼
+      ┌───────────┐        ┌───────────┐
+      │ Left child│        │Right child│
+      │ (rate<=55)│        │ (rate>55) │
+      └───────────┘        └───────────┘
+
+  YES branch = feature <= threshold
+  NO  branch = feature >  threshold
+```
+
 ---
 
 ## Concept: Interpreting Rules in a Security Context

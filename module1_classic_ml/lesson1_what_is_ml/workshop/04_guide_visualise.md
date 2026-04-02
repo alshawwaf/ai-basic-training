@@ -128,6 +128,24 @@ The model has to learn that 1 is narrow, 7 is wider at top.
 
 Pairs with the most similar prototypes will produce the highest confusion rates in the final model. You can predict this before training anything — and verify it in Lesson 1.5.
 
+```
+  Average images → predict model confusion
+
+  All images         mean(axis=0)        Compare prototypes
+  of digit 3         per class
+  ┌──────────┐       ┌──────┐
+  │  sample 1│       │      │
+  │  sample 2│──────►│proto │            proto(3) vs proto(8)
+  │  sample 3│ avg   │  3   │──────────► difference = LOW
+  │  ...     │       │      │            → model will confuse 3 and 8
+  └──────────┘       └──────┘
+
+  All images         ┌──────┐            proto(1) vs proto(0)
+  of digit 8 ──────► │proto │──────────► difference = HIGH
+                     │  8   │            → model will separate easily
+                     └──────┘
+```
+
 ---
 
 ## What Each Task Asks You to Do

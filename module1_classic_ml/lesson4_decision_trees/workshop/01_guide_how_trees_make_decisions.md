@@ -63,6 +63,28 @@ Gain = Gini(parent) - [weighted average of Gini(left child), Gini(right child)]
 
 A high information gain means the split dramatically reduces uncertainty. The tree evaluates every possible feature and every possible threshold, then picks the (feature, threshold) pair with the highest gain.
 
+```
+  Information gain from splitting on connection_rate <= 55
+
+  PARENT (100 samples)                Gini = 0.480
+  ┌──────────────────────────────┐
+  │  60 benign     40 DoS       │
+  └──────────────┬───────────────┘
+                 │
+      connection_rate <= 55?
+        ┌────────┴────────┐
+        ▼                 ▼
+  LEFT (60 samples)    RIGHT (40 samples)
+  ┌──────────────┐    ┌──────────────┐
+  │ 58 benign    │    │  2 benign    │
+  │  2 DoS       │    │ 38 DoS       │
+  │ Gini = 0.065 │    │ Gini = 0.095 │
+  └──────────────┘    └──────────────┘
+       almost pure         almost pure
+
+  Gain = 0.480 - (0.6*0.065 + 0.4*0.095) = 0.403  ← great split!
+```
+
 **Security intuition:** The feature `connection_rate` splits benign (low rate) from DoS (very high rate) cleanly → high Gini gain. The feature `src_port` is more uniformly distributed → low gain.
 
 ---

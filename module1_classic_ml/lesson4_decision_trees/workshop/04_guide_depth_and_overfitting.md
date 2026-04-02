@@ -30,6 +30,24 @@ Every additional level in a decision tree allows the model to create finer and f
 
 An unlimited decision tree will achieve ~100% training accuracy by creating a separate leaf for every unique combination of feature values in the training set. But when tested on new data, those hyper-specific rules generalise poorly.
 
+```
+  Underfit vs Good fit vs Overfit
+
+  Depth=1 (underfit)     Depth=5 (good)        Depth=15 (overfit)
+  ┌──────────┐          ┌──────────┐           ┌──────────┐
+  │ One split │          │ Captures │           │ Memorises│
+  │ only      │          │ real     │           │ every    │
+  │           │          │ patterns │           │ training │
+  │ Too       │          │          │           │ sample   │
+  │ simple    │          │ Ignores  │           │          │
+  │           │          │ noise    │           │ Fails on │
+  │           │          │          │           │ new data │
+  └──────────┘          └──────────┘           └──────────┘
+  Train: 65%             Train: 99%             Train: 100%
+  Test:  65%             Test:  97%             Test:  94%
+  Gap:   0%              Gap:   2%              Gap:   6%
+```
+
 **Signs of overfitting:**
 - Training accuracy >> Test accuracy
 - The gap grows as depth increases

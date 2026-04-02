@@ -69,6 +69,19 @@ Low std   →  the feature is nearly constant            →  little or no infor
 Zero std  →  the feature never changes                 →  completely useless
 ```
 
+```
+  Feature usefulness spectrum
+
+  std = 0              std = 4.5            std = 16
+  │                    │                    │
+  ▼                    ▼                    ▼
+  ┌─────────────────────────────────────────────┐
+  │  USELESS  │    SOME SIGNAL    │  HIGH SIGNAL  │
+  └─────────────────────────────────────────────┘
+  pixel_0              pixel_32             (hypothetical)
+  always 0             varies 0–16          max variation
+```
+
 A feature that is always the same value for every sample tells the model nothing at all. When you are working with real data, removing zero-variance features before training is standard practice.
 
 In this dataset the corner pixels (pixel_0, pixel_8, pixel_63, pixel_55) are always white — they are the corners of a hand-drawn digit. You could drop them safely.
@@ -113,6 +126,22 @@ Feature C:  syn_flag_ratio     range 0.0 – 1.0
 ```
 
 An algorithm using Euclidean distance will be dominated entirely by `bytes_sent` — one feature will overwhelm all others simply because its numbers are bigger. This is not what you want.
+
+```
+  Distance dominated by bytes_sent alone:
+
+  Feature A (bytes_sent):       0 ─────────────────────────── 2,000,000,000
+  Feature B (unique_ports):     0 ───── 65,535
+  Feature C (syn_flag_ratio):   0 ─ 1.0
+
+  ┌──────────────────────────────────────────────────┐
+  │  Point 1: [1000000000, 443, 0.8]                 │
+  │  Point 2: [1000000500,  80, 0.1]                 │
+  │                                                  │
+  │  Euclidean distance ≈ 500  (bytes_sent dominates)│
+  │  port and ratio differences are invisible         │
+  └──────────────────────────────────────────────────┘
+```
 
 The fix is **normalisation** (also called scaling) — you will apply it properly in Module 2. For now, notice the problem exists.
 

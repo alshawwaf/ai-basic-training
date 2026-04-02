@@ -159,10 +159,34 @@ Wrapping it in a pandas `DataFrame` gives you:
 
 - **Named columns** — `pixel_0`, `pixel_1`, ... so you can refer to features by name
 - **Easy inspection** — `.head()`, `.describe()`, `.value_counts()` all work
-- **Filtering** — `df[df["target"] == 3]` to slice to one class
+- **Filtering** — pull out exactly the rows you need (see example below)
 - **Consistent interface** — most scikit-learn functions accept DataFrames directly
 
-The pattern is the same for every dataset you will ever load:
+**How filtering works:**
+
+```python
+df[df["target"] == 3]
+```
+
+Read this from the inside out. `df["target"]` grabs the target column. `== 3` compares every value to 3 and produces a column of `True`/`False`. Wrapping that back in `df[...]` keeps only the rows where the result is `True`:
+
+```
+df["target"]      == 3       df[df["target"] == 3]
+
+  0                False
+  1                False     (skipped)
+  2                False     (skipped)
+  3        -->     True   -->  row kept
+  4                False     (skipped)
+  3                True   -->  row kept
+  ...                        ...
+```
+
+This is how you slice a dataset down to a single class — useful when you want to inspect or plot just the "3" digits, for example.
+
+**How column names appear:**
+
+The raw ndarray has no column names — just numbered positions. When you pass `columns=[...]` to `pd.DataFrame()`, pandas attaches a name to each column. After that, you can refer to columns by name instead of by number:
 
 ```python
 df = pd.DataFrame(raw_data, columns=column_names)
@@ -172,24 +196,30 @@ df["target"] = labels
 ```
 digits.data (ndarray)                   digits.target (ndarray)
 ┌───────────────────────────┐           ┌───┐
-│  0  0  5 13  9 ...  (×64) │           │ 0 │
-│  0  0  0 12  6 ...  (×64) │           │ 1 │
+│  0  0  5 13  9 ...  (x64) │           │ 0 │
+│  0  0  0 12  6 ...  (x64) │           │ 1 │
 │  ...      (1797 rows)     │           │...│
 └─────────────┬─────────────┘           └─┬─┘
+              │                           │
+              │  columns=["pixel_0", ...] │
+              │  df["target"] = labels    │
               │       pd.DataFrame()      │
               └────────────┬──────────────┘
                            ▼
 ┌─────────────────────────────────────────────┐
-│  DataFrame  (1797 rows × 65 columns)        │
+│  DataFrame  (1797 rows x 65 columns)        │
 │                                             │
 │  pixel_0  pixel_21  ...  pixel_63   target  │
-│  ──────   ────────       ────────   ──────  │
+│  ------   --------       --------   ------  │
 │     0.0      11.0   ...     0.0        0    │
 │     0.0       6.0   ...     0.0        1    │
 │     0.0      16.0   ...     0.0        2    │
 │    ...                                      │
 └─────────────────────────────────────────────┘
-  ◄──── 64 feature columns ────►  + 1 target
+  <---- 64 feature columns ---->  + 1 target
+
+columns= gave each of the 64 data columns a name (pixel_0 ... pixel_63).
+df["target"] = added a 65th column with the labels.
 ```
 
 > **Want to go deeper?** [pandas — Wikipedia](https://en.wikipedia.org/wiki/Pandas_(software))

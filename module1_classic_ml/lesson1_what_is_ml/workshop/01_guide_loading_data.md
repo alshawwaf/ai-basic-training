@@ -207,9 +207,9 @@ digits.data (ndarray)                   digits.target (ndarray)
 │  ...      (1797 rows)     │           │...│
 └─────────────┬─────────────┘           └─┬─┘
               │                           │
-              │  columns=["pixel_0", ...]       │
-              │  df["target"] = digits.target   │
-              │         pd.DataFrame()          │
+              │  64 pixel columns         │
+              │  + target column          │
+              │       pd.DataFrame()      │
               └────────────┬──────────────┘
                            ▼
 ┌─────────────────────────────────────────────┐

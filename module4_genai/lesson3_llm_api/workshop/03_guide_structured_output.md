@@ -1,6 +1,6 @@
 # Exercise 3 — Structured JSON Output
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

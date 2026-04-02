@@ -1,6 +1,6 @@
 # Exercise 3 — The Full RAG Pipeline
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

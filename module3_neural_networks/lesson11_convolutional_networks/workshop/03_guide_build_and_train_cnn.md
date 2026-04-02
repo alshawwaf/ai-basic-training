@@ -1,6 +1,6 @@
 # Exercise 3 — Build and Train a CNN
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ## What You Will Learn
 

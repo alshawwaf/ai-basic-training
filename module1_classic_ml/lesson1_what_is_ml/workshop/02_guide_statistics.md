@@ -1,6 +1,6 @@
 # Exercise 2 — Shape, Statistics, and Missing Values
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

@@ -1,6 +1,6 @@
 # Exercise 1 — Loading a Dataset
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

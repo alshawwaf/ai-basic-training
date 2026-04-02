@@ -1,6 +1,6 @@
 # Exercise 1 — Your First LLM API Call
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

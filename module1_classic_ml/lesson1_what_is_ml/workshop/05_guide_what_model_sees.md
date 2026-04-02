@@ -1,6 +1,6 @@
 # Exercise 5 — What the Model Actually Sees
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

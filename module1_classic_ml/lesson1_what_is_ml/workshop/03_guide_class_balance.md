@@ -1,6 +1,6 @@
 # Exercise 3 — Class Balance: The Silent Model Killer
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

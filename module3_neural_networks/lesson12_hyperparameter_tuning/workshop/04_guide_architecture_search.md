@@ -1,6 +1,6 @@
 # Exercise 4 — Architecture Search
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ---
 

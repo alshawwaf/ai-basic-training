@@ -1,6 +1,6 @@
 # Exercise 1 — Why Dense Fails on Images
 
-> Read this guide fully before opening the exercise file.
+> Read this guide fully before opening the lab.
 
 ## What You Will Learn
 

@@ -106,30 +106,17 @@ That bundle is called a `Bunch` — a container object that works like a Python 
 
 Most of the fields inside are **ndarray** objects. An `ndarray` (short for *n-dimensional array*) is NumPy's core data type — a grid of numbers that can have any number of dimensions. A 1D ndarray is a list of numbers, a 2D ndarray is a table (rows and columns), and a 3D ndarray is a stack of tables. All ML data flows through ndarrays because they are fast and memory-efficient.
 
-| Field | Type | Contents |
-|-------|------|----------|
-| `digits.data` | ndarray (1797, 64) | Raw pixel values — one row per image, one column per pixel |
-| `digits.target` | ndarray (1797,) | Correct label (0-9) for each image |
-| `digits.images` | ndarray (1797, 8, 8) | Same pixel values arranged as 8x8 grids — only used for plotting |
+| Field | Type | What it is |
+|:---|:---|:---|
+| `digits.data` | ndarray (1797, 64) | Raw pixel values — one row per image, one column per pixel. **Feed this to the model.** |
+| `digits.target` | ndarray (1797,) | Correct label (0-9) for each image. **These are the answers.** |
+| `digits.images` | ndarray (1797, 8, 8) | Same pixel values arranged as 8x8 grids — **only used for plotting.** |
 | `digits.target_names` | ndarray ([0..9]) | The list of all unique class labels |
 | `digits.DESCR` | str | Full text description of the dataset |
 
 `digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8x8 grid).
 
 ```
-digits = load_digits()
-
-digits (Bunch)
-┌──────────────────────────────────────────────────────────┐
-│  Field             Type / Shape          What it is      │
-├──────────────────────────────────────────────────────────┤
-│  .data             ndarray (1797, 64)    pixel values    │  ← flat rows - feed this to the model
-│  .target           ndarray (1797,)       labels 0-9      │  ← correct answers
-│  .images           ndarray (1797,8,8)    pixel grids     │  ← 8x8 shape - use for plotting
-│  .target_names     [0, 1, 2, ... 9]      class list      │
-│  .DESCR            string                description     │
-└──────────────────────────────────────────────────────────┘
-
 Same pixels, two shapes:
 
 .data[0]    →  [ 0, 0, 5, 13, 9, 1, 0, 0, 0, 0, ... ]    64 values in a flat row

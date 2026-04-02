@@ -98,14 +98,14 @@ print(f"Columns: pixel_0 ... pixel_63, target  ({df.shape[1]} total)")
 **Why these columns?** Each image is an 8x8 grid — 64 pixels numbered left-to-right, top-to-bottom. Pixels at the edges (0, 7, 56, 63) are almost always zero because handwriting sits in the centre. Pixels 21, 28, 36, and 43 are in the middle rows where the ink actually is, so they show meaningful variation across different digits.
 
 ```
- 0  1  2  3  4  5  6  7        ← top row (mostly blank)
- 8  9 10 11 12 13 14 15
-16 17 18 19 20 [21] 22 23      ← pixel 21
-24 25 26 27 [28] 29 30 31      ← pixel 28
-32 33 34 35 [36] 37 38 39      ← pixel 36
-40 41 42 43 [44] 45 46 47      ← pixel 43 (one row up)
-48 49 50 51 52 53 54 55
-56 57 58 59 60 61 62 63        ← bottom row (mostly blank)
+ 0   1   2   3   4   5   6   7      ← top row (mostly blank)
+ 8   9  10  11  12  13  14  15
+16  17  18  19  20 [21] 22  23      ← pixel 21
+24  25  26  27 [28] 29  30  31      ← pixel 28
+32  33  34  35 [36] 37  38  39      ← pixel 36
+40  41  42 [43] 44  45  46  47      ← pixel 43
+48  49  50  51  52  53  54  55
+56  57  58  59  60  61  62  63      ← bottom row (mostly blank)
 ```
 
 Run your file. You should see:

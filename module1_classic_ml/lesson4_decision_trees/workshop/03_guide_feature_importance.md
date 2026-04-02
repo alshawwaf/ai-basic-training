@@ -50,7 +50,7 @@ This is also called the **Mean Decrease in Impurity (MDI)**. A feature that appe
 ## Concept: Why These Features Matter for Network Security
 
 | Feature | Expected importance | Reason |
-|---------|--------------------|-|
+|:---|:---|:---|
 | `connection_rate` | Very high | DoS is characterised by extreme rate; benign and scans are much lower |
 | `unique_dest_ports` | High | Port scanning contacts many ports; benign and exfil use very few |
 | `bytes_sent` | High | Exfiltration sends massive amounts; port scans send almost nothing |

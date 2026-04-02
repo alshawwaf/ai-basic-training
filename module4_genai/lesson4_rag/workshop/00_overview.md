@@ -1,7 +1,7 @@
 # Lesson 4.4 — Workshop Guide
 ## Retrieval-Augmented Generation (RAG)
 
-> **Read first:** [../4_retrieval_augmented_generation.md](../4_retrieval_augmented_generation.md) — theory and concepts
+> **Read first:** [../notes.md](../notes.md) — theory and concepts
 > **Reference solutions:** Each exercise has a matching `_solution_` file (e.g. `01_solution_chunking.py`) — open only after finishing the exercise
 
 ---

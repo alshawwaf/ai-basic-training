@@ -138,10 +138,14 @@ Call `model.count_params()` after `model.compile()`, not before building the mod
 
 ---
 
+## Now Open the Lab
+
+[04_lab_architecture_search.md](04_lab_architecture_search.md)
+
+---
+
 ## Workshop Complete
 
 You have now tuned the three most important hyperparameters: learning rate, batch size, and architecture. This knowledge applies to every neural network you train from this point forward.
-
-Open the matching `_solution_` file for each exercise to compare your code, then move to:
 
 **[Module 4 — Generative AI](../../../module4_genai/lesson1_how_llms_work/workshop/00_overview.md)**

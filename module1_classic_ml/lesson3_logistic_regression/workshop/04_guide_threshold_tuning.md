@@ -62,7 +62,7 @@ This is a **fundamental tradeoff** — you cannot have both perfect precision an
 ```
 
 | Priority | Preferred threshold | Effect |
-|---------|--------------------|-|
+|:---|:---|:---|
 | Catch every phishing URL (security-first) | Low (0.2–0.3) | High recall, lower precision |
 | Minimise analyst alert fatigue | High (0.6–0.7) | High precision, lower recall |
 | Balance both | Medium (0.4–0.5) | Moderate recall and precision |

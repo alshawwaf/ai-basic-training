@@ -50,6 +50,26 @@ Feature engineering is the process of translating raw data into a numerical repr
 2. Is in a format sklearn can process
 3. Is robust to variations (different port numbers, new IPs, etc.)
 
+```
+Raw log line (strings, mixed types — sklearn rejects this)
+┌──────────────────────────────────────────────────────────┐
+│ "2024-01-15 08:23:11  192.168.1.42  TCP  443  14580  2.3s" │
+└──────────────────────────┬───────────────────────────────┘
+                           │  feature engineering
+                           ▼
+Numeric feature vector (sklearn accepts this)
+┌──────────────────────────────────────────────────────────┐
+│  [ 8,  1,  1,  3,  6339,  5.2,  1 ]                     │
+│    │  │  │  │    │     │    └─ is_private (bool)          │
+│    │  │  │  │    │     └─ packet_rate                     │
+│    │  │  │  │    └─ bytes_per_second                      │
+│    │  │  │  └─ port_risk_score                            │
+│    │  │  └─ proto_TCP (one-hot)                           │
+│    │  └─ is_business_hours (bool)                         │
+│    └─ hour_of_day                                         │
+└──────────────────────────────────────────────────────────┘
+```
+
 For network logs, this means computing *behavioural* features that capture what the connection is *doing*, not just its identifiers.
 
 > **Want to go deeper?** [Feature engineering (Wikipedia)](https://en.wikipedia.org/wiki/Feature_engineering)

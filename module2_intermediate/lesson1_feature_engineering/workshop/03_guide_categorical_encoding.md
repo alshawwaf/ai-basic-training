@@ -21,11 +21,18 @@ TCP → 0, UDP → 1, ICMP → 2
 **Problem:** This implies an ordering (ICMP > UDP > TCP) and a distance (TCP to ICMP is "2 apart") that doesn't exist. A linear model will try to learn coefficients that treat 0, 1, 2 as a scale — leading to incorrect behaviour.
 
 **OneHotEncoder** creates one binary column per category:
+
 ```
-protocol_TCP  protocol_UDP  protocol_ICMP
-     1              0             0       ← was TCP
-     0              1             0       ← was UDP
-     0              0             1       ← was ICMP
+Original column              One-hot encoded columns
+┌──────────┐        ┌──────────┬──────────┬──────────┐
+│ protocol │        │ proto_TCP│ proto_UDP│proto_ICMP│
+├──────────┤        ├──────────┼──────────┼──────────┤
+│   TCP    │  ───►  │    1     │    0     │    0     │
+│   UDP    │  ───►  │    0     │    1     │    0     │
+│   ICMP   │  ───►  │    0     │    0     │    1     │
+│   TCP    │  ───►  │    1     │    0     │    0     │
+└──────────┘        └──────────┴──────────┴──────────┘
+  1 column             3 columns (one per category)
 ```
 
 Now there is no implied ordering. Each protocol is independent.
@@ -45,6 +52,17 @@ Now there is no implied ordering. Each protocol is independent.
 With one-hot encoding, the three protocol columns sum to exactly 1 for every row (`TCP + UDP + ICMP = 1`). This causes **perfect multicollinearity** in linear models — the model cannot distinguish the individual effect of each protocol.
 
 The fix: drop one column (`drop='first'`). With two columns (UDP, ICMP), the third (TCP) is implied when both are 0.
+
+```
+With drop='first' (ICMP dropped as reference)
+┌──────────┐        ┌──────────┬──────────┐
+│ protocol │        │ proto_TCP│ proto_UDP│
+├──────────┤        ├──────────┼──────────┤
+│   TCP    │  ───►  │    1     │    0     │
+│   UDP    │  ───►  │    0     │    1     │
+│   ICMP   │  ───►  │    0     │    0     │  ← both 0 = ICMP (implied)
+└──────────┘        └──────────┴──────────┘
+```
 
 ```python
 # sklearn

@@ -20,6 +20,19 @@ A random forest averages importances over 100 trees, each trained on a different
 **Measuring stability:**
 Train the model 20 times with different seeds. For each feature, compute the std of its importance across runs. A small std means the feature's importance is consistent and trustworthy.
 
+```
+Feature importances (sorted, forest average over 100 trees)
+
+file_entropy        ████████████████████████████████████████  0.382
+has_packer_sig      ████████████████████████                  0.241
+virtual_size_ratio  ██████████████████                        0.178
+import_entropy      █████████                                 0.089
+num_imports          ██████                                   0.058
+code_section_size    ███                                      0.031
+num_sections         ██                                       0.021
+                    0.0       0.1       0.2       0.3       0.4
+```
+
 > **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)
 
 ---

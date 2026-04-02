@@ -23,6 +23,25 @@ After K-Means, every sample belongs to a cluster. Its **anomaly score** = its di
 distances = np.min(kmeans.transform(X_scaled), axis=1)
 ```
 
+```
+                          ★ Centroid 0
+                        · · ·
+                      · · · · ·    normal samples (close)
+                        · · ·
+
+                                              ✖  anomaly (far from
+                                                  ALL centroids)
+
+          ★ Centroid 1
+        · · ·
+      · · · · ·
+        · · ·
+
+  anomaly score = distance to nearest centroid
+  ● normal:  score = 0.8   (close to its centroid)
+  ✖ anomaly: score = 6.2   (far from every centroid)
+```
+
 `kmeans.transform(X_scaled)` returns an (n, K) matrix of distances from each sample to each centroid. `np.min(..., axis=1)` gives the distance to the nearest centroid.
 
 > **Want to go deeper?** [Anomaly detection (Wikipedia)](https://en.wikipedia.org/wiki/Anomaly_detection)
@@ -34,6 +53,25 @@ distances = np.min(kmeans.transform(X_scaled), axis=1)
 Choose a percentile threshold:
 - Top 5% of distances are flagged as anomalous
 - This is calibrated to your false-positive budget
+
+```
+Anomaly score distribution
+
+  Count
+    │
+    │ ████
+    │ █████
+    │ ██████
+    │ ████████
+    │ ██████████
+    │ ████████████
+    │ █████████████                             ░░   ← flagged (top 5%)
+    │ ██████████████                          ░░░░░
+    └──────────────────────────┬─────────────────────►
+   0.0                       3.87            8.0   score
+                          threshold
+                        (95th pctl)
+```
 
 Or use a statistical approach: mean + 2σ of distances.
 

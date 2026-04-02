@@ -43,6 +43,18 @@ At each split, the random forest considers only a **random subset** of features 
 
 Default: `max_features='sqrt'` → √(n_features) features considered per split.
 
+```
+All 7 features: [entropy, packer, vsize, imports, imp_ent, code_sz, sections]
+
+At each split, each tree picks a RANDOM subset of sqrt(7) ~ 3 features:
+
+Tree 1, node A:  picks [entropy, packer, code_sz]  ───► splits on entropy
+Tree 2, node A:  picks [vsize, imports, sections]   ───► splits on vsize
+Tree 3, node A:  picks [entropy, imp_ent, imports]  ───► splits on entropy
+
+Result: trees make DIFFERENT splits ───► diverse, uncorrelated predictions
+```
+
 For 7 features: √7 ≈ 2.6 → 2 or 3 features considered at each node. This is small enough to create diversity but large enough to use the good features most of the time.
 
 ---

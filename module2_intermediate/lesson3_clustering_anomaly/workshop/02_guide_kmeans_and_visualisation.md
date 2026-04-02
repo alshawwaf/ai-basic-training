@@ -19,6 +19,23 @@ K-Means iteratively:
 3. Recompute centroids as the mean of their assigned samples
 4. Repeat until centroids stop moving
 
+```
+Step 1: Random centroids    Step 2: Assign nearest    Step 3: Recompute centroids
+                                                        (repeat until stable)
+
+    ·  ·                        ·  ·                        ·  ·
+  ·  ★  ·  ·                  · [★] ·  ·                  ·  ★  ·  ·
+    ·  ·                        ·  ·                        ·  ·
+                ·                        ·                          ·
+         ·  ·                     ·  ·                       ·  ·
+   ·      ★    ·  ·         ·     [★]   ·  ·           ·      ★   ·  ·
+         ·  ·                     ·  ·                       ·  ·
+
+  ★ = centroid               [★] = centroid              ★ = centroid (moved)
+  · = data point              ·  = assigned to             · = re-assigned
+                                   nearest ★                    to new nearest ★
+```
+
 The result: K clusters, each with a centroid. Distance from centroid = "how typical" a sample is for its cluster. High distance = anomalous.
 
 > **Want to go deeper?** [k-means clustering (Wikipedia)](https://en.wikipedia.org/wiki/K-means_clustering)

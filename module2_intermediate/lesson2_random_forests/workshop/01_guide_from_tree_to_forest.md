@@ -34,6 +34,27 @@ Bagging creates diversity among trees:
 3. Repeat K times → K different trees, each slightly different
 4. **Aggregate** predictions: majority vote (classification) or average (regression)
 
+```
+Training data (N rows)
+┌──────────────────────┐
+│ ████████████████████ │
+└──────────┬───────────┘
+           │ draw bootstrap samples (with replacement)
+     ┌─────┼──────┬──────────┐
+     ▼     ▼      ▼          ▼
+  Sample1 Sample2 Sample3 ... SampleK
+  (N rows) (N rows) (N rows)   (N rows)
+     │      │       │           │
+     ▼      ▼       ▼           ▼
+  Tree 1  Tree 2  Tree 3  ... Tree K
+     │      │       │           │
+     ▼      ▼       ▼           ▼
+  pred=1  pred=0  pred=1      pred=1
+     └──────┴───────┴─────┬─────┘
+                          ▼
+                   Majority vote ───► final prediction = 1
+```
+
 Because each tree sees a different random subset, no single noisy point can dominate all trees. The ensemble averages out errors.
 
 **Out-of-Bag (OOB) samples:** In each bootstrap sample, ~37% of training rows are *not* sampled. These "out-of-bag" samples can be used as a free validation set, giving an unbiased estimate of test performance without a separate hold-out set.

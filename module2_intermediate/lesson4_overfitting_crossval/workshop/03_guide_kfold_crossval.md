@@ -20,6 +20,19 @@ With a single 80/20 split, your test set is one random 20% sample. If that 20% h
 2. For k=1 to K: train on K-1 folds, evaluate on fold k
 3. Average the K evaluation scores
 
+```
+5-Fold Cross-Validation — each fold takes a turn as the test set
+
+Fold 1:  [ TEST  ][ train ][ train ][ train ][ train ]  ───► score 1
+Fold 2:  [ train ][ TEST  ][ train ][ train ][ train ]  ───► score 2
+Fold 3:  [ train ][ train ][ TEST  ][ train ][ train ]  ───► score 3
+Fold 4:  [ train ][ train ][ train ][ TEST  ][ train ]  ───► score 4
+Fold 5:  [ train ][ train ][ train ][ train ][ TEST  ]  ───► score 5
+                                                               │
+                                              mean ± std  ◄────┘
+                                              0.968 ± 0.008
+```
+
 Every sample is used as both training and test exactly once. The K scores give you a distribution — mean and std — that is far more reliable than a single split.
 
 > **Want to go deeper?** [Cross-validation (Wikipedia)](https://en.wikipedia.org/wiki/Cross-validation_(statistics))

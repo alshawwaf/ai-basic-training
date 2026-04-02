@@ -23,6 +23,26 @@ Adding trees always reduces variance — but the improvement shrinks quickly:
 | 100 → 500 | +0.1% | High |
 | 500 → 1000 | < 0.05% | Very high |
 
+```
+Test Accuracy vs n_estimators
+
+ 0.95 │                       ●─────●──────●  plateau
+      │                 ●────/
+ 0.94 │            ●───/
+      │        ●──/
+ 0.93 │      /
+      │    /
+ 0.92 │  ●         ← steep improvement zone
+      │ /
+ 0.91 │/
+      │
+ 0.89 ●
+      └──┬────┬────┬────┬────┬────┬────┬────►
+         1    5   10   25   50  100  200  500
+                                 ▲
+                          elbow (~100 trees)
+```
+
 The "elbow" of the learning curve — where accuracy plateaus — is usually around 100–200 trees. Beyond that, you are paying CPU time for tiny gains.
 
 > **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)

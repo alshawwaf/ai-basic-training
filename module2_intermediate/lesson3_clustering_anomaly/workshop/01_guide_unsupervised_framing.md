@@ -31,6 +31,28 @@ Imagine monitoring a corporate network:
 - File server access: internal IPs, large bytes, long duration → cluster B
 - DNS: small packets, UDP, frequent, port 53 → cluster C
 
+```
+         bytes_sent
+            ▲
+            │
+   250000   │                    ○   ○
+            │                  ○  ○ ○    Cluster C: exfil
+            │                   ○ ○       (high bytes, low rate)
+            │
+    50000   │  ■ ■ ■ ■ ■
+            │ ■ ■ ■ ■ ■ ■       Cluster A: web browsing
+            │  ■ ■ ■ ■ ■         (moderate bytes, low rate)
+            │
+     1000   │                ▲ ▲ ▲ ▲ ▲ ▲ ▲
+            │               ▲ ▲ ▲ ▲ ▲ ▲ ▲   Cluster B: DoS
+            │                ▲ ▲ ▲ ▲ ▲ ▲      (low bytes, HIGH rate)
+            │
+            │    ◆ ◆ ◆         Cluster D: DNS
+            │   ◆ ◆ ◆ ◆         (tiny bytes, moderate rate)
+            └────────────────────────────────► connection_rate
+           0                                 1000
+```
+
 These patterns are stable and reproducible. Any connection that doesn't fit any of these known patterns is suspicious.
 
 ---

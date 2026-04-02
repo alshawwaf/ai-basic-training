@@ -16,11 +16,13 @@ You will build each piece yourself, step by step, across 5 focused exercises.
 
 ## How the Workshop Works
 
-Each exercise file is self-contained — it loads the data for you and gives you a set of tasks to complete. Your job is to fill in the `# >>> YOUR CODE HERE` blocks.
+Each exercise has three files:
 
-Every task shows you the **expected output** in a comment. Run the file after each task and verify your output matches before moving on.
+- **Guide** (`_guide_`) — explains the concept and the API you need
+- **Lab** (`_lab_`) — step-by-step instructions to build your script from scratch
+- **Solution** (`_solution_`) — reference implementation to compare against when you are done
 
-When you are done, compare your code against the matching `_solution_` file for each exercise.
+Every lab shows you the **expected output** at each step. Run your script after each task and verify your output matches before moving on.
 
 ---
 
@@ -28,7 +30,7 @@ When you are done, compare your code against the matching `_solution_` file for 
 
 Work through them in order — each one builds on the previous.
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_loading_data.md](01_guide_loading_data.md) | [01_lab_loading_data.md](01_lab_loading_data.md) | Loading a dataset — Bunch, DataFrame, features vs labels |
 | 2 | [02_guide_statistics.md](02_guide_statistics.md) | [02_lab_statistics.md](02_lab_statistics.md) | Shape and statistics — `.describe()`, missing values, zero-variance features |
@@ -40,25 +42,25 @@ Work through them in order — each one builds on the previous.
 
 ---
 
-## Running an Exercise
+## Running a Solution
 
 Make sure your virtual environment is active, then from the repo root:
 
 ```bash
-python module1_classic_ml/lesson1_what_is_ml/workshop/exercise1_loading_data.py
+python module1_classic_ml/lesson1_what_is_ml/workshop/01_solution_loading_data.py
 ```
 
-Replace `exercise1_loading_data` with whichever exercise you are working on.
+Replace the filename with whichever exercise you are working on.
 
 ---
 
 ## Tips
 
-**Stuck on a task?** Re-read the background section at the top of the exercise file. The explanation usually contains the method name you need.
+**Stuck on a task?** Re-read the guide for that exercise. It explains the concept and usually names the exact method you need.
 
-**Output doesn't match?** Check your variable names — Python is case-sensitive. Also check you haven't skipped a line.
+**Output doesn't match?** Check your variable names — Python is case-sensitive. Also check you haven't skipped a step.
 
-**Finished early?** Each exercise has a **BONUS** task at the bottom — experiment freely, no expected output given.
+**Finished early?** Some labs have a **BONUS** task at the end — experiment freely, no expected output given.
 
 ---
 

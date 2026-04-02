@@ -12,7 +12,7 @@ This workshop uses a synthetic binary classification dataset with class imbalanc
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_from_numpy_to_keras.md](01_guide_from_numpy_to_keras.md) | [01_lab_from_numpy_to_keras.md](01_lab_from_numpy_to_keras.md) | Dense layer = matrix multiply + bias + activation |
 | 2 | [02_guide_build_the_network.md](02_guide_build_the_network.md) | [02_lab_build_the_network.md](02_lab_build_the_network.md) | Choose layers, activations, output shape |

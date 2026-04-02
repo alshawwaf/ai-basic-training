@@ -18,7 +18,7 @@ Work through them in order.
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_first_api_call.md](01_guide_first_api_call.md) | [01_lab_first_api_call.md](01_lab_first_api_call.md) | Make your first LLM call; understand request/response structure |
 | 2 | [02_guide_system_prompts.md](02_guide_system_prompts.md) | [02_lab_system_prompts.md](02_lab_system_prompts.md) | System prompt design; security analyst persona; tone control |

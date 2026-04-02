@@ -12,7 +12,7 @@ This workshop reuses the same synthetic binary classification dataset from Lesso
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_what_are_hyperparameters.md](01_guide_what_are_hyperparameters.md) | [01_lab_what_are_hyperparameters.md](01_lab_what_are_hyperparameters.md) | Parameters vs hyperparameters; before/after weight inspection |
 | 2 | [02_guide_learning_rate_sensitivity.md](02_guide_learning_rate_sensitivity.md) | [02_lab_learning_rate_sensitivity.md](02_lab_learning_rate_sensitivity.md) | lr=0.001 vs 0.01 vs 0.1 — convergence, divergence, slow learning |

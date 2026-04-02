@@ -10,7 +10,7 @@ Raw firewall and NetFlow logs contain strings, IP addresses, timestamps, and pro
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_why_raw_logs_fail.md](01_guide_why_raw_logs_fail.md) | [01_lab_why_raw_logs_fail.md](01_lab_why_raw_logs_fail.md) | What raw logs look like and why sklearn can't use them |
 | 2 | [02_guide_numeric_feature_extraction.md](02_guide_numeric_feature_extraction.md) | [02_lab_numeric_feature_extraction.md](02_lab_numeric_feature_extraction.md) | Derive bytes_per_second, packet_rate, duration, port risk scores |

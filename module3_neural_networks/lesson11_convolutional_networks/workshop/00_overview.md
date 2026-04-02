@@ -12,7 +12,7 @@ This workshop uses the MNIST dataset (handwritten digits, 28×28 greyscale image
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_why_dense_fails_on_images.md](01_guide_why_dense_fails_on_images.md) | [01_lab_why_dense_fails_on_images.md](01_lab_why_dense_fails_on_images.md) | Dense ignores spatial relationships; pixels as flat vector |
 | 2 | [02_guide_conv_and_pooling.md](02_guide_conv_and_pooling.md) | [02_lab_conv_and_pooling.md](02_lab_conv_and_pooling.md) | Conv2D filter sliding, MaxPooling2D downsampling, shape arithmetic |

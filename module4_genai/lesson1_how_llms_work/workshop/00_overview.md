@@ -16,7 +16,7 @@ Work through them in order — each exercise builds on the previous.
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_tokenisation.md](01_guide_tokenisation.md) | [01_lab_tokenisation.md](01_lab_tokenisation.md) | Text → tokens → token IDs; vocabulary and OOV handling |
 | 2 | [02_guide_embeddings.md](02_guide_embeddings.md) | [02_lab_embeddings.md](02_lab_embeddings.md) | Tokens → vectors; cosine similarity; semantic distance |

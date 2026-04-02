@@ -8,11 +8,11 @@
 
 You will deliberately overfit a large neural network to see the problem clearly, then apply three regularisation techniques one by one: Dropout, Batch Normalisation, and Early Stopping. Each exercise isolates one technique so you can measure its effect directly. By the end you will have a regularised model that generalises well and stops training automatically at the right moment.
 
-This workshop reuses the same synthetic binary classification dataset from Lesson 3.9 (10 features, 90/10 class imbalance). Import and setup code is provided in each exercise file — do not modify it.
+This workshop reuses the same synthetic binary classification dataset from Lesson 3.9 (10 features, 90/10 class imbalance). Import and setup code is provided in each exercise — do not modify it.
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_demonstrate_overfitting.md](01_guide_demonstrate_overfitting.md) | [01_lab_demonstrate_overfitting.md](01_lab_demonstrate_overfitting.md) | Build large unregularised network, plot diverging loss |
 | 2 | [02_guide_add_dropout.md](02_guide_add_dropout.md) | [02_lab_add_dropout.md](02_lab_add_dropout.md) | Add Dropout(0.3), compare val loss to exercise 1 |

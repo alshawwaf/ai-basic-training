@@ -16,7 +16,7 @@ Work through them in order — each exercise builds on the previous.
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_zero_shot_classification.md](01_guide_zero_shot_classification.md) | [01_lab_zero_shot_classification.md](01_lab_zero_shot_classification.md) | Classify security logs with no training — zero-shot NLI pipeline |
 | 2 | [02_guide_sentence_embeddings.md](02_guide_sentence_embeddings.md) | [02_lab_sentence_embeddings.md](02_lab_sentence_embeddings.md) | Encode sentences as vectors; cosine similarity; semantic distance |

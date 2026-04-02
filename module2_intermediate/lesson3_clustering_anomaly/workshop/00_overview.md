@@ -10,7 +10,7 @@ You will apply K-Means clustering to unlabelled network traffic to discover beha
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_unsupervised_framing.md](01_guide_unsupervised_framing.md) | [01_lab_unsupervised_framing.md](01_lab_unsupervised_framing.md) | No labels available, what clustering finds |
 | 2 | [02_guide_kmeans_and_visualisation.md](02_guide_kmeans_and_visualisation.md) | [02_lab_kmeans_and_visualisation.md](02_lab_kmeans_and_visualisation.md) | KMeans, PCA to 2D, colour-coded cluster plot |

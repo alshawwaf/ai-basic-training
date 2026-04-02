@@ -16,7 +16,7 @@ Work through them in order — each exercise is a component of the final pipelin
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_chunking.md](01_guide_chunking.md) | [01_lab_chunking.md](01_lab_chunking.md) | Document chunking strategies — fixed-size, overlap, by sentence |
 | 2 | [02_guide_retrieval.md](02_guide_retrieval.md) | [02_lab_retrieval.md](02_lab_retrieval.md) | Encode chunks and retrieve top-k by cosine similarity |

@@ -10,18 +10,18 @@ In this workshop you will build a linear regression model that predicts a server
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_understanding_regression.md](01_guide_understanding_regression.md) | [01_lab_understanding_regression.md](01_lab_understanding_regression.md) | Regression vs classification, the dataset, visualising the relationship |
 | 2 | [02_guide_train_test_split.md](02_guide_train_test_split.md) | [02_lab_train_test_split.md](02_lab_train_test_split.md) | Why we split data, train_test_split(), the danger of evaluating on training data |
 | 3 | [03_guide_fit_and_predict.md](03_guide_fit_and_predict.md) | [03_lab_fit_and_predict.md](03_lab_fit_and_predict.md) | model.fit(), model.predict(), slope and intercept, visualise the line |
 | 4 | [04_guide_evaluate_regression.md](04_guide_evaluate_regression.md) | [04_lab_evaluate_regression.md](04_lab_evaluate_regression.md) | MSE, RMSE, MAE, R², interpret results, build a security baseline |
 
-## Running an Exercise
+## Running a Solution
 
 ```bash
 cd "C:/Users/admin/Desktop/AI Basic Training"
-python module1_classic_ml/lesson2_linear_regression/workshop/exercise1_understanding_regression.py
+python module1_classic_ml/lesson2_linear_regression/workshop/01_solution_understanding_regression.py
 ```
 
 ## Next Lesson

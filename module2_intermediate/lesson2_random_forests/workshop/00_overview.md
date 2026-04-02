@@ -10,7 +10,7 @@ You will build a random forest classifier that distinguishes malware from benign
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_from_tree_to_forest.md](01_guide_from_tree_to_forest.md) | [01_lab_from_tree_to_forest.md](01_lab_from_tree_to_forest.md) | Single tree overfitting demo, bagging concept |
 | 2 | [02_guide_train_random_forest.md](02_guide_train_random_forest.md) | [02_lab_train_random_forest.md](02_lab_train_random_forest.md) | RandomForestClassifier, oob_score, tree vs forest accuracy |

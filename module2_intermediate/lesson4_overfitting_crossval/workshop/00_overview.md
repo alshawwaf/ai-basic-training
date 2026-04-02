@@ -10,7 +10,7 @@ You will deeply understand overfitting by watching a decision tree's train-vs-te
 
 ## Exercise Overview
 
-| # | Guide | Exercise file | Topic |
+| # | Guide | Lab | Topic |
 |---|-------|---------------|-------|
 | 1 | [01_guide_overfitting_demo.md](01_guide_overfitting_demo.md) | [01_lab_overfitting_demo.md](01_lab_overfitting_demo.md) | Sweep tree depth, watch train vs val accuracy diverge |
 | 2 | [02_guide_bias_variance.md](02_guide_bias_variance.md) | [02_lab_bias_variance.md](02_lab_bias_variance.md) | Underfit vs good fit vs overfit — visualise all three |

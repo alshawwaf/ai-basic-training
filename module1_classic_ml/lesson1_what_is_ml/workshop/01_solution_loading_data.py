@@ -19,7 +19,8 @@ df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 
 # Show a few selected columns instead of all 65 — keeps the output readable
-preview_cols = ["pixel_0", "pixel_8", "pixel_32", "pixel_63", "target"]
+# Centre pixels (21, 28, 36, 43) — edge pixels are mostly zero
+preview_cols = ["pixel_21", "pixel_28", "pixel_36", "pixel_43", "target"]
 print("\nFirst 5 rows (selected columns):")
 print(df[preview_cols].head().to_string())
 print(f"\nFull DataFrame shape: {df.shape}")

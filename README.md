@@ -142,11 +142,11 @@ Every lesson follows the same three-part structure:
 
 1. **Read** the theory (`README.md`) — understand the concept before writing code
 2. **For each exercise folder:**
-   - Read the **guide** — it explains the concept and the methods you need
-   - Follow the **lab** — step-by-step instructions to build your script
+   - Read the **lecture** — it explains the concept and the methods you need
+   - Follow the **handson** — step-by-step instructions to build your script
    - Run your script and verify output matches expected results
    - Compare against the **solution** file when you are done
-4. **Move on** when the output makes sense — deep understanding comes from repetition across stages
+3. **Move on** when the output makes sense — deep understanding comes from repetition across stages
 
 ---
 
@@ -156,13 +156,13 @@ Every lesson follows the same three-part structure:
 
 Classic ML is the foundation everything else builds on. These algorithms are fast, interpretable, and still widely used in production security tooling — SIEM correlation rules, email filters, endpoint detection. You will build a real phishing detector by the end of this stage.
 
-| # | Lesson | Workshop | What You Learn |
-|---|--------|----------|----------------|
-| 1.1 | [What is ML?](stage1_classic_ml/01_what_is_ml/README.md) | [5 exercises](stage1_classic_ml/01_what_is_ml/README.md) | The ML workflow — loading data, exploring features, EDA, class balance |
-| 1.2 | [Linear Regression](stage1_classic_ml/02_linear_regression/README.md) | [4 exercises](stage1_classic_ml/02_linear_regression/README.md) | Predicting continuous values — server response time from traffic load |
-| 1.3 | [Logistic Regression](stage1_classic_ml/03_logistic_regression/README.md) | [4 exercises](stage1_classic_ml/03_logistic_regression/README.md) | Binary classification — phishing or legitimate from URL features |
-| 1.4 | [Decision Trees](stage1_classic_ml/04_decision_trees/README.md) | [4 exercises](stage1_classic_ml/04_decision_trees/README.md) | Interpretable rule-based splits — network traffic as threat or benign |
-| 1.5 | [Model Evaluation](stage1_classic_ml/05_model_evaluation/README.md) | [5 exercises](stage1_classic_ml/05_model_evaluation/README.md) | Precision, recall, F1, ROC AUC — why accuracy alone is meaningless in security |
+| # | Lesson | Exercises | What You Learn |
+|---|--------|-----------|----------------|
+| 1.1 | [What is ML?](stage1_classic_ml/01_what_is_ml/README.md) | 5 | The ML workflow — loading data, exploring features, EDA, class balance |
+| 1.2 | [Linear Regression](stage1_classic_ml/02_linear_regression/README.md) | 4 | Predicting continuous values — server response time from traffic load |
+| 1.3 | [Logistic Regression](stage1_classic_ml/03_logistic_regression/README.md) | 4 | Binary classification — phishing or legitimate from URL features |
+| 1.4 | [Decision Trees](stage1_classic_ml/04_decision_trees/README.md) | 4 | Interpretable rule-based splits — network traffic as threat or benign |
+| 1.5 | [Model Evaluation](stage1_classic_ml/05_model_evaluation/README.md) | 5 | Precision, recall, F1, ROC AUC — why accuracy alone is meaningless in security |
 
 **Project:** [Phishing URL Classifier](stage1_classic_ml/project/phishing_detector.py) — end-to-end pipeline from feature extraction through training to evaluation on a real phishing dataset.
 
@@ -180,12 +180,12 @@ Supervised learning, features and labels, train/test split, underfitting, decisi
 
 Real security data is never clean. Logs have missing fields, features need to be engineered from raw text, and many of the most interesting problems have no labelled ground truth at all. This stage covers the techniques you will encounter in real SOC tooling and detection engineering.
 
-| # | Lesson | Workshop | What You Learn |
-|---|--------|----------|----------------|
-| 2.1 | [Feature Engineering](stage2_intermediate/01_feature_engineering/README.md) | [4 exercises](stage2_intermediate/01_feature_engineering/README.md) | Extracting numerical signals from raw firewall and NetFlow logs |
-| 2.2 | [Random Forests](stage2_intermediate/02_random_forests/README.md) | [4 exercises](stage2_intermediate/02_random_forests/README.md) | Ensemble of decision trees — malware vs. benign file classifier |
-| 2.3 | [Clustering & Anomaly Detection](stage2_intermediate/03_clustering_anomaly/README.md) | [4 exercises](stage2_intermediate/03_clustering_anomaly/README.md) | K-Means to find anomalous network connections — no labels needed |
-| 2.4 | [Overfitting & Cross-Validation](stage2_intermediate/04_overfitting_crossval/README.md) | [4 exercises](stage2_intermediate/04_overfitting_crossval/README.md) | Why models fail in production — k-fold CV, bias-variance tradeoff |
+| # | Lesson | Exercises | What You Learn |
+|---|--------|-----------|----------------|
+| 2.1 | [Feature Engineering](stage2_intermediate/01_feature_engineering/README.md) | 4 | Extracting numerical signals from raw firewall and NetFlow logs |
+| 2.2 | [Random Forests](stage2_intermediate/02_random_forests/README.md) | 4 | Ensemble of decision trees — malware vs. benign file classifier |
+| 2.3 | [Clustering & Anomaly Detection](stage2_intermediate/03_clustering_anomaly/README.md) | 4 | K-Means to find anomalous network connections — no labels needed |
+| 2.4 | [Overfitting & Cross-Validation](stage2_intermediate/04_overfitting_crossval/README.md) | 4 | Why models fail in production — k-fold CV, bias-variance tradeoff |
 
 **Project:** [Network Intrusion Detector](stage2_intermediate/project/intrusion_detector.py) — full pipeline trained and evaluated on KDD Cup-style network connection data.
 
@@ -220,12 +220,12 @@ No ML framework — just arrays and arithmetic. Each script builds one component
 
 ### Phase 2 — Keras and Real Security Data (Lessons 3.9–3.12)
 
-| # | Lesson | Workshop | What You Learn |
-|---|--------|----------|----------------|
-| 3.9 | [First Neural Network](stage3_neural_networks/01_first_neural_network/README.md) | [4 exercises](stage3_neural_networks/01_first_neural_network/README.md) | Rebuild the NumPy network in Keras in ~10 lines of code |
-| 3.10 | [Dropout & Regularisation](stage3_neural_networks/02_dropout_regularisation/README.md) | [4 exercises](stage3_neural_networks/02_dropout_regularisation/README.md) | Dropout, batch normalisation, early stopping — prevent memorisation |
-| 3.11 | [Convolutional Networks](stage3_neural_networks/03_convolutional_networks/README.md) | [4 exercises](stage3_neural_networks/03_convolutional_networks/README.md) | CNNs for spatial data — applied to malware binary visualisation |
-| 3.12 | [Hyperparameter Tuning](stage3_neural_networks/04_hyperparameter_tuning/README.md) | [4 exercises](stage3_neural_networks/04_hyperparameter_tuning/README.md) | Learning rate, batch size, architecture — systematic search |
+| # | Lesson | Exercises | What You Learn |
+|---|--------|-----------|----------------|
+| 3.9 | [First Neural Network](stage3_neural_networks/01_first_neural_network/README.md) | 4 | Rebuild the NumPy network in Keras in ~10 lines of code |
+| 3.10 | [Dropout & Regularisation](stage3_neural_networks/02_dropout_regularisation/README.md) | 4 | Dropout, batch normalisation, early stopping — prevent memorisation |
+| 3.11 | [Convolutional Networks](stage3_neural_networks/03_convolutional_networks/README.md) | 4 | CNNs for spatial data — applied to malware binary visualisation |
+| 3.12 | [Hyperparameter Tuning](stage3_neural_networks/04_hyperparameter_tuning/README.md) | 4 | Learning rate, batch size, architecture — systematic search |
 
 **Project:** [Malicious Packet Classifier](stage3_neural_networks/project/packet_classifier.py) — neural network trained on network packet feature vectors to classify malicious traffic.
 
@@ -243,12 +243,12 @@ Forward pass, backpropagation (conceptual), gradient descent, activation functio
 
 This stage bridges traditional ML and modern AI. You will learn what an LLM actually is — not just how to call one — how to use open-source models from HuggingFace for security tasks, and how to build a grounded assistant that reasons over your own documents instead of hallucinating.
 
-| # | Lesson | Workshop | What You Learn |
-|---|--------|----------|----------------|
-| 4.1 | [How LLMs Work](stage4_genai/01_how_llms_work/README.md) | [3 exercises](stage4_genai/01_how_llms_work/README.md) | Tokenisation, embeddings, attention — pure NumPy, no API key needed |
-| 4.2 | [HuggingFace Models](stage4_genai/02_huggingface/README.md) | [3 exercises](stage4_genai/02_huggingface/README.md) | Zero-shot classification, sentence embeddings, semantic search |
-| 4.3 | [The LLM API](stage4_genai/03_llm_api/README.md) | [4 exercises](stage4_genai/03_llm_api/README.md) | System prompts, structured JSON output, multi-turn conversation |
-| 4.4 | [Retrieval-Augmented Generation](stage4_genai/04_rag/README.md) | [3 exercises](stage4_genai/04_rag/README.md) | Document chunking, vector retrieval, full RAG pipeline |
+| # | Lesson | Exercises | What You Learn |
+|---|--------|-----------|----------------|
+| 4.1 | [How LLMs Work](stage4_genai/01_how_llms_work/README.md) | 3 | Tokenisation, embeddings, attention — pure NumPy, no API key needed |
+| 4.2 | [HuggingFace Models](stage4_genai/02_huggingface/README.md) | 3 | Zero-shot classification, sentence embeddings, semantic search |
+| 4.3 | [The LLM API](stage4_genai/03_llm_api/README.md) | 4 | System prompts, structured JSON output, multi-turn conversation |
+| 4.4 | [Retrieval-Augmented Generation](stage4_genai/04_rag/README.md) | 3 | Document chunking, vector retrieval, full RAG pipeline |
 
 **Project:** [Security Analyst Assistant](stage4_genai/project/security_assistant.py) — interactive Q&A over a knowledge base of CVEs, threat reports, and security runbooks.
 
@@ -341,4 +341,4 @@ Aim for consistency over speed. Completing one exercise per session is better th
 
 **Use the solutions as a reference, not a shortcut.** Try each exercise yourself first, even if you get stuck. The struggle is where learning happens. Check the solution file only after you have a working (or broken) attempt of your own.
 
-**The milestones are checkpoints, not exams.** If a milestone script runs and produces reasonable output, you have the understanding you need to continue. You do not need to master every detail before moving forward.
+**The projects are checkpoints, not exams.** If a project script runs and produces reasonable output, you have the understanding you need to continue. You do not need to master every detail before moving forward.

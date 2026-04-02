@@ -185,7 +185,7 @@ Print the label and first 10 pixel values of the very first row.
 ```
 Dataset loaded.
 Type: <class 'sklearn.utils._bunch.Bunch'>
-Fields available: ['data', 'target', 'target_names', 'images', 'DESCR']
+Fields available: ['data', 'target', 'frame', 'feature_names', 'target_names', 'images', 'DESCR']
 ```
 
 **Task 2**

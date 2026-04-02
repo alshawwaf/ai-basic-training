@@ -50,7 +50,7 @@ Run your file. You should see:
 ```
 Dataset loaded.
 Type: <class 'sklearn.utils._bunch.Bunch'>
-Fields available: ['data', 'target', 'target_names', 'images', 'DESCR']
+Fields available: ['data', 'target', 'frame', 'feature_names', 'target_names', 'images', 'DESCR']
 ```
 
 ---

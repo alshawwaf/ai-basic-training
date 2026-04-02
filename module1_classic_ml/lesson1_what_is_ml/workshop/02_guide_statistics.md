@@ -76,7 +76,7 @@ Zero std  →  the feature never changes                 →  completely useless
   │                    │                    │
   ▼                    ▼                    ▼
   ┌─────────────────────────────────────────────┐
-  │  USELESS  │    SOME SIGNAL    │  HIGH SIGNAL  │
+  │  USELESS  │    SOME SIGNAL    │  HIGH SIGNAL│
   └─────────────────────────────────────────────┘
   pixel_0              pixel_32             (hypothetical)
   always 0             varies 0–16          max variation
@@ -139,7 +139,7 @@ An algorithm using Euclidean distance will be dominated entirely by `bytes_sent`
   │  Point 2: [1000000500,  80, 0.1]                 │
   │                                                  │
   │  Euclidean distance ≈ 500  (bytes_sent dominates)│
-  │  port and ratio differences are invisible         │
+  │  port and ratio differences are invisible        │
   └──────────────────────────────────────────────────┘
 ```
 

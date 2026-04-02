@@ -39,8 +39,8 @@ Full RAG Pipeline
         │
         ▼
  ┌─────────────┐   encode query    ┌───────────────────────┐
- │  RETRIEVE    │ ────────────────► │ Vector Index (N chunks)│
- │              │ ◄─── top-k ───── │                       │
+ │  RETRIEVE   │ ───────────────► │ Vector Index (N chunks)│
+ │             │ ◄──── top-k ───── │                       │
  └──────┬──────┘                   └───────────────────────┘
         │ top 3 chunks
         ▼

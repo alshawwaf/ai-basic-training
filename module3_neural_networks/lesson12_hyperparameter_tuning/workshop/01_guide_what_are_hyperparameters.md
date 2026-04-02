@@ -40,10 +40,10 @@ Training learns (parameters):
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                   YOU DECIDE                              │
-│  (hyperparameters — fixed before training)                │
-│                                                           │
-│  units=64, lr=0.001, batch_size=32, epochs=20             │
+│                   YOU DECIDE                             │
+│  (hyperparameters — fixed before training)               │
+│                                                          │
+│  units=64, lr=0.001, batch_size=32, epochs=20            │
 └──────────────────────┬───────────────────────────────────┘
                        │
                        ▼
@@ -53,9 +53,9 @@ Training learns (parameters):
                       │
                       ▼
 ┌──────────────────────────────────────────────────────────┐
-│                TRAINING LEARNS                            │
-│  (parameters — updated every batch by gradient descent)   │
-│                                                           │
+│                TRAINING LEARNS                           │
+│  (parameters — updated every batch by gradient descent)  │
+│                                                          │
 │  W1: 640 values, b1: 64 values, W2: 65 values, ...       │
 └──────────────────────────────────────────────────────────┘
 ```

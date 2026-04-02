@@ -68,7 +68,7 @@ A high information gain means the split dramatically reduces uncertainty. The tr
 
   PARENT (100 samples)                Gini = 0.480
   ┌──────────────────────────────┐
-  │  60 benign     40 DoS       │
+  │  60 benign     40 DoS        │
   └──────────────┬───────────────┘
                  │
       connection_rate <= 55?

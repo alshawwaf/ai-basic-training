@@ -34,15 +34,15 @@ An unlimited decision tree will achieve ~100% training accuracy by creating a se
   Underfit vs Good fit vs Overfit
 
   Depth=1 (underfit)     Depth=5 (good)        Depth=15 (overfit)
-  ┌──────────┐          ┌──────────┐           ┌──────────┐
-  │ One split │          │ Captures │           │ Memorises│
-  │ only      │          │ real     │           │ every    │
-  │           │          │ patterns │           │ training │
-  │ Too       │          │          │           │ sample   │
-  │ simple    │          │ Ignores  │           │          │
-  │           │          │ noise    │           │ Fails on │
-  │           │          │          │           │ new data │
-  └──────────┘          └──────────┘           └──────────┘
+  ┌───────────┐         ┌───────────┐          ┌───────────┐
+  │ One split │         │ Captures  │          │ Memorises │
+  │ only      │         │ real      │          │ every     │
+  │           │         │ patterns  │          │ training  │
+  │ Too       │         │           │          │ sample    │
+  │ simple    │         │ Ignores   │          │           │
+  │           │         │ noise     │          │ Fails on  │
+  │           │         │           │          │ new data  │
+  └───────────┘         └───────────┘          └───────────┘
   Train: 65%             Train: 99%             Train: 100%
   Test:  65%             Test:  97%             Test:  94%
   Gap:   0%              Gap:   2%              Gap:   6%

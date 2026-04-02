@@ -67,9 +67,9 @@ Problem: a sentence may be cut in half, losing meaning at chunk boundaries.
 Fixed-Size Chunking (no overlap) — boundary problem
 ──────────────────────────────────────────────────────
  ┌──── Chunk 1 ─────┐┌──── Chunk 2 ─────┐
- │ ... detection     ││ relies on Sysmon │
- │ of LSASS access   ││ Event ID 10 ...  │
- └───────────────────┘└──────────────────┘
+ │ ... detection    ││ relies on Sysmon │
+ │ of LSASS access  ││ Event ID 10 ...  │
+ └──────────────────┘└──────────────────┘
         ▲ sentence is cut here ▲
         key fact split across two chunks!
 ```

@@ -40,7 +40,7 @@ Full dataset (500 rows)
 
 ```
   ┌──────────────────────────────────────────────────┐
-  │                Full dataset (500 rows)            │
+  │                Full dataset (500 rows)           │
   └──────────────────────────────────────────────────┘
                          │
               train_test_split(test_size=0.2)
@@ -106,10 +106,10 @@ In a security context, data leakage can make a model look 99% accurate on your b
 
   ┌─────────────────────────────┐
   │      Full dataset           │
-  │  ┌────────┐  ┌──────────┐  │
-  │  │ Train  │  │  Test    │  │
-  │  └───┬────┘  └────┬─────┘  │
-  └──────┼────────────┼────────┘
+  │  ┌────────┐  ┌──────────┐   │
+  │  │ Train  │  │  Test    │   │
+  │  └───┬────┘  └────┬─────┘   │
+  └──────┼────────────┼─────────┘
          │            │
     scaler.fit()  scaler.fit()    ← WRONG: test stats leak in
          │            │

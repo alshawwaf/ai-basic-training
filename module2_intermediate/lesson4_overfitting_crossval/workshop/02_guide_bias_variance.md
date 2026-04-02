@@ -33,8 +33,8 @@ Train: 65%  Val: 65%       Train: 99%  Val: 97%       Train: 100%  Val: 92%
 │ . x . x . .  │           │ .   | x x x  │           │ ._/\  |x x/\ │
 │ . x . . x .  │           │ . . |  x x   │           │ ./   \_| x/  │
 │ . . x . x .  │           │ . . | x x x  │           │ . . .  |x x  │
-│  (draws a    │           │ (clean split) │           │ (wiggly line │
-│   flat line) │           │               │           │  around noise│
+│  (draws a    │           │ (clean split) │           │ (wiggly line│
+│   flat line) │           │              │           │  around noise│
 └──────────────┘           └──────────────┘           └──────────────┘
  Too simple to              Captures the real           Memorises every
  learn the pattern          decision boundary           training point

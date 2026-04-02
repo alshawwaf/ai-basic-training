@@ -38,9 +38,9 @@ If you fit the scaler on `X_test` or the full dataset, you leak information abou
   Correct scaling workflow
 
   ┌───────────────┐          ┌───────────────┐
-  │   X_train     │          │    X_test      │
-  │ (raw values)  │          │  (raw values)  │
-  └───────┬───────┘          └───────┬────────┘
+  │   X_train     │          │    X_test     │
+  │ (raw values)  │          │  (raw values) │
+  └───────┬───────┘          └───────┬───────┘
           │                          │
    fit_transform()             transform() only
    (learn mean/std             (use train's

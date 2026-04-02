@@ -44,7 +44,7 @@ Zero-Shot Classification Flow
                ▼                               │
         ┌──────────────────────────────────────┐
         │     NLI Model (BART-large-MNLI)      │
-        │   "does text entail each label?"      │
+        │   "does text entail each label?"     │
         └──────────────────┬───────────────────┘
                            ▼
                 ┌────────────────────────┐

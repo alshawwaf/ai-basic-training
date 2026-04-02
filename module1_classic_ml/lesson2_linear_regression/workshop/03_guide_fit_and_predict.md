@@ -114,7 +114,7 @@ y_pred = model.predict(X_test)    # returns an array of predictions
   model.predict() pipeline
 
   ┌────────────────┐     ┌─────────────────────────┐     ┌──────────────┐
-  │   New X value  │────►│ slope * X + intercept    │────►│  Prediction  │
+  │   New X value  │────►│ slope * X + intercept    │────►│  Prediction │
   │   [[150]]      │     │ 1.82 * 150 + 29.5       │     │   302.5 ms   │
   └────────────────┘     └─────────────────────────┘     └──────────────┘
        input                  learned equation               output

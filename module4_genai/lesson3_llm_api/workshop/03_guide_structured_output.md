@@ -45,17 +45,17 @@ Structured Output Flow
  Log entry            LLM (with JSON           Downstream
                       system prompt)            system
 ┌───────────────┐    ┌──────────────┐    ┌──────────────┐
-│"198 failed     │    │              │    │              │
-│ logins in 60s  │───►│  LLM Model   │───►│  json.loads()│
-│ from 45.33..." │    │              │    │       │      │
+│"198 failed     │    │              │    │             │
+│ logins in 60s │───►│  LLM Model   │───►│  json.loads()│
+│ from 45.33..." │    │              │    │       │     │
 └───────────────┘    └──────────────┘    └───────┼──────┘
                       responds with JSON         │
                                                  ▼
-                                          ┌─────────────┐
+                                          ┌──────────────┐
                                           │ SIEM / SOAR  │
                                           │ ticket system│
                                           │ playbook     │
-                                          └─────────────┘
+                                          └──────────────┘
 ```
 
 ---

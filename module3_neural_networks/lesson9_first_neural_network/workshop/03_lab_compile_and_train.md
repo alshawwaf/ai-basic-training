@@ -1,6 +1,6 @@
 # Lab — Exercise 3: Compile and Train
 
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
+> Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
 ---
 
@@ -12,7 +12,7 @@ Create a new file called `03_compile_and_train.py` in this folder.
 
 ## Step 2: Add the imports, dataset, and model setup
 
-This exercise starts from a pre-built model so you can focus on the training loop. Copy this to the top of your file:
+This exercise starts from a pre-built model so you can focus on the training loop. Add these imports to the top of your file:
 
 ```python
 import numpy as np

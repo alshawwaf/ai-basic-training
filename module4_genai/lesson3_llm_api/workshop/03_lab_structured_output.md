@@ -1,6 +1,6 @@
 # Lab — Exercise 3: Structured JSON Output
 
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
+> Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
 ---
 

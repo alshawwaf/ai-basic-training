@@ -1,6 +1,6 @@
 # Lab — Exercise 3: Class Balance — The Silent Model Killer
 
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
+> Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
 ---
 
@@ -12,7 +12,7 @@ Create a new file called `03_class_balance.py` in this folder.
 
 ## Step 2: Add the imports and setup
 
-Copy this to the top of your file:
+Add these imports to the top of your file:
 
 ```python
 import numpy as np

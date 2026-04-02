@@ -1,6 +1,6 @@
 # Lab — Exercise 2: Shape, Statistics, and Missing Values
 
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
+> Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
 ---
 
@@ -12,7 +12,7 @@ Create a new file called `02_statistics.py` in this folder.
 
 ## Step 2: Add the imports and setup
 
-The dataset is loaded for you so you can focus on the statistics tasks. Copy this to the top of your file:
+The dataset is loaded for you so you can focus on the statistics tasks. Add these imports to the top of your file:
 
 ```python
 import numpy as np

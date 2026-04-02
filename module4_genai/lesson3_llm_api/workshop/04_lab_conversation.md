@@ -1,6 +1,6 @@
 # Lab — Exercise 4: Multi-Turn Conversation
 
-> Follow each step in order. Copy the code into your script file as you go. By the final step you will have a complete, runnable Python script.
+> Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
 ---
 

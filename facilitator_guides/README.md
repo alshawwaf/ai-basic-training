@@ -36,3 +36,7 @@ Standardised teacher notes for each lecture in the AI Ninja Program. Each guide 
 | 15 | `guide_15_huggingface.md` | Lecture 15 | Stage 4 |
 | 16 | `guide_16_llm_api.md` | Lecture 16 | Stage 4 |
 | 17 | `guide_17_rag.md` | Lecture 17 | Stage 4 |
+| 18 | `guide_18_workforce_ai_security.md` | Session 5.1 — Workforce AI Security | Stage 5 |
+| 19 | `guide_19_ai_agent_security.md` | Session 5.2 — AI Agent Security + MCP | Stage 5 |
+| 20 | `guide_20_ai_guardrails.md` | Session 5.3 — AI Guardrails | Stage 5 |
+| 21 | `guide_21_positioning_cp_ai.md` | Session 5.4 — Positioning Check Point AI Security | Stage 5 |

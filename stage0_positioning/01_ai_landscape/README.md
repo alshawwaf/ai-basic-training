@@ -73,22 +73,13 @@ These terms get thrown around interchangeably in sales conversations. Here's wha
 
 ### Timeline: From Signatures to Self-Learning
 
-```
-1990s          2000s           2010s           2018+           2023+
-  |              |               |               |               |
-  v              v               v               v               v
-SIGNATURES   HEURISTICS      MACHINE         DEEP            GENERATIVE
-              & RULES        LEARNING        LEARNING        AI / LLMs
-
-Exact-match   "If URL length   Trained on      Neural nets     LLMs for
-virus sigs,   > 75 AND         labelled        for malware     analysis,
-Snort rules,  domain age       datasets:       image class.,   triage,
-regex on      < 7 days         random forests  NLP for         copilots,
-log lines     THEN phish"      gradient boost  phishing text,  RAG over
-                               SVM, k-means    sequence        threat
-                                               models for      intel
-                                               network data
-```
+| Era | Approach | How It Works | Security Examples |
+|-----|----------|-------------|-------------------|
+| **1990s** | Signatures | Exact-match patterns written by humans | Virus signatures, Snort rules, regex on log lines |
+| **2000s** | Heuristics & Rules | Hand-crafted conditional logic | `if URL_length > 75 AND domain_age < 7 days THEN phish` |
+| **2010s** | Machine Learning | Models trained on labelled datasets | Random forests, gradient boosting, SVM, k-means |
+| **2018+** | Deep Learning | Neural networks on raw data | Malware image classification, NLP for phishing text, sequence models for network data |
+| **2023+** | Generative AI / LLMs | Large language models that generate and reason over text | Analyst copilots, automated triage, RAG over threat intel |
 
 ### What Changed at Each Stage
 

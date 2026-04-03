@@ -6,11 +6,11 @@
 
 ## Program Overview
 
-The AI Ninja Program is a 13-week cohort-based training program that takes security professionals from zero AI/ML knowledge to building and demonstrating AI-powered security tools. Graduates earn tiered certification and walk away with a portable customer demo they can use in sales engagements immediately.
+The AI Ninja Program is a 15-week cohort-based training program that takes security professionals from zero AI/ML knowledge to building AI-powered security tools and positioning Check Point's AI Security products with technical depth. Graduates earn tiered certification and walk away with a portable customer demo they can use in sales engagements immediately.
 
 This is not a passive course. Every week includes hands-on coding, every stage ends with an assessment gate, and the program culminates in a live capstone presentation to a review panel.
 
-**Duration:** 13 weeks
+**Duration:** 15 weeks
 **Format:** Self-paced modules + weekly live sessions
 **Cohort size:** 12–16 participants
 **Regions:** Americas (NA, LATAM, Brazil)
@@ -26,7 +26,8 @@ By the end of this program, participants will be able to:
 3. **Build** working ML classifiers for security use cases (phishing detection, intrusion detection, anomaly scoring)
 4. **Design** and critique neural network architectures for security applications
 5. **Demonstrate** a RAG-based security assistant live to a customer audience
-6. **Lead** AI-driven technical discussions in sales engagements and architecture reviews
+6. **Position** Check Point's AI Security products (Workforce AI Security, AI Agent Security, AI Guardrails) with technical depth
+7. **Lead** AI-driven technical discussions in sales engagements and architecture reviews
 
 ---
 
@@ -44,7 +45,7 @@ This program is designed for:
 |-------------|---------|
 | Python proficiency | Comfortable with variables, loops, functions, classes, list comprehensions |
 | Security domain knowledge | Working knowledge of firewalls, SIEM, endpoint detection, network security |
-| Time commitment | 5-8 hours per week for 13 weeks |
+| Time commitment | 5-8 hours per week for 15 weeks |
 | Laptop with Python 3.10+ | Setup instructions provided in Week 0 |
 
 ### Not Required
@@ -88,7 +89,7 @@ The program awards progressive certifications. Each tier builds on the previous 
 |------|-----------------|------------------|------------|
 | **Tier 1 — AI Foundations** | Stages 0, 1, 2 | Gates 1 + 2 | AI Foundations Certified |
 | **Tier 2 — AI Practitioner** | + Stage 3 | + Gate 3 | AI Practitioner Certified |
-| **Tier 3 — AI Ninja** | + Stage 4 | + Gate 4 (live demo) | AI Ninja |
+| **Tier 3 — AI Ninja** | + Stages 4, 5 | + Gate 4 (live demo) | AI Ninja |
 
 ---
 
@@ -266,15 +267,43 @@ The program awards progressive certifications. Each tier builds on the previous 
 
 ---
 
-### Week 13 — Gate 4: Capstone Demo Day (Live)
+### Weeks 14–15 — Stage 5: Check Point AI Security
 
-Each participant presents their Security Analyst Assistant to a review panel.
+#### Week 14: Workforce AI Security + AI Agent Security
+
+| Day | Self-Paced | Time |
+|-----|-----------|------|
+| Mon-Tue | Session 5.1: Workforce AI Security — dashboard, policy actions, data classification | 2 hrs |
+| Wed | Docker setup for labs (cp-agentic-mcp-playground + Lakera-Demo) | 1 hr |
+| Thu-Fri | Session 5.2: AI Agent Security + MCP — agent architecture, MCP servers, hands-on lab | 3 hrs |
+
+| Live Session | Duration | Content |
+|-------------|----------|---------|
+| Week 14 Q&A | 90 min | MCP playground walkthrough — build a threat investigation workflow live |
+
+#### Week 15: AI Guardrails + Positioning + Demo Day
+
+| Day | Self-Paced | Time |
+|-----|-----------|------|
+| Mon-Tue | Session 5.3: AI Guardrails — LLM threat landscape, hands-on with Lakera-Demo | 3 hrs |
+| Wed | Session 5.4: Positioning Check Point AI Security — competitive matrix, demo prep | 2 hrs |
+| Thu-Fri | Final demo preparation — integrate Check Point AI Security into capstone narrative | 2 hrs |
+
+| Live Session | Duration | Content |
+|-------------|----------|---------|
+| Week 15 Q&A | 60 min | Role-play: position Check Point AI Security against Microsoft Purview + Zscaler |
+
+---
+
+### Week 15 (end) — Gate 4: Capstone Demo Day (Live)
+
+Each participant presents their Security Analyst Assistant AND Check Point AI Security positioning to a review panel.
 
 | Component | Details |
 |-----------|---------|
-| **Duration** | 5-minute demo + 5-minute Q&A per participant |
+| **Duration** | 7-minute demo + 5-minute Q&A per participant |
 | **Audience** | Tech lead + 2-3 stakeholders (engineering managers, sales leaders) |
-| **Demo content** | RAG assistant answering security questions grounded in retrieved documents |
+| **Demo content** | Part 1: RAG assistant grounded in retrieved documents. Part 2: Check Point AI Security product positioning (choose one: Workforce dashboard, Guardrails attack demo, or MCP workflow). |
 | **Evaluation** | Rubric scoring (see assessments folder) |
 
 #### Capstone Rubric
@@ -337,6 +366,7 @@ If you fall more than one week behind:
 - **Tiered certification** — Tier 1, 2, or 3 based on gates passed
 - **Complete code portfolio** — 67 exercises + 4 capstone projects, all in your own repository
 - **Customer demo kit** — the RAG security assistant, pre-loaded with curated threat data, with a presentation script
+- **Check Point AI Security expertise** — hands-on experience with Workforce AI Security, AI Guardrails (Lakera-Demo), and AI Agent Security (MCP playground)
 - **AI vocabulary cheat sheet** — terms and definitions mapped to security contexts
 - **Alumni network access** — persistent channel for ongoing knowledge sharing
 
@@ -384,7 +414,9 @@ Each participant is assigned a partner from a different region for the duration 
 | 10 | TBD | **Gate 3 assessment** | 45 min proctored | **Gate 3** |
 | 11 | TBD | Lessons 4.1-4.2 | 60 min Q&A | — |
 | 12 | TBD | Lessons 4.3-4.4 + capstone prep | 60 min demo prep | — |
-| 13 | TBD | **Gate 4: Capstone Demo Day** | Full session | **Gate 4** |
+| 13 | TBD | Buffer / catch-up week | 60 min Q&A | — |
+| 14 | TBD | Sessions 5.1-5.2 (Workforce AI + Agent Security) | 90 min lab session | — |
+| 15 | TBD | Sessions 5.3-5.4 + **Gate 4: Capstone Demo Day** | Full session | **Gate 4** |
 
 ---
 

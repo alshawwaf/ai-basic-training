@@ -11,19 +11,19 @@
 
 This curriculum teaches AI and machine learning from the ground up, using **real cybersecurity scenarios** in every lesson. It is the technical core of the **AI Ninja Program** — a selective, cohort-based training program for security architects and engineers across the Americas.
 
-The program starts with AI positioning for customer conversations, progresses through classic ML algorithms and neural networks, and culminates in building a RAG-based security assistant that graduates can demo to customers.
+The program starts with AI positioning for customer conversations, progresses through classic ML algorithms and neural networks, builds a RAG-based security assistant, and culminates with hands-on mastery of Check Point's AI Security product suite.
 
-**5 stages | 17 lessons | 67 exercises | 4 capstone projects | 3-tier certification**
+**6 stages | 21 sessions | 67 exercises | 4 capstone projects | 3-tier certification**
 
 ### Program Documents
 
 | Document | Description |
 |----------|-------------|
-| [Program Syllabus](PROGRAM_SYLLABUS.md) | 13-week schedule, tier system, assessment gates, participant expectations |
+| [Program Syllabus](PROGRAM_SYLLABUS.md) | 15-week schedule, tier system, assessment gates, participant expectations |
 | [Ninja Program Blueprint](NINJA_PROGRAM_BLUEPRINT.md) | Strategic plan, recommendations, and success metrics |
 | [Facilitator Guides](facilitator_guides/) | Teacher notes template and per-lecture delivery guides |
 | [Assessments](assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
-| [Security Corpus](stage4_genai/data/) | 25 curated CVEs, threat actors, runbooks, and detection guides for RAG exercises |
+| [Security Corpus](stage4_genai/data/) | 31 curated documents: CVEs, threat actors, runbooks, detection guides, and Check Point AI products |
 | [Customer Demo Kit](demo_kit/) | Packaged demo assistant, presentation script, architecture one-pager |
 | [Program Operations](program_ops/) | Welcome packet, recruitment pitch, skills survey, certificates, dry-run checklist |
 
@@ -41,6 +41,7 @@ The program starts with AI positioning for customer conversations, progresses th
 - [Stage 2 — Intermediate ML](#stage-2--intermediate-ml)
 - [Stage 3 — Neural Networks](#stage-3--neural-networks)
 - [Stage 4 — Generative AI](#stage-4--generative-ai)
+- [Stage 5 — Check Point AI Security](#stage-5--check-point-ai-security)
 - [Repository Map](#repository-map)
 - [Pacing Guide](#pacing-guide)
 - [Tips for Success](#tips-for-success)
@@ -49,19 +50,19 @@ The program starts with AI positioning for customer conversations, progresses th
 
 ## Learning Path
 
-The five stages follow a deliberate progression. Stage 0 builds your ability to discuss AI in sales and architecture contexts. Stages 1-4 build progressively deeper technical skill.
+The six stages follow a deliberate progression. Stage 0 builds your ability to discuss AI in sales and architecture contexts. Stages 1-4 build progressively deeper technical skill. Stage 5 connects everything to Check Point's AI Security products.
 
-| | Stage 0 — Positioning | Stage 1 — Classic ML | Stage 2 — Intermediate ML | Stage 3 — Neural Networks | Stage 4 — Generative AI |
-|---|---|---|---|---|---|
-| **Topics** | AI landscape | Supervised learning | Feature engineering | Neurons & layers | Tokenisation |
-| | Competitor analysis | Linear regression | Random Forests | Activations & loss | Embeddings & attention |
-| | Objection handling | Logistic regression | Clustering | Keras & CNNs | LLM APIs |
-| | Discovery questions | Decision trees | Cross-validation | Hyperparameter tuning | RAG pipelines |
-| | | Model evaluation | Anomaly detection | Regularisation | Prompt engineering |
-| **Project** | — | Phishing Classifier | Intrusion Detector | Packet Classifier | Security Assistant |
-| **Tier** | — | Tier 1: AI Foundations | Tier 1: AI Foundations | Tier 2: Practitioner | Tier 3: AI Ninja |
+| | Stage 0 — Positioning | Stage 1 — Classic ML | Stage 2 — Intermediate ML | Stage 3 — Neural Networks | Stage 4 — Generative AI | Stage 5 — CP AI Security |
+|---|---|---|---|---|---|---|
+| **Topics** | AI landscape | Supervised learning | Feature engineering | Neurons & layers | Tokenisation | Workforce AI Security |
+| | Competitor analysis | Linear regression | Random Forests | Activations & loss | Embeddings & attention | AI Agent Security + MCP |
+| | Objection handling | Logistic regression | Clustering | Keras & CNNs | LLM APIs | AI Guardrails |
+| | Discovery questions | Decision trees | Cross-validation | Hyperparameter tuning | RAG pipelines | Positioning & demos |
+| | | Model evaluation | Anomaly detection | Regularisation | Prompt engineering | |
+| **Project** | — | Phishing Classifier | Intrusion Detector | Packet Classifier | Security Assistant | Customer Demo |
+| **Tier** | — | Tier 1: AI Foundations | Tier 1: AI Foundations | Tier 2: Practitioner | Tier 3: AI Ninja | Tier 3: AI Ninja |
 
-> Stages 1-4 each end with a **capstone project** — a complete, working application you build from scratch. Stage 4's capstone becomes your **customer demo kit**.
+> Stages 1-4 each end with a **capstone project**. Stage 5 connects your AI knowledge to Check Point's products and prepares you for customer-facing demos.
 
 ---
 
@@ -286,6 +287,27 @@ Tokens and context windows, embeddings, cosine similarity, vector search, RAG pi
 
 ---
 
+## Stage 5 — Check Point AI Security
+
+> Apply everything you've learned to Check Point's AI Security products — and become the expert your customers need.
+
+This stage connects your AI fundamentals to the products you sell. You will learn how Check Point's AI Security suite works under the hood, get hands-on with the MCP playground and Lakera-Demo, and build a customer-facing demo that positions all three products.
+
+| # | Session | Format | Time | Hands-On |
+|---|---------|--------|------|----------|
+| 5.1 | [Workforce AI Security](stage5_cp_ai_security/01_workforce_ai_security/README.md) | Lecture + walkthrough | 60 min | Dashboard exploration, policy design |
+| 5.2 | [AI Agent Security + MCP](stage5_cp_ai_security/02_ai_agent_security/README.md) | Lecture + lab | 90 min | [cp-agentic-mcp-playground](https://github.com/alshawwaf/cp-agentic-mcp-playground) |
+| 5.3 | [AI Guardrails](stage5_cp_ai_security/03_ai_guardrails/README.md) | Lecture + lab | 90 min | [Lakera-Demo](https://github.com/alshawwaf/Lakera-Demo) |
+| 5.4 | [Positioning Check Point AI Security](stage5_cp_ai_security/04_positioning_cp_ai/README.md) | Workshop | 60 min | Customer demo rehearsal |
+
+<details>
+<summary><strong>Key concepts in this stage</strong></summary>
+
+AI governance, shadow AI, sensitive data classification, policy enforcement (allow/prevent/redact/detect/block/ask), AI agents, Model Context Protocol (MCP), least-privilege for agents, prompt injection defense, jailbreak detection, LLM guardrails, inbound/outbound scanning, competitive positioning
+</details>
+
+---
+
 <details>
 <summary><strong>Repository Map</strong></summary>
 
@@ -341,9 +363,15 @@ AI Basic Training/
 │   ├── 02_huggingface/                              3 exercises
 │   ├── 03_llm_api/                                  4 exercises
 │   ├── 04_rag/                                      3 exercises
-│   ├── data/                                        25-document security corpus for RAG
+│   ├── data/                                        31-document security corpus for RAG
 │   └── project/
 │       └── security_assistant.py
+│
+├── stage5_cp_ai_security/                       Stage 5 — Check Point AI Security
+│   ├── 01_workforce_ai_security/                    Dashboard, policy, data classification
+│   ├── 02_ai_agent_security/                        Agents, MCP, playground lab
+│   ├── 03_ai_guardrails/                            LLM defense, Lakera-Demo lab
+│   └── 04_positioning_cp_ai/                        Competitive positioning, demo workshop
 │
 ├── demo_kit/                                    Customer demo kit
 │   ├── demo_assistant.py                            File-loading RAG demo

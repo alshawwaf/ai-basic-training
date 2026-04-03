@@ -14,6 +14,7 @@ Standardised teacher notes for each lecture in the AI Ninja Program. Each guide 
 
 | # | Guide | Lecture | Stage |
 |---|-------|---------|-------|
+| 0.0 | `guide_00_kickoff.md` | Week 0 Kickoff (90 min) | Pre-program |
 | 0.1 | `guide_00_ai_landscape.md` | Stage 0 Session 1 | Stage 0 |
 | 0.2 | `guide_00_competitor_analysis.md` | Stage 0 Session 2 | Stage 0 |
 | 0.3 | `guide_00_objection_handling.md` | Stage 0 Session 3 | Stage 0 |

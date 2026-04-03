@@ -25,6 +25,7 @@ The program starts with AI positioning for customer conversations, progresses th
 | [Assessments](assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
 | [Security Corpus](stage4_genai/data/) | 25 curated CVEs, threat actors, runbooks, and detection guides for RAG exercises |
 | [Customer Demo Kit](demo_kit/) | Packaged demo assistant, presentation script, architecture one-pager |
+| [Program Operations](program_ops/) | Welcome packet, recruitment pitch, skills survey, certificates, dry-run checklist |
 
 ---
 
@@ -354,8 +355,16 @@ AI Basic Training/
 │   └── README.md                                    Gate overview + tier requirements
 │
 ├── facilitator_guides/                          Teacher notes for live sessions
-│   ├── README.md                                    Guide index
+│   ├── README.md                                    Guide index (22 guides)
+│   ├── guide_00_kickoff.md                          Week 0 kickoff (90 min)
 │   └── TEMPLATE.md                                  Standard format for all guides
+│
+├── program_ops/                                 Cohort launch operations
+│   ├── welcome_packet.md                            Participant onboarding packet
+│   ├── recruitment_pitch.md                         Internal pitch for managers
+│   ├── skills_survey.md                             Pre-program assessment
+│   ├── certificates.md                              Tier 1/2/3 certificate specs
+│   └── dry_run_checklist.md                         Session 0.1 dry-run guide
 │
 ├── assets/                                      Diagrams embedded in lesson notes
 └── README.md                                    This file

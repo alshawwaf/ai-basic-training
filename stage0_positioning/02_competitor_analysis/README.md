@@ -295,6 +295,36 @@ OUR POSITIONING STATEMENT (2-3 sentences):
 
 ---
 
+---
+
+## Check Point AI Security — Our Position
+
+While this session focuses on how competitors position their AI, it's equally important to understand our own AI capabilities and how to articulate them.
+
+### Check Point's AI Stack
+
+| Layer | Product | What It Does | AI Under the Hood |
+|-------|---------|-------------|-------------------|
+| Threat Intelligence | ThreatCloud AI | Real-time threat verdicts across all enforcement points | Gradient-boosted trees for malware classification, deep learning for zero-day detection, NLP for phishing |
+| AI Governance | Workforce AI Security | Monitors and governs employee AI tool usage | NLP content classification, sensitive data detection, application fingerprinting |
+| AI Application Security | AI Guardrails | Protects LLM applications against prompt injection, jailbreaks | NLP classifiers, semantic embedding analysis, pattern matching |
+| AI Agent Security | AI Agent Security | Secures autonomous AI agents and MCP tool access | Behavioural analysis, anomaly detection on agent invocations |
+
+### How to Position Against Each Competitor
+
+| Competitor Claim | Our Response |
+|-----------------|-------------|
+| "CrowdStrike Charlotte AI is the most advanced security copilot" | "Charlotte is an investigation assistant — it helps analysts ask questions faster. It doesn't govern employee AI usage, protect LLM applications, or secure AI agents. Our AI Security suite covers all three." |
+| "Microsoft Copilot for Security uses GPT-4 for threat analysis" | "Copilot for Security is Microsoft-only — it doesn't cover ChatGPT, Claude, or open-source models. Workforce AI Security governs ALL AI tools, not just Microsoft's." |
+| "Palo Alto XSIAM uses AI for autonomous SOC operations" | "XSIAM automates SOC workflows — but who secures the AI agents doing the automating? AI Agent Security provides the governance layer for autonomous AI operations." |
+| "Darktrace uses unsupervised AI to detect unknown threats" | "Darktrace detects network anomalies — a different problem. We're talking about securing the AI tools and applications themselves. Workforce AI Security + AI Guardrails is a new category they don't play in." |
+
+### The Key Differentiator
+
+After completing this program, you can do something no competitor's SE can: explain how AI actually works — classification, embeddings, retrieval, neural networks — and connect it directly to how our products use those techniques. That technical depth is the ultimate competitive advantage.
+
+---
+
 ## Next Session
 
 **[Session 0.3 — AI Objection Handling](../03_objection_handling/README.md)**

@@ -23,6 +23,8 @@ The program starts with AI positioning for customer conversations, progresses th
 | [Ninja Program Blueprint](NINJA_PROGRAM_BLUEPRINT.md) | Strategic plan, recommendations, and success metrics |
 | [Facilitator Guides](facilitator_guides/) | Teacher notes template and per-lecture delivery guides |
 | [Assessments](assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
+| [Security Corpus](stage4_genai/data/) | 25 curated CVEs, threat actors, runbooks, and detection guides for RAG exercises |
+| [Customer Demo Kit](demo_kit/) | Packaged demo assistant, presentation script, architecture one-pager |
 
 ---
 
@@ -338,8 +340,15 @@ AI Basic Training/
 │   ├── 02_huggingface/                              3 exercises
 │   ├── 03_llm_api/                                  4 exercises
 │   ├── 04_rag/                                      3 exercises
+│   ├── data/                                        25-document security corpus for RAG
 │   └── project/
 │       └── security_assistant.py
+│
+├── demo_kit/                                    Customer demo kit
+│   ├── demo_assistant.py                            File-loading RAG demo
+│   ├── demo_script.md                               5-minute presentation script
+│   ├── architecture.md                              One-pager for technical buyers
+│   └── demo_queries.md                              10 pre-built demo queries
 │
 ├── assessments/                                 Assessment gates (quizzes, challenges, rubrics)
 │   └── README.md                                    Gate overview + tier requirements

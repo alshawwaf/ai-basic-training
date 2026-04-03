@@ -1,6 +1,6 @@
-# AI Basic Training
+# AI Basic Training — Ninja Program
 
-### A Hands-On Curriculum for Cybersecurity Professionals
+### A Hands-On AI Curriculum for Security Architects and Engineers
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-orange?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
@@ -9,11 +9,20 @@
 
 ---
 
-This curriculum teaches AI and machine learning from the ground up, using **real cybersecurity scenarios** in every lesson. It starts with classic ML algorithms and progresses through neural networks to generative AI — the same trajectory the field itself followed.
+This curriculum teaches AI and machine learning from the ground up, using **real cybersecurity scenarios** in every lesson. It is the technical core of the **AI Ninja Program** — a selective, cohort-based training program for security architects and engineers across the Americas.
 
-Everything is self-paced. There are no deadlines, no quizzes, and no abstract toy datasets. Every exercise uses security data — phishing URLs, network traffic, threat reports, CVEs — so the skills transfer directly to your work.
+The program starts with AI positioning for customer conversations, progresses through classic ML algorithms and neural networks, and culminates in building a RAG-based security assistant that graduates can demo to customers.
 
-**4 stages | 17 lessons | 67 exercises | 79 runnable files**
+**5 stages | 17 lessons | 67 exercises | 4 capstone projects | 3-tier certification**
+
+### Program Documents
+
+| Document | Description |
+|----------|-------------|
+| [Program Syllabus](PROGRAM_SYLLABUS.md) | 13-week schedule, tier system, assessment gates, participant expectations |
+| [Ninja Program Blueprint](NINJA_PROGRAM_BLUEPRINT.md) | Strategic plan, recommendations, and success metrics |
+| [Facilitator Guides](facilitator_guides/) | Teacher notes template and per-lecture delivery guides |
+| [Assessments](assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
 
 ---
 
@@ -24,6 +33,7 @@ Everything is self-paced. There are no deadlines, no quizzes, and no abstract to
 - [Prerequisites](#prerequisites)
 - [Environment Setup](#environment-setup)
 - [How Lessons Are Structured](#how-lessons-are-structured)
+- [Stage 0 — AI for Security Positioning](#stage-0--ai-for-security-positioning)
 - [Stage 1 — Classic Machine Learning](#stage-1--classic-machine-learning)
 - [Stage 2 — Intermediate ML](#stage-2--intermediate-ml)
 - [Stage 3 — Neural Networks](#stage-3--neural-networks)
@@ -36,18 +46,19 @@ Everything is self-paced. There are no deadlines, no quizzes, and no abstract to
 
 ## Learning Path
 
-The four stages follow a deliberate progression. Each one builds on the concepts and intuition developed in the previous stage.
+The five stages follow a deliberate progression. Stage 0 builds your ability to discuss AI in sales and architecture contexts. Stages 1-4 build progressively deeper technical skill.
 
-| | Stage 1 — Classic ML | Stage 2 — Intermediate ML | Stage 3 — Neural Networks | Stage 4 — Generative AI |
-|---|---|---|---|---|
-| **Topics** | Supervised learning | Feature engineering | Neurons & layers | Tokenisation |
-| | Linear regression | Random Forests | Activations & loss | Embeddings & attention |
-| | Logistic regression | Clustering | Keras & CNNs | LLM APIs |
-| | Decision trees | Cross-validation | Hyperparameter tuning | RAG pipelines |
-| | Model evaluation | Anomaly detection | Regularisation | Prompt engineering |
-| **Project** | Phishing Classifier | Intrusion Detector | Packet Classifier | Security Assistant |
+| | Stage 0 — Positioning | Stage 1 — Classic ML | Stage 2 — Intermediate ML | Stage 3 — Neural Networks | Stage 4 — Generative AI |
+|---|---|---|---|---|---|
+| **Topics** | AI landscape | Supervised learning | Feature engineering | Neurons & layers | Tokenisation |
+| | Competitor analysis | Linear regression | Random Forests | Activations & loss | Embeddings & attention |
+| | Objection handling | Logistic regression | Clustering | Keras & CNNs | LLM APIs |
+| | Discovery questions | Decision trees | Cross-validation | Hyperparameter tuning | RAG pipelines |
+| | | Model evaluation | Anomaly detection | Regularisation | Prompt engineering |
+| **Project** | — | Phishing Classifier | Intrusion Detector | Packet Classifier | Security Assistant |
+| **Tier** | — | Tier 1: AI Foundations | Tier 1: AI Foundations | Tier 2: Practitioner | Tier 3: AI Ninja |
 
-> Each stage ends with a **project** — a complete, working application you build from scratch and can run end-to-end.
+> Stages 1-4 each end with a **capstone project** — a complete, working application you build from scratch. Stage 4's capstone becomes your **customer demo kit**.
 
 ---
 
@@ -112,6 +123,21 @@ deactivate
 ### Step 2 — Install Dependencies
 
 Each stage tells you exactly what to install when you reach it. You do not need to install anything beyond the virtual environment right now — just start Stage 1 and follow the instructions as you go.
+
+---
+
+## Stage 0 — AI for Security Positioning
+
+> Learn how to talk about AI in cybersecurity — before writing a single line of code.
+
+This stage is non-technical. It builds the vocabulary, market awareness, and conversational skill needed to discuss AI confidently with customers, partners, and internal stakeholders. Complete this before starting Stage 1.
+
+| # | Session | Format | Time |
+|---|---------|--------|------|
+| 0.1 | [The AI Landscape in Cybersecurity](stage0_positioning/01_ai_landscape/README.md) | Lecture + discussion | 60 min |
+| 0.2 | [How Competitors Position AI](stage0_positioning/02_competitor_analysis/README.md) | Lecture + group exercise | 60 min |
+| 0.3 | [AI Objection Handling](stage0_positioning/03_objection_handling/README.md) | Lecture + role-play | 60 min |
+| 0.4 | [Discovery Questions for AI Use Cases](stage0_positioning/04_discovery_questions/README.md) | Workshop | 60 min |
 
 ---
 
@@ -263,6 +289,16 @@ Tokens and context windows, embeddings, cosine similarity, vector search, RAG pi
 ```
 AI Basic Training/
 │
+├── PROGRAM_SYLLABUS.md                         13-week schedule + participant guide
+├── NINJA_PROGRAM_BLUEPRINT.md                  Strategic plan + recommendations
+│
+├── stage0_positioning/                         Stage 0 — AI for Security Positioning
+│   ├── README.md                                   Overview + session index
+│   ├── 01_ai_landscape/
+│   ├── 02_competitor_analysis/
+│   ├── 03_objection_handling/
+│   └── 04_discovery_questions/
+│
 ├── stage1_classic_ml/                          Stage 1 — Classic ML (5 lessons)
 │   ├── 01_what_is_ml/
 │   │   ├── README.md                                Theory + exercise overview
@@ -304,6 +340,13 @@ AI Basic Training/
 │   ├── 04_rag/                                      3 exercises
 │   └── project/
 │       └── security_assistant.py
+│
+├── assessments/                                 Assessment gates (quizzes, challenges, rubrics)
+│   └── README.md                                    Gate overview + tier requirements
+│
+├── facilitator_guides/                          Teacher notes for live sessions
+│   ├── README.md                                    Guide index
+│   └── TEMPLATE.md                                  Standard format for all guides
 │
 ├── assets/                                      Diagrams embedded in lesson notes
 └── README.md                                    This file

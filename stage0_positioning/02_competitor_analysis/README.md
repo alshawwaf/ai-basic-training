@@ -25,19 +25,13 @@ Every competitor says "AI-powered." Customers hear it from 5 vendors in the same
 
 ### The Five Vendors Customers Ask About Most
 
-```
-+------------------------------------------------------------------+
-|                    COMPETITIVE AI MAP                             |
-|                                                                   |
-|   CROWDSTRIKE          PALO ALTO          SENTINELONE            |
-|   Charlotte AI         Cortex XSIAM       Purple AI              |
-|   ML-first endpoint    AI-driven SOC      Autonomous endpoint    |
-|                                                                   |
-|   DARKTRACE            MICROSOFT                                 |
-|   Self-Learning AI     Security Copilot                          |
-|   Network anomaly      LLM-based triage                          |
-+------------------------------------------------------------------+
-```
+| Vendor | AI Brand | Positioning |
+|--------|----------|-------------|
+| **CrowdStrike** | Charlotte AI | ML-first endpoint detection |
+| **Palo Alto Networks** | Cortex XSIAM | AI-driven SOC platform |
+| **SentinelOne** | Purple AI | Autonomous endpoint response |
+| **Darktrace** | Self-Learning AI | Unsupervised network anomaly detection |
+| **Microsoft** | Security Copilot | LLM-based investigation and triage |
 
 These are the vendors your customers will benchmark you against. For each, we'll cover:
 - **What they claim** — the marketing message
@@ -210,17 +204,13 @@ These are the vendors your customers will benchmark you against. For each, we'll
 
 ### Summary: What Each Vendor Actually Does
 
-```
-                    SUPERVISED ML     UNSUPERVISED ML    LLM / GenAI
-                    (classifiers)     (anomaly det.)     (copilots)
-                   +--------------+-----------------+---------------+
-  CrowdStrike      |  ■■■■■       |  ■■             |  ■■■          |
-  Palo Alto        |  ■■■■        |  ■■■            |  ■■■          |
-  SentinelOne      |  ■■■■■       |  ■■             |  ■■■          |
-  Darktrace        |  ■■          |  ■■■■■          |  ■■           |
-  Microsoft        |  ■■■         |  ■■             |  ■■■■■        |
-                   +--------------+-----------------+---------------+
-```
+| Vendor | Supervised ML (classifiers) | Unsupervised ML (anomaly) | LLM / GenAI (copilots) |
+|--------|---------------------------|--------------------------|----------------------|
+| CrowdStrike | Strong | Low | Medium |
+| Palo Alto | Strong | Medium | Medium |
+| SentinelOne | Strong | Low | Medium |
+| Darktrace | Low | **Very Strong** | Low |
+| Microsoft | Medium | Low | **Very Strong** |
 
 | Vendor | Primary AI Approach | Best At | Weakest At |
 |--------|-------------------|---------|------------|

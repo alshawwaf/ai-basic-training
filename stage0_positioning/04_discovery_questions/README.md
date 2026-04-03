@@ -35,27 +35,12 @@ AI is the mechanism. Discovery uncovers the motivation.
 
 ## The PDFC Framework
 
-```
-+---------------------------------------------------------------+
-|                   PDFC DISCOVERY FRAMEWORK                    |
-|                                                               |
-|   P — PAIN                                                    |
-|       What problem are they trying to solve?                  |
-|       What's the business impact of not solving it?           |
-|                                                               |
-|   D — DATA                                                    |
-|       What data do they have? Where does it live?             |
-|       Is it labelled? How much? How clean?                    |
-|                                                               |
-|   F — FIT                                                     |
-|       Is this problem ML-solvable? Which approach fits?       |
-|       What's the alternative (rules, manual, outsource)?      |
-|                                                               |
-|   C — COMMITMENT                                              |
-|       Do they have the resources to operationalise AI?        |
-|       Who owns the model after deployment?                    |
-+---------------------------------------------------------------+
-```
+| Phase | Focus | Key Questions |
+|-------|-------|--------------|
+| **P — Pain** | What problem are they trying to solve? | What's the business impact of not solving it? |
+| **D — Data** | What data do they have? Where does it live? | Is it labelled? How much? How clean? |
+| **F — Fit** | Is this problem ML-solvable? Which approach fits? | What's the alternative (rules, manual, outsource)? |
+| **C — Commitment** | Do they have the resources to operationalise AI? | Who owns the model after deployment? |
 
 Each phase has a set of discovery questions. Work through them in order — each phase gates the next.
 
@@ -159,35 +144,14 @@ Not every problem needs AI. Some are better solved with rules, SOAR playbooks, o
 
 For a problem to be a good ML candidate, it should meet at least 4 of these 6 criteria:
 
-```
-+---------------------------------------------------------------+
-|               ML FIT CHECKLIST                                |
-|                                                               |
-|   [ ] 1. PATTERN-BASED                                        |
-|         The problem involves finding patterns in data          |
-|         that are too complex or numerous for manual rules      |
-|                                                               |
-|   [ ] 2. DATA AVAILABLE                                       |
-|         Relevant data exists (labelled or unlabelled)          |
-|         in sufficient volume                                   |
-|                                                               |
-|   [ ] 3. TOLERANCE FOR IMPERFECTION                           |
-|         The use case can handle some false positives           |
-|         or false negatives — it's not all-or-nothing          |
-|                                                               |
-|   [ ] 4. SCALE PROBLEM                                        |
-|         The volume of signals or decisions exceeds             |
-|         what humans can handle manually                        |
-|                                                               |
-|   [ ] 5. DYNAMIC THREAT LANDSCAPE                             |
-|         The patterns change over time — rules would            |
-|         require constant manual updating                       |
-|                                                               |
-|   [ ] 6. MEASURABLE OUTCOME                                   |
-|         You can define what "better" looks like                |
-|         (fewer FPs, faster MTTD, higher recall)               |
-+---------------------------------------------------------------+
-```
+| # | Criterion | What It Means |
+|---|-----------|--------------|
+| 1 | **Pattern-based** | The problem involves finding patterns in data that are too complex or numerous for manual rules |
+| 2 | **Data available** | Relevant data exists (labelled or unlabelled) in sufficient volume |
+| 3 | **Tolerance for imperfection** | The use case can handle some false positives or false negatives — it's not all-or-nothing |
+| 4 | **Scale problem** | The volume of signals or decisions exceeds what humans can handle manually |
+| 5 | **Dynamic threat landscape** | The patterns change over time — rules would require constant manual updating |
+| 6 | **Measurable outcome** | You can define what "better" looks like (fewer FPs, faster MTTD, higher recall) |
 
 ### Discovery Questions for Fit
 

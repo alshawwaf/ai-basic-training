@@ -21,29 +21,11 @@ Before diving into specific objections, learn the framework that handles all of 
 
 Most objection-handling frameworks are designed for price or feature objections. AI objections are different — they're rooted in **misunderstanding, fear, or past bad experience**. Arguing doesn't work. Education does.
 
-```
-+---------------------------------------------------------------+
-|                    THE ACE FRAMEWORK                          |
-|                                                               |
-|   A — ACKNOWLEDGE                                            |
-|       Validate the concern. It's usually reasonable.          |
-|       "That's a fair concern — a lot of teams have had        |
-|        that experience."                                      |
-|                                                               |
-|   C — CLARIFY                                                 |
-|       Ask a question to understand what's behind              |
-|       the objection. Often the real concern is                |
-|       different from the stated one.                          |
-|       "When you say AI didn't work — was the issue            |
-|        false positives, or detection gaps?"                   |
-|                                                               |
-|   E — EDUCATE                                                 |
-|       Share a specific technical insight that reframes         |
-|       the objection. Use ML vocabulary precisely.             |
-|       "The false positive problem is usually a threshold      |
-|        tuning issue, not an AI failure. Here's how..."        |
-+---------------------------------------------------------------+
-```
+| Step | Action | Example |
+|------|--------|---------|
+| **A — Acknowledge** | Validate the concern. It's usually reasonable. | *"That's a fair concern — a lot of teams have had that experience."* |
+| **C — Clarify** | Ask a question to understand what's behind the objection. Often the real concern is different from the stated one. | *"When you say AI didn't work — was the issue false positives, or detection gaps?"* |
+| **E — Educate** | Share a specific technical insight that reframes the objection. Use ML vocabulary precisely. | *"The false positive problem is usually a threshold tuning issue, not an AI failure. Here's how..."* |
 
 **Why ACE works:** Customers raise AI objections because they've been burned by hype. Jumping to "but our AI is different" sounds like more hype. Acknowledging their experience first builds trust. Clarifying reveals the real problem. Educating — with technical specifics — demonstrates that you actually understand the technology.
 

@@ -25,34 +25,14 @@ That's it. Everything else is detail.
 
 ### Terminology — Precise, Not Impressive
 
-These terms get thrown around interchangeably in sales conversations. Here's what they actually mean:
+These terms get thrown around interchangeably in sales conversations. Here's what they actually mean — each layer is a subset of the one above it:
 
-```
-+-------------------------------------------------------------------+
-|                    ARTIFICIAL INTELLIGENCE                         |
-|   Any system that performs tasks normally requiring                |
-|   human intelligence                                              |
-|                                                                   |
-|   +---------------------------------------------------------------+
-|   |                  MACHINE LEARNING                             |
-|   |   Systems that learn from data without being                  |
-|   |   explicitly programmed for each case                        |
-|   |                                                               |
-|   |   +-----------------------------------------------------------+
-|   |   |               DEEP LEARNING                              |
-|   |   |   ML using neural networks with many                     |
-|   |   |   layers — learns complex patterns                       |
-|   |   |                                                           |
-|   |   |   +-------------------------------------------------------+
-|   |   |   |           GENERATIVE AI / LLMs                       |
-|   |   |   |   Deep learning models that generate                 |
-|   |   |   |   text, code, images, or structured                  |
-|   |   |   |   output (ChatGPT, Claude, Gemini)                   |
-|   |   |   +-------------------------------------------------------+
-|   |   +-----------------------------------------------------------+
-|   +---------------------------------------------------------------+
-+-------------------------------------------------------------------+
-```
+| Layer | What It Means | Scope |
+|-------|--------------|-------|
+| **Artificial Intelligence** | Any system that performs tasks normally requiring human intelligence | Broadest — includes rules, search, planning, ML |
+| **Machine Learning** | Systems that learn from data without being explicitly programmed | Subset of AI — the most common form in security today |
+| **Deep Learning** | ML using neural networks with many layers — learns complex patterns | Subset of ML — used for image, text, and sequence data |
+| **Generative AI / LLMs** | Deep learning models that generate text, code, images, or structured output (ChatGPT, Claude, Gemini) | Newest layer — analyst copilots, RAG, report generation |
 
 **Key point for customer conversations:** Most AI in production security tools today is **machine learning** — not deep learning, not generative AI. When a vendor says "AI-powered," they usually mean a random forest or gradient-boosted tree trained on labelled telemetry. That's not a criticism — those models work well. But knowing this lets you ask the right follow-up questions.
 
@@ -105,31 +85,16 @@ When a customer asks "Do you use AI?", the real question is "Which generation of
 
 ### The AI Map Across the Security Stack
 
-```
-+------------------------------------------------------------------+
-|                        SECURITY STACK                             |
-|                                                                   |
-|  ENDPOINT          NETWORK          EMAIL           IDENTITY      |
-|  +-----------+    +-----------+    +-----------+   +-----------+  |
-|  | Behavioural|   | Traffic   |    | Phishing  |   | Anomalous |  |
-|  | analysis   |   | anomaly   |    | detection |   | login     |  |
-|  | Process    |   | DPI +     |    | URL       |   | detection |  |
-|  | lineage    |   | flow      |    | analysis  |   | Risk      |  |
-|  | ML models  |   | analysis  |    | NLP on    |   | scoring   |  |
-|  +-----------+    +-----------+    | body text |   +-----------+  |
-|                                    +-----------+                  |
-|                                                                   |
-|  SIEM/SOAR         CLOUD           THREAT INTEL    VULNERABILITY  |
-|  +-----------+    +-----------+    +-----------+   +-----------+  |
-|  | Alert     |    | Config    |    | IOC        |   | Priority  |  |
-|  | scoring   |    | drift     |    | clustering |   | scoring   |  |
-|  | Anomaly   |    | detection |    | Campaign   |   | Exploit   |  |
-|  | detection |    | Workload  |    | attribution|   | prediction|  |
-|  | Auto-     |    | profiling |    | Report     |   | CVSS      |  |
-|  | triage    |    +-----------+    | generation |   | enrichment|  |
-|  +-----------+                     +-----------+   +-----------+  |
-+------------------------------------------------------------------+
-```
+| Domain | AI Applications |
+|--------|----------------|
+| **Endpoint** | Behavioural analysis, process lineage scoring, pre-execution ML classification |
+| **Network** | Traffic anomaly detection, DPI + flow analysis, DNS anomaly detection |
+| **Email** | Phishing detection, URL analysis, NLP on body text, BEC detection |
+| **Identity** | Anomalous login detection, risk-based authentication, privilege anomaly scoring |
+| **SIEM / SOAR** | Alert scoring and prioritisation, anomaly detection on logs, automated triage |
+| **Cloud** | Configuration drift detection, workload profiling, cloud posture anomalies |
+| **Threat Intel** | IOC clustering, campaign attribution, report generation |
+| **Vulnerability** | Priority scoring, exploit prediction, CVSS enrichment |
 
 ### Breakdown by Domain
 
@@ -196,37 +161,15 @@ AI washing is when a product claims to use "AI" or "ML" but the actual technolog
 
 When evaluating an AI claim — from a competitor, a vendor, or your own product — ask these five questions:
 
-```
-+-------------------------------------------------------+
-|           AI CLAIM EVALUATION FRAMEWORK               |
-|                                                       |
-|  1. WHAT MODEL?                                       |
-|     "What algorithm or model architecture?"            |
-|     Vague: "proprietary AI"                           |
-|     Real: "gradient-boosted tree on 50M samples"      |
-|                                                       |
-|  2. WHAT DATA?                                        |
-|     "What training data? How much? How often updated?"|
-|     Vague: "trained on global threat intelligence"    |
-|     Real: "retrained weekly on 2M labelled events"    |
-|                                                       |
-|  3. WHAT METRIC?                                      |
-|     "What's the false positive rate? Recall?"         |
-|     Vague: "industry-leading detection rates"         |
-|     Real: "97% recall at 0.1% FPR on CICIDS2017"     |
-|                                                       |
-|  4. WHAT BASELINE?                                    |
-|     "Compared to what? Rules alone? Previous version?"|
-|     Vague: "significantly reduces alert fatigue"      |
-|     Real: "58% fewer false positives vs rule-only"    |
-|                                                       |
-|  5. WHAT FAILS?                                       |
-|     "Where does the model struggle? What are the      |
-|      known failure modes?"                            |
-|     Vague: (silence)                                  |
-|     Real: "struggles with encrypted C2 over port 443" |
-+-------------------------------------------------------+
-```
+**The AI Claim Evaluation Framework — 5 Questions:**
+
+| # | Question | Vague Answer (red flag) | Real Answer (credible) |
+|---|----------|----------------------|----------------------|
+| 1 | **What model?** — "What algorithm or model architecture?" | "Proprietary AI" | "Gradient-boosted tree on 50M samples" |
+| 2 | **What data?** — "What training data? How much? How often updated?" | "Trained on global threat intelligence" | "Retrained weekly on 2M labelled events" |
+| 3 | **What metric?** — "What's the false positive rate? Recall?" | "Industry-leading detection rates" | "97% recall at 0.1% FPR on CICIDS2017" |
+| 4 | **What baseline?** — "Compared to what? Rules alone? Previous version?" | "Significantly reduces alert fatigue" | "58% fewer false positives vs rule-only" |
+| 5 | **What fails?** — "Where does the model struggle? Known failure modes?" | (silence) | "Struggles with encrypted C2 over port 443" |
 
 ### Red Flags in Vendor Claims
 

@@ -28,30 +28,30 @@ That's it. Everything else is detail.
 These terms get thrown around interchangeably in sales conversations. Here's what they actually mean:
 
 ```
-+--------------------------------------------------------------+
-|                  ARTIFICIAL INTELLIGENCE                      |
-|  Any system that performs tasks normally requiring             |
-|  human intelligence                                           |
-|                                                               |
-|  +------------------------------------------------------+   |
-|  |              MACHINE LEARNING                         |   |
-|  |  Systems that learn from data without being           |   |
-|  |  explicitly programmed for each case                  |   |
-|  |                                                       |   |
-|  |  +----------------------------------------------+   |   |
-|  |  |           DEEP LEARNING                       |   |   |
-|  |  |  ML using neural networks with many           |   |   |
-|  |  |  layers — learns complex patterns             |   |   |
-|  |  |                                               |   |   |
-|  |  |  +--------------------------------------+   |   |   |
-|  |  |  |     GENERATIVE AI / LLMs             |   |   |   |
-|  |  |  |  Deep learning models that generate  |   |   |   |
-|  |  |  |  text, code, images, or structured   |   |   |   |
-|  |  |  |  output (ChatGPT, Claude, Gemini)    |   |   |   |
-|  |  |  +--------------------------------------+   |   |   |
-|  |  +----------------------------------------------+   |   |
-|  +------------------------------------------------------+   |
-+--------------------------------------------------------------+
++-------------------------------------------------------------------+
+|                    ARTIFICIAL INTELLIGENCE                         |
+|   Any system that performs tasks normally requiring                |
+|   human intelligence                                              |
+|                                                                   |
+|   +---------------------------------------------------------------+
+|   |                  MACHINE LEARNING                             |
+|   |   Systems that learn from data without being                  |
+|   |   explicitly programmed for each case                        |
+|   |                                                               |
+|   |   +-----------------------------------------------------------+
+|   |   |               DEEP LEARNING                              |
+|   |   |   ML using neural networks with many                     |
+|   |   |   layers — learns complex patterns                       |
+|   |   |                                                           |
+|   |   |   +-------------------------------------------------------+
+|   |   |   |           GENERATIVE AI / LLMs                       |
+|   |   |   |   Deep learning models that generate                 |
+|   |   |   |   text, code, images, or structured                  |
+|   |   |   |   output (ChatGPT, Claude, Gemini)                   |
+|   |   |   +-------------------------------------------------------+
+|   |   +-----------------------------------------------------------+
+|   +---------------------------------------------------------------+
++-------------------------------------------------------------------+
 ```
 
 **Key point for customer conversations:** Most AI in production security tools today is **machine learning** — not deep learning, not generative AI. When a vendor says "AI-powered," they usually mean a random forest or gradient-boosted tree trained on labelled telemetry. That's not a criticism — those models work well. But knowing this lets you ask the right follow-up questions.

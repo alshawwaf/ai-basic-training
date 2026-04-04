@@ -14,7 +14,7 @@
                 <h2>{{ stage.title }}</h2>
                 <p>{{ stage.desc }}</p>
             </div>
-            <span class="tier-badge">{{ stage.tier }} &middot; Weeks {{ stage.weeks }}</span>
+            <span class="tier-badge">{{ stage.tier }} &middot; ~{{ stage.lessons | sum(attribute='minutes') }} min</span>
         </div>
 
         <div class="lesson-cards">
@@ -24,7 +24,7 @@
                 <div class="lesson-num">{{ lesson.num }}</div>
                 <div class="lesson-info">
                     <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }}</div>
+                    <div class="desc">{{ lesson.desc }} &middot; ~{{ lesson.minutes }} min</div>
                 </div>
                 <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
             </a>
@@ -33,7 +33,7 @@
                 <div class="lesson-num">{{ lesson.num }}</div>
                 <div class="lesson-info">
                     <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }}</div>
+                    <div class="desc">{{ lesson.desc }} &middot; ~{{ lesson.minutes }} min</div>
                 </div>
                 <span style="margin-left:auto; font-size:11px; color:var(--text-dim);">Coming soon</span>
             </div>
@@ -44,7 +44,7 @@
     {% endfor %}
 
     <p style="text-align:center; color:var(--text-dim); font-size:13px; margin-top:32px;">
-        21 lessons &middot; 15 weeks &middot; 3 certification tiers
+        21 lessons &middot; 3 certification tiers
     </p>
 </div>
 

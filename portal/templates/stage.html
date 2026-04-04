@@ -11,7 +11,7 @@
             <h2>Stage {{ stage.num }}: {{ stage.title }}</h2>
             <p>{{ stage.desc }}</p>
         </div>
-        <span class="tier-badge">{{ stage.tier }} &middot; Weeks {{ stage.weeks }}</span>
+        <span class="tier-badge">{{ stage.tier }} &middot; ~{{ stage.lessons | sum(attribute='minutes') }} min</span>
     </div>
 
     <div class="lesson-cards" style="grid-template-columns: 1fr;">

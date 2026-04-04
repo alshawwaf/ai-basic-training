@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 from sklearn.datasets import load_digits
 
-if "agg" in plt.get_backend().lower():
+if plt.get_backend().lower() == "agg":
     print("ERROR: Non-interactive matplotlib backend detected.")
     print("Run this from a terminal:  python explore_08_pixel_importance.py")
     sys.exit(1)

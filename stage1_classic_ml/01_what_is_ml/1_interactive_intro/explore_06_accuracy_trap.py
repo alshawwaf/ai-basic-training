@@ -16,7 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-if "agg" in plt.get_backend().lower():
+if plt.get_backend().lower() == "agg":
     print("ERROR: Non-interactive matplotlib backend detected.")
     print("Run this from a terminal:  python explore_06_accuracy_trap.py")
     sys.exit(1)

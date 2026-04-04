@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import RadioButtons, Button
 from sklearn.datasets import load_digits
 
-if "agg" in plt.get_backend().lower():
+if plt.get_backend().lower() == "agg":
     print("ERROR: Non-interactive matplotlib backend detected.")
     print("Run this from a terminal:  python explore_07_average_digits.py")
     sys.exit(1)

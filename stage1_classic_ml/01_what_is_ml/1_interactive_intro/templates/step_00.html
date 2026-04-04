@@ -2,7 +2,7 @@
 {% block content %}
 <div class="card">
     <h3>What digit is this?</h3>
-    <p>A machine learning dataset is just rows of numbers. Each row below is an 8x8 image of a handwritten digit.</p>
+    <p>A machine learning dataset is just rows of numbers. Each row below is an 8x8 image of a handwritten digit. Can you tell what it is?</p>
 
     <div class="grids-row">
         <div class="grid-container">
@@ -10,14 +10,21 @@
         </div>
     </div>
 
-    <div style="text-align:center; margin: 16px 0;">
-        <button class="btn btn-primary" id="btn-reveal">Reveal the answer</button>
-        <button class="btn" id="btn-new">New digit</button>
+    <div style="text-align:center; margin: 20px 0;">
+        <p style="color: var(--text-dim); margin-bottom: 10px;">Your guess:</p>
+        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:16px;" id="guess-buttons">
+            {% for d in range(10) %}
+            <button class="btn guess-btn" data-digit="{{ d }}" onclick="makeGuess({{ d }})">{{ d }}</button>
+            {% endfor %}
+        </div>
+        <div id="result-area" class="hidden" style="margin-bottom:16px;">
+            <div class="info-box" id="result-text"></div>
+        </div>
+        <button class="btn" id="btn-new" onclick="newDigit()">New digit</button>
     </div>
 
     <div id="answer-area" class="hidden">
-        <div class="info-box blue" id="answer-text"></div>
-        <h3 style="margin-top:16px;">What the model receives:</h3>
+        <h3>What the model receives:</h3>
         <p>Not an image — just a flat array of 64 numbers:</p>
         <div class="flat-array" id="flat-display"></div>
     </div>
@@ -33,28 +40,93 @@
 {% endblock %}
 
 {% block scripts %}
+<style>
+    .guess-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+    .guess-btn.selected {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+    }
+    .guess-btn.correct {
+        border-color: var(--green);
+        background: var(--green);
+        color: #fff;
+    }
+    .guess-btn.wrong {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+    }
+    .guess-btn.was-answer {
+        border-color: var(--green);
+        outline: 3px solid var(--green);
+    }
+</style>
 <script>
     let image = {{ image | tojson }};
     let label = {{ label }};
     let flat  = {{ flat | tojson }};
+    let guessed = false;
 
     renderGrid('digit-display', image);
 
-    document.getElementById('btn-reveal').onclick = () => {
-        document.getElementById('answer-area').classList.remove('hidden');
-        document.getElementById('answer-text').innerHTML =
-            `This is a <strong>${label}</strong>.`;
-        document.getElementById('flat-display').textContent =
-            '[' + flat.join(', ') + ']';
-    };
+    function makeGuess(digit) {
+        if (guessed) return;
+        guessed = true;
 
-    document.getElementById('btn-new').onclick = async () => {
+        const correct = digit === label;
+        const resultEl = document.getElementById('result-text');
+        const buttons = document.querySelectorAll('.guess-btn');
+
+        // Highlight the chosen button
+        buttons[digit].classList.add(correct ? 'correct' : 'wrong');
+
+        // If wrong, also highlight the correct answer
+        if (!correct) {
+            buttons[label].classList.add('was-answer');
+        }
+
+        // Disable all buttons
+        buttons.forEach(b => b.style.pointerEvents = 'none');
+
+        // Show result
+        if (correct) {
+            resultEl.className = 'info-box green';
+            resultEl.innerHTML = `<strong>Correct!</strong> It's a ${label}.`;
+        } else {
+            resultEl.className = 'info-box red';
+            resultEl.innerHTML = `Not quite — it's a <strong>${label}</strong>, not a ${digit}. Look at the highlighted button for the right answer.`;
+        }
+        document.getElementById('result-area').classList.remove('hidden');
+
+        // Show flat array
+        document.getElementById('answer-area').classList.remove('hidden');
+        document.getElementById('flat-display').textContent = '[' + flat.join(', ') + ']';
+    }
+
+    async function newDigit() {
         const data = await fetchJSON('/api/random-digit');
         image = data.image;
         label = data.label;
         flat  = data.flat;
+        guessed = false;
+
         renderGrid('digit-display', image);
         document.getElementById('answer-area').classList.add('hidden');
-    };
+        document.getElementById('result-area').classList.add('hidden');
+
+        // Reset buttons
+        const buttons = document.querySelectorAll('.guess-btn');
+        buttons.forEach(b => {
+            b.className = 'btn guess-btn';
+            b.style.pointerEvents = '';
+        });
+    }
 </script>
 {% endblock %}

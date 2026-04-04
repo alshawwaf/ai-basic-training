@@ -191,7 +191,8 @@ def step(n):
         ctx["flat"] = digits.data[idx].astype(int).tolist()
 
     elif n == 1:
-        ctx["real_digit"] = averages[7]
+        sample_7 = digits.images[digits.target == 7][0].astype(int).tolist()
+        ctx["real_digit"] = sample_7
 
     elif n == 2:
         ctx["averages"] = averages

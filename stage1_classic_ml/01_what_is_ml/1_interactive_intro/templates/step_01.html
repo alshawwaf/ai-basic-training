@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Create your own digit</h3>
-    <p>Click and drag on the grid to draw. Use the brush slider to control darkness (0 = white, 16 = black). Right-click or use the eraser to clear pixels.</p>
+    <h3>Pixels are just numbers</h3>
+    <p>Every image in this dataset is an 8x8 grid of numbers. Each number (0–16) represents how dark that pixel is. That's all a "digit image" is — 64 numbers.</p>
+    <p>Your task: <strong>draw a digit on the left grid and try to match the real one on the right.</strong> Click and drag to paint. Use the slider to control how dark your brush is.</p>
+</div>
 
+<div class="card">
     <div class="controls">
         <div class="slider-group" style="max-width:300px;">
-            <label>Brush intensity</label>
+            <label>Brush darkness (0 = white, 16 = black)</label>
             <input type="range" id="brush-val" min="0" max="16" step="1" value="12" oninput="updateBrushLabel()">
         </div>
         <div class="slider-value" id="brush-label">12</div>
@@ -17,16 +20,25 @@
 
     <div class="grids-row">
         <div class="grid-container">
-            <div class="label">Draw here</div>
+            <div class="label">Your drawing</div>
             <div class="digit-grid large paint-grid" id="paint-grid"></div>
+            <div style="font-size:12px; color:var(--text-dim); margin-top:6px;">Click & drag to draw. Right-click to erase.</div>
+        </div>
+        <div class="grid-container" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="font-size:32px; color:var(--text-dim); margin-bottom:8px;">&#8592; try to match &#8594;</div>
         </div>
         <div class="grid-container">
-            <div class="label">Real digit 7</div>
+            <div class="label">Real digit 7 (from the dataset)</div>
             <div class="digit-grid large" id="real-grid"></div>
+            <div style="font-size:12px; color:var(--text-dim); margin-top:6px;">This is what the model trains on.</div>
         </div>
     </div>
+</div>
 
-    <div class="info-box blue" id="flat-display" style="font-family:monospace; font-size:13px; word-break:break-all;"></div>
+<div class="card">
+    <h3>What the model actually sees</h3>
+    <p>To a model, your drawing isn't a picture — it's a flat row of 64 numbers. Every change you make above updates this array in real time:</p>
+    <div class="info-box blue" id="flat-display" style="font-family:'JetBrains Mono',monospace; font-size:13px; word-break:break-all;"></div>
 </div>
 {% endblock %}
 
@@ -46,7 +58,7 @@
         -webkit-user-select: none;
     }
     .paint-grid .cell:hover {
-        outline: 2px solid var(--blue);
+        outline: 2px solid var(--accent);
         outline-offset: -2px;
         z-index: 1;
     }
@@ -99,8 +111,8 @@
         const flat = myDigit.flat();
         const nonzero = flat.filter(v => v > 0).length;
         document.getElementById('flat-display').innerHTML =
-            `<strong>What the model sees:</strong> [${flat.join(', ')}]` +
-            `<br><span style="color:var(--text-dim)">${nonzero} of 64 pixels are non-zero</span>`;
+            `[${flat.join(', ')}]` +
+            `<br><br><span style="color:var(--text-dim)">${nonzero} of 64 pixels are non-zero</span>`;
     }
 
     function attachPaintEvents() {

@@ -1,0 +1,42 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}
+
+{% block body %}
+<div class="welcome">
+    <p style="margin-bottom: 8px;"><a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 14px;">&larr; Back to portal</a></p>
+    <h1>{{ lesson_title }}</h1>
+    <p class="tagline">What is Machine Learning?</p>
+
+    <p style="color: var(--text-dim); margin-bottom: 32px; line-height: 1.6; max-width: 520px; margin-left:auto; margin-right:auto;">
+        Learn by doing, not reading. Each step lets you manipulate real data
+        and discover ML concepts yourself.
+    </p>
+
+    <div class="step-cards">
+        {% for s in steps %}
+        <a href="{{ url_prefix }}/step/{{ s.id }}" class="step-card" id="card-{{ s.id }}">
+            <div class="num">{{ s.id }}</div>
+            <div class="info">
+                <div class="title">{{ s.title }}</div>
+                <div class="desc">{{ s.sub }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <p style="color: var(--text-dim); margin-top: 32px; font-size: 14px;">
+        ~100 minutes &middot; 10 interactive steps &middot; Start with Step 0
+    </p>
+</div>
+
+<script>
+    const visited = getVisitedSteps();
+    visited.forEach(step => {
+        const card = document.getElementById('card-' + step);
+        if (card) {
+            card.querySelector('.num').style.background = 'var(--green)';
+            card.querySelector('.num').textContent = '\u2713';
+        }
+    });
+</script>
+{% endblock %}

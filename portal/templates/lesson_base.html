@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Mobile hamburger -->
+    <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <nav class="sidebar">
+        <h2><a href="/">AI Ninja</a></h2>
+        <p class="subtitle"><a href="{{ url_prefix }}/" style="color:inherit; text-decoration:none;">{{ lesson_title }}</a></p>
+        <ul>
+            {% for s in steps %}
+            <li class="{{ 'active' if s.id == current else '' }}" data-step="{{ s.id }}">
+                <a href="{{ url_prefix }}/step/{{ s.id }}">
+                    <span class="step-num">{{ s.id }}</span>
+                    <span>{{ s.title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <div style="padding: 16px 20px; border-top: 1px solid var(--border); margin-top: 12px;">
+            <a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 13px;">&larr; Back to portal</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Progress bar -->
+        <div class="progress-wrap">
+            <div class="progress-fill" style="width: {{ ((current + 1) / (steps | length) * 100) | round(0) }}%"></div>
+        </div>
+
+        <div class="step-header">
+            <h1>Step {{ current }}: {{ steps[current].title }}</h1>
+            <p>{{ steps[current].sub }}</p>
+        </div>
+
+        <div class="content-layout">
+            <!-- Left: main step content -->
+            <div class="content-main">
+                {% block content %}{% endblock %}
+            </div>
+
+            <!-- Right: challenge + security stacked -->
+            <aside class="content-aside">
+                <div class="challenge-box">
+                    <button class="challenge-toggle" onclick="toggleChallenge()">
+                        What happens if...?
+                    </button>
+                    <div class="challenge-body">
+                        <p>{{ challenge.q }}</p>
+                        <button class="btn btn-sm" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
+                        <div class="answer">{{ challenge.a | safe }}</div>
+                    </div>
+                </div>
+
+                {% block security %}{% endblock %}
+            </aside>
+        </div>
+
+        <!-- Nav -->
+        <div class="nav-buttons">
+            {% if current > 0 %}
+                <a href="{{ url_prefix }}/step/{{ current - 1 }}">&#8592; Previous</a>
+            {% else %}
+                <a href="{{ url_prefix }}/">&#8592; Overview</a>
+            {% endif %}
+            <span class="kbd-hint"><span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> to navigate</span>
+            {% if current < (steps | length) - 1 %}
+                <a href="{{ url_prefix }}/step/{{ current + 1 }}">Next step &#8594;</a>
+            {% else %}
+                <a href="/">Back to portal</a>
+            {% endif %}
+        </div>
+    </main>
+
+    <script src="/static/app.js"></script>
+    <script>
+        // Track progress per lesson
+        const lessonId = '{{ lesson_id }}';
+        const urlPrefix = '{{ url_prefix }}';
+
+        function markStepVisitedPortal(step) {
+            try {
+                const progress = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+                if (!progress[lessonId]) progress[lessonId] = [];
+                if (!progress[lessonId].includes(step)) {
+                    progress[lessonId].push(step);
+                    localStorage.setItem('portalProgress', JSON.stringify(progress));
+                }
+            } catch(e) {}
+            markStepVisited(step);
+        }
+
+        markStepVisitedPortal({{ current }});
+        applyVisitedSteps();
+
+        // Keyboard nav scoped to lesson
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+            const total = {{ steps | length }};
+            const cur = {{ current }};
+            if (e.key === 'ArrowLeft' && cur > 0) {
+                window.location.href = urlPrefix + '/step/' + (cur - 1);
+            } else if (e.key === 'ArrowRight' && cur < total - 1) {
+                window.location.href = urlPrefix + '/step/' + (cur + 1);
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

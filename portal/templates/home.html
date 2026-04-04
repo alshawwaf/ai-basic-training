@@ -1,0 +1,64 @@
+{% extends "portal_base.html" %}
+{% block title %}AI Ninja Program — Training Portal{% endblock %}
+
+{% block body %}
+<div class="portal-home">
+    <h1>AI Ninja Program</h1>
+    <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
+
+    {% for stage in stages %}
+    <div class="stage-section" style="animation-delay: {{ loop.index0 * 0.08 }}s;">
+        <div class="stage-header">
+            <div class="stage-num {{ stage.id }}">{{ stage.num }}</div>
+            <div class="stage-info">
+                <h2>{{ stage.title }}</h2>
+                <p>{{ stage.desc }}</p>
+            </div>
+            <span class="tier-badge">{{ stage.tier }} &middot; Weeks {{ stage.weeks }}</span>
+        </div>
+
+        <div class="lesson-cards">
+            {% for lesson in stage.lessons %}
+            {% if lesson.id in registered %}
+            <a href="/lesson/{{ lesson.id }}/" class="lesson-card active">
+                <div class="lesson-num">{{ lesson.num }}</div>
+                <div class="lesson-info">
+                    <div class="title">{{ lesson.title }}</div>
+                    <div class="desc">{{ lesson.desc }}</div>
+                </div>
+                <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
+            </a>
+            {% else %}
+            <div class="lesson-card locked">
+                <div class="lesson-num">{{ lesson.num }}</div>
+                <div class="lesson-info">
+                    <div class="title">{{ lesson.title }}</div>
+                    <div class="desc">{{ lesson.desc }}</div>
+                </div>
+                <span style="margin-left:auto; font-size:11px; color:var(--text-dim);">Coming soon</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <p style="text-align:center; color:var(--text-dim); font-size:13px; margin-top:32px;">
+        21 lessons &middot; 15 weeks &middot; 3 certification tiers
+    </p>
+</div>
+
+<script>
+    // Show completion badges for visited lessons
+    try {
+        const visited = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+        Object.keys(visited).forEach(lessonId => {
+            const badge = document.getElementById('badge-' + lessonId);
+            const steps = visited[lessonId] || [];
+            if (badge && steps.length > 0) {
+                badge.textContent = steps.length + ' visited';
+            }
+        });
+    } catch(e) {}
+</script>
+{% endblock %}

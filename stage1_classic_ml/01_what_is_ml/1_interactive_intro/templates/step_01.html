@@ -2,27 +2,31 @@
 {% block content %}
 <div class="card">
     <h3>Create your own digit</h3>
-    <p>Each pixel is a number from 0 (white) to 16 (black). Edit the grid below to draw a digit, then compare it with a real one from the dataset.</p>
+    <p>Click and drag on the grid to draw. Use the brush slider to control darkness (0 = white, 16 = black). Right-click or use the eraser to clear pixels.</p>
+
+    <div class="controls">
+        <div class="slider-group" style="max-width:300px;">
+            <label>Brush intensity</label>
+            <input type="range" id="brush-val" min="0" max="16" step="1" value="12" oninput="updateBrushLabel()">
+        </div>
+        <div class="slider-value" id="brush-label">12</div>
+        <button class="btn" id="btn-mode" onclick="toggleEraser()" style="min-width:90px;">Eraser</button>
+        <button class="btn" onclick="clearGrid()">Clear</button>
+        <button class="btn" onclick="fillSeven()">Load a 7</button>
+    </div>
 
     <div class="grids-row">
         <div class="grid-container">
-            <div class="label">Your digit</div>
-            <div class="edit-grid" id="edit-grid"></div>
-        </div>
-        <div class="grid-container">
-            <div class="label">Your digit (preview)</div>
-            <div class="digit-grid medium" id="preview-grid"></div>
+            <div class="label">Draw here</div>
+            <div class="digit-grid large paint-grid" id="paint-grid"></div>
         </div>
         <div class="grid-container">
             <div class="label">Real digit 7</div>
-            <div class="digit-grid medium" id="real-grid"></div>
+            <div class="digit-grid large" id="real-grid"></div>
         </div>
     </div>
 
-    <div style="text-align:center; margin-top: 12px;">
-        <button class="btn" onclick="fillSeven()">Load a template 7</button>
-        <button class="btn" onclick="clearGrid()">Clear</button>
-    </div>
+    <div class="info-box blue" id="flat-display" style="font-family:monospace; font-size:13px; word-break:break-all;"></div>
 </div>
 {% endblock %}
 
@@ -35,9 +39,23 @@
 {% endblock %}
 
 {% block scripts %}
+<style>
+    .paint-grid .cell {
+        cursor: crosshair;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    .paint-grid .cell:hover {
+        outline: 2px solid var(--blue);
+        outline-offset: -2px;
+        z-index: 1;
+    }
+</style>
 <script>
     const realDigit = {{ real_digit | tojson }};
     let myDigit = Array.from({length: 8}, () => Array(8).fill(0));
+    let painting = false;
+    let erasing = false;
 
     const template7 = [
         [ 0,  0,  4, 12, 12,  2,  0,  0],
@@ -50,62 +68,87 @@
         [ 0,  0,  4, 12,  0,  0,  0,  0],
     ];
 
-    // Build editable grid
-    const editEl = document.getElementById('edit-grid');
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            const inp = document.createElement('input');
-            inp.type = 'number';
-            inp.min = 0;
-            inp.max = 16;
-            inp.value = 0;
-            inp.dataset.row = i;
-            inp.dataset.col = j;
-            inp.addEventListener('input', () => {
-                const v = Math.max(0, Math.min(16, parseInt(inp.value) || 0));
-                inp.value = v;
-                myDigit[i][j] = v;
-                // Update input background
-                const t = v / 16;
-                const c = Math.round(255 * (1 - t));
-                inp.style.backgroundColor = `rgb(${c},${c},${c})`;
-                inp.style.color = t > 0.45 ? '#fff' : '#222';
-                updatePreview();
-            });
-            editEl.appendChild(inp);
-        }
+    function getBrush() {
+        return erasing ? 0 : parseInt(document.getElementById('brush-val').value);
     }
 
-    function updatePreview() {
-        renderGrid('preview-grid', myDigit);
+    function updateBrushLabel() {
+        document.getElementById('brush-label').textContent =
+            document.getElementById('brush-val').value;
+    }
+
+    function toggleEraser() {
+        erasing = !erasing;
+        const btn = document.getElementById('btn-mode');
+        btn.textContent = erasing ? 'Brush' : 'Eraser';
+        btn.style.borderColor = erasing ? 'var(--red)' : '';
+    }
+
+    function paintCell(i, j) {
+        myDigit[i][j] = getBrush();
+        refreshGrid();
+    }
+
+    function refreshGrid() {
+        renderGrid('paint-grid', myDigit, {showVals: true});
+        attachPaintEvents();
+        updateFlat();
+    }
+
+    function updateFlat() {
+        const flat = myDigit.flat();
+        const nonzero = flat.filter(v => v > 0).length;
+        document.getElementById('flat-display').innerHTML =
+            `<strong>What the model sees:</strong> [${flat.join(', ')}]` +
+            `<br><span style="color:var(--text-dim)">${nonzero} of 64 pixels are non-zero</span>`;
+    }
+
+    function attachPaintEvents() {
+        const cells = document.querySelectorAll('#paint-grid .cell');
+        cells.forEach((cell, idx) => {
+            const i = Math.floor(idx / 8), j = idx % 8;
+
+            cell.onmousedown = (e) => {
+                e.preventDefault();
+                if (e.button === 2) { myDigit[i][j] = 0; refreshGrid(); return; }
+                painting = true;
+                paintCell(i, j);
+            };
+            cell.onmouseenter = () => { if (painting) paintCell(i, j); };
+            cell.ontouchstart = (e) => {
+                e.preventDefault();
+                painting = true;
+                paintCell(i, j);
+            };
+            cell.ontouchmove = (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (el && el.classList.contains('cell')) {
+                    const parent = el.parentElement;
+                    const allCells = [...parent.children];
+                    const ti = allCells.indexOf(el);
+                    if (ti >= 0) paintCell(Math.floor(ti / 8), ti % 8);
+                }
+            };
+        });
+    }
+
+    document.addEventListener('mouseup', () => { painting = false; });
+    document.addEventListener('touchend', () => { painting = false; });
+    document.getElementById('paint-grid').addEventListener('contextmenu', e => e.preventDefault());
+
+    function clearGrid() {
+        myDigit = Array.from({length: 8}, () => Array(8).fill(0));
+        refreshGrid();
     }
 
     function fillSeven() {
         myDigit = template7.map(r => [...r]);
-        const inputs = editEl.querySelectorAll('input');
-        inputs.forEach(inp => {
-            const i = +inp.dataset.row, j = +inp.dataset.col;
-            inp.value = myDigit[i][j];
-            const t = myDigit[i][j] / 16;
-            const c = Math.round(255 * (1 - t));
-            inp.style.backgroundColor = `rgb(${c},${c},${c})`;
-            inp.style.color = t > 0.45 ? '#fff' : '#222';
-        });
-        updatePreview();
+        refreshGrid();
     }
 
-    function clearGrid() {
-        myDigit = Array.from({length: 8}, () => Array(8).fill(0));
-        const inputs = editEl.querySelectorAll('input');
-        inputs.forEach(inp => {
-            inp.value = 0;
-            inp.style.backgroundColor = 'rgb(255,255,255)';
-            inp.style.color = '#222';
-        });
-        updatePreview();
-    }
-
-    renderGrid('real-grid', realDigit);
-    updatePreview();
+    renderGrid('real-grid', realDigit, {showVals: true});
+    refreshGrid();
 </script>
 {% endblock %}

@@ -98,20 +98,20 @@
             data: {
                 labels: pcts.map(p => p + '%'),
                 datasets: [
-                    {label: 'Accuracy',  data: acc,  borderColor: '#2ecc71', tension: 0.3, pointRadius: 3},
-                    {label: 'Precision', data: prec, borderColor: '#3498db', tension: 0.3, pointRadius: 3},
-                    {label: 'Recall',    data: rec,  borderColor: '#e94560', tension: 0.3, pointRadius: 3},
-                    {label: 'F1 Score',  data: f1,   borderColor: '#f39c12', tension: 0.3, pointRadius: 3},
+                    {label: 'Accuracy',  data: acc,  borderColor: '#10b981', tension: 0.3, pointRadius: 3},
+                    {label: 'Precision', data: prec, borderColor: '#06b6d4', tension: 0.3, pointRadius: 3},
+                    {label: 'Recall',    data: rec,  borderColor: '#f43f5e', tension: 0.3, pointRadius: 3},
+                    {label: 'F1 Score',  data: f1,   borderColor: '#f59e0b', tension: 0.3, pointRadius: 3},
                 ],
             },
             options: {
                 responsive: true,
                 scales: {
-                    y: {min: 0, max: 1.05, ticks: {color: '#8892b0'}, grid: {color: '#2a2a4a'}},
-                    x: {ticks: {color: '#8892b0'}, grid: {color: '#2a2a4a'}},
+                    y: {min: 0, max: 1.05, ticks: {color: '#7b82a8'}, grid: {color: '#1e2140'}},
+                    x: {ticks: {color: '#7b82a8'}, grid: {color: '#1e2140'}},
                 },
                 plugins: {
-                    legend: {labels: {color: '#e0e0e0'}},
+                    legend: {labels: {color: '#e4e6f0', font: {family: "'Space Grotesk'"}}},
                     annotation: currentPct ? {
                         annotations: {line1: {type: 'line', xMin: currentPct/5, xMax: currentPct/5, borderColor: '#888', borderDash: [4,4]}}
                     } : {},

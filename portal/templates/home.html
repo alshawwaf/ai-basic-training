@@ -1,6 +1,8 @@
 {% extends "portal_base.html" %}
 {% block title %}AI Ninja Program — Training Portal{% endblock %}
 
+{% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
+
 {% block body %}
 <div class="portal-home">
     <h1>AI Ninja Program</h1>
@@ -14,7 +16,7 @@
                 <h2>{{ stage.title }}</h2>
                 <p>{{ stage.desc }}</p>
             </div>
-            <span class="tier-badge">{{ stage.tier }} &middot; ~{{ stage.lessons | sum(attribute='minutes') }} min</span>
+            <span class="tier-badge">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
         </div>
 
         <div class="lesson-cards">
@@ -24,7 +26,7 @@
                 <div class="lesson-num">{{ lesson.num }}</div>
                 <div class="lesson-info">
                     <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }} &middot; ~{{ lesson.minutes }} min</div>
+                    <div class="desc">{{ lesson.desc }} &middot; {{ fmt_time(lesson.minutes) }}</div>
                 </div>
                 <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
             </a>
@@ -33,7 +35,7 @@
                 <div class="lesson-num">{{ lesson.num }}</div>
                 <div class="lesson-info">
                     <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }} &middot; ~{{ lesson.minutes }} min</div>
+                    <div class="desc">{{ lesson.desc }} &middot; {{ fmt_time(lesson.minutes) }}</div>
                 </div>
                 <span style="margin-left:auto; font-size:11px; color:var(--text-dim);">Coming soon</span>
             </div>

@@ -1,6 +1,8 @@
 {% extends "portal_base.html" %}
 {% block title %}Stage {{ stage.num }}: {{ stage.title }} — AI Ninja Program{% endblock %}
 
+{% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
+
 {% block body %}
 <div class="stage-detail">
     <a href="/" class="back-link">&larr; Back to portal</a>
@@ -11,7 +13,7 @@
             <h2>Stage {{ stage.num }}: {{ stage.title }}</h2>
             <p>{{ stage.desc }}</p>
         </div>
-        <span class="tier-badge">{{ stage.tier }} &middot; ~{{ stage.lessons | sum(attribute='minutes') }} min</span>
+        <span class="tier-badge">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
     </div>
 
     <div class="lesson-cards" style="grid-template-columns: 1fr;">

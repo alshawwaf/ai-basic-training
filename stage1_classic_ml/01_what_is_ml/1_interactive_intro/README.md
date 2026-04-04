@@ -34,8 +34,8 @@ pip install numpy matplotlib scikit-learn pandas jupyter
 
 The explore scripts give you intuition. The existing exercise folders give you practice writing code:
 
-- [1_loading_data/](1_loading_data/) — Load and inspect the dataset yourself
-- [2_statistics/](2_statistics/) — Compute summary statistics with pandas
-- [3_class_balance/](3_class_balance/) — Detect and measure imbalance
-- [4_visualise/](4_visualise/) — Plot digits and prototypes with matplotlib
-- [5_what_model_sees/](5_what_model_sees/) — Work with flat arrays and correlations
+- [1_loading_data/](../2_coding_exercises/1_loading_data/) — Load and inspect the dataset yourself
+- [2_statistics/](../2_coding_exercises/2_statistics/) — Compute summary statistics with pandas
+- [3_class_balance/](../2_coding_exercises/3_class_balance/) — Detect and measure imbalance
+- [4_visualise/](../2_coding_exercises/4_visualise/) — Plot digits and prototypes with matplotlib
+- [5_what_model_sees/](../2_coding_exercises/5_what_model_sees/) — Work with flat arrays and correlations

@@ -227,4 +227,4 @@ This is not a one-time exercise. This is how every ML project begins — every s
 
 When all 5 exercises run cleanly, compare your code against the matching solution file for each exercise.
 
-**Next lesson:** [Lesson 1.2 — Linear Regression](../../02_linear_regression/README.md) — build your first trained model.
+**Next lesson:** [Lesson 1.2 — Linear Regression](../../../02_linear_regression/README.md) — build your first trained model.

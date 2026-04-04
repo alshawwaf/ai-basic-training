@@ -193,7 +193,7 @@ main {
     margin-left: 260px;
     flex: 1;
     padding: 32px 40px;
-    max-width: 1100px;
+    max-width: 1400px;
 }
 
 .step-header {
@@ -496,21 +496,29 @@ select:hover, .btn:hover {
     margin: 16px auto;
 }
 
-/* ── Bottom row (challenge + security side by side) ─────────────────────── */
-.bottom-row {
+/* ── Two-column layout (content left, aside right) ──────────────────────── */
+.content-layout {
     display: flex;
-    gap: 16px;
-    align-items: stretch;
-    margin: 28px 0 20px;
+    gap: 20px;
+    align-items: flex-start;
 }
-.bottom-row .challenge-box {
-    flex: 2;
-    min-width: 0;
-    margin: 0;
-}
-.bottom-row .security-callout {
+.content-main {
     flex: 1;
     min-width: 0;
+}
+.content-aside {
+    width: 280px;
+    min-width: 280px;
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.content-aside .challenge-box {
+    margin: 0;
+}
+.content-aside .security-callout {
     margin: 0;
 }
 
@@ -978,7 +986,8 @@ select:hover, .btn:hover {
     .metric-card { min-width: 100px; padding: 12px; }
     .metric-card .val { font-size: 22px; }
     .nav-buttons a { padding: 8px 16px; font-size: 13px; }
-    .bottom-row { flex-direction: column; }
+    .content-layout { flex-direction: column; }
+    .content-aside { width: 100%; min-width: 0; position: static; }
 }
 @media (max-width: 480px) {
     .digit-grid.large { width: 240px; }

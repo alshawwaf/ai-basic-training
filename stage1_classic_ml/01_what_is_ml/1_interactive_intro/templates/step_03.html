@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Dataset dimensions</h3>
+    <p>Before training any model, you must know the shape of your data.</p>
+
+    <div style="display:flex; gap:24px; flex-wrap:wrap; margin: 16px 0;">
+        <div class="stat"><div class="value">{{ shape[0] }}</div><div class="label">Samples</div></div>
+        <div class="stat"><div class="value">{{ shape[1] }}</div><div class="label">Features (pixels)</div></div>
+        <div class="stat"><div class="value">10</div><div class="label">Classes (digits 0-9)</div></div>
+        <div class="stat"><div class="value">8 x 8</div><div class="label">Image size</div></div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Explore any sample</h3>
+    <p>Enter an index (0–{{ n_samples - 1 }}) to see that sample's image and pixel values.</p>
+
+    <div class="controls">
+        <input type="number" id="sample-idx" value="0" min="0" max="{{ n_samples - 1 }}"
+               class="guess-input" style="width:100px;">
+        <button class="btn btn-primary" onclick="loadSample()">Load</button>
+        <button class="btn" onclick="randomSample()">Random</button>
+    </div>
+
+    <div class="grids-row">
+        <div class="grid-container">
+            <div class="label" id="sample-label">Sample 0</div>
+            <div class="digit-grid medium" id="sample-grid"></div>
+        </div>
+    </div>
+
+    <div class="flat-array" id="sample-flat" style="margin-top:8px;"></div>
+    <div id="sample-error" class="info-box red hidden"></div>
+</div>
+
+<div class="card">
+    <h3>Class distribution</h3>
+    <p>How many samples per digit? Are they evenly distributed?</p>
+
+    <div id="class-bars"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The shape of your data tells you everything about
+    the problem. 1,797 samples × 64 features. In a network dataset it might be 500,000
+    connections × 12 features. Same structure. Same tools.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const classCounts = {{ class_counts | tojson }};
+    const maxCount = Math.max(...classCounts);
+
+    async function loadSample() {
+        const idx = document.getElementById('sample-idx').value;
+        const errEl = document.getElementById('sample-error');
+        errEl.classList.add('hidden');
+
+        try {
+            const data = await fetchJSON(`/api/sample/${idx}`);
+            if (data.error) {
+                errEl.textContent = data.error;
+                errEl.classList.remove('hidden');
+                return;
+            }
+            document.getElementById('sample-label').textContent =
+                `Sample ${idx} — label: ${data.label}`;
+            renderGrid('sample-grid', data.image);
+            document.getElementById('sample-flat').textContent =
+                '[' + data.flat.join(', ') + ']';
+        } catch(e) {
+            errEl.textContent = 'Error loading sample';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    function randomSample() {
+        document.getElementById('sample-idx').value =
+            Math.floor(Math.random() * {{ n_samples }});
+        loadSample();
+    }
+
+    // Class distribution bars
+    const barsEl = document.getElementById('class-bars');
+    classCounts.forEach((count, d) => {
+        const pct = (count / maxCount * 100).toFixed(0);
+        barsEl.innerHTML += `
+            <div class="bar-row">
+                <div class="bar-label">Digit ${d}</div>
+                <div class="bar-track">
+                    <div class="bar-fill blue" style="width:${pct}%"></div>
+                </div>
+                <div class="bar-count">${count}</div>
+            </div>`;
+    });
+
+    loadSample();
+</script>
+{% endblock %}

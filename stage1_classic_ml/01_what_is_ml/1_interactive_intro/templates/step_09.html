@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Can you read numbers like a model?</h3>
+    <p>A machine learning model never sees an image. It receives a flat row of 64 numbers.
+       Try to identify the digit from just the numbers below.</p>
+
+    <div id="game-area">
+        <div id="round-info" class="info-box blue" style="font-size:16px; text-align:center;"></div>
+
+        <div class="flat-array" id="flat-display" style="margin: 16px 0;"></div>
+
+        <div style="text-align:center; margin: 16px 0;">
+            <input type="number" id="guess-input" class="guess-input" min="0" max="9" placeholder="?">
+            <button class="btn btn-primary" id="btn-guess" onclick="submitGuess()">Guess</button>
+        </div>
+
+        <div id="result-area" class="hidden">
+            <div class="info-box" id="result-text"></div>
+            <div class="grids-row" style="margin-top:12px;">
+                <div class="grid-container">
+                    <div class="label" id="result-label"></div>
+                    <div class="digit-grid medium" id="result-grid"></div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:12px;">
+                <button class="btn btn-primary" id="btn-next" onclick="nextRound()">Next round</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="final-score" class="hidden">
+        <div class="info-box green" style="text-align:center; font-size:18px;" id="score-text"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Now imagine a network intrusion model.
+    Instead of pixel values, it receives:<br>
+    <code>[1048576, 443, 2.4, 14, 0, 3, 1, 0.87, 2048, ...]</code><br>
+    bytes_sent, dest_port, duration, packets, flags, protocol, is_encrypted, entropy, payload_size...
+    <br>Same idea. Different domain. <strong>Just numbers in a row.</strong>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const totalRounds = 5;
+    let round = 0;
+    let correct = 0;
+    let currentLabel = {{ label }};
+    let currentImage = {{ image | tojson }};
+    let currentFlat = {{ flat | tojson }};
+
+    function showRound() {
+        document.getElementById('round-info').innerHTML =
+            `Round <strong>${round + 1}</strong> of ${totalRounds} &nbsp;|&nbsp; Score: ${correct}/${round}`;
+        document.getElementById('flat-display').textContent =
+            '[' + currentFlat.join(', ') + ']';
+        document.getElementById('guess-input').value = '';
+        document.getElementById('guess-input').focus();
+        document.getElementById('result-area').classList.add('hidden');
+        document.getElementById('btn-guess').disabled = false;
+    }
+
+    function submitGuess() {
+        const guess = parseInt(document.getElementById('guess-input').value);
+        if (isNaN(guess) || guess < 0 || guess > 9) return;
+
+        document.getElementById('btn-guess').disabled = true;
+        const isCorrect = guess === currentLabel;
+        if (isCorrect) correct++;
+
+        const resultEl = document.getElementById('result-text');
+        if (isCorrect) {
+            resultEl.className = 'info-box green';
+            resultEl.innerHTML = `<strong>Correct!</strong> It was a ${currentLabel}.`;
+        } else {
+            resultEl.className = 'info-box red';
+            resultEl.innerHTML = `Not quite — it was a <strong>${currentLabel}</strong>, not a ${guess}.`;
+        }
+
+        document.getElementById('result-label').textContent = `Answer: digit ${currentLabel}`;
+        renderGrid('result-grid', currentImage);
+        document.getElementById('result-area').classList.remove('hidden');
+
+        if (round + 1 >= totalRounds) {
+            document.getElementById('btn-next').textContent = 'See final score';
+        }
+    }
+
+    async function nextRound() {
+        round++;
+        if (round >= totalRounds) {
+            showFinalScore();
+            return;
+        }
+        const data = await fetchJSON('/api/random-digit');
+        currentLabel = data.label;
+        currentImage = data.image;
+        currentFlat = data.flat;
+        showRound();
+    }
+
+    function showFinalScore() {
+        document.getElementById('game-area').classList.add('hidden');
+        document.getElementById('final-score').classList.remove('hidden');
+
+        let msg = `Final score: <strong>${correct}/${totalRounds}</strong><br><br>`;
+        if (correct >= 4)      msg += "Impressive! You're reading numbers like a model.";
+        else if (correct >= 2) msg += "Not bad. With practice, patterns emerge.";
+        else                   msg += "That's the point — raw numbers are hard for humans.<br>But models process them in milliseconds.";
+
+        document.getElementById('score-text').innerHTML = msg;
+    }
+
+    // Handle Enter key
+    document.getElementById('guess-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submitGuess();
+    });
+
+    showRound();
+</script>
+{% endblock %}

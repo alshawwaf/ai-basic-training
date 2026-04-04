@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The accuracy trap</h3>
+    <p>A real LogisticRegression model is trained as you drag the slider.
+       Watch accuracy stay high while recall collapses — this is the most dangerous metric in security.</p>
+
+    <div class="controls">
+        <label>Target class:
+            <select id="sel-class" onchange="loadMetrics()">
+                {% for d in range(10) %}<option value="{{ d }}" {{ 'selected' if d == 9 }}>Digit {{ d }}</option>{% endfor %}
+            </select>
+        </label>
+        <div class="slider-group">
+            <label>Remove % of target class</label>
+            <input type="range" id="remove-pct" min="0" max="95" step="5" value="0"
+                   oninput="updateDisplay()">
+        </div>
+        <div class="slider-value" id="pct-val">0%</div>
+    </div>
+
+    <div class="metrics-row" id="metric-cards">
+        <div class="metric-card" id="mc-acc"><div class="name">Accuracy</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-prec"><div class="name">Precision</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-rec"><div class="name">Recall</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-f1"><div class="name">F1 Score</div><div class="val">—</div></div>
+    </div>
+
+    <div class="info-box red hidden" id="trap-warn"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Metric trajectories</h3>
+        <div class="chart-wrap"><canvas id="line-chart"></canvas></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In security, the "rare class" is the attack.
+    A malware detector with 99% accuracy but 10% recall misses 9 out of 10 threats.
+    Security models must use <strong>F1, precision/recall, and ROC-AUC</strong> — not accuracy.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let metricsData = {};
+    let lineChart = null;
+
+    function metricClass(name, val, rec) {
+        if (name === 'Accuracy' && val > 0.9 && rec < 0.5) return 'bad';
+        if (val < 0.5) return 'bad';
+        if (val < 0.75) return 'warn';
+        return 'ok';
+    }
+
+    function updateCard(id, val, cls) {
+        const el = document.getElementById(id);
+        el.querySelector('.val').textContent = (val * 100).toFixed(0) + '%';
+        el.className = 'metric-card ' + cls;
+    }
+
+    function updateDisplay() {
+        const pct = +document.getElementById('remove-pct').value;
+        document.getElementById('pct-val').textContent = pct + '%';
+
+        const m = metricsData[String(pct)];
+        if (!m) return;
+
+        updateCard('mc-acc',  m.acc,  metricClass('Accuracy',  m.acc,  m.rec));
+        updateCard('mc-prec', m.prec, metricClass('Precision', m.prec, m.rec));
+        updateCard('mc-rec',  m.rec,  metricClass('Recall',    m.rec,  m.rec));
+        updateCard('mc-f1',   m.f1,   metricClass('F1',        m.f1,   m.rec));
+
+        // Trap warning
+        const warnEl = document.getElementById('trap-warn');
+        if (m.acc > 0.9 && m.rec < 0.5) {
+            warnEl.innerHTML = `<strong>THE TRAP:</strong> ${(m.acc * 100).toFixed(0)}% accuracy but only ${(m.rec * 100).toFixed(0)}% recall — the model misses most target samples!`;
+            warnEl.classList.remove('hidden');
+        } else {
+            warnEl.classList.add('hidden');
+        }
+
+        updateChart(pct);
+    }
+
+    function updateChart(currentPct) {
+        const pcts = Object.keys(metricsData).map(Number).sort((a, b) => a - b);
+        const acc = pcts.map(p => metricsData[String(p)].acc);
+        const prec = pcts.map(p => metricsData[String(p)].prec);
+        const rec = pcts.map(p => metricsData[String(p)].rec);
+        const f1 = pcts.map(p => metricsData[String(p)].f1);
+
+        if (lineChart) lineChart.destroy();
+        lineChart = new Chart(document.getElementById('line-chart'), {
+            type: 'line',
+            data: {
+                labels: pcts.map(p => p + '%'),
+                datasets: [
+                    {label: 'Accuracy',  data: acc,  borderColor: '#2ecc71', tension: 0.3, pointRadius: 3},
+                    {label: 'Precision', data: prec, borderColor: '#3498db', tension: 0.3, pointRadius: 3},
+                    {label: 'Recall',    data: rec,  borderColor: '#e94560', tension: 0.3, pointRadius: 3},
+                    {label: 'F1 Score',  data: f1,   borderColor: '#f39c12', tension: 0.3, pointRadius: 3},
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {min: 0, max: 1.05, ticks: {color: '#8892b0'}, grid: {color: '#2a2a4a'}},
+                    x: {ticks: {color: '#8892b0'}, grid: {color: '#2a2a4a'}},
+                },
+                plugins: {
+                    legend: {labels: {color: '#e0e0e0'}},
+                    annotation: currentPct ? {
+                        annotations: {line1: {type: 'line', xMin: currentPct/5, xMax: currentPct/5, borderColor: '#888', borderDash: [4,4]}}
+                    } : {},
+                },
+            },
+        });
+    }
+
+    async function loadMetrics() {
+        const cls = document.getElementById('sel-class').value;
+        const data = await fetchJSON(`/api/trap-all?cls=${cls}`);
+        metricsData = data;
+        updateDisplay();
+    }
+
+    loadMetrics();
+</script>
+{% endblock %}

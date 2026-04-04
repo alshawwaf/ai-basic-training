@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Compare two digit prototypes</h3>
+    <p>Each image below is the <em>average</em> of all samples for that digit. The difference heatmap shows where they diverge.</p>
+
+    <div class="controls">
+        <label>Digit A:
+            <select id="sel-a" onchange="updateComparison()">
+                {% for d in range(10) %}<option value="{{ d }}" {{ 'selected' if d == 3 }}>{{ d }}</option>{% endfor %}
+            </select>
+        </label>
+        <label>Digit B:
+            <select id="sel-b" onchange="updateComparison()">
+                {% for d in range(10) %}<option value="{{ d }}" {{ 'selected' if d == 8 }}>{{ d }}</option>{% endfor %}
+            </select>
+        </label>
+        <button class="btn" onclick="randomPair()">Random pair</button>
+    </div>
+
+    <div class="grids-row">
+        <div class="grid-container">
+            <div class="label" id="label-a">Average 3</div>
+            <div class="digit-grid medium" id="grid-a"></div>
+        </div>
+        <div class="grid-container">
+            <div class="label" id="label-b">Average 8</div>
+            <div class="digit-grid medium" id="grid-b"></div>
+        </div>
+        <div class="grid-container">
+            <div class="label">Difference</div>
+            <div class="digit-grid medium" id="grid-diff"></div>
+        </div>
+    </div>
+
+    <div class="info-box blue" id="sim-text" style="text-align:center; font-size:16px;"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> When two prototypes look alike, the model struggles to separate
+    them — just like distinguishing legitimate HTTPS traffic from C2 beaconing. The more overlap between
+    classes, the harder the classification task.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const averages = {{ averages | tojson }};
+
+    function updateComparison() {
+        const a = +document.getElementById('sel-a').value;
+        const b = +document.getElementById('sel-b').value;
+        const imgA = averages[a], imgB = averages[b];
+        const diff = diffGrid(imgA, imgB);
+        const sim = similarity(imgA, imgB);
+
+        document.getElementById('label-a').textContent = `Average ${a}`;
+        document.getElementById('label-b').textContent = `Average ${b}`;
+
+        renderGrid('grid-a', imgA);
+        renderGrid('grid-b', imgB);
+        renderGrid('grid-diff', diff, {colorFn: hotColor, textFn: hotText});
+
+        const color = sim > 0.85 ? 'var(--red)' : 'var(--blue)';
+        document.getElementById('sim-text').innerHTML =
+            `Similarity: <strong style="color:${color}">${(sim * 100).toFixed(0)}%</strong>` +
+            (sim > 0.85 ? ' — these will confuse a model!' : '');
+    }
+
+    function randomPair() {
+        let a = Math.floor(Math.random() * 10);
+        let b = Math.floor(Math.random() * 10);
+        while (b === a) b = Math.floor(Math.random() * 10);
+        document.getElementById('sel-a').value = a;
+        document.getElementById('sel-b').value = b;
+        updateComparison();
+    }
+
+    updateComparison();
+</script>
+{% endblock %}

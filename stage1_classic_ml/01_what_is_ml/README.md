@@ -6,7 +6,7 @@ Work through the two folders **in order**:
 
 | # | Folder | What | Time |
 |---|--------|------|------|
-| 1 | [1_interactive_intro/](1_interactive_intro/) | **Visual exploration** — 10 interactive scripts with sliders, buttons, and prompts to build intuition about ML concepts | ~100 min |
+| 1 | [1_interactive_intro/](1_interactive_intro/) | **Visual exploration** — run `python app.py`, open localhost:5000, and explore 10 interactive steps in your browser | ~100 min |
 | 2 | [2_coding_exercises/](2_coding_exercises/) | **Write the code** — 5 guided exercises where you build scripts from scratch, with solutions to compare against | ~60 min |
 
 Open `1_interactive_intro/` first — it has its own README with step-by-step instructions.

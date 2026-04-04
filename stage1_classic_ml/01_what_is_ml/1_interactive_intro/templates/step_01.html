@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Create your own digit</h3>
+    <p>Each pixel is a number from 0 (white) to 16 (black). Edit the grid below to draw a digit, then compare it with a real one from the dataset.</p>
+
+    <div class="grids-row">
+        <div class="grid-container">
+            <div class="label">Your digit</div>
+            <div class="edit-grid" id="edit-grid"></div>
+        </div>
+        <div class="grid-container">
+            <div class="label">Your digit (preview)</div>
+            <div class="digit-grid medium" id="preview-grid"></div>
+        </div>
+        <div class="grid-container">
+            <div class="label">Real digit 7</div>
+            <div class="digit-grid medium" id="real-grid"></div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 12px;">
+        <button class="btn" onclick="fillSeven()">Load a template 7</button>
+        <button class="btn" onclick="clearGrid()">Clear</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In malware analysis, features aren't pixels — they're things like
+    file entropy, import counts, and section sizes. But the principle is identical: every feature is just
+    a number, and every sample is just a row of numbers.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const realDigit = {{ real_digit | tojson }};
+    let myDigit = Array.from({length: 8}, () => Array(8).fill(0));
+
+    const template7 = [
+        [ 0,  0,  4, 12, 12,  2,  0,  0],
+        [ 0,  0,  0,  4, 12,  6,  0,  0],
+        [ 0,  0,  0,  0, 12,  4,  0,  0],
+        [ 0,  0,  0,  2, 14,  0,  0,  0],
+        [ 0,  0,  0,  6, 10,  0,  0,  0],
+        [ 0,  0,  0, 10,  6,  0,  0,  0],
+        [ 0,  0,  2, 14,  2,  0,  0,  0],
+        [ 0,  0,  4, 12,  0,  0,  0,  0],
+    ];
+
+    // Build editable grid
+    const editEl = document.getElementById('edit-grid');
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.min = 0;
+            inp.max = 16;
+            inp.value = 0;
+            inp.dataset.row = i;
+            inp.dataset.col = j;
+            inp.addEventListener('input', () => {
+                const v = Math.max(0, Math.min(16, parseInt(inp.value) || 0));
+                inp.value = v;
+                myDigit[i][j] = v;
+                // Update input background
+                const t = v / 16;
+                const c = Math.round(255 * (1 - t));
+                inp.style.backgroundColor = `rgb(${c},${c},${c})`;
+                inp.style.color = t > 0.45 ? '#fff' : '#222';
+                updatePreview();
+            });
+            editEl.appendChild(inp);
+        }
+    }
+
+    function updatePreview() {
+        renderGrid('preview-grid', myDigit);
+    }
+
+    function fillSeven() {
+        myDigit = template7.map(r => [...r]);
+        const inputs = editEl.querySelectorAll('input');
+        inputs.forEach(inp => {
+            const i = +inp.dataset.row, j = +inp.dataset.col;
+            inp.value = myDigit[i][j];
+            const t = myDigit[i][j] / 16;
+            const c = Math.round(255 * (1 - t));
+            inp.style.backgroundColor = `rgb(${c},${c},${c})`;
+            inp.style.color = t > 0.45 ? '#fff' : '#222';
+        });
+        updatePreview();
+    }
+
+    function clearGrid() {
+        myDigit = Array.from({length: 8}, () => Array(8).fill(0));
+        const inputs = editEl.querySelectorAll('input');
+        inputs.forEach(inp => {
+            inp.value = 0;
+            inp.style.backgroundColor = 'rgb(255,255,255)';
+            inp.style.color = '#222';
+        });
+        updatePreview();
+    }
+
+    renderGrid('real-grid', realDigit);
+    updatePreview();
+</script>
+{% endblock %}

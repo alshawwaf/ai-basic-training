@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What digit is this?</h3>
+    <p>A machine learning dataset is just rows of numbers. Each row below is an 8x8 image of a handwritten digit.</p>
+
+    <div class="grids-row">
+        <div class="grid-container">
+            <div class="digit-grid medium" id="digit-display"></div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin: 16px 0;">
+        <button class="btn btn-primary" id="btn-reveal">Reveal the answer</button>
+        <button class="btn" id="btn-new">New digit</button>
+    </div>
+
+    <div id="answer-area" class="hidden">
+        <div class="info-box blue" id="answer-text"></div>
+        <h3 style="margin-top:16px;">What the model receives:</h3>
+        <p>Not an image — just a flat array of 64 numbers:</p>
+        <div class="flat-array" id="flat-display"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A network intrusion model receives the same kind of input — not
+    packet captures or log files, but flat rows of numbers: <code>[bytes_sent, dest_port, duration, flags, ...]</code>.
+    Same structure, different domain.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let image = {{ image | tojson }};
+    let label = {{ label }};
+    let flat  = {{ flat | tojson }};
+
+    renderGrid('digit-display', image);
+
+    document.getElementById('btn-reveal').onclick = () => {
+        document.getElementById('answer-area').classList.remove('hidden');
+        document.getElementById('answer-text').innerHTML =
+            `This is a <strong>${label}</strong>.`;
+        document.getElementById('flat-display').textContent =
+            '[' + flat.join(', ') + ']';
+    };
+
+    document.getElementById('btn-new').onclick = async () => {
+        const data = await fetchJSON('/api/random-digit');
+        image = data.image;
+        label = data.label;
+        flat  = data.flat;
+        renderGrid('digit-display', image);
+        document.getElementById('answer-area').classList.add('hidden');
+    };
+</script>
+{% endblock %}

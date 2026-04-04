@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lesson 1.1 — What is ML?{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <nav class="sidebar">
+        <h2><a href="/">Lesson 1.1</a></h2>
+        <p class="subtitle">What is Machine Learning?</p>
+        <ul>
+            {% for s in steps %}
+            <li class="{{ 'active' if s.id == current else '' }}">
+                <a href="/step/{{ s.id }}">
+                    <span class="step-num">{{ s.id }}</span>
+                    <span>{{ s.title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <main>
+        <div class="step-header">
+            <h1>Step {{ current }}: {{ steps[current].title }}</h1>
+            <p>{{ steps[current].sub }}</p>
+        </div>
+
+        {% block content %}{% endblock %}
+
+        <!-- Challenge card -->
+        <div class="challenge-box">
+            <button class="challenge-toggle" onclick="toggleChallenge()">
+                What happens if...?
+            </button>
+            <div class="challenge-body">
+                <p>{{ challenge.q }}</p>
+                <button class="btn" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
+                <div class="answer">{{ challenge.a | safe }}</div>
+            </div>
+        </div>
+
+        <!-- Security callout -->
+        {% block security %}{% endblock %}
+
+        <!-- Nav -->
+        <div class="nav-buttons">
+            {% if current > 0 %}
+                <a href="/step/{{ current - 1 }}">Previous</a>
+            {% else %}
+                <span></span>
+            {% endif %}
+            {% if current < 9 %}
+                <a href="/step/{{ current + 1 }}">Next step</a>
+            {% else %}
+                <a href="/">Back to overview</a>
+            {% endif %}
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

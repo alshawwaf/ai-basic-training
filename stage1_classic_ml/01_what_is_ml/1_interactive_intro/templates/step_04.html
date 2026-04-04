@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Find the useless pixels</h3>
+    <p>Some pixels never change across all 1,797 samples — they carry zero information.
+       Drag the slider to set a minimum variance threshold and watch useless pixels disappear.</p>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>Minimum standard deviation</label>
+            <input type="range" id="threshold" min="0" max="6" step="0.1" value="1.0"
+                   oninput="updateMask()">
+        </div>
+        <div class="slider-value" id="threshold-val">1.0</div>
+    </div>
+
+    <div class="grids-row">
+        <div class="grid-container">
+            <div class="label">Pixel variance (std dev)</div>
+            <div class="digit-grid medium" id="grid-std"></div>
+        </div>
+        <div class="grid-container">
+            <div class="label">Useful pixels</div>
+            <div class="digit-grid medium" id="grid-mask"></div>
+        </div>
+    </div>
+
+    <div class="info-box blue" id="mask-info" style="text-align:center; font-size:16px;"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In security logs, this is equivalent to a field that's always
+    empty — like a TTL column that's always 64, or a protocol field that's always TCP. Removing useless
+    features makes models faster and often more accurate.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const pixelStd = {{ pixel_std | tojson }};
+    const maxStd = Math.max(...pixelStd.flat());
+
+    renderGrid('grid-std', pixelStd, {colorFn: hotColor, maxVal: maxStd, showVals: true, textFn: hotText});
+
+    function updateMask() {
+        const threshold = parseFloat(document.getElementById('threshold').value);
+        document.getElementById('threshold-val').textContent = threshold.toFixed(1);
+
+        const mask = pixelStd.map(row => row.map(v => v >= threshold ? 1 : 0));
+        const count = mask.flat().reduce((a, b) => a + b, 0);
+
+        renderGrid('grid-mask', mask, {colorFn: maskColor, maxVal: 1});
+
+        document.getElementById('mask-info').innerHTML =
+            `Keeping <strong>${count}</strong> of 64 pixels (${Math.round(count / 64 * 100)}% of features)`;
+    }
+
+    updateMask();
+</script>
+{% endblock %}

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="card">
     <h3>Compare two digit prototypes</h3>
-    <p>Each image below is the <em>average</em> of all samples for that digit. The difference heatmap shows where they diverge.</p>
+    <p>Each image below is the <em>average</em> of all samples for that digit. The difference heatmap shows where they diverge. Pairs with high similarity will confuse a model.</p>
 
     <div class="controls">
         <label>Digit A:
@@ -16,6 +16,14 @@
             </select>
         </label>
         <button class="btn" onclick="randomPair()">Random pair</button>
+    </div>
+
+    <!-- Quick preset buttons -->
+    <div class="btn-group">
+        <button class="btn btn-sm" onclick="setPair(3,8)">Most similar (3 vs 8)</button>
+        <button class="btn btn-sm" onclick="setPair(0,1)">Least similar (0 vs 1)</button>
+        <button class="btn btn-sm" onclick="setPair(4,9)">Tricky (4 vs 9)</button>
+        <button class="btn btn-sm" onclick="setPair(1,7)">Easy (1 vs 7)</button>
     </div>
 
     <div class="grids-row">
@@ -33,7 +41,7 @@
         </div>
     </div>
 
-    <div class="info-box blue" id="sim-text" style="text-align:center; font-size:16px;"></div>
+    <div class="sim-meter" id="sim-meter"></div>
 </div>
 {% endblock %}
 
@@ -62,20 +70,20 @@
         renderGrid('grid-a', imgA);
         renderGrid('grid-b', imgB);
         renderGrid('grid-diff', diff, {colorFn: hotColor, textFn: hotText});
+        updateSimMeter('sim-meter', sim);
+    }
 
-        const color = sim > 0.85 ? 'var(--red)' : 'var(--blue)';
-        document.getElementById('sim-text').innerHTML =
-            `Similarity: <strong style="color:${color}">${(sim * 100).toFixed(0)}%</strong>` +
-            (sim > 0.85 ? ' — these will confuse a model!' : '');
+    function setPair(a, b) {
+        document.getElementById('sel-a').value = a;
+        document.getElementById('sel-b').value = b;
+        updateComparison();
     }
 
     function randomPair() {
         let a = Math.floor(Math.random() * 10);
         let b = Math.floor(Math.random() * 10);
         while (b === a) b = Math.floor(Math.random() * 10);
-        document.getElementById('sel-a').value = a;
-        document.getElementById('sel-b').value = b;
-        updateComparison();
+        setPair(a, b);
     }
 
     updateComparison();

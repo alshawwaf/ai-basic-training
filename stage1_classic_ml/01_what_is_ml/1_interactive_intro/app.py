@@ -250,6 +250,19 @@ def api_sample(idx):
     })
 
 
+@app.route("/api/random-digit/<int:d>")
+def api_random_digit_class(d):
+    if d < 0 or d > 9:
+        return jsonify({"error": "Digit must be 0-9"}), 400
+    indices = np.where(digits.target == d)[0]
+    idx = np.random.choice(indices)
+    return jsonify({
+        "image": digits.images[idx].astype(int).tolist(),
+        "flat": digits.data[idx].astype(int).tolist(),
+        "label": int(digits.target[idx]),
+    })
+
+
 @app.route("/api/trap-all")
 def api_trap_all():
     cls = int(request.args.get("cls", 9))

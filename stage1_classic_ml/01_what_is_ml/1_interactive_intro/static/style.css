@@ -36,6 +36,43 @@ code, .flat-array, .guess-input {
     font-family: 'JetBrains Mono', 'Consolas', monospace;
 }
 
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+    50%      { box-shadow: 0 0 20px 4px rgba(6, 182, 212, 0.25); }
+}
+@keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    50%      { box-shadow: 0 0 16px 4px rgba(244, 63, 94, 0.2); }
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pop {
+    0%   { transform: scale(0.8); opacity: 0; }
+    70%  { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ── Custom scrollbar ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
 .sidebar {
     width: 260px;
@@ -48,7 +85,8 @@ code, .flat-array, .guess-input {
     left: 0;
     height: 100vh;
     overflow-y: auto;
-    z-index: 10;
+    z-index: 100;
+    transition: transform 0.3s ease;
 }
 .sidebar h2 {
     padding: 0 20px;
@@ -98,10 +136,56 @@ code, .flat-array, .guess-input {
     font-size: 12px;
     font-weight: 600;
     flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
 }
 .active .step-num {
     background: var(--accent);
     color: #fff;
+}
+.sidebar li.visited .step-num {
+    background: rgba(16, 185, 129, 0.3);
+    color: var(--green);
+}
+.sidebar li.active .step-num {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ── Mobile toggle ──────────────────────────────────────────────────────── */
+.mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 200;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+.mobile-toggle:hover { background: var(--accent-dim); }
+
+/* ── Progress bar ───────────────────────────────────────────────────────── */
+.progress-wrap {
+    height: 3px;
+    background: var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin-bottom: 24px;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--violet));
+    border-radius: 0 3px 3px 0;
+    transition: width 0.4s ease;
 }
 
 /* ── Main content ────────────────────────────────────────────────────────── */
@@ -114,6 +198,7 @@ main {
 
 .step-header {
     margin-bottom: 28px;
+    animation: fadeSlideUp 0.4s ease both;
 }
 .step-header h1 {
     font-size: 28px;
@@ -132,7 +217,11 @@ main {
     border-radius: var(--radius);
     padding: 24px;
     margin-bottom: 20px;
+    animation: fadeSlideUp 0.5s ease both;
 }
+.card:nth-child(2) { animation-delay: 0.08s; }
+.card:nth-child(3) { animation-delay: 0.16s; }
+.card:nth-child(4) { animation-delay: 0.24s; }
 .card h3 {
     font-size: 16px;
     margin-bottom: 12px;
@@ -159,8 +248,10 @@ main {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 2px;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
+    background: rgba(0,0,0,0.3);
+    padding: 2px;
 }
 .digit-grid.small  { width: 200px; }
 .digit-grid.medium { width: 280px; }
@@ -173,7 +264,12 @@ main {
     justify-content: center;
     font-size: 10px;
     font-weight: 500;
-    transition: background-color 0.15s;
+    border-radius: 3px;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.digit-grid .cell:hover {
+    transform: scale(1.08);
+    z-index: 1;
 }
 .digit-grid .cell.show-val {
     font-size: 9px;
@@ -232,6 +328,7 @@ main {
 .slider-group input[type="range"] {
     width: 100%;
     accent-color: var(--accent);
+    height: 6px;
 }
 .slider-value {
     font-size: 20px;
@@ -249,11 +346,14 @@ select, .btn {
     color: var(--text);
     font-size: 14px;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 select:hover, .btn:hover {
     border-color: var(--accent);
     background: rgba(6, 182, 212, 0.1);
+}
+.btn:active {
+    transform: scale(0.97);
 }
 .btn-primary {
     background: var(--accent);
@@ -263,6 +363,37 @@ select:hover, .btn:hover {
 .btn-primary:hover {
     background: #0891b2;
 }
+.btn-sm {
+    padding: 5px 12px;
+    font-size: 12px;
+}
+
+/* Scenario / preset button group */
+.btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+}
+.btn-group .btn {
+    font-size: 12px;
+    padding: 6px 14px;
+}
+
+/* ── Keyboard shortcut badge ────────────────────────────────────────────── */
+.kbd {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    line-height: 1.4;
+    vertical-align: middle;
+    margin-left: 4px;
+}
 
 /* ── Status/info boxes ───────────────────────────────────────────────────── */
 .info-box {
@@ -270,10 +401,17 @@ select:hover, .btn:hover {
     border-radius: var(--radius);
     font-size: 14px;
     margin: 12px 0;
+    transition: all 0.3s ease;
 }
 .info-box.blue   { background: rgba(6, 182, 212, 0.1); border-left: 3px solid var(--accent); }
 .info-box.red    { background: rgba(244, 63, 94, 0.12); border-left: 3px solid var(--red); color: var(--red); }
 .info-box.green  { background: rgba(16, 185, 129, 0.12); border-left: 3px solid var(--green); }
+.info-box.orange { background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--orange); }
+
+/* Pulsing danger box */
+.info-box.red.pulse {
+    animation: pulseRed 1.5s ease infinite;
+}
 
 .stat {
     display: inline-block;
@@ -305,6 +443,8 @@ select:hover, .btn:hover {
     border-radius: var(--radius);
     padding: 16px;
     text-align: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
 }
 .metric-card .name {
     font-size: 12px;
@@ -312,14 +452,42 @@ select:hover, .btn:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 4px;
+    cursor: help;
 }
 .metric-card .val {
     font-size: 28px;
     font-weight: 700;
+    transition: color 0.3s;
 }
+.metric-card.ok   { border-color: rgba(16, 185, 129, 0.3); }
 .metric-card.ok .val   { color: var(--green); }
+.metric-card.warn { border-color: rgba(245, 158, 11, 0.3); }
 .metric-card.warn .val { color: var(--orange); }
+.metric-card.bad  { border-color: rgba(244, 63, 94, 0.3); }
 .metric-card.bad .val  { color: var(--red); }
+.metric-card.bad  { animation: pulseRed 2s ease infinite; }
+
+/* Metric tooltip */
+.metric-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+}
+.metric-card:hover .metric-tip {
+    display: block;
+    animation: fadeIn 0.15s ease;
+}
 
 /* ── Chart ───────────────────────────────────────────────────────────────── */
 .chart-wrap {
@@ -331,10 +499,11 @@ select:hover, .btn:hover {
 /* ── Challenge box ───────────────────────────────────────────────────────── */
 .challenge-box {
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(245, 158, 11, 0.2);
     border-radius: var(--radius);
     margin: 28px 0 20px;
     overflow: hidden;
+    animation: fadeSlideUp 0.5s ease 0.3s both;
 }
 .challenge-toggle {
     width: 100%;
@@ -346,9 +515,21 @@ select:hover, .btn:hover {
     font-weight: 600;
     cursor: pointer;
     text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
 }
 .challenge-toggle:hover {
     background: rgba(245, 158, 11, 0.08);
+}
+.challenge-toggle::before {
+    content: '\25B6';
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+.challenge-toggle.open::before {
+    transform: rotate(90deg);
 }
 .challenge-body {
     padding: 0 20px 16px;
@@ -376,6 +557,7 @@ select:hover, .btn:hover {
     margin: 20px 0;
     font-size: 14px;
     line-height: 1.6;
+    animation: fadeSlideUp 0.5s ease 0.4s both;
 }
 .security-callout strong { color: var(--red); }
 
@@ -383,6 +565,7 @@ select:hover, .btn:hover {
 .nav-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid var(--border);
@@ -395,10 +578,16 @@ select:hover, .btn:hover {
     color: var(--text);
     text-decoration: none;
     font-size: 14px;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, transform 0.1s, background 0.15s;
 }
 .nav-buttons a:hover {
     border-color: var(--accent);
+    background: var(--accent-dim);
+    transform: translateY(-1px);
+}
+.nav-buttons .kbd-hint {
+    font-size: 11px;
+    color: var(--text-dim);
 }
 
 /* ── Table ───────────────────────────────────────────────────────────────── */
@@ -426,7 +615,7 @@ select:hover, .btn:hover {
 
 /* ── Flat array display ──────────────────────────────────────────────────── */
 .flat-array {
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
     font-size: 14px;
     background: var(--bg);
     border: 1px solid var(--border);
@@ -455,13 +644,18 @@ select:hover, .btn:hover {
 
 /* ── Welcome page ────────────────────────────────────────────────────────── */
 .welcome {
-    max-width: 700px;
+    max-width: 720px;
     margin: 60px auto;
     text-align: center;
+    animation: fadeSlideUp 0.6s ease both;
 }
 .welcome h1 {
-    font-size: 36px;
+    font-size: 42px;
     margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 .welcome .tagline {
     font-size: 18px;
@@ -484,11 +678,23 @@ select:hover, .btn:hover {
     border-radius: var(--radius);
     color: var(--text);
     text-decoration: none;
-    transition: border-color 0.15s, transform 0.1s;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    animation: fadeSlideUp 0.4s ease both;
 }
+.step-card:nth-child(1)  { animation-delay: 0.05s; }
+.step-card:nth-child(2)  { animation-delay: 0.10s; }
+.step-card:nth-child(3)  { animation-delay: 0.15s; }
+.step-card:nth-child(4)  { animation-delay: 0.20s; }
+.step-card:nth-child(5)  { animation-delay: 0.25s; }
+.step-card:nth-child(6)  { animation-delay: 0.30s; }
+.step-card:nth-child(7)  { animation-delay: 0.35s; }
+.step-card:nth-child(8)  { animation-delay: 0.40s; }
+.step-card:nth-child(9)  { animation-delay: 0.45s; }
+.step-card:nth-child(10) { animation-delay: 0.50s; }
 .step-card:hover {
     border-color: var(--accent);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1);
 }
 .step-card .num {
     width: 32px;
@@ -538,13 +744,233 @@ select:hover, .btn:hover {
 .bar-fill {
     height: 100%;
     border-radius: 4px;
-    transition: width 0.3s ease;
+    transition: width 0.4s ease;
     min-width: 2px;
 }
-.bar-fill.blue { background: var(--accent); }
-.bar-fill.red  { background: var(--red); }
+.bar-fill.blue { background: linear-gradient(90deg, var(--accent), rgba(6, 182, 212, 0.7)); }
+.bar-fill.red  { background: linear-gradient(90deg, var(--red), rgba(244, 63, 94, 0.7)); }
 .bar-count {
     width: 40px;
     font-size: 13px;
     font-weight: 600;
 }
+
+/* ── Guess buttons (Step 0, 9) ──────────────────────────────────────────── */
+.guess-btn {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    border-radius: 10px;
+    position: relative;
+    transition: transform 0.1s, border-color 0.15s, background 0.15s;
+}
+.guess-btn:hover {
+    transform: scale(1.08);
+}
+.guess-btn:active {
+    transform: scale(0.95);
+}
+.guess-btn .shortcut {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 8px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+}
+.guess-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+}
+.guess-btn.correct {
+    border-color: var(--green);
+    background: var(--green);
+    color: #fff;
+    animation: pop 0.3s ease;
+}
+.guess-btn.wrong {
+    border-color: var(--red);
+    background: var(--red);
+    color: #fff;
+}
+.guess-btn.was-answer {
+    border-color: var(--green);
+    outline: 3px solid var(--green);
+    animation: pulseGlow 1s ease 1;
+}
+
+/* ── Streak counter ─────────────────────────────────────────────────────── */
+.streak-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    transition: color 0.3s, border-color 0.3s;
+}
+.streak-display.hot {
+    color: var(--orange);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+/* ── Similarity meter ───────────────────────────────────────────────────── */
+.sim-meter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 12px 0;
+}
+.sim-meter .meter-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.sim-meter .meter-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+.sim-meter .meter-label {
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* ── Prototypes overview grid (Step 7) ──────────────────────────────────── */
+.proto-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+.proto-item {
+    text-align: center;
+    padding: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.1s;
+}
+.proto-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+.proto-item .proto-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-dim);
+}
+
+/* ── Hint rows (Step 9) ─────────────────────────────────────────────────── */
+.hint-progress {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+    justify-content: center;
+}
+.hint-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+}
+.hint-dot.revealed {
+    background: var(--accent);
+}
+
+/* ── Score stars ─────────────────────────────────────────────────────────── */
+.score-stars {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    font-size: 28px;
+    margin: 12px 0;
+}
+
+/* ── Auto-play button ───────────────────────────────────────────────────── */
+.btn-play {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn-play.playing {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+}
+
+/* ── Paint grid overrides ───────────────────────────────────────────────── */
+.paint-grid .cell {
+    cursor: crosshair;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.paint-grid .cell:hover {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    z-index: 2;
+    transform: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .mobile-toggle {
+        display: flex;
+    }
+    main {
+        margin-left: 0;
+        padding: 60px 20px 32px;
+    }
+    .grids-row {
+        gap: 12px;
+    }
+    .digit-grid.large { width: 280px; }
+    .digit-grid.medium { width: 220px; }
+    .welcome { margin: 30px auto; padding: 0 20px; }
+    .step-cards { grid-template-columns: 1fr; }
+    .proto-grid { grid-template-columns: repeat(3, 1fr); }
+    .metrics-row { gap: 8px; }
+    .metric-card { min-width: 100px; padding: 12px; }
+    .metric-card .val { font-size: 22px; }
+    .nav-buttons a { padding: 8px 16px; font-size: 13px; }
+}
+@media (max-width: 480px) {
+    .digit-grid.large { width: 240px; }
+    .digit-grid.medium { width: 180px; }
+    .proto-grid { grid-template-columns: repeat(2, 1fr); }
+    .guess-btn { width: 44px; height: 44px; font-size: 18px; }
+}
+
+/* ── Overlay for mobile sidebar ─────────────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+}
+.sidebar-overlay.show { display: block; }

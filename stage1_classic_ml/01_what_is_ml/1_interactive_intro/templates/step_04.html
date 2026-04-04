@@ -12,6 +12,7 @@
                    oninput="updateMask()">
         </div>
         <div class="slider-value" id="threshold-val">1.0</div>
+        <button class="btn" onclick="showMaskedDigit()">Show on real digit</button>
     </div>
 
     <div class="grids-row">
@@ -22,6 +23,10 @@
         <div class="grid-container">
             <div class="label">Useful pixels</div>
             <div class="digit-grid medium" id="grid-mask"></div>
+        </div>
+        <div class="grid-container hidden" id="masked-digit-area">
+            <div class="label" id="masked-digit-label">Masked digit</div>
+            <div class="digit-grid medium" id="grid-masked"></div>
         </div>
     </div>
 
@@ -55,6 +60,39 @@
 
         document.getElementById('mask-info').innerHTML =
             `Keeping <strong>${count}</strong> of 64 pixels (${Math.round(count / 64 * 100)}% of features)`;
+
+        // Update masked digit if visible
+        const area = document.getElementById('masked-digit-area');
+        if (!area.classList.contains('hidden')) {
+            applyMaskToCurrentDigit(mask);
+        }
+    }
+
+    let currentDigitImage = null;
+    let currentDigitLabel = null;
+
+    async function showMaskedDigit() {
+        const data = await fetchJSON('/api/random-digit');
+        currentDigitImage = data.image;
+        currentDigitLabel = data.label;
+
+        const threshold = parseFloat(document.getElementById('threshold').value);
+        const mask = pixelStd.map(row => row.map(v => v >= threshold ? 1 : 0));
+
+        document.getElementById('masked-digit-area').classList.remove('hidden');
+        document.getElementById('masked-digit-label').textContent = `Digit ${data.label} (masked)`;
+        applyMaskToCurrentDigit(mask);
+    }
+
+    function applyMaskToCurrentDigit(mask) {
+        if (!currentDigitImage) return;
+        const masked = currentDigitImage.map((row, i) =>
+            row.map((v, j) => mask[i][j] ? v : -1)
+        );
+        renderGrid('grid-masked', masked, {
+            colorFn: (v, max) => v < 0 ? '#1a1a2e' : tealColor(v, max),
+            textFn:  (v, max) => v < 0 ? 'transparent' : tealText(v, max),
+        });
     }
 
     updateMask();

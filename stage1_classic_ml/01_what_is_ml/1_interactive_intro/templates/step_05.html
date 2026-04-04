@@ -18,6 +18,14 @@
         <div class="slider-value" id="pct-val">0%</div>
     </div>
 
+    <!-- Preset scenario buttons -->
+    <div class="btn-group">
+        <button class="btn btn-sm" onclick="setScenario(5, 0)">Balanced</button>
+        <button class="btn btn-sm" onclick="setScenario(5, 50)">Mild imbalance</button>
+        <button class="btn btn-sm" onclick="setScenario(5, 85)">Real-world security</button>
+        <button class="btn btn-sm" onclick="setScenario(5, 95)">Extreme (needle in haystack)</button>
+    </div>
+
     <div id="balance-bars" style="margin: 16px 0;"></div>
 
     <div class="info-box blue" id="balance-info" style="text-align:center; font-size:16px;"></div>
@@ -37,6 +45,12 @@
 <script>
     const origCounts = {{ class_counts | tojson }};
     const maxOrig = Math.max(...origCounts);
+
+    function setScenario(cls, pct) {
+        document.getElementById('sel-class').value = cls;
+        document.getElementById('remove-pct').value = pct;
+        updateBalance();
+    }
 
     function updateBalance() {
         const cls = +document.getElementById('sel-class').value;
@@ -68,13 +82,16 @@
         });
 
         document.getElementById('balance-info').innerHTML =
-            `Imbalance ratio: <strong>${ratio.toFixed(1)}:1</strong>`;
+            `Imbalance ratio: <strong>${ratio.toFixed(1)}:1</strong>` +
+            (ratio > 10 ? ` — that's extreme!` : '');
 
         const warnEl = document.getElementById('balance-warn');
         if (ratio > 5) {
             warnEl.innerHTML =
                 `A lazy model that always guesses the majority class gets <strong>${(naiveAcc * 100).toFixed(0)}%</strong> accuracy — while catching <strong>0%</strong> of digit ${cls}.`;
             warnEl.classList.remove('hidden');
+            if (ratio > 20) warnEl.classList.add('pulse');
+            else warnEl.classList.remove('pulse');
         } else {
             warnEl.classList.add('hidden');
         }

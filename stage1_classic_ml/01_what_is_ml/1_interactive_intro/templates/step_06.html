@@ -17,13 +17,26 @@
                    oninput="updateDisplay()">
         </div>
         <div class="slider-value" id="pct-val">0%</div>
+        <button class="btn btn-play" id="btn-autoplay" onclick="toggleAutoplay()">&#9654; Auto-play</button>
     </div>
 
     <div class="metrics-row" id="metric-cards">
-        <div class="metric-card" id="mc-acc"><div class="name">Accuracy</div><div class="val">—</div></div>
-        <div class="metric-card" id="mc-prec"><div class="name">Precision</div><div class="val">—</div></div>
-        <div class="metric-card" id="mc-rec"><div class="name">Recall</div><div class="val">—</div></div>
-        <div class="metric-card" id="mc-f1"><div class="name">F1 Score</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-acc">
+            <div class="metric-tip">How often the model is correct overall</div>
+            <div class="name">Accuracy</div><div class="val">—</div>
+        </div>
+        <div class="metric-card" id="mc-prec">
+            <div class="metric-tip">When it says "target", how often is it right?</div>
+            <div class="name">Precision</div><div class="val">��</div>
+        </div>
+        <div class="metric-card" id="mc-rec">
+            <div class="metric-tip">Of all real targets, how many does it find?</div>
+            <div class="name">Recall</div><div class="val">—</div>
+        </div>
+        <div class="metric-card" id="mc-f1">
+            <div class="metric-tip">Balance of precision and recall (harmonic mean)</div>
+            <div class="name">F1 Score</div><div class="val">—</div>
+        </div>
     </div>
 
     <div class="info-box red hidden" id="trap-warn"></div>
@@ -47,6 +60,7 @@
 <script>
     let metricsData = {};
     let lineChart = null;
+    let autoplayTimer = null;
 
     function metricClass(name, val, rec) {
         if (name === 'Accuracy' && val > 0.9 && rec < 0.5) return 'bad';
@@ -78,8 +92,10 @@
         if (m.acc > 0.9 && m.rec < 0.5) {
             warnEl.innerHTML = `<strong>THE TRAP:</strong> ${(m.acc * 100).toFixed(0)}% accuracy but only ${(m.rec * 100).toFixed(0)}% recall — the model misses most target samples!`;
             warnEl.classList.remove('hidden');
+            warnEl.classList.add('pulse');
         } else {
             warnEl.classList.add('hidden');
+            warnEl.classList.remove('pulse');
         }
 
         updateChart(pct);
@@ -118,6 +134,36 @@
                 },
             },
         });
+    }
+
+    function toggleAutoplay() {
+        const btn = document.getElementById('btn-autoplay');
+        if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+            btn.innerHTML = '&#9654; Auto-play';
+            btn.classList.remove('playing');
+            return;
+        }
+
+        btn.innerHTML = '&#9632; Stop';
+        btn.classList.add('playing');
+        document.getElementById('remove-pct').value = 0;
+        updateDisplay();
+
+        autoplayTimer = setInterval(() => {
+            const slider = document.getElementById('remove-pct');
+            const val = parseInt(slider.value) + 5;
+            if (val > 95) {
+                clearInterval(autoplayTimer);
+                autoplayTimer = null;
+                btn.innerHTML = '&#9654; Auto-play';
+                btn.classList.remove('playing');
+                return;
+            }
+            slider.value = val;
+            updateDisplay();
+        }, 500);
     }
 
     async function loadMetrics() {

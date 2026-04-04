@@ -11,12 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+    <!-- Mobile hamburger -->
+    <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <nav class="sidebar">
         <h2><a href="/">Lesson 1.1</a></h2>
         <p class="subtitle">What is Machine Learning?</p>
         <ul>
             {% for s in steps %}
-            <li class="{{ 'active' if s.id == current else '' }}">
+            <li class="{{ 'active' if s.id == current else '' }}" data-step="{{ s.id }}">
                 <a href="/step/{{ s.id }}">
                     <span class="step-num">{{ s.id }}</span>
                     <span>{{ s.title }}</span>
@@ -27,6 +31,11 @@
     </nav>
 
     <main>
+        <!-- Progress bar -->
+        <div class="progress-wrap">
+            <div class="progress-fill" style="width: {{ ((current + 1) / 10 * 100) | round(0) }}%"></div>
+        </div>
+
         <div class="step-header">
             <h1>Step {{ current }}: {{ steps[current].title }}</h1>
             <p>{{ steps[current].sub }}</p>
@@ -41,7 +50,7 @@
             </button>
             <div class="challenge-body">
                 <p>{{ challenge.q }}</p>
-                <button class="btn" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
+                <button class="btn btn-sm" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
                 <div class="answer">{{ challenge.a | safe }}</div>
             </div>
         </div>
@@ -52,12 +61,13 @@
         <!-- Nav -->
         <div class="nav-buttons">
             {% if current > 0 %}
-                <a href="/step/{{ current - 1 }}">Previous</a>
+                <a href="/step/{{ current - 1 }}">&#8592; Previous</a>
             {% else %}
                 <span></span>
             {% endif %}
+            <span class="kbd-hint"><span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> to navigate</span>
             {% if current < 9 %}
-                <a href="/step/{{ current + 1 }}">Next step</a>
+                <a href="/step/{{ current + 1 }}">Next step &#8594;</a>
             {% else %}
                 <a href="/">Back to overview</a>
             {% endif %}
@@ -65,6 +75,13 @@
     </main>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script>
+        // Mark current step as visited & highlight visited steps
+        markStepVisited({{ current }});
+        applyVisitedSteps();
+        // Enable keyboard arrow navigation
+        setupKeyboardNav({{ current }});
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

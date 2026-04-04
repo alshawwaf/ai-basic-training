@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Digit prototypes</h3>
-    <p>Average all images in a class and you get a "prototype" — the ideal shape a model learns.
-       Compare prototypes to predict which digits will confuse the model.</p>
+    <h3>All 10 prototypes at a glance</h3>
+    <p>Each image is the average of all samples for that digit — the "prototype" a model learns.
+       Click any two to compare them below.</p>
+
+    <div class="proto-grid" id="proto-overview"></div>
+</div>
+
+<div class="card">
+    <h3>Compare prototypes</h3>
 
     <div class="controls">
         <label>Digit A:
@@ -34,7 +40,21 @@
         </div>
     </div>
 
-    <div class="info-box blue" id="sim-text" style="text-align:center; font-size:16px;"></div>
+    <div class="sim-meter" id="sim-meter"></div>
+
+    <!-- Blend slider -->
+    <div style="margin-top: 16px;">
+        <div class="slider-group" style="max-width:400px; margin:0 auto;">
+            <label style="text-align:center;">Blend: morph between the two prototypes</label>
+            <input type="range" id="blend-slider" min="0" max="100" step="1" value="0" oninput="updateBlend()">
+        </div>
+        <div class="grids-row">
+            <div class="grid-container">
+                <div class="label" id="blend-label">100% A</div>
+                <div class="digit-grid medium" id="grid-blend"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="card">
@@ -48,7 +68,7 @@
         <thead><tr><th>#</th><th>Pair</th><th>Similarity</th></tr></thead>
         <tbody>
         {% for p in pairs %}
-            <tr>
+            <tr onclick="selectFromRank({{ p.a }}, {{ p.b }})" style="cursor:pointer;">
                 <td>{{ loop.index }}</td>
                 <td>{{ p.a }} vs {{ p.b }}</td>
                 <td style="color: {{ 'var(--red)' if p.sim > 0.85 else 'var(--text)' }}">
@@ -73,6 +93,38 @@
 {% block scripts %}
 <script>
     const averages = {{ averages | tojson }};
+    let selectedProtos = [];
+
+    // Render all 10 prototypes overview
+    const overview = document.getElementById('proto-overview');
+    for (let d = 0; d < 10; d++) {
+        const item = document.createElement('div');
+        item.className = 'proto-item';
+        item.innerHTML = `<div class="proto-label">Digit ${d}</div><div class="digit-grid small" id="proto-${d}"></div>`;
+        item.onclick = () => pickProto(d);
+        overview.appendChild(item);
+        renderGrid(`proto-${d}`, averages[d]);
+    }
+
+    function pickProto(d) {
+        selectedProtos.push(d);
+        if (selectedProtos.length === 2) {
+            document.getElementById('sel-a').value = selectedProtos[0];
+            document.getElementById('sel-b').value = selectedProtos[1];
+            update();
+            selectedProtos = [];
+        }
+        // Highlight selection
+        document.querySelectorAll('.proto-item').forEach((el, i) => {
+            el.style.borderColor = selectedProtos.includes(i) ? 'var(--accent)' : '';
+        });
+    }
+
+    function selectFromRank(a, b) {
+        document.getElementById('sel-a').value = a;
+        document.getElementById('sel-b').value = b;
+        update();
+    }
 
     function update() {
         const a = +document.getElementById('sel-a').value;
@@ -86,10 +138,32 @@
         renderGrid('grid-a', imgA);
         renderGrid('grid-b', imgB);
         renderGrid('grid-diff', diff, {colorFn: hotColor, textFn: hotText});
+        updateSimMeter('sim-meter', sim);
 
-        const color = sim > 0.85 ? 'var(--red)' : 'var(--blue)';
-        document.getElementById('sim-text').innerHTML =
-            `Similarity: <strong style="color:${color}">${(sim * 100).toFixed(0)}%</strong>`;
+        // Reset blend slider
+        document.getElementById('blend-slider').value = 0;
+        updateBlend();
+    }
+
+    function updateBlend() {
+        const t = parseInt(document.getElementById('blend-slider').value) / 100;
+        const a = +document.getElementById('sel-a').value;
+        const b = +document.getElementById('sel-b').value;
+        const imgA = averages[a], imgB = averages[b];
+
+        const blended = [];
+        for (let i = 0; i < 8; i++) {
+            blended.push([]);
+            for (let j = 0; j < 8; j++) {
+                blended[i].push(imgA[i][j] * (1 - t) + imgB[i][j] * t);
+            }
+        }
+
+        document.getElementById('blend-label').textContent =
+            t === 0 ? `100% digit ${a}` :
+            t === 1 ? `100% digit ${b}` :
+            `${Math.round((1-t)*100)}% digit ${a} / ${Math.round(t*100)}% digit ${b}`;
+        renderGrid('grid-blend', blended);
     }
 
     function randomPair() {

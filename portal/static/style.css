@@ -2079,16 +2079,17 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 }
 .mat-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
-    background: var(--bg-card); color: var(--text); font-size: 13px;
-    font-weight: 500; cursor: pointer; transition: all 0.2s;
+    padding: 8px 16px; border-radius: 8px; border: none;
+    color: #fff; font-size: 13px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
     font-family: 'Roboto Mono', monospace;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-.mat-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+.mat-btn:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 .mat-btn .mat-icon { font-size: 15px; }
-.mat-lecture:hover { border-color: var(--cyan); }
-.mat-lab:hover { border-color: var(--green); }
-.mat-solution:hover { border-color: var(--violet); }
+.mat-lecture { background: var(--cyan); }
+.mat-lab { background: var(--green); }
+.mat-solution { background: var(--violet); }
 
 /* Drawer overlay */
 .drawer-overlay {

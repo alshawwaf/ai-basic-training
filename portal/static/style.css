@@ -545,16 +545,7 @@ select:hover, .btn:hover {
     flex: 1;
     min-width: 0;
 }
-/* ── Hint FAB (floating action button) ───────────────────────────────────── */
-.hint-fab {
-    position: fixed; bottom: 24px; right: 24px; z-index: 50;
-    width: 48px; height: 48px; border-radius: 50%; border: none;
-    background: var(--orange); color: #fff; font-size: 22px; font-weight: 700;
-    cursor: pointer; box-shadow: 0 4px 14px rgba(245,158,11,0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    font-family: 'Space Grotesk', sans-serif;
-}
-.hint-fab:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(245,158,11,0.5); }
+.mat-hint { background: var(--orange); }
 
 /* ── Hint modal overlay ──────────────────────────────────────────────────── */
 .hint-modal-overlay {

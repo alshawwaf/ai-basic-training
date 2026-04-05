@@ -52,9 +52,9 @@
             <p>{{ steps[current].sub }}</p>
         </div>
 
-        <!-- Material buttons (floating toolbar) -->
-        {% if materials %}
+        <!-- Material + hint toolbar -->
         <div class="material-toolbar">
+            {% if materials %}
             {% for mtype, label, path in materials %}
             {% if mtype == 'lecture' %}
             <button class="mat-btn mat-lecture" onclick="openDrawer('{{ path }}', '{{ label }}')" title="{{ label }}">
@@ -70,17 +70,17 @@
             </button>
             {% endif %}
             {% endfor %}
+            {% endif %}
+            <button class="mat-btn mat-hint" onclick="openHintModal()" title="Challenge &amp; Security notes">
+                <span class="mat-icon">&#128161;</span> Think Deeper
+            </button>
         </div>
-        {% endif %}
 
         <div class="content-layout">
             <!-- Left: main step content -->
             <div class="content-main">
                 {% block content %}{% endblock %}
             </div>
-
-            <!-- Floating hint button -->
-            <button class="hint-fab" onclick="openHintModal()" title="Challenge &amp; Security notes">?</button>
         </div>
 
         <!-- Hint modal (challenge + security) -->

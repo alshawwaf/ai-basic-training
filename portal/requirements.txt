@@ -1,4 +1,5 @@
 flask
+gunicorn
 markdown
 
 # ML / Data

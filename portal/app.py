@@ -16,6 +16,24 @@ from runner import run_script
 warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024  # 1 MB max request size
+
+
+@app.after_request
+def add_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data:; "
+        "connect-src 'self'"
+    )
+    return response
 
 # ── Auto-discover and register lesson Blueprints ────────────────────────────
 
@@ -109,10 +127,12 @@ def api_run():
     if not rel_path:
         return jsonify({"error": "Missing path"}), 400
 
-    # Only allow solution_*.py files
+    # Only allow solution_*.py files under curriculum/
     filename = os.path.basename(rel_path)
     if not filename.startswith("solution_") or not filename.endswith(".py"):
         return jsonify({"error": "Only solution_*.py files can be executed"}), 403
+    if not rel_path.startswith("curriculum/"):
+        return jsonify({"error": "Scripts must be in curriculum/"}), 403
 
     result = run_script(rel_path, timeout=120)
     return jsonify(result)

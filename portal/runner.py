@@ -50,31 +50,47 @@ except ImportError:
 '''
 
 
+MAX_OUTPUT_BYTES = 64 * 1024   # 64 KB max stdout/stderr
+MAX_IMAGES = 10                # max matplotlib figures returned
+ALLOWED_PREFIX = "curriculum/" # scripts must live under curriculum/
+
+# Minimal env — strip secrets, API keys, etc.
+_SAFE_ENV_KEYS = {
+    "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "USER",
+    "MPLBACKEND", "_FIG_DIR", "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUNBUFFERED", "PYTHONPATH",
+}
+
+
 def run_script(rel_path: str, timeout: int = 60) -> dict:
     """Execute a Python script and return its output.
 
     Args:
-        rel_path: path relative to REPO_ROOT (e.g. "stage1_.../solution_x.py")
+        rel_path: path relative to REPO_ROOT (e.g. "curriculum/.../solution_x.py")
         timeout:  max seconds before killing the process
 
     Returns:
         dict with keys: stdout, stderr, images (list of base64 PNGs),
                         exit_code, timed_out
     """
+    _err = lambda msg: {"stdout": "", "stderr": msg, "images": [],
+                        "exit_code": 1, "timed_out": False}
+
+    # Security: must be under curriculum/
+    if not rel_path.startswith(ALLOWED_PREFIX):
+        return _err("Access denied: scripts must be in curriculum/")
+
     full_path = os.path.normpath(os.path.join(REPO_ROOT, rel_path))
 
-    # Security checks
+    # Security: prevent path traversal
     if not full_path.startswith(REPO_ROOT):
-        return {"stdout": "", "stderr": "Access denied", "images": [],
-                "exit_code": 1, "timed_out": False}
+        return _err("Access denied")
 
     if not os.path.isfile(full_path):
-        return {"stdout": "", "stderr": f"File not found: {rel_path}", "images": [],
-                "exit_code": 1, "timed_out": False}
+        return _err(f"File not found: {rel_path}")
 
     if not full_path.endswith(".py"):
-        return {"stdout": "", "stderr": "Only .py files can be executed", "images": [],
-                "exit_code": 1, "timed_out": False}
+        return _err("Only .py files can be executed")
 
     # Read the script
     with open(full_path, encoding="utf-8") as f:
@@ -91,8 +107,8 @@ def run_script(rel_path: str, timeout: int = 60) -> dict:
             f.write(_WRAPPER)
             f.write(user_code)
 
-        # Build environment
-        env = os.environ.copy()
+        # Build minimal environment (no secrets leak)
+        env = {k: v for k, v in os.environ.items() if k in _SAFE_ENV_KEYS}
         env["MPLBACKEND"] = "Agg"
         env["_FIG_DIR"] = fig_dir
         env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -101,25 +117,25 @@ def run_script(rel_path: str, timeout: int = 60) -> dict:
         timed_out = False
         try:
             proc = subprocess.run(
-                [sys.executable, script_path],
+                [sys.executable, "-u", script_path],
                 capture_output=True,
                 text=True,
                 timeout=timeout,
-                cwd=os.path.dirname(full_path),  # run from the script's own dir
+                cwd=os.path.dirname(full_path),
                 env=env,
             )
             exit_code = proc.returncode
-            stdout = proc.stdout
-            stderr = proc.stderr
+            stdout = proc.stdout[:MAX_OUTPUT_BYTES]
+            stderr = proc.stderr[:MAX_OUTPUT_BYTES]
         except subprocess.TimeoutExpired:
             timed_out = True
             exit_code = -1
             stdout = ""
             stderr = f"Script timed out after {timeout} seconds."
 
-        # Collect saved figures
+        # Collect saved figures (capped)
         images = []
-        for png in sorted(glob.glob(os.path.join(fig_dir, "*.png"))):
+        for png in sorted(glob.glob(os.path.join(fig_dir, "*.png")))[:MAX_IMAGES]:
             with open(png, "rb") as img:
                 images.append(base64.b64encode(img.read()).decode("ascii"))
 

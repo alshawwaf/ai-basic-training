@@ -3,10 +3,25 @@ services:
     build: .
     ports:
       - "5000:5000"
-    volumes:
-      # Mount project for live editing (dev mode)
-      - .:/app
     environment:
-      - FLASK_ENV=development
       - MPLBACKEND=Agg
     restart: unless-stopped
+
+    # ── Security hardening ──────────────────────────────────────────────
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp/runner:size=256M,mode=1777
+
+    # ── Resource limits ─────────────────────────────────────────────────
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4G
+        reservations:
+          cpus: "0.5"
+          memory: 512M

@@ -53,7 +53,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Roboto Mono', 'Consolas', monospace;
     background: var(--bg);
     color: var(--text);
     display: flex;
@@ -68,7 +68,7 @@ h1, h2, h3, h4, .step-num, .stat .value, .metric-card .val,
 }
 
 code, .flat-array, .guess-input {
-    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-family: 'Roboto Mono', 'Consolas', monospace;
 }
 
 /* ── Animations ─────────────────────────────────────────────────────────── */
@@ -424,7 +424,7 @@ select:hover, .btn:hover {
     display: inline-block;
     padding: 2px 7px;
     font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -683,7 +683,7 @@ select:hover, .btn:hover {
 
 /* ── Flat array display ──────────────────────────────────────────────────── */
 .flat-array {
-    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-family: 'Roboto Mono', 'Consolas', monospace;
     font-size: 14px;
     background: var(--bg);
     border: 1px solid var(--border);
@@ -907,7 +907,7 @@ select:hover, .btn:hover {
     right: 4px;
     font-size: 8px;
     color: var(--text-dim);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
 }
 .guess-btn.selected {
     border-color: var(--accent);
@@ -1743,7 +1743,7 @@ select:hover, .btn:hover {
 .log-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 12px;
 }
 .log-table th, .log-table td {
@@ -1778,7 +1778,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     border-radius: 8px;
     margin-left: 4px;
     vertical-align: middle;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Roboto Mono', monospace;
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -1808,7 +1808,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .tc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .tc-name { font-weight: 600; font-size: 13px; color: var(--text); }
 .tc-dtype { font-size: 10px; padding: 1px 6px; border-radius: 6px; color: #fff; }
-.tc-example { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+.tc-example { font-size: 11px; color: var(--text-dim); font-family: 'Roboto Mono', monospace; margin: 4px 0; }
 .tc-state { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 6px; }
 .tc-answer { font-size: 11px; color: var(--accent); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); }
 
@@ -1834,7 +1834,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     background: rgba(6, 182, 212, 0.06);
 }
 .derive-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
-.derive-val { font-size: 18px; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+.derive-val { font-size: 18px; font-weight: 700; color: var(--text); font-family: 'Roboto Mono', monospace; }
 .derive-arrow { font-size: 16px; color: var(--text-dim); font-weight: 600; }
 
 /* Risk editor (step 3) */
@@ -1846,7 +1846,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     padding: 8px 0;
     border-bottom: 1px solid var(--border);
 }
-.risk-port { font-weight: 600; min-width: 80px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+.risk-port { font-weight: 600; min-width: 80px; font-family: 'Roboto Mono', monospace; font-size: 13px; color: var(--text); }
 .risk-service { font-size: 12px; color: var(--text-dim); min-width: 70px; }
 .risk-select {
     background: var(--input-bg);
@@ -1855,7 +1855,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     border-radius: 6px;
     padding: 4px 8px;
     font-size: 13px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
 }
 .risk-bar-wrap {
     flex: 1;
@@ -1902,7 +1902,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 }
 .ft-name {
     font-size: 13px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     color: var(--text);
 }
 
@@ -1970,7 +1970,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 }
 .ni-row label { min-width: 30px; font-weight: 600; color: var(--text); font-size: 14px; }
 .ni-row input[type="range"] { width: 100px; }
-.ni-val { min-width: 40px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--cyan); font-weight: 600; }
+.ni-val { min-width: 40px; font-family: 'Roboto Mono', monospace; font-size: 13px; color: var(--cyan); font-weight: 600; }
 .ni-times { color: var(--text-dim); font-size: 16px; }
 .neuron-compute {
     display: flex;
@@ -2006,7 +2006,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     align-items: center;
     min-width: 70px;
 }
-.fp-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text); }
+.fp-val { font-family: 'Roboto Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text); }
 .fp-label { font-size: 10px; color: var(--text-dim); }
 .fp-arrows {
     font-size: 24px;

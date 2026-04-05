@@ -301,6 +301,25 @@
                         if (!/\.(md|py)$/i.test(h)) a.classList.add('dead-link');
                     });
                     body.scrollTop = 0;
+                    // Add copy buttons to code blocks
+                    body.querySelectorAll('pre').forEach(function(pre) {
+                        var btn = document.createElement('button');
+                        btn.className = 'code-block-copy';
+                        btn.textContent = 'Copy';
+                        btn.onclick = function() {
+                            var code = pre.querySelector('code');
+                            var text = code ? code.textContent : pre.textContent;
+                            navigator.clipboard.writeText(text).then(function() {
+                                btn.textContent = 'Copied!';
+                                btn.classList.add('copied');
+                                setTimeout(function() {
+                                    btn.textContent = 'Copy';
+                                    btn.classList.remove('copied');
+                                }, 1500);
+                            });
+                        };
+                        pre.appendChild(btn);
+                    });
                 })
                 .catch(err => {
                     document.getElementById('drawerBody').innerHTML =

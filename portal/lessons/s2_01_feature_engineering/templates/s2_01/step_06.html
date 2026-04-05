@@ -1,0 +1,156 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Which features help the model?</h3>
+    <p>Toggle features on and off. The model retrains in real time — watch which features make the biggest difference.</p>
+
+    <div class="feature-toggles" id="feature-toggles">
+        <div class="ft-group">
+            <div class="ft-label">Raw columns</div>
+            {% for f in ['bytes_sent', 'bytes_recv', 'packets', 'duration'] %}
+            <label class="ft-toggle">
+                <input type="checkbox" value="{{ f }}" checked onchange="retrain()">
+                <span class="ft-name">{{ f }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        <div class="ft-group">
+            <div class="ft-label">Engineered features</div>
+            {% for f in ['bytes_per_second', 'packet_rate', 'bytes_ratio', 'port_risk_score', 'hour_of_day', 'is_business_hours'] %}
+            <label class="ft-toggle">
+                <input type="checkbox" value="{{ f }}" onchange="retrain()">
+                <span class="ft-name">{{ f }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="controls" style="margin-top:12px;">
+        <button class="btn" onclick="presetRaw()">Raw only</button>
+        <button class="btn" onclick="presetAll()">All features</button>
+        <button class="btn" onclick="presetDerived()">Derived only</button>
+    </div>
+
+    <div class="metrics-row" id="metric-cards" style="margin-top:20px;">
+        <div class="metric-card" id="mc-acc"><div class="name">Accuracy</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-prec"><div class="name">Precision</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-rec"><div class="name">Recall</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-f1"><div class="name">F1 Score</div><div class="val">—</div></div>
+    </div>
+
+    <div class="info-box" id="feature-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Comparison</h3>
+        <div class="chart-wrap"><canvas id="compare-chart"></canvas></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In SOC ML pipelines, adding <strong>bytes_per_second</strong> and
+    <strong>port_risk_score</strong> often matters more than tuning the model algorithm. Feature engineering
+    is where domain expertise meets machine learning — and where security engineers have the advantage.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const precomputed = {{ precomputed | tojson }};
+    let compareChart = null;
+    const history = [];
+
+    function getSelectedFeatures() {
+        const checks = document.querySelectorAll('#feature-toggles input[type="checkbox"]:checked');
+        return Array.from(checks).map(c => c.value);
+    }
+
+    function updateCards(m) {
+        const names = ['Accuracy', 'Precision', 'Recall', 'F1 Score'];
+        const ids = ['mc-acc', 'mc-prec', 'mc-rec', 'mc-f1'];
+        const keys = ['acc', 'prec', 'rec', 'f1'];
+        keys.forEach((k, i) => {
+            const el = document.getElementById(ids[i]);
+            const val = m[k];
+            el.querySelector('.val').textContent = (val * 100).toFixed(0) + '%';
+            el.className = 'metric-card ' + (val < 0.5 ? 'bad' : val < 0.75 ? 'warn' : 'ok');
+        });
+    }
+
+    async function retrain() {
+        const features = getSelectedFeatures();
+        if (features.length === 0) {
+            document.getElementById('feature-info').className = 'info-box red';
+            document.getElementById('feature-info').innerHTML = 'Select at least one feature.';
+            return;
+        }
+
+        const res = await fetch(urlPrefix + '/api/train', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({features}),
+        });
+        const m = await res.json();
+
+        updateCards(m);
+
+        const label = features.length <= 3 ? features.join('+') : features.length + ' features';
+        history.push({label, ...m});
+        if (history.length > 8) history.shift();
+
+        updateCompareChart();
+
+        const info = document.getElementById('feature-info');
+        info.className = 'info-box blue';
+        info.innerHTML = `Training with <strong>${m.n_features}</strong> features (${features.length} selected + protocol one-hot columns).`;
+    }
+
+    function updateCompareChart() {
+        if (compareChart) compareChart.destroy();
+        compareChart = new Chart(document.getElementById('compare-chart'), {
+            type: 'bar',
+            data: {
+                labels: history.map(h => h.label),
+                datasets: [
+                    {label: 'Accuracy', data: history.map(h => h.acc), backgroundColor: '#10b981'},
+                    {label: 'Precision', data: history.map(h => h.prec), backgroundColor: '#06b6d4'},
+                    {label: 'Recall', data: history.map(h => h.rec), backgroundColor: '#f43f5e'},
+                    {label: 'F1', data: history.map(h => h.f1), backgroundColor: '#f59e0b'},
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {min: 0, max: 1.05, ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim')}, grid: {display: false}},
+                },
+                plugins: {
+                    legend: {labels: {color: getCSS('--text'), font: {family: "'Space Grotesk'"}}},
+                },
+            },
+        });
+    }
+
+    function setCheckboxes(names) {
+        document.querySelectorAll('#feature-toggles input[type="checkbox"]').forEach(cb => {
+            cb.checked = names.includes(cb.value);
+        });
+        retrain();
+    }
+
+    function presetRaw() {
+        setCheckboxes(['bytes_sent', 'bytes_recv', 'packets', 'duration']);
+    }
+    function presetAll() {
+        setCheckboxes({{ all_features | tojson }});
+    }
+    function presetDerived() {
+        setCheckboxes(['bytes_per_second', 'packet_rate', 'bytes_ratio', 'port_risk_score']);
+    }
+
+    // Initial train with raw features
+    retrain();
+</script>
+{% endblock %}

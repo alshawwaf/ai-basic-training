@@ -1,0 +1,122 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>A firewall just exported this log</h3>
+    <p>200 connections from the last few hours. Each row is one network connection. Can you spot which columns a machine learning model can use?</p>
+
+    <div class="log-table-wrap" style="overflow-x:auto; margin: 16px 0;">
+        <table class="log-table" id="log-table">
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                    <th class="col-header" id="th-{{ col }}" onclick="toggleColumn('{{ col }}')">
+                        {{ col }}
+                        <span class="col-badge" id="badge-{{ col }}"></span>
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in log_rows %}
+                <tr>
+                    {% for col in columns %}
+                    <td class="log-cell" data-col="{{ col }}">{{ row[col] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="controls" style="flex-wrap:wrap;">
+        <button class="btn" onclick="colorByType()">Colour by type</button>
+        <button class="btn btn-play" onclick="feedToModel()">Feed to sklearn &rarr;</button>
+    </div>
+
+    <div class="info-box hidden" id="result-box" style="margin-top:16px;"></div>
+
+    <div class="hidden" id="dtype-summary" style="margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3>Column types</h3>
+            <div style="display:flex; gap:24px; flex-wrap:wrap;">
+                <div>
+                    <span style="display:inline-block;width:14px;height:14px;background:var(--green);border-radius:3px;vertical-align:middle;"></span>
+                    <strong>Numeric</strong> — ready for ML
+                    <div style="margin-top:6px; color:var(--text-dim); font-size:13px;" id="numeric-list"></div>
+                </div>
+                <div>
+                    <span style="display:inline-block;width:14px;height:14px;background:var(--red);border-radius:3px;vertical-align:middle;"></span>
+                    <strong>String</strong> — needs transformation
+                    <div style="margin-top:6px; color:var(--text-dim); font-size:13px;" id="string-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Every SIEM and firewall exports logs like this.
+    The raw export has IP addresses, timestamps, protocol strings — none of which sklearn can process.
+    Feature engineering is the bridge between SOC data and ML models.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const columnMeta = {{ column_meta | tojson }};
+    const metaMap = {};
+    columnMeta.forEach(c => metaMap[c.name] = c);
+
+    function colorByType() {
+        const numericCols = [];
+        const stringCols = [];
+
+        columnMeta.forEach(c => {
+            const th = document.getElementById('th-' + c.name);
+            const cells = document.querySelectorAll(`td[data-col="${c.name}"]`);
+            const badge = document.getElementById('badge-' + c.name);
+
+            if (c.usable) {
+                th.classList.add('col-numeric');
+                cells.forEach(td => td.classList.add('col-numeric'));
+                badge.textContent = 'numeric';
+                badge.className = 'col-badge badge-ok';
+                numericCols.push(c.name);
+            } else {
+                th.classList.add('col-string');
+                cells.forEach(td => td.classList.add('col-string'));
+                badge.textContent = 'string';
+                badge.className = 'col-badge badge-bad';
+                stringCols.push(c.name);
+            }
+        });
+
+        document.getElementById('dtype-summary').classList.remove('hidden');
+        document.getElementById('numeric-list').textContent = numericCols.join(', ');
+        document.getElementById('string-list').textContent = stringCols.join(', ');
+    }
+
+    let feedAttempted = false;
+    function feedToModel() {
+        if (feedAttempted) return;
+        feedAttempted = true;
+
+        const box = document.getElementById('result-box');
+        box.classList.remove('hidden');
+        box.className = 'info-box red pulse';
+        box.innerHTML = `
+            <strong>ValueError:</strong> could not convert string to float: 'TCP'
+            <div style="margin-top:10px; font-size:13px; color:var(--text-dim);">
+                sklearn's LogisticRegression requires all-numeric input.<br>
+                Columns like <strong>protocol</strong>, <strong>src_ip</strong>, <strong>timestamp</strong>, and <strong>duration_str</strong> are strings.<br>
+                You need to <strong>transform</strong> them into numbers first.
+            </div>
+        `;
+
+        // Also color by type to make the problem visible
+        colorByType();
+    }
+</script>
+{% endblock %}

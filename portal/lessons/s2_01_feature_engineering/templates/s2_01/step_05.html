@@ -1,0 +1,151 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The scaling problem</h3>
+    <p><code>bytes_per_second</code> ranges from 0 to 100,000+. <code>port_risk_score</code> ranges from 1 to 5.
+       Without scaling, the model thinks bytes_per_second is 20,000x more important.</p>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>Outlier multiplier</label>
+            <input type="range" id="outlier-mult" min="1" max="20" step="1" value="1"
+                   oninput="updateOutlier()">
+        </div>
+        <div class="slider-value" id="mult-val">1x (no outlier)</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3>StandardScaler <span style="font-size:13px;color:var(--text-dim);">(x - mean) / std</span></h3>
+            <div class="chart-wrap"><canvas id="chart-standard"></canvas></div>
+            <div class="metric-row" id="stats-standard"></div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>MinMaxScaler <span style="font-size:13px;color:var(--text-dim);">(x - min) / (max - min)</span></h3>
+            <div class="chart-wrap"><canvas id="chart-minmax"></canvas></div>
+            <div class="metric-row" id="stats-minmax"></div>
+        </div>
+    </div>
+
+    <div class="info-box" id="scale-verdict" style="margin-top:16px;"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Network data has extreme outliers — one data exfiltration event
+    can transfer millions of bytes while normal traffic stays under 10KB. <strong>StandardScaler</strong> handles
+    this gracefully; MinMaxScaler gets crushed by the outlier.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    let chartStd, chartMM;
+    const initialData = {{ scaling | tojson }};
+
+    function drawHistograms(data) {
+        const stdData = data.standard || data;
+        const mmData = data.minmax || data;
+
+        function makeLabels(edges) {
+            const labels = [];
+            for (let i = 0; i < edges.length - 1; i++) {
+                labels.push(edges[i].toFixed(1));
+            }
+            return labels;
+        }
+
+        if (chartStd) chartStd.destroy();
+        chartStd = new Chart(document.getElementById('chart-standard'), {
+            type: 'bar',
+            data: {
+                labels: makeLabels(stdData.edges),
+                datasets: [{
+                    label: 'Count',
+                    data: stdData.counts,
+                    backgroundColor: 'rgba(6, 182, 212, 0.6)',
+                    borderColor: 'rgba(6, 182, 212, 1)',
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {legend: {display: false}},
+                scales: {
+                    y: {ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim'), maxRotation: 0, autoSkip: true, maxTicksLimit: 6}, grid: {display: false}},
+                },
+            },
+        });
+
+        if (chartMM) chartMM.destroy();
+        chartMM = new Chart(document.getElementById('chart-minmax'), {
+            type: 'bar',
+            data: {
+                labels: makeLabels(mmData.edges),
+                datasets: [{
+                    label: 'Count',
+                    data: mmData.counts,
+                    backgroundColor: 'rgba(249, 115, 22, 0.6)',
+                    borderColor: 'rgba(249, 115, 22, 1)',
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {legend: {display: false}},
+                scales: {
+                    y: {ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim'), maxRotation: 0, autoSkip: true, maxTicksLimit: 6}, grid: {display: false}},
+                },
+            },
+        });
+    }
+
+    function updateStats(stats) {
+        const s = stats.standard;
+        const m = stats.minmax;
+        document.getElementById('stats-standard').innerHTML = `
+            <div class="metric-card ok"><div class="name">Mean</div><div class="val">${s.mean}</div></div>
+            <div class="metric-card ok"><div class="name">Median</div><div class="val">${s.median !== undefined ? s.median : '—'}</div></div>
+            <div class="metric-card ok"><div class="name">Range</div><div class="val">[${s.min}, ${s.max}]</div></div>
+        `;
+        document.getElementById('stats-minmax').innerHTML = `
+            <div class="metric-card ${m.median !== undefined && m.median < 0.1 ? 'bad' : 'ok'}"><div class="name">Mean</div><div class="val">${m.mean}</div></div>
+            <div class="metric-card ${m.median !== undefined && m.median < 0.1 ? 'bad' : 'ok'}"><div class="name">Median</div><div class="val">${m.median !== undefined ? m.median : '—'}</div></div>
+            <div class="metric-card ok"><div class="name">Range</div><div class="val">[${m.min}, ${m.max}]</div></div>
+        `;
+    }
+
+    function updateVerdict(mult) {
+        const verdict = document.getElementById('scale-verdict');
+        if (mult <= 1) {
+            verdict.className = 'info-box blue';
+            verdict.innerHTML = 'No outlier. Both scalers produce reasonable distributions.';
+        } else if (mult <= 5) {
+            verdict.className = 'info-box orange';
+            verdict.innerHTML = `<strong>${mult}x outlier:</strong> MinMaxScaler starts compressing normal data toward 0. StandardScaler barely changes.`;
+        } else {
+            verdict.className = 'info-box red';
+            verdict.innerHTML = `<strong>${mult}x outlier:</strong> MinMaxScaler is crushed — median is near 0. All normal traffic looks identical. <strong>StandardScaler wins</strong> for network data with extreme outliers.`;
+        }
+    }
+
+    async function updateOutlier() {
+        const mult = parseInt(document.getElementById('outlier-mult').value);
+        document.getElementById('mult-val').textContent = mult === 1 ? '1x (no outlier)' : mult + 'x outlier';
+
+        const data = await fetchJSON(urlPrefix + '/api/scale-with-outlier?mult=' + mult);
+        drawHistograms(data);
+        updateStats(data.stats);
+        updateVerdict(mult);
+    }
+
+    // Initial render
+    drawHistograms(initialData);
+    updateStats(initialData.stats);
+    updateVerdict(1);
+</script>
+{% endblock %}

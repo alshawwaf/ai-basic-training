@@ -1,0 +1,155 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Encode security knowledge as features</h3>
+    <p>Not all ports are equal. Port 443 (HTTPS) is routine traffic. Port 3389 (RDP) is frequently exploited.
+       A <strong>port risk score</strong> encodes your security expertise directly into the model.</p>
+
+    <div class="controls">
+        <label>Edit risk scores:</label>
+    </div>
+
+    <div class="risk-editor" id="risk-editor">
+        {% for port, risk in port_risk_map.items() | sort %}
+        <div class="risk-row">
+            <span class="risk-port">Port {{ port }}</span>
+            <span class="risk-service" id="svc-{{ port }}"></span>
+            <select class="risk-select" id="risk-{{ port }}" data-port="{{ port }}" onchange="updateRisk()">
+                {% for r in range(1, 6) %}
+                <option value="{{ r }}" {{ 'selected' if r == risk }}>{{ r }}</option>
+                {% endfor %}
+            </select>
+            <span class="risk-bar-wrap">
+                <span class="risk-bar" id="bar-{{ port }}" style="width:{{ risk * 20 }}%;"></span>
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+        <div class="card" style="margin:0;">
+            <h3>Port distribution</h3>
+            <div class="chart-wrap"><canvas id="port-chart"></canvas></div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>Risk distribution</h3>
+            <div class="chart-wrap"><canvas id="risk-chart"></canvas></div>
+        </div>
+    </div>
+
+    <div class="info-box blue" style="margin-top:16px;">
+        <strong>Why encode domain knowledge?</strong> Without port_risk_score, the model sees port 3389 as
+        "just a number bigger than 443." The risk score tells the model that 3389 is <em>dangerous</em>,
+        regardless of its numeric value.
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> This is where ML meets threat intelligence.
+    Port risk scores, known-bad IP lists, and protocol risk profiles are all ways to encode
+    <strong>expert knowledge</strong> that the model can't learn from small datasets alone.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    const serviceMap = {
+        80: 'HTTP', 443: 'HTTPS', 22: 'SSH', 53: 'DNS',
+        3389: 'RDP', 21: 'FTP', 8080: 'HTTP-Alt'
+    };
+    Object.entries(serviceMap).forEach(([port, svc]) => {
+        const el = document.getElementById('svc-' + port);
+        if (el) el.textContent = svc;
+    });
+
+    const portDist = {{ port_dist | tojson }};
+    const riskColors = {1: '#10b981', 2: '#06b6d4', 3: '#f59e0b', 4: '#f97316', 5: '#f43f5e'};
+
+    let portChart, riskChart;
+
+    function drawCharts() {
+        const ports = Object.keys(portDist).sort((a,b) => a - b);
+        const portLabels = ports.map(p => p + ' (' + (serviceMap[p] || '?') + ')');
+        const portCounts = ports.map(p => portDist[p]);
+
+        // Get current risk scores from dropdowns
+        const riskMap = {};
+        document.querySelectorAll('.risk-select').forEach(sel => {
+            riskMap[sel.dataset.port] = parseInt(sel.value);
+        });
+
+        // Compute risk distribution
+        const riskDist = {};
+        ports.forEach(p => {
+            const r = riskMap[p] || 1;
+            riskDist[r] = (riskDist[r] || 0) + portDist[p];
+        });
+
+        // Port bar colors based on current risk
+        const barColors = ports.map(p => riskColors[riskMap[p] || 1]);
+
+        if (portChart) portChart.destroy();
+        portChart = new Chart(document.getElementById('port-chart'), {
+            type: 'bar',
+            data: {
+                labels: portLabels,
+                datasets: [{
+                    label: 'Connections',
+                    data: portCounts,
+                    backgroundColor: barColors,
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {legend: {display: false}},
+                scales: {
+                    y: {ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim'), maxRotation: 45}, grid: {display: false}},
+                },
+            },
+        });
+
+        const riskKeys = Object.keys(riskDist).sort();
+        const riskLabels = {1: 'Standard', 2: 'Watch', 3: 'Targeted', 4: 'Dangerous', 5: 'Critical'};
+
+        if (riskChart) riskChart.destroy();
+        riskChart = new Chart(document.getElementById('risk-chart'), {
+            type: 'doughnut',
+            data: {
+                labels: riskKeys.map(r => 'Risk ' + r + ': ' + (riskLabels[r] || '')),
+                datasets: [{
+                    data: riskKeys.map(r => riskDist[r]),
+                    backgroundColor: riskKeys.map(r => riskColors[r]),
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {color: getCSS('--text'), font: {family: "'Space Grotesk'", size: 12}},
+                    },
+                },
+            },
+        });
+    }
+
+    function updateRisk() {
+        // Update bar widths
+        document.querySelectorAll('.risk-select').forEach(sel => {
+            const port = sel.dataset.port;
+            const val = parseInt(sel.value);
+            const bar = document.getElementById('bar-' + port);
+            bar.style.width = (val * 20) + '%';
+            bar.style.background = riskColors[val];
+        });
+        drawCharts();
+    }
+
+    drawCharts();
+</script>
+{% endblock %}

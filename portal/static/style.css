@@ -12,6 +12,7 @@
     --red:        #e11d48;
     --green:      #059669;
     --orange:     #d97706;
+    --cyan:       #0891b2;
     --border:     #d8dce9;
     --radius:     10px;
     /* Theme-dependent helpers */
@@ -37,6 +38,7 @@
     --red:        #f43f5e;
     --green:      #10b981;
     --orange:     #f59e0b;
+    --cyan:       #06b6d4;
     --border:     #1e2140;
     --card-subtle:    rgba(255,255,255,0.02);
     --card-hover:     rgba(255,255,255,0.04);
@@ -1733,4 +1735,233 @@ select:hover, .btn:hover {
     .portal-home h1 { font-size: 26px; }
     .stage-header { flex-wrap: wrap; }
     .stage-num { width: 36px; height: 36px; font-size: 16px; }
+}
+
+/* ── Feature Engineering lesson (s2_01) ──────────────────────────────────── */
+
+/* Log table */
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+}
+.log-table th, .log-table td {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+}
+.log-table th {
+    background: var(--card-subtle);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+}
+.log-table td {
+    color: var(--text);
+}
+.log-table-wrap { border-radius: var(--radius); overflow: hidden; }
+
+/* Column type coloring */
+.col-numeric { background: rgba(5, 150, 105, 0.08) !important; }
+.col-string  { background: rgba(225, 29, 72, 0.08) !important; }
+th.col-numeric { border-bottom: 3px solid var(--green) !important; }
+th.col-string  { border-bottom: 3px solid var(--red) !important; }
+
+.col-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+    vertical-align: middle;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.badge-ok  { background: var(--green); color: #fff; }
+.badge-bad { background: var(--red);   color: #fff; }
+
+/* Transformation plan grid */
+.transform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+}
+.transform-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+.transform-card:hover { border-color: var(--accent); }
+.transform-card.tc-use       { border-color: var(--green); background: rgba(5,150,105,0.06); }
+.transform-card.tc-transform { border-color: var(--orange); background: rgba(217,119,6,0.06); }
+.transform-card.tc-drop      { border-color: var(--red); background: rgba(225,29,72,0.06); }
+
+.tc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.tc-name { font-weight: 600; font-size: 13px; color: var(--text); }
+.tc-dtype { font-size: 10px; padding: 1px 6px; border-radius: 6px; color: #fff; }
+.tc-example { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+.tc-state { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 6px; }
+.tc-answer { font-size: 11px; color: var(--accent); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); }
+
+/* Derive display (step 2) */
+.derive-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px 0;
+}
+.derive-step {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    text-align: center;
+    min-width: 100px;
+}
+.derive-step.highlight {
+    border-color: var(--cyan);
+    background: rgba(6, 182, 212, 0.06);
+}
+.derive-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+.derive-val { font-size: 18px; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+.derive-arrow { font-size: 16px; color: var(--text-dim); font-weight: 600; }
+
+/* Risk editor (step 3) */
+.risk-editor { margin-top: 12px; }
+.risk-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+.risk-port { font-weight: 600; min-width: 80px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); }
+.risk-service { font-size: 12px; color: var(--text-dim); min-width: 70px; }
+.risk-select {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+}
+.risk-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--grid-bg);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.risk-bar {
+    height: 100%;
+    background: var(--red);
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* Feature toggles (step 6) */
+.feature-toggles {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.ft-group {
+    flex: 1;
+    min-width: 200px;
+}
+.ft-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.ft-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    cursor: pointer;
+}
+.ft-toggle input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+}
+.ft-name {
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+}
+
+/* Encoding nodes (step 4) */
+.enc-node {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    min-width: 70px;
+}
+.enc-arrow {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Pipeline flow (step 7) */
+.pipeline-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 24px 0;
+    flex-wrap: wrap;
+}
+.pipe-stage {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 12px;
+    text-align: center;
+    min-width: 90px;
+    flex: 0 0 auto;
+}
+.pipe-stage.highlight {
+    border-color: var(--green);
+    background: rgba(5, 150, 105, 0.06);
+}
+.pipe-icon { font-size: 24px; margin-bottom: 6px; }
+.pipe-title { font-weight: 700; font-size: 13px; color: var(--text); }
+.pipe-detail { font-size: 11px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+.pipe-arrow { font-size: 20px; color: var(--text-dim); font-weight: 700; }
+
+/* Metric row variant for s2_01 scaling step */
+.metric-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Info box variants */
+.info-box.orange { background: rgba(217,119,6,0.1); border-left: 4px solid var(--orange); }
+
+@media (max-width: 700px) {
+    .derive-display { flex-direction: column; }
+    .pipeline-flow { flex-direction: column; }
+    .pipe-arrow { transform: rotate(90deg); }
+    .transform-grid { grid-template-columns: 1fr; }
+    .feature-toggles { flex-direction: column; }
 }

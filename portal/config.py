@@ -40,7 +40,7 @@ STAGES = [
         "lessons": [
             {"id": "s2_01", "num": 1, "title": "Feature Engineering",
              "desc": "Transform raw data into useful features",
-             "folder": "s2_01_feature_engineering", "has_app": False, "minutes": 90},
+             "folder": "s2_01_feature_engineering", "has_app": True, "minutes": 90},
             {"id": "s2_02", "num": 2, "title": "Random Forests",
              "desc": "Ensemble methods and bagging",
              "folder": "s2_02_random_forests", "has_app": False, "minutes": 90},

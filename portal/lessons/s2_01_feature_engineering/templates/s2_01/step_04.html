@@ -1,0 +1,121 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Encode the categories</h3>
+    <p>The <code>protocol</code> column has three values: TCP, UDP, ICMP. A model needs numbers.
+       Toggle between two encoding methods and see why the choice matters.</p>
+
+    <div class="controls">
+        <label>Encoding method:
+            <select id="enc-method" onchange="switchEncoding()">
+                <option value="label">LabelEncoder</option>
+                <option value="onehot" selected>OneHotEncoder</option>
+            </select>
+        </label>
+    </div>
+
+    <div id="enc-display" style="margin-top:16px;">
+        <table class="log-table" id="enc-table">
+            <thead id="enc-thead"></thead>
+            <tbody id="enc-tbody"></tbody>
+        </table>
+    </div>
+
+    <div class="info-box" id="enc-warning" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>The false ordering problem</h3>
+        <div id="ordering-viz" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:20px 0;">
+            <div class="enc-node" id="node-0" style="text-align:center;">
+                <div style="font-size:24px; font-weight:700;" id="node-0-val">0</div>
+                <div style="font-size:12px; color:var(--text-dim);" id="node-0-label">ICMP</div>
+            </div>
+            <div class="enc-arrow" id="arrow-01">&larr; distance = 1 &rarr;</div>
+            <div class="enc-node" id="node-1" style="text-align:center;">
+                <div style="font-size:24px; font-weight:700;" id="node-1-val">1</div>
+                <div style="font-size:12px; color:var(--text-dim);" id="node-1-label">TCP</div>
+            </div>
+            <div class="enc-arrow" id="arrow-12">&larr; distance = 1 &rarr;</div>
+            <div class="enc-node" id="node-2" style="text-align:center;">
+                <div style="font-size:24px; font-weight:700;" id="node-2-val">2</div>
+                <div style="font-size:12px; color:var(--text-dim);" id="node-2-label">UDP</div>
+            </div>
+        </div>
+        <div class="info-box" id="ordering-explain" style="text-align:center;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In network security, protocol type is <strong>nominal</strong> — TCP is not
+    "between" ICMP and UDP. Using LabelEncoder on nominal features tricks linear models into learning
+    nonsensical relationships. Always use one-hot encoding for categorical security fields.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const encRows = {{ enc_rows | tojson }};
+    const labelMapping = {{ label_mapping | tojson }};
+    const oheNames = {{ ohe_names | tojson }};
+    const oheDropped = {{ ohe_dropped | tojson }};
+
+    function switchEncoding() {
+        const method = document.getElementById('enc-method').value;
+        const thead = document.getElementById('enc-thead');
+        const tbody = document.getElementById('enc-tbody');
+        const warning = document.getElementById('enc-warning');
+
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        if (method === 'label') {
+            thead.innerHTML = '<tr><th>protocol</th><th>&rarr;</th><th>protocol_encoded</th></tr>';
+            encRows.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${r.protocol}</td><td>&rarr;</td><td style="font-weight:700;color:var(--cyan);">${r.label_val}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            warning.className = 'info-box red';
+            warning.innerHTML = `<strong>Problem:</strong> LabelEncoder maps ${Object.entries(labelMapping).map(([k,v]) => k+'='+v).join(', ')}.
+                A linear model treats these as a numeric scale — implying TCP is "halfway" between ICMP and UDP. <strong>Meaningless!</strong>`;
+
+            // Update ordering viz
+            document.getElementById('ordering-explain').className = 'info-box red';
+            document.getElementById('ordering-explain').innerHTML =
+                'A linear model learns: <code>weight × 2</code> (UDP) = 2 × <code>weight × 1</code> (TCP). This implies UDP is "twice as much" as TCP — <strong>nonsense</strong>.';
+            document.querySelectorAll('.enc-arrow').forEach(el => el.style.display = '');
+            document.querySelectorAll('.enc-node').forEach(el => el.style.background = '');
+
+        } else {
+            let headerHtml = '<tr><th>protocol</th><th>&rarr;</th>';
+            oheNames.forEach(n => headerHtml += `<th>${n}</th>`);
+            headerHtml += '</tr>';
+            thead.innerHTML = headerHtml;
+
+            encRows.forEach(r => {
+                let rowHtml = `<td>${r.protocol}</td><td>&rarr;</td>`;
+                r.ohe_vals.forEach(v => {
+                    const color = v === 1 ? 'var(--cyan)' : 'var(--text-dim)';
+                    rowHtml += `<td style="font-weight:${v?700:400};color:${color};">${v}</td>`;
+                });
+                const tr = document.createElement('tr');
+                tr.innerHTML = rowHtml;
+                tbody.appendChild(tr);
+            });
+
+            warning.className = 'info-box green';
+            warning.innerHTML = `<strong>Correct:</strong> OneHotEncoder creates one binary column per category (dropping <strong>${oheDropped}</strong> as reference to avoid the dummy variable trap). No false ordering.`;
+
+            document.getElementById('ordering-explain').className = 'info-box green';
+            document.getElementById('ordering-explain').innerHTML =
+                'Each protocol gets its own dimension. No implied ordering. The model learns <strong>independent weights</strong> for TCP and UDP.';
+            document.querySelectorAll('.enc-arrow').forEach(el => el.style.display = 'none');
+        }
+    }
+
+    switchEncoding();
+</script>
+{% endblock %}

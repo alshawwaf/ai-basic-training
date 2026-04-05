@@ -1,0 +1,86 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Build the transformation plan</h3>
+    <p>Every column needs a strategy. Click each column to classify it: <strong>use directly</strong>, <strong>needs transformation</strong>, or <strong>drop</strong>.</p>
+
+    <div class="transform-grid" id="transform-grid">
+        {% for col in column_meta %}
+        <div class="transform-card" id="tc-{{ col.name }}" onclick="cycleState('{{ col.name }}')">
+            <div class="tc-header">
+                <span class="tc-name">{{ col.name }}</span>
+                <span class="tc-dtype {{ 'badge-ok' if col.usable else 'badge-bad' }}">{{ col.dtype }}</span>
+            </div>
+            <div class="tc-example">e.g. {{ col.example }}</div>
+            <div class="tc-state" id="state-{{ col.name }}">Click to classify</div>
+            <div class="tc-answer hidden" id="answer-{{ col.name }}">{{ col.transform }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="controls" style="margin-top:16px;">
+        <button class="btn" onclick="showAllAnswers()">Show transformation plan</button>
+        <div class="slider-value" id="score-display">0 / {{ column_meta | length }} classified</div>
+    </div>
+
+    <div class="hidden" id="plan-summary" style="margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3>The transformation plan</h3>
+            <table class="log-table" style="font-size:13px;">
+                <thead><tr><th>Column</th><th>Type</th><th>Action</th></tr></thead>
+                <tbody>
+                {% for col in column_meta %}
+                <tr>
+                    <td><strong>{{ col.name }}</strong></td>
+                    <td><span class="{{ 'badge-ok' if col.usable else 'badge-bad' }}" style="padding:2px 8px;border-radius:4px;font-size:12px;">{{ col.dtype }}</span></td>
+                    <td>{{ col.transform }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="info-box blue" style="margin-top:12px;">
+                <strong>{{ numeric_count }}</strong> columns are ready. <strong>{{ string_count }}</strong> need transformation.
+                The next steps will show you how to transform each one.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A transformation plan is like an incident response playbook — you decide
+    <em>before</em> the data arrives how each field will be handled. In production ML pipelines, this plan
+    becomes a <strong>preprocessing module</strong> that runs on every new batch of logs.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const states = ['unset', 'use', 'transform', 'drop'];
+    const stateLabels = {unset: 'Click to classify', use: 'Use directly', transform: 'Needs transformation', drop: 'Drop'};
+    const stateClasses = {unset: '', use: 'tc-use', transform: 'tc-transform', drop: 'tc-drop'};
+    const colStates = {};
+    let classified = 0;
+
+    function cycleState(name) {
+        const current = colStates[name] || 'unset';
+        const idx = states.indexOf(current);
+        const next = states[(idx + 1) % states.length];
+        colStates[name] = next;
+
+        const card = document.getElementById('tc-' + name);
+        card.className = 'transform-card ' + stateClasses[next];
+        document.getElementById('state-' + name).textContent = stateLabels[next];
+
+        classified = Object.values(colStates).filter(v => v !== 'unset').length;
+        document.getElementById('score-display').textContent =
+            classified + ' / {{ column_meta | length }} classified';
+    }
+
+    function showAllAnswers() {
+        document.querySelectorAll('.tc-answer').forEach(el => el.classList.remove('hidden'));
+        document.getElementById('plan-summary').classList.remove('hidden');
+    }
+</script>
+{% endblock %}

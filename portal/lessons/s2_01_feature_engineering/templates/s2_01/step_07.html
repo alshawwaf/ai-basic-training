@@ -1,0 +1,119 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The full pipeline</h3>
+    <p>You've built a complete feature engineering pipeline. Here's the journey from raw log to trained model.</p>
+
+    <div class="pipeline-flow" id="pipeline">
+        <div class="pipe-stage" id="ps-raw">
+            <div class="pipe-icon">&#128196;</div>
+            <div class="pipe-title">Raw Log</div>
+            <div class="pipe-detail">{{ n_raw_cols }} columns<br>{{ n_string_cols }} are strings</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage" id="ps-parse">
+            <div class="pipe-icon">&#9986;</div>
+            <div class="pipe-title">Parse</div>
+            <div class="pipe-detail">Strip suffixes<br>Parse timestamps</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage" id="ps-derive">
+            <div class="pipe-icon">&#9881;</div>
+            <div class="pipe-title">Derive</div>
+            <div class="pipe-detail">bytes/sec, ratios<br>port risk scores</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage" id="ps-encode">
+            <div class="pipe-icon">&#127922;</div>
+            <div class="pipe-title">Encode</div>
+            <div class="pipe-detail">OneHot protocol<br>Drop label column</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage" id="ps-scale">
+            <div class="pipe-icon">&#9878;</div>
+            <div class="pipe-title">Scale</div>
+            <div class="pipe-detail">StandardScaler<br>Fit on train only</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage highlight" id="ps-model">
+            <div class="pipe-icon">&#129302;</div>
+            <div class="pipe-title">Model</div>
+            <div class="pipe-detail">{{ n_final_features }} features<br>All numeric</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px;">
+        <div class="card" style="margin:0;">
+            <h3>Before engineering</h3>
+            <div class="metrics-row">
+                <div class="metric-card {{ 'ok' if raw_metrics.acc > 0.75 else 'warn' }}">
+                    <div class="name">Accuracy</div>
+                    <div class="val">{{ (raw_metrics.acc * 100) | round(0) }}%</div>
+                </div>
+                <div class="metric-card {{ 'ok' if raw_metrics.f1 > 0.5 else 'bad' }}">
+                    <div class="name">F1</div>
+                    <div class="val">{{ (raw_metrics.f1 * 100) | round(0) }}%</div>
+                </div>
+            </div>
+            <div style="font-size:13px;color:var(--text-dim);margin-top:8px;">
+                4 raw numeric columns only
+            </div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>After engineering</h3>
+            <div class="metrics-row">
+                <div class="metric-card {{ 'ok' if final_metrics.acc > 0.75 else 'warn' }}">
+                    <div class="name">Accuracy</div>
+                    <div class="val">{{ (final_metrics.acc * 100) | round(0) }}%</div>
+                </div>
+                <div class="metric-card {{ 'ok' if final_metrics.f1 > 0.5 else 'bad' }}">
+                    <div class="name">F1</div>
+                    <div class="val">{{ (final_metrics.f1 * 100) | round(0) }}%</div>
+                </div>
+            </div>
+            <div style="font-size:13px;color:var(--text-dim);margin-top:8px;">
+                {{ n_final_features }} engineered features
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>What you built</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Step</th><th>What you learned</th><th>Key takeaway</th></tr></thead>
+            <tbody>
+                <tr><td>0-1</td><td>Raw logs fail</td><td>sklearn needs all-numeric input</td></tr>
+                <tr><td>2</td><td>Parse & derive</td><td>bytes_per_second captures transfer speed</td></tr>
+                <tr><td>3</td><td>Domain knowledge</td><td>Port risk scores encode security expertise</td></tr>
+                <tr><td>4</td><td>Encode categories</td><td>OneHot avoids false ordering</td></tr>
+                <tr><td>5</td><td>Scaling</td><td>StandardScaler handles outliers better</td></tr>
+                <tr><td>6</td><td>Feature impact</td><td>Engineered features boost model quality</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Every SOC ML project starts with raw logs and ends with a feature matrix.
+    The pipeline you built — parse, derive, encode, scale — is the same one used in production malware detectors,
+    intrusion detection systems, and UEBA platforms. <strong>Feature engineering is where security expertise becomes ML signal.</strong>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Animate pipeline stages appearing one by one
+    const stages = document.querySelectorAll('.pipe-stage, .pipe-arrow');
+    stages.forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(10px)';
+        el.style.transition = `opacity 0.4s ease ${i * 150}ms, transform 0.4s ease ${i * 150}ms`;
+        requestAnimationFrame(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Parse the hidden numbers</h3>
+    <p>The <code>duration_str</code> column looks like <code>"2.34s"</code> — a string with a unit suffix.
+       Strip the "s", convert to float, then derive <strong>bytes_per_second</strong>.</p>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>Browse connections</label>
+            <input type="range" id="conn-slider" min="0" max="19" step="1" value="0"
+                   oninput="showConnection()">
+        </div>
+        <div class="slider-value" id="conn-idx">Connection 0</div>
+    </div>
+
+    <div class="derive-display" id="derive-display">
+        <div class="derive-step">
+            <div class="derive-label">Raw</div>
+            <div class="derive-val" id="d-raw">—</div>
+        </div>
+        <div class="derive-arrow">&rarr; strip "s" &rarr;</div>
+        <div class="derive-step">
+            <div class="derive-label">Duration (seconds)</div>
+            <div class="derive-val" id="d-parsed">—</div>
+        </div>
+        <div class="derive-arrow">&rarr;</div>
+        <div class="derive-step">
+            <div class="derive-label">Bytes sent</div>
+            <div class="derive-val" id="d-bytes">—</div>
+        </div>
+        <div class="derive-arrow">&divide;</div>
+        <div class="derive-step highlight">
+            <div class="derive-label">Bytes/second</div>
+            <div class="derive-val" id="d-bps">—</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+        <div class="card" style="margin:0;">
+            <h3>More derived features</h3>
+            <table class="log-table" style="font-size:13px;">
+                <thead><tr><th>Feature</th><th>Formula</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td>packet_rate</td><td>packets / duration</td><td id="d-pr">—</td></tr>
+                    <tr><td>bytes_ratio</td><td>sent / (recv + 1)</td><td id="d-br">—</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>Top 5 suspicious (by bytes/sec)</h3>
+            <table class="log-table" style="font-size:13px;">
+                <thead><tr><th>#</th><th>Bytes/sec</th><th>Bytes sent</th><th>Duration</th></tr></thead>
+                <tbody>
+                    {% for s in top_bps %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td style="color:var(--red);font-weight:600;">{{ s.bps }}</td>
+                        <td>{{ s.bytes_sent }}</td>
+                        <td>{{ s.duration }}s</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A 50,000-byte transfer in 0.5 seconds is a red flag (possible data exfiltration).
+    The same 50,000 bytes over 50 seconds is normal browsing. <strong>bytes_per_second</strong> captures the signal that
+    raw bytes_sent alone misses.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const samples = {{ samples | tojson }};
+
+    function showConnection() {
+        const idx = parseInt(document.getElementById('conn-slider').value);
+        const s = samples[idx];
+        document.getElementById('conn-idx').textContent = 'Connection ' + idx;
+        document.getElementById('d-raw').textContent = s.duration_str;
+        document.getElementById('d-parsed').textContent = s.duration + 's';
+        document.getElementById('d-bytes').textContent = s.bytes_sent.toLocaleString();
+        document.getElementById('d-bps').textContent = s.bytes_per_second.toLocaleString();
+        document.getElementById('d-pr').textContent = s.packet_rate + ' pkt/s';
+        document.getElementById('d-br').textContent = s.bytes_ratio;
+
+        // Highlight suspicious values
+        const bpsEl = document.getElementById('d-bps');
+        if (s.bytes_per_second > 5000) {
+            bpsEl.style.color = 'var(--red)';
+            bpsEl.style.fontWeight = '700';
+        } else {
+            bpsEl.style.color = 'var(--green)';
+            bpsEl.style.fontWeight = '600';
+        }
+    }
+
+    showConnection();
+</script>
+{% endblock %}

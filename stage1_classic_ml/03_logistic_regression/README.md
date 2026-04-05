@@ -12,21 +12,13 @@ P(phishing) = sigmoid( w₁×url_length + w₂×num_dots + ... + bias )
 
 The sigmoid function squashes any number into the range [0, 1], making it interpretable as a probability:
 
-```
-P(phishing)
-  1.0 |                       ___________
-      |                    ../
-  0.8 |                  ./
-      |                ./
-  0.5 |_______________X_________________ <-- decision boundary
-      |            ./
-  0.2 |          ./
-      |       ../
-  0.0 |______/
-      +-------+-------+-------+-------+-> linear score (features x weights)
-           very          0          very
-          legit                   suspicious
-```
+The sigmoid curve maps any linear score to a probability between 0 and 1:
+
+| Linear score | Sigmoid output | Interpretation |
+|-------------|---------------|----------------|
+| Very negative | Near 0.0 | Very likely legitimate |
+| Near 0 | 0.5 | Decision boundary — uncertain |
+| Very positive | Near 1.0 | Very likely phishing |
 
 ```
 sigmoid(x) = 1 / (1 + e^(-x))

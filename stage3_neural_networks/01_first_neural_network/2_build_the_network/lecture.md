@@ -38,13 +38,13 @@ Why ReLU for hidden layers?
 
 ```
 sigmoid(x) = 1 / (1 + e^-x)
-
-Output:
-  1.0 |          _______
-  0.5 |        ./
-  0.0 |_______/
-      +---------> x
 ```
+
+| x value | sigmoid(x) | Behaviour |
+|---------|-----------|-----------|
+| Very negative | Near 0.0 | Suppressed |
+| 0 | 0.5 | Midpoint |
+| Very positive | Near 1.0 | Saturated |
 
 Maps any real number to [0, 1]. Interpret as probability of the positive class.
 

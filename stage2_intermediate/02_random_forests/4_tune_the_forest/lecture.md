@@ -24,23 +24,19 @@ Adding trees always reduces variance — but the improvement shrinks quickly:
 | 500 → 1000 | < 0.05% | Very high |
 
 ```
-Test Accuracy vs n_estimators
+Test Accuracy vs n_estimators (conceptual shape):
 
- 0.95 │                       ●─────●──────●  plateau
-      │                 ●────/
- 0.94 │            ●───/
-      │        ●──/
- 0.93 │      /
-      │    /
- 0.92 │  ●         ← steep improvement zone
-      │ /
- 0.91 │/
-      │
- 0.89 ●
-      └──┬────┬────┬────┬────┬────┬────┬────►
-         1    5   10   25   50  100  200  500
-                                 ▲
-                          elbow (~100 trees)
+  n_estimators =   1  -->  ~0.89  (steep improvement zone starts here)
+                   5  -->  ~0.92
+                  10  -->  ~0.93
+                  25  -->  ~0.94
+                  50  -->  ~0.94+
+                 100  -->  ~0.95   <-- elbow (accuracy plateaus here)
+                 200  -->  ~0.95
+                 500  -->  ~0.95
+
+  Steep gains from 1-50 trees, then diminishing returns.
+  Elbow at ~100 trees: beyond this, you pay CPU time for tiny gains.
 ```
 
 The "elbow" of the learning curve — where accuracy plateaus — is usually around 100–200 trees. Beyond that, you are paying CPU time for tiny gains.

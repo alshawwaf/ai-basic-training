@@ -61,29 +61,13 @@ This program is designed for:
 
 The program awards progressive certifications. Each tier builds on the previous one.
 
-```
-+------------------------------------------------------+
-|                                                      |
-|  TIER 3 — AI NINJA                    Weeks 11-13   |
-|  Can build AI-powered security tools                 |
-|  and lead AI-driven engagements                      |
-|                                                      |
-|  +----------------------------------------------+   |
-|  |                                              |   |
-|  |  TIER 2 — AI PRACTITIONER      Weeks 8-10   |   |
-|  |  Can prototype a neural network              |   |
-|  |  and assess AI solution architectures        |   |
-|  |                                              |   |
-|  |  +--------------------------------------+   |   |
-|  |  |                                      |   |   |
-|  |  |  TIER 1 — AI FOUNDATIONS  Weeks 1-7  |   |   |
-|  |  |  Can explain AI/ML to a customer     |   |   |
-|  |  |  and evaluate vendor AI claims       |   |   |
-|  |  |                                      |   |   |
-|  |  +--------------------------------------+   |   |
-|  +----------------------------------------------+   |
-+------------------------------------------------------+
-```
+| Tier | Name | Weeks | Capability |
+|------|------|-------|------------|
+| **3** | **AI Ninja** | 11–13 | Can build AI-powered security tools and lead AI-driven engagements |
+| **2** | **AI Practitioner** | 8–10 | Can prototype a neural network and assess AI solution architectures |
+| **1** | **AI Foundations** | 1–7 | Can explain AI/ML to a customer and evaluate vendor AI claims |
+
+> Each tier builds on the previous one — Tier 1 is required for Tier 2, and Tier 2 is required for Tier 3.
 
 | Tier | Stages Completed | Assessment Gates | Credential |
 |------|-----------------|------------------|------------|

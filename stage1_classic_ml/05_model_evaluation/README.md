@@ -63,23 +63,13 @@ Use F1 when you need to balance catching attacks vs generating false alarms.
 
 Lowering the decision threshold catches more attacks (higher recall) but generates more false alarms (lower precision):
 
-```
-      Precision
-  1.0 |*
-      | **
-  0.8 |   ***
-      |      ****
-  0.6 |          ****
-      |              *****
-  0.4 |                   ******
-      |                         ******
-  0.2 |                               ****
-      +--+--+--+--+--+--+--+--+--+--+--> Recall
-        0.1  0.3  0.5  0.7  0.9  1.0
+As you lower the decision threshold, recall increases but precision decreases:
 
-  Threshold HIGH -----> LOW
-  (catch less, be sure)  (catch more, accept false alarms)
-```
+| Threshold | Precision | Recall | Behaviour |
+|-----------|-----------|--------|-----------|
+| High (0.9) | Very high | Low | Catch few, but be certain |
+| Medium (0.5) | Moderate | Moderate | Balanced |
+| Low (0.1) | Low | Very high | Catch everything, accept false alarms |
 
 The right balance depends on your organisation:
 

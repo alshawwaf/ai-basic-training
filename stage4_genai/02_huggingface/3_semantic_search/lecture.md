@@ -36,12 +36,15 @@ Semantic Search: Two-Phase Architecture
 ───────────────────────────────────────────────────────────────
 PHASE 1 — Indexing (offline, done once)
 
- Doc 1 ──►┐                    ┌───────────────────────────┐
- Doc 2 ──►┤  model.encode()    │ Embedding Matrix (N × 384)│
- Doc 3 ──►┤ ─────────────────► │ [0.23, -0.45, 0.87, ...] │ doc 1
- ...   ──►┤                    │ [0.11,  0.55, 0.02, ...] │ doc 2
- Doc N ──►┘                    │ [...]                     │
-                               └───────────────────────────┘
+ Doc 1, Doc 2, Doc 3, ... Doc N
+           │
+      model.encode()
+           │
+           ▼
+  Embedding Matrix (N × 384)
+   doc 1: [0.23, -0.45, 0.87, ...]
+   doc 2: [0.11,  0.55, 0.02, ...]
+   ...
 
 PHASE 2 — Query (real-time)
 

@@ -30,22 +30,13 @@ lr=0.01    →  bigger steps →  faster early, may oscillate near minimum
 lr=0.1     →  huge steps   →  often diverges (loss explodes or oscillates wildly)
 ```
 
-```
-Learning rate effect on the loss landscape:
+**Learning rate effect on the loss landscape:**
 
-Loss                     Loss                     Loss
-  |  .                     |  .                     |  .        .
-  | . .                    | . .                    | . .      . .
-  |.   .                   |.   .                   |.   .    .   .
-  |     .  .               |     . .                |     .  .
-  |      .. .              |      .                 |      ..  ← bouncing!
-  |         .  .           |      *  ← minimum     |
-  |          ...           |                        |
-  +------------>           +------------>           +------------>
-   lr=0.0001                lr=0.001                 lr=0.1
-   too slow: still          just right: reaches      too large: overshoots
-   crawling down            minimum smoothly         and oscillates
-```
+| Learning rate | Behaviour | Loss pattern |
+|--------------|-----------|-------------|
+| `lr=0.0001` | Too slow | Loss crawls down gradually — still decreasing after many epochs, may never reach minimum |
+| `lr=0.001` | Just right | Loss decreases smoothly and reaches the minimum efficiently |
+| `lr=0.1` | Too large | Loss overshoots and oscillates (bounces) — may never converge |
 
 > **Want to go deeper?** [Learning rate (Wikipedia)](https://en.wikipedia.org/wiki/Learning_rate)
 

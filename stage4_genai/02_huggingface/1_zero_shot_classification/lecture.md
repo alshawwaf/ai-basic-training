@@ -35,23 +35,23 @@ The model has never seen your labels before. It uses its general understanding o
 ```
 Zero-Shot Classification Flow
 ──────────────────────────────────────────────────────────────
- Input text                          Candidate labels
-┌──────────────────────────────┐    ┌───────────────────────┐
-│ "Outbound connection from    │    │ "malicious activity"  │
-│  workstation to 185.234..."  │    │ "normal traffic"      │
-└──────────────┬───────────────┘    │ "configuration change"│
-               │                    └───────────┬───────────┘
-               ▼                               │
-        ┌──────────────────────────────────────┐
-        │     NLI Model (BART-large-MNLI)      │
-        │   "does text entail each label?"     │
-        └──────────────────┬───────────────────┘
-                           ▼
-                ┌────────────────────────┐
-                │ malicious activity 0.87│ ← top
-                │ normal traffic     0.09│
-                │ config change      0.04│
-                └────────────────────────┘
+
+ Input text                       Candidate labels
+ "Outbound connection from         "malicious activity"
+  workstation to 185.234..."       "normal traffic"
+                                   "configuration change"
+               │                            │
+               ▼                            ▼
+            NLI Model (BART-large-MNLI)
+            "does text entail each label?"
+                        │
+                        ▼
+
+ | Label              | Score |       |
+ |--------------------|-------|-------|
+ | malicious activity | 0.87  | ← top |
+ | normal traffic     | 0.09  |       |
+ | config change      | 0.04  |       |
 ```
 
 ---
@@ -75,15 +75,15 @@ NLI Scoring for one label
  Hypothesis: "This is an example of malicious activity"
                            │
                            ▼
-                  ┌─────────────────┐
-                  │    NLI Model    │
-                  └────────┬────────┘
+                      NLI Model
+                           │
                            ▼
-              ┌─────────────────────────┐
-              │ ENTAILMENT:     0.87    │ ───► score for this label
-              │ NEUTRAL:        0.09    │
-              │ CONTRADICTION:  0.04    │
-              └─────────────────────────┘
+
+ | Prediction     | Score | Note                  |
+ |----------------|-------|-----------------------|
+ | ENTAILMENT     | 0.87  | → score for this label |
+ | NEUTRAL        | 0.09  |                       |
+ | CONTRADICTION  | 0.04  |                       |
 ```
 
 ---

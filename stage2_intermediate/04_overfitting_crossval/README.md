@@ -19,20 +19,15 @@ Test accuracy:     71.2%
 -> The model memorised the training data. It has not learned.
 ```
 
-```
-Accuracy
-  1.0 |              training ___________
-      |            ./
-  0.8 |          ./
-      |    _____/   <-- gap opens up = overfitting
-  0.6 |   validation \___________
-      |
-  0.4 |
-      +--+--+--+--+--+--+--+--+-> Model Complexity (e.g. tree depth)
-        low              high
+As model complexity increases, training and validation accuracy diverge:
 
-  Sweet spot: where validation accuracy is highest
-```
+| Model complexity | Training accuracy | Validation accuracy | Diagnosis |
+|-----------------|-------------------|---------------------|-----------|
+| Low (simple) | Low | Low | Underfitting — model too simple |
+| Medium | High | **Peaks here** | Sweet spot — best generalisation |
+| High (complex) | Very high | Falls | Overfitting — model memorises noise |
+
+> The gap between training and validation accuracy is the overfitting signal. When the gap opens up, the model has learned noise specific to the training set.
 
 The model has learned noise specific to the training set — patterns that don't exist in the real world. It's like a student who memorises exam answers without understanding the material.
 

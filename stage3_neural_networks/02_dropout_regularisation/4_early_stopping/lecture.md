@@ -48,22 +48,17 @@ Epoch 23: val_loss = 0.184  (counter = 5) ← STOP, restore epoch 18 weights
 
 The model that gets restored is from epoch 18 (val_loss = 0.169) — the best it ever achieved.
 
-```
-Early Stopping with patience=5:
+**Early Stopping with patience=5:**
 
-val_loss
-  0.19 |      .     . . . .
-       |    .   .         X ← STOP (patience exhausted)
-  0.17 |  .       *           * = best epoch (18), weights restored here
-       | .
-  0.15 |.
-       +--+--+--+--+--+--+--+--+---> Epoch
-         15 16 17 18 19 20 21 22 23
-
-         ◄──────────────────────►
-          patience counter: resets at epoch 18,
-          reaches 5 at epoch 23 → training stops
-```
+| Epoch | val_loss | Patience counter | Event |
+|-------|---------|-----------------|-------|
+| 15–17 | Decreasing | — | Still improving |
+| **18** | **0.170 (best)** | **Reset to 0** | New best — weights saved here |
+| 19 | 0.172 | 1 | Worse than best |
+| 20 | 0.175 | 2 | Still worse |
+| 21 | 0.178 | 3 | Still worse |
+| 22 | 0.180 | 4 | Still worse |
+| **23** | 0.182 | **5 — STOP** | Patience exhausted — restore weights from epoch 18 |
 
 ---
 

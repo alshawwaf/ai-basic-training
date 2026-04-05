@@ -15,16 +15,9 @@
 
 A 28×28 greyscale image has 784 pixels. When flattened:
 
-```
-Original 28×28:        Flattened to 784:
-+-+-+-+-+--+           [0.0, 0.0, 0.12, 0.85, 0.95, 0.71, 0.0, ...]
-|  |  |  |  |               pixel 0  1    2     3     4    5   6
-|  |  | #|# |
-|  | #|# |# |    →    Dense doesn't know pixel 3 is next to pixel 4.
-|  | #|# |  |         It doesn't know they form an edge.
-+-+-+-+-+--+          It just knows "when index 3 is high, index 4 is
-                       usually also high" — a correlation without geometry.
-```
+A 28x28 image is flattened to a 784-element array: `[0.0, 0.0, 0.12, 0.85, 0.95, 0.71, 0.0, ...]`
+
+Dense doesn't know pixel 3 is next to pixel 4. It doesn't know they form an edge. It just knows "when index 3 is high, index 4 is usually also high" — a correlation without geometry.
 
 A Dense layer with `input_shape=(784,)` and 128 units learns:
 - "When pixel 401 is bright AND pixel 402 is bright AND pixel 415 is bright → probably digit 3"
@@ -39,22 +32,12 @@ If the digit "3" slides one pixel to the right, a Dense layer must re-learn all 
 
 A Conv2D filter learns **one detector** (e.g., "curved line") and applies it at **every position**. If the "3" shifts right, the same filter still detects it.
 
-```
-Dense: must learn separate weights for each position
+| Scenario | Dense layer | Conv2D layer |
+|----------|------------|-------------|
+| "3" centred in image | Learned — recognises it | Learned — recognises it |
+| "3" shifted 5px right | **Never seen this** — must relearn all weights | **Still works** — same 3x3 filter detects curves at every position |
 
- "3" centred:               "3" shifted right:
- ┌─────────────┐            ┌─────────────┐
- │    ###      │            │       ###   │
- │       #     │            │          #  │
- │    ###      │            │       ###   │
- │       #     │            │          #  │
- │    ###      │            │       ###   │
- └─────────────┘            └─────────────┘
- Dense: learned!             Dense: never seen this!
-
-Conv2D: same 3x3 filter detects curves at EVERY position
- → works for both, no relearning needed
-```
+> Conv2D achieves **translation invariance** through weight sharing — one detector applied everywhere. Dense must learn separate weights for every position.
 
 This is why CNNs use dramatically fewer parameters:
 

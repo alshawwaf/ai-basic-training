@@ -91,22 +91,14 @@ plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 ```
 
-```
-Loss
-  1.0 |\
-      | \  train loss        Good training:
-  0.6 |  \___                both curves fall together
-      |      \____
-  0.2 |           \__________
-      +---+---+---+---+---+--> Epoch
+**Good training:** Both train_loss and val_loss decrease together and converge.
 
-  1.0 |         ____-----      Overfitting:
-      |        /               val_loss rises while
-  0.4 |  _____/                train_loss keeps falling
-      |train /
-  0.1 |-----/
-      +---+---+---+---+---+--> Epoch
-```
+**Overfitting:** val_loss stops falling and starts rising while train_loss keeps decreasing.
+
+| Pattern | Train loss | Val loss | Diagnosis |
+|---------|-----------|----------|-----------|
+| Both falling together | Decreasing | Decreasing | Healthy — model is learning |
+| Diverging | Still decreasing | Rising | Overfitting — stop training earlier |
 
 - **loss decreasing** — model is learning
 - **val_loss increasing while loss decreases** — overfitting, stop training earlier

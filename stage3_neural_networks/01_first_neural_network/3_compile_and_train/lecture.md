@@ -27,21 +27,24 @@ For each epoch:
     Print epoch summary
 ```
 
-```
-One mini-batch iteration (forward + backward):
+**One mini-batch iteration (forward + backward):**
 
- FORWARD PASS (left to right):
- ┌───────┐    ┌───────────┐    ┌───────────┐    ┌────────┐
- │ batch │───►│ Dense(64) │───►│ Dense(1)  │───►│  loss  │
- │ 32×10 │    │   relu    │    │ sigmoid   │    │function│
- └───────┘    └───────────┘    └───────────┘    └───┬────┘
-                                                   │
- BACKWARD PASS (right to left):                    │
- ┌───────────┐    ┌──────────┐    ┌──────────┐    │
- │  weights  │◄───│ gradients│◄───│ gradients│◄───┘
- │  updated  │    │  layer 1 │    │  layer 2 │
- └───────────┘    └──────────┘    └──────────┘
-```
+**Forward pass** (left to right):
+
+| Step | Component | Shape / Detail |
+|------|-----------|---------------|
+| 1 | Batch input | 32 x 10 |
+| 2 | Dense(64), relu | Hidden layer activation |
+| 3 | Dense(1), sigmoid | Output probability |
+| 4 | Loss function | Compare prediction vs label |
+
+**Backward pass** (right to left):
+
+| Step | Component | What happens |
+|------|-----------|-------------|
+| 4 → 3 | Gradients layer 2 | Compute error signal |
+| 3 → 2 | Gradients layer 1 | Propagate gradients back |
+| 2 → 1 | Weights updated | `w = w - learning_rate x gradient` |
 
 One **epoch** = one complete pass through all training data.
 One **batch** = `batch_size` samples processed before updating weights.

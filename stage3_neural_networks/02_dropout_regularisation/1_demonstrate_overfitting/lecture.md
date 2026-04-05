@@ -17,24 +17,18 @@
 
 With 3 x Dense(256) layers and 10 input features, this model has ~133,000 parameters being trained on 1,600 samples. That's 83 parameters per training sample. The model has enough capacity to memorise every training example, including the random noise in the data.
 
-```
-The overfit architecture:
+**The overfit architecture:**
 
-Input    Dense(256)   Dense(256)   Dense(256)   Output
- (10)      relu         relu         relu       sigmoid
+| Layer | Size | Activation | Parameters |
+|-------|------|-----------|------------|
+| Input | 10 | — | — |
+| Dense | 256 | relu | 10 x 256 + 256 = 2,816 |
+| Dense | 256 | relu | 256 x 256 + 256 = 65,792 |
+| Dense | 256 | relu | 256 x 256 + 256 = 65,792 |
+| Output | 1 | sigmoid | 256 x 1 + 1 = 257 |
+| **Total** | | | **~134,657 params** |
 
-  o ──►  oooooooo ──► oooooooo ──► oooooooo ──►  o
-         oooooooo     oooooooo     oooooooo
-         oooooooo     oooooooo     oooooooo
-         oooooooo     oooooooo     oooooooo
-          (256)        (256)        (256)        (1)
-
-Params:  10×256+256  256×256+256  256×256+256  256×1+1
-         = 2,816     = 65,792     = 65,792     = 257
-                                         Total: ~134,657
-                                         Samples: 1,600
-                                         Ratio: 84 params per sample!
-```
+> With only 1,600 training samples, that is **84 parameters per sample** — far too much capacity.
 
 ```
 Too much capacity:
@@ -52,28 +46,15 @@ Result:
 
 In a healthy training run, train loss and val loss both decrease and track each other:
 
-```
-Loss
-  0.6 | \  val
-      |  \.____
-  0.3 |   \____   train and val converge
-      |        \__________
-  0.1 |                    \_____
-      +---+---+---+---+---+---> Epoch
-```
+**Healthy training:** Both train and val loss decrease together and converge toward the same low value.
 
-Overfitting signature — val loss stops falling, then rises:
+**Overfitting signature:** Val loss stops falling (around epoch 20-30), then starts rising, while train loss continues decreasing.
 
-```
-Loss
-  0.6 | \  train          val
-      |  \               /____  <- divergence here
-  0.3 |   \_______      /
-      |           \____/
-  0.1 |                train continues falling
-      +---+---+---+---+---+---> Epoch
-         10  20  30  40  50
-```
+| Epoch range | Train loss | Val loss | What's happening |
+|-------------|-----------|----------|-----------------|
+| 1–10 | Falling fast | Falling fast | Both learning — healthy |
+| 10–30 | Still falling | Flattens | Val gains slow — approaching capacity |
+| 30–50 | Still falling | **Rising** | Overfitting — model memorising noise |
 
 The point where val loss hits its minimum is the ideal stopping point. Training beyond that point makes the model worse on unseen data.
 

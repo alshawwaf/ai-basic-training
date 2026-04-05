@@ -22,23 +22,11 @@
 | depth=5 | Medium | Medium | ~99% | ~97% | Small |
 | depth=50 | Low | High | 100% | ~92% | Large |
 
-```
-UNDERFIT (depth=1)         GOOD FIT (depth=5)         OVERFIT (depth=50)
-High bias, low variance    Low bias, low variance      Low bias, high variance
-
-Train: 65%  Val: 65%       Train: 99%  Val: 97%       Train: 100%  Val: 92%
-  gap: ~0%                   gap: ~2%                    gap: ~8%
-
-┌──────────────┐           ┌──────────────┐           ┌──────────────┐
-│ . x . x . .  │           │ .   | x x x  │           │ ._/\  |x x/\ │
-│ . x . . x .  │           │ . . |  x x   │           │ ./   \_| x/  │
-│ . . x . x .  │           │ . . | x x x  │           │ . . .  |x x  │
-│  (draws a    │           │ (clean split) │           │ (wiggly line│
-│   flat line) │           │              │           │  around noise│
-└──────────────┘           └──────────────┘           └──────────────┘
- Too simple to              Captures the real           Memorises every
- learn the pattern          decision boundary           training point
-```
+| Regime | Depth | Bias | Variance | Train | Val | Gap | Decision boundary |
+|--------|-------|------|----------|-------|-----|-----|-------------------|
+| UNDERFIT | 1 | High | Low | 65% | 65% | ~0% | Draws a flat line -- too simple to learn the pattern |
+| GOOD FIT | 5 | Low | Low | 99% | 97% | ~2% | Clean split -- captures the real decision boundary |
+| OVERFIT | 50 | Low | High | 100% | 92% | ~8% | Wiggly line around noise -- memorises every training point |
 
 **The sweet spot** is the depth where both bias and variance are low enough — validation accuracy is highest.
 

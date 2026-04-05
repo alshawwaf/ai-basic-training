@@ -31,17 +31,19 @@ But chunking is not just a technical constraint — it also determines retrieval
 Long Document ───► Chunks
 ──────────────────────────────────────────────────────
  Original document (800 words)
-┌────────────────────────────────────────────────────┐
-│ word 1 ... word 100 ... word 200 ... word 300 ...  │
-│ ... word 400 ... word 500 ... word 600 ... word 800│
-└────────────────────────────────────────────────────┘
+  word 1 ... word 100 ... word 200 ... word 300 ...
+  ... word 400 ... word 500 ... word 600 ... word 800
                       │
                       ▼  split into chunks
- ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
- │ Chunk 1      │ │ Chunk 2      │ │ Chunk 3      │ ...
- │ words 1-100  │ │ words 101-200│ │ words 201-300│
- └──────────────┘ └──────────────┘ └──────────────┘
-  each chunk is small enough to embed (128-512 tokens)
+
+ | Chunk   | Contents       |
+ |---------|----------------|
+ | Chunk 1 | words 1-100    |
+ | Chunk 2 | words 101-200  |
+ | Chunk 3 | words 201-300  |
+ | ...     | ...            |
+
+ Each chunk is small enough to embed (128-512 tokens)
 ```
 
 ---
@@ -66,10 +68,11 @@ Problem: a sentence may be cut in half, losing meaning at chunk boundaries.
 ```
 Fixed-Size Chunking (no overlap) — boundary problem
 ──────────────────────────────────────────────────────
- ┌──── Chunk 1 ─────┐┌──── Chunk 2 ─────┐
- │ ... detection    ││ relies on Sysmon │
- │ of LSASS access  ││ Event ID 10 ...  │
- └──────────────────┘└──────────────────┘
+
+ | Chunk 1                 | Chunk 2                 |
+ |-------------------------|-------------------------|
+ | ... detection           | relies on Sysmon        |
+ | of LSASS access         | Event ID 10 ...         |
         ▲ sentence is cut here ▲
         key fact split across two chunks!
 ```
@@ -97,17 +100,17 @@ Overlap Chunking — boundary facts preserved
 ──────────────────────────────────────────────────────
  chunk_size=100, overlap=20
 
- ┌──────── Chunk 1 (words 1-100) ────────┐
- │ ... detection of LSASS access         │
- │      relies on Sysmon Event ID 10 ... │
- └───────────────────────┬───────────────┘
-                         │ overlap zone
- ┌───────────────────────┼───────────────┐
- │ ... relies on Sysmon  │Event ID 10    │
- │      for detecting... │               │
- └──────── Chunk 2 (words 81-180) ───────┘
-            ▲
-   words 81-100 appear in BOTH chunks
+ Chunk 1 (words 1-100):
+   ... detection of LSASS access
+   relies on Sysmon Event ID 10 ...
+                         │
+                    overlap zone (words 81-100)
+                         │
+ Chunk 2 (words 81-180):
+   ... relies on Sysmon Event ID 10
+   for detecting...
+
+ Words 81-100 appear in BOTH chunks
 ```
 
 ---

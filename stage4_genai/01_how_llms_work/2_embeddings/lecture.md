@@ -31,18 +31,16 @@ token 6 (malicious):  [0.88, 0.15, -0.42, 0.69]  ← close to "suspicious"
 
 Words that appear in similar contexts get similar vectors after training. This is the **distributional hypothesis** — meaning is defined by context.
 
-```
-Token ID → Embedding Lookup
-─────────────────────────────────────────────────
-                  Embedding Matrix (20 × 4)
- Token ID        ┌────────────────────────────┐
-    1  ─────────►│  0.12  -0.34   0.78   0.05 │ ← "the"
-    2  ─────────►│  0.89   0.12  -0.45   0.67 │ ← "network"
-    5  ─────────►│  0.91   0.08  -0.50   0.71 │ ← "suspicious"
-    6  ─────────►│  0.88   0.15  -0.42   0.69 │ ← "malicious"
-                 └────────────────────────────┘
-                        ↑ close vectors = similar meaning
-```
+**Token ID → Embedding Lookup** (Embedding Matrix: 20 x 4)
+
+| Token ID | Word | Dim 0 | Dim 1 | Dim 2 | Dim 3 |
+|----------|------|-------|-------|-------|-------|
+| 1 | "the" | 0.12 | -0.34 | 0.78 | 0.05 |
+| 2 | "network" | 0.89 | 0.12 | -0.45 | 0.67 |
+| 5 | "suspicious" | 0.91 | 0.08 | -0.50 | 0.71 |
+| 6 | "malicious" | 0.88 | 0.15 | -0.42 | 0.69 |
+
+> Notice: "suspicious" and "malicious" have very close vectors — similar meaning produces similar embeddings.
 
 ---
 
@@ -65,20 +63,13 @@ In a well-trained embedding space:
 - `cosine_sim(embedding("malicious"), embedding("suspicious"))` ≈ 0.95
 - `cosine_sim(embedding("malicious"), embedding("the"))` ≈ 0.05
 
-```
-Embedding Space (2-D projection)
-─────────────────────────────────
-      ▲
-      │   ● malicious
-      │   ● suspicious      ← close together (cosine ≈ 0.95)
-      │
-      │          ● firewall
-      │          ● traffic   ← moderate similarity
-      │
-      │                          ● the
-      │                          ● a     ← far from security terms
-      └──────────────────────────────────►
-```
+**Embedding Space (2-D projection):**
+
+| Cluster | Words | Position |
+|---------|-------|----------|
+| Threat terms | malicious, suspicious | Close together (cosine ~ 0.95) |
+| Network terms | firewall, traffic | Moderate similarity |
+| Function words | the, a | Far from security terms |
 
 ---
 

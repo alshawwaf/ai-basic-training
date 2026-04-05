@@ -42,20 +42,16 @@ The JSON version can be consumed directly by a SIEM, ticketing system, or automa
 ```
 Structured Output Flow
 ──────────────────────────────────────────────────────────
- Log entry            LLM (with JSON           Downstream
-                      system prompt)            system
-┌───────────────┐    ┌──────────────┐    ┌──────────────┐
-│"198 failed     │    │              │    │             │
-│ logins in 60s │───►│  LLM Model   │───►│  json.loads()│
-│ from 45.33..." │    │              │    │       │     │
-└───────────────┘    └──────────────┘    └───────┼──────┘
-                      responds with JSON         │
-                                                 ▼
-                                          ┌──────────────┐
-                                          │ SIEM / SOAR  │
-                                          │ ticket system│
-                                          │ playbook     │
-                                          └──────────────┘
+
+ Log entry               LLM                 Downstream system
+ ──────────              ─────────────        ─────────────────
+ "198 failed             LLM Model            json.loads()
+  logins in 60s   ────►  (with JSON    ────►       │
+  from 45.33..."          system prompt)           │
+                          responds with JSON       ▼
+                                              SIEM / SOAR
+                                              ticket system
+                                              playbook
 ```
 
 ---

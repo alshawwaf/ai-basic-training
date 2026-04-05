@@ -36,15 +36,16 @@ Three parameters control every call:
 ```
 API Call Flow
 ──────────────────────────────────────────────────────
- Your Python code                      LLM Provider
-┌──────────────────────┐              ┌─────────────┐
-│ system: "You are..." │              │             │
-│ messages: [          │  ── HTTPS ──►│  LLM Model  │
-│   {user: "Hello!"}   │              │             │
-│ ]                    │              └──────┬──────┘
-│ max_tokens: 200      │                     │
-└──────────────────────┘              ◄──────┘
-                                     response (string)
+
+ Your Python code              LLM Provider
+ ─────────────────             ─────────────
+ system: "You are..."
+ messages: [                    LLM Model
+   {user: "Hello!"}    HTTPS
+ ]                   ────────►  processes
+ max_tokens: 200                  │
+                       ◄──────────
+                    response (string)
 ```
 
 ---

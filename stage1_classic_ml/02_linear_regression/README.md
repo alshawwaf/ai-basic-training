@@ -8,28 +8,16 @@ Linear regression answers the question: **"Given input X, what number do I expec
 
 It fits a straight line through your data:
 
-```
-Response
-Time (ms)
-  500 |          .                          /
-      |      .      .                    . /
-  400 |   .            .              . /
-      |        .          .        ./
-  300 |   .                .    ./  <-- line of best fit
-      |               .    . /
-  200 |          .       /
-      |             . /
-  100 |          /
-      +-----+-----+-----+-----+-----+------> Requests/sec
-            100   200   300   400   500
-```
+Imagine a scatter plot: **Requests/sec** on the x-axis, **Response Time (ms)** on the y-axis. Data points form an upward-sloping cloud, and the line of best fit cuts through the middle.
 
 ```
-y = (weight × x) + bias
-       |               |
-  how many ms        baseline ms
-  per extra req/s    when traffic = 0
+y = (weight x x) + bias
 ```
+
+| Term | Meaning |
+|------|---------|
+| **weight** (coefficient) | How many ms per extra req/s |
+| **bias** (intercept) | Baseline ms when traffic = 0 |
 
 The model learns the best `weight` and `bias` to minimise the gap between its predictions and the actual values.
 

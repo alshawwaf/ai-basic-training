@@ -47,18 +47,13 @@ And it is actually fed this — a flat, single row:
 [0, 0, 5, 13, 9, 1, 0, 0, 0, 0, 13, 15, 10, 15, 5, 0, 0, 3, 15, 2, ...]
 ```
 
-```
-  How the 8x8 image becomes a flat input row:
+**How the 8x8 image becomes a flat input row:**
 
-  8x8 grid                     flatten                 model input
-  ┌─────────────────┐          ───────►     ┌─────────────────────────────────┐
-  │ 0  0  5 13  9  1│                       │ 0  0  5 13  9  1  0  0  0  0  │
-  │ 0  0 13 15 10 15│   row 0 ++ row 1      │13 15 10 15  5  0  0  3 15  2  │
-  │ 0  3 15  2  0 11│   ++ row 2 ++ ...     │ 0 11  8  0 ... (64 values)    │
-  │ ...             │                       └─────────────────────────────────┘
-  └─────────────────┘                         one row = one sample
-    shape: (8, 8)                             shape: (64,)
-```
+| Stage | Shape | What it looks like |
+|-------|-------|--------------------|
+| **8x8 grid** | `(8, 8)` | 8 rows of 8 pixel values — the image as humans see it |
+| **Flatten** | row 0 ++ row 1 ++ row 2 ++ ... | Concatenate all rows into a single sequence |
+| **Model input** | `(64,)` | `[0, 0, 5, 13, 9, 1, 0, 0, 0, 0, 13, 15, ...]` — one row = one sample |
 
 64 numbers. That is the complete input. No concept of "up", "down", "left", "right." No idea that these are pixels. No visual intuition of any kind.
 
@@ -90,18 +85,14 @@ The table below maps the digits domain to the security domain:
 
 The algorithm — logistic regression, decision tree, random forest — operates identically regardless of domain. You load the numbers, split them, fit the model, evaluate. The domain expertise comes in when you decide which numbers to include and how to engineer them.
 
-```
-  The universal ML pipeline — same for any domain
+**The universal ML pipeline — same for any domain:**
 
-  ┌──────────────┐     ┌───────────┐     ┌──────────┐     ┌────────────┐
-  │  Raw data    │────►│ Numeric   │────►│  Model   │────►│ Prediction │
-  │ (images,     │     │ features  │     │ .fit()   │     │ .predict() │
-  │  logs, URLs) │     │ (flat row │     │          │     │            │
-  │              │     │  of nums) │     │          │     │ digit: 0   │
-  └──────────────┘     └───────────┘     └──────────┘     └────────────┘
-       domain              math              math             domain
-      knowledge          agnostic          agnostic         knowledge
-```
+| Step | Stage | Role |
+|------|-------|------|
+| 1 | **Raw data** (images, logs, URLs) | Domain knowledge |
+| 2 | **Numeric features** (flat row of numbers) | Math-agnostic |
+| 3 | **Model** `.fit()` | Math-agnostic |
+| 4 | **Prediction** `.predict()` → digit: 0 | Domain knowledge |
 
 ---
 

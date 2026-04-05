@@ -32,20 +32,16 @@ The diagnostic plot shows:
 - Validation accuracy (dashed red): rises to a peak, then plateaus or drops
 
 ```
-Accuracy
-  1.00 │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ train (solid)
-       │                _______________
-  0.97 │              /
-       │   val ___.__/     ← val peaks here (depth=5)
-  0.95 │      /     \___
-       │    /            \______         ← val drops = OVERFITTING
-  0.90 │  /                      val
-       │ /
-  0.65 │●                                      gap grows ───►
-       └──┬───┬───┬───┬───┬───┬───┬───┬──► max_depth
-          1   2   3   5   7  10  15  20
-                      ▲
-               sweet spot (depth=5)
+Accuracy vs max_depth (conceptual shape):
+
+  Training accuracy:   starts ~0.65 at depth=1, rises quickly, reaches 1.00 by depth ~7,
+                       stays at 1.00 for all deeper trees.
+
+  Validation accuracy: starts ~0.65 at depth=1, rises to a peak ~0.97 at depth=5
+                       (sweet spot), then gradually drops to ~0.94 by depth=20.
+
+  The growing gap between the two curves = overfitting.
+  Sweet spot: depth=5 (validation accuracy highest, gap still small).
 ```
 
 The **overfitting point** is where the gap between training and validation becomes "too large" — typically where validation accuracy starts to decline or plateau while training continues to rise.

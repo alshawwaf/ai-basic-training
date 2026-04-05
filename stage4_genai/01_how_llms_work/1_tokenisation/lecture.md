@@ -35,20 +35,14 @@ A tokeniser converts text to a sequence of integers:
 "Hello world" → ["Hello", " world"] → [9906, 1917]
 ```
 
-```
-Tokenisation Pipeline
-─────────────────────────────────────────────────────────────────
- Raw text              Tokens                 Token IDs
-┌─────────────┐      ┌──────────┐      ┌──────────────────────┐
-│"Hello world"│ ───► │ "Hello"  │ ───► │  9906                │
-│             │      │ " world" │      │  1917                │
-└─────────────┘      └──────────┘      └──────────────────────┘
-  (string)         (subword pieces)    (integers for the model)
-                                              │
-                                              ▼
-                                       Embedding Layer
-                                    (vector per token)
-```
+**Tokenisation Pipeline:**
+
+| Stage | Example | What it is |
+|-------|---------|-----------|
+| Raw text | `"Hello world"` | String input |
+| Tokens | `"Hello"`, `" world"` | Subword pieces |
+| Token IDs | `9906`, `1917` | Integers for the model |
+| Embedding Layer | vectors per token | Dense representations |
 
 Each integer is a **token ID** — an index into the model's vocabulary. The model's embedding layer converts each ID into a high-dimensional vector.
 
@@ -69,14 +63,16 @@ LLMs add special tokens that carry structural meaning:
 | `<PAD>` | Fills shorter sequences in a batch to equal length |
 | `<UNK>` | Replaces unknown tokens not in vocabulary |
 
-```
-Sequence with special tokens
-┌─────┬───────┬───────┬─────┬─────┬─────┐
-│<BOS>│ Hello │ world │<EOS>│<PAD>│<PAD>│
-└─────┴───────┴───────┴─────┴─────┴─────┘
-  ↑     actual content   ↑     padding
-  start                  stop   (batch alignment)
-```
+**Sequence with special tokens:**
+
+| Position | Token | Role |
+|----------|-------|------|
+| 1 | `<BOS>` | Start of sequence |
+| 2 | `Hello` | Actual content |
+| 3 | `world` | Actual content |
+| 4 | `<EOS>` | End of sequence |
+| 5 | `<PAD>` | Padding (batch alignment) |
+| 6 | `<PAD>` | Padding (batch alignment) |
 
 ---
 

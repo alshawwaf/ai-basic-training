@@ -41,19 +41,13 @@ The result shapes are both `(n_param_values, n_cv_folds)`. Take `.mean(axis=1)` 
 
 ## Concept: Reading the Three Regions
 
-```
-Accuracy
-  1.0 |                  train __________
-      |               ../
-  0.9 |             ./
-      |   val ____./     <- val score peaks here = sweet spot
-  0.8 |  /
-      | /  <- both low = underfitting (high bias)
-  0.7 |/
-      |                           val \___  <- overfitting (high variance)
-      +---+---+---+---+---+---+---+---+---> max_depth
-       1   2   3   4   5   6  ...        20
-```
+As `max_depth` increases, train and validation scores tell different stories:
+
+| `max_depth` | Train score | Val score | Diagnosis |
+|-------------|------------|-----------|-----------|
+| 1–2 (shallow) | Low | Low | High bias — model too simple (underfitting) |
+| 3–5 (moderate) | High | **Peaks here** | Best complexity — choose this depth |
+| 10–20 (deep) | 1.000 | Drops | High variance — model memorises training data (overfitting) |
 
 | Region | Train score | Val score | Diagnosis |
 |--------|------------|-----------|-----------|

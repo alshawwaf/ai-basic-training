@@ -36,33 +36,32 @@ This is why the conversation list grows with each turn. You are sending the enti
 ```
 Conversation State: messages list grows each turn
 ──────────────────────────────────────────────────────────
- Turn 1 — you send:
- ┌────────────────────────────────────────────┐
- │ messages = [                               │
- │   {user: "What is lateral movement?"}      │
- │ ]                                          │
- └────────────────────────────────────────────┘
 
- Turn 2 — you send the FULL history:
- ┌────────────────────────────────────────────┐
- │ messages = [                               │
- │   {user: "What is lateral movement?"}      │  ← turn 1
- │   {assistant: "Lateral movement is..."}    │  ← reply 1
- │   {user: "How do I detect it?"}            │  ← turn 2
- │ ]                                          │
- └────────────────────────────────────────────┘
+Turn 1 — you send:
 
- Turn 3 — even bigger:
- ┌────────────────────────────────────────────┐
- │ messages = [                               │
- │   {user: "What is lateral movement?"}      │
- │   {assistant: "Lateral movement is..."}    │
- │   {user: "How do I detect it?"}            │
- │   {assistant: "Common detection..."}       │
- │   {user: "Show me a Sigma rule"}           │  ← turn 3
- │ ]                                          │
- └────────────────────────────────────────────┘
-  The list keeps growing ───► eventually hits context limit
+  messages = [
+    {user: "What is lateral movement?"}
+  ]
+
+Turn 2 — you send the FULL history:
+
+  messages = [
+    {user: "What is lateral movement?"}       ← turn 1
+    {assistant: "Lateral movement is..."}     ← reply 1
+    {user: "How do I detect it?"}             ← turn 2
+  ]
+
+Turn 3 — even bigger:
+
+  messages = [
+    {user: "What is lateral movement?"}
+    {assistant: "Lateral movement is..."}
+    {user: "How do I detect it?"}
+    {assistant: "Common detection..."}
+    {user: "Show me a Sigma rule"}            ← turn 3
+  ]
+
+The list keeps growing ───► eventually hits context limit
 ```
 
 ---

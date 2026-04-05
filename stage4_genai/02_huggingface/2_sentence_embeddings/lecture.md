@@ -30,17 +30,12 @@ Semantic similarity → close vectors. Semantic difference → distant vectors.
 ```
 Sentence Embedding: entire sentence ───► one vector
 ─────────────────────────────────────────────────────
- Sentence                             384-dim vector
-┌────────────────────────────────┐   ┌──────────────┐
-│"System was compromised via     │──►│ [0.23, -0.45,│
-│ phishing"                      │   │  0.87, ...]  │
-├────────────────────────────────┤   ├──────────────┤
-│"Spear-phishing email led to   │──►│ [0.21, -0.42,│  ← similar!
-│ the breach"                    │   │  0.89, ...]  │
-├────────────────────────────────┤   ├──────────────┤
-│"Pizza delivery takes 30 min"  │──►│[-0.55,  0.31,│  ← very different
-│                                │   │ -0.12, ...]  │
-└────────────────────────────────┘   └──────────────┘
+
+| Sentence                                | 384-dim vector              | Note             |
+|-----------------------------------------|-----------------------------|------------------|
+| "System was compromised via phishing"   | [0.23, -0.45, 0.87, ...]   |                  |
+| "Spear-phishing email led to the breach"| [0.21, -0.42, 0.89, ...]   | ← similar!       |
+| "Pizza delivery takes 30 min"           | [-0.55, 0.31, -0.12, ...]  | ← very different |
 ```
 
 ---
@@ -76,12 +71,12 @@ Practical thresholds for security text:
 ```
 Cosine Similarity Matrix (N × N)
 ──────────────────────────────────────────────────────
-              Sent A    Sent B    Sent C
-           ┌─────────┬─────────┬─────────┐
-  Sent A   │  1.00   │  0.91   │  0.12   │
-  Sent B   │  0.91   │  1.00   │  0.15   │  ← A and B are similar
-  Sent C   │  0.12   │  0.15   │  1.00   │  ← C is unrelated
-           └─────────┴─────────┴─────────┘
+
+|        | Sent A | Sent B | Sent C | Note                    |
+|--------|--------|--------|--------|-------------------------|
+| Sent A |  1.00  |  0.91  |  0.12  |                         |
+| Sent B |  0.91  |  1.00  |  0.15  | ← A and B are similar   |
+| Sent C |  0.12  |  0.15  |  1.00  | ← C is unrelated        |
 ```
 
 ---

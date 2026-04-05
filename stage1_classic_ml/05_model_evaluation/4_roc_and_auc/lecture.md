@@ -30,26 +30,21 @@ At every possible threshold, you get one (FPR, TPR) point. Connecting all those 
 A good classifier's curve bulges toward the upper-left corner.
 
 ```
-  ROC curve — what it looks like
+ROC curve — what it looks like (conceptual shape):
 
-  TPR (Recall)
-  1.0 │ ·  ·  ·  ·  ·  ─────── perfect (AUC=1.0)
-      │              /·
-  0.8 │           /  ·
-      │         /   ·    ← good model (AUC=0.95)
-  0.6 │       /   ·
-      │     /    ·
-  0.4 │    /   ·  ·  ·  ·  ·  · random (AUC=0.5)
-      │   /  ·
-  0.2 │  / ·           ← goal: curve hugs upper-left
-      │ /·
-  0.0 │·
-      └──────────────────────────
-      0.0  0.2  0.4  0.6  0.8  1.0
-               FPR (False Positive Rate)
+  Axes: x = FPR (False Positive Rate), y = TPR (Recall)
 
-  (0,1) = perfect: all attacks caught, zero false alarms
-  diagonal = random: no better than flipping a coin
+  Perfect classifier (AUC = 1.0):  goes straight up from (0,0) to (0,1),
+                                    then right to (1,1) — a right angle
+                                    hugging the upper-left corner.
+
+  Good model (AUC = 0.95):         curves upward steeply from (0,0),
+                                    bulging toward the upper-left corner.
+
+  Random classifier (AUC = 0.5):   follows the diagonal from (0,0) to (1,1).
+
+  Key point (0,1) = all attacks caught, zero false alarms.
+  The closer the curve hugs the upper-left corner, the better the model.
 ```
 
 ---

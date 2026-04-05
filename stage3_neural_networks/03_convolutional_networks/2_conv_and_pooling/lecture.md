@@ -17,18 +17,9 @@ A `Conv2D(32, (3,3))` layer creates 32 filters, each of shape 3×3 pixels.
 
 Each filter slides across the image one position at a time:
 
-```
-Input image (6×6):          Filter (3×3):       At position (0,0):
-+--+--+--+--+--+--+         +--+--+--+          sum([0.1×0.2, 0.5×0.4, ...])
-|0 |0 |0 |0 |0 |0 |         |0.1|0.4|0.3|       + bias = output value
-|0 |0 |0 |0 |0 |0 |    ×    |0.2|0.5|0.1|
-|0 |0 |.7|.9|.8|0 |         |0.0|0.3|0.8|
-|0 |0 |.8|1 |.9|0 |
-|0 |0 |.6|.8|.7|0 |
-|0 |0 |0 |0 |0 |0 |
+The filter slides across the input image one position at a time. At each position, it computes a dot product (element-wise multiply + sum) plus a bias term.
 
-Filter slides to (0,1), (0,2), ..., (3,3) → 4×4 output positions
-```
+**Example:** A 3x3 filter on a 6x6 input produces a 4x4 output (6 - 3 + 1 = 4 positions per axis).
 
 Key insight: **the same filter weights are applied at every position**. This is weight sharing — a "horizontal edge detector" learned once detects horizontal edges everywhere.
 
@@ -59,31 +50,30 @@ output_size = input_size / pool_size
 | 26×26 | 2×2 | 13×13 |
 | 13×13 | 2×2 | 6×6 |
 
-```
-Shape trace through Conv + Pool on MNIST:
+**Shape trace through Conv + Pool on MNIST:**
 
-Input         Conv2D(32,(3,3))     MaxPool(2,2)
-(28,28,1)  ───►  (26,26,32)    ───►  (13,13,32)
-               28-3+1=26             26/2=13
-               32 filters            spatial halved
-               ↓                     ↓
-            each filter           keep max of
-            produces one          each 2x2 block
-            26x26 map
-```
+| Layer | Output shape | How |
+|-------|-------------|-----|
+| Input | (28, 28, 1) | Greyscale image |
+| Conv2D(32, (3,3)) | (26, 26, 32) | 28 - 3 + 1 = 26, 32 filters each produce a 26x26 map |
+| MaxPool(2, 2) | (13, 13, 32) | 26 / 2 = 13, keep max of each 2x2 block |
 
 ---
 
 ## Concept: MaxPooling2D
 
-```
-2×2 MaxPool example:
-+---+---+---+---+         +---+---+
-| 1 | 3 | 2 | 4 |         | 3 | 4 |
-| 2 | 0 | 1 | 3 |    →    | 2 | 3 |
-| 0 | 2 | 3 | 1 |         (max of each 2×2 block)
-| 1 | 0 | 0 | 3 |
-```
+**2x2 MaxPool example:**
+
+Input (4x4):
+
+| | | | |
+|---|---|---|---|
+| 1 | **3** | 2 | **4** |
+| 2 | 0 | 1 | 3 |
+| 0 | **2** | **3** | 1 |
+| 1 | 0 | 0 | **3** |
+
+Output (2x2) — max of each 2x2 block: **3, 4, 2, 3**
 
 Benefits:
 - Reduces spatial dimensions (less computation for later layers)

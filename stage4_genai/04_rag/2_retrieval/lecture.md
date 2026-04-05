@@ -43,13 +43,15 @@ Vector Retrieval — query embedding vs chunk embeddings
               │
               │  cosine_similarity against index
               ▼
- ┌──────────────────────────────────────────────────┐
- │ Chunk  1: [0.10, -0.55, 0.22, ...]  score: 0.31 │
- │ Chunk  2: [0.43,  0.15, -0.30, ...] score: 0.92 │ ← top match!
- │ Chunk  3: [0.38,  0.08, -0.28, ...] score: 0.78 │
- │ ...                                              │
- │ Chunk  N: [-0.12, 0.60,  0.05, ...] score: 0.15 │
- └──────────────────────────────────────────────────┘
+
+ | Chunk   | Embedding                    | Score |              |
+ |---------|------------------------------|-------|--------------|
+ | Chunk 1 | [0.10, -0.55, 0.22, ...]    | 0.31  |              |
+ | Chunk 2 | [0.43, 0.15, -0.30, ...]    | 0.92  | ← top match! |
+ | Chunk 3 | [0.38, 0.08, -0.28, ...]    | 0.78  |              |
+ | ...     | ...                          | ...   |              |
+ | Chunk N | [-0.12, 0.60, 0.05, ...]    | 0.15  |              |
+
               │
          argsort + top-k
               │
@@ -76,13 +78,15 @@ Top-k vs Threshold Retrieval
 ──────────────────────────────────────────────────────
  All scores: [0.92, 0.78, 0.45, 0.31, 0.15, 0.08]
 
- Top-k (k=3):          Threshold (min=0.60):
- ┌────────────────┐     ┌────────────────┐
- │ 0.92  Chunk 2  │     │ 0.92  Chunk 2  │
- │ 0.78  Chunk 3  │     │ 0.78  Chunk 3  │
- │ 0.45  Chunk 5  │ ←   └────────────────┘
- └────────────────┘  may be irrelevant     only 2 results
-  always 3 results   but always returned   (both relevant)
+ Top-k (k=3):                  Threshold (min=0.60):
+
+ | Score | Chunk   |            | Score | Chunk   |
+ |-------|---------|            |-------|---------|
+ | 0.92  | Chunk 2 |            | 0.92  | Chunk 2 |
+ | 0.78  | Chunk 3 |            | 0.78  | Chunk 3 |
+ | 0.45  | Chunk 5 | ← may be   (only 2 results,
+                      irrelevant  both relevant)
+ Always 3 results
 ```
 
 ---

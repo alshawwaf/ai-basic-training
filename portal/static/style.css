@@ -708,12 +708,13 @@ select:hover, .btn:hover {
     outline: none;
 }
 
-/* ── Welcome page ────────────────────────────────────────────────────────── */
+/* ── Lesson overview page ───────────────────────────────────────────────── */
 .welcome {
-    max-width: 720px;
-    margin: 60px auto;
+    max-width: 800px;
+    margin: 40px auto;
     text-align: center;
     animation: fadeSlideUp 0.6s ease both;
+    padding: 0 24px;
 }
 .welcome h1 {
     font-size: 42px;
@@ -726,62 +727,122 @@ select:hover, .btn:hover {
 .welcome .tagline {
     font-size: 18px;
     color: var(--text-dim);
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 }
+
+/* Progress ring */
+.welcome-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.progress-ring-wrap {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+.progress-ring-wrap svg { transform: rotate(-90deg); }
+.progress-ring-bg { stroke: var(--border); }
+.progress-ring-fill {
+    stroke: var(--accent);
+    transition: stroke-dashoffset 0.6s ease;
+}
+.progress-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+}
+.progress-detail {
+    text-align: left;
+}
+.progress-detail .prog-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.progress-detail .prog-sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+/* Step cards grid */
 .step-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
     text-align: left;
 }
 .step-card {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 18px;
+    padding: 14px 16px;
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-left: 3px solid var(--accent);
+    border-radius: 14px;
     color: var(--text);
     text-decoration: none;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s ease;
     animation: fadeSlideUp 0.4s ease both;
+    position: relative;
+    overflow: hidden;
 }
-.step-card:nth-child(1)  { animation-delay: 0.05s; }
-.step-card:nth-child(2)  { animation-delay: 0.10s; }
-.step-card:nth-child(3)  { animation-delay: 0.15s; }
-.step-card:nth-child(4)  { animation-delay: 0.20s; }
-.step-card:nth-child(5)  { animation-delay: 0.25s; }
-.step-card:nth-child(6)  { animation-delay: 0.30s; }
-.step-card:nth-child(7)  { animation-delay: 0.35s; }
-.step-card:nth-child(8)  { animation-delay: 0.40s; }
-.step-card:nth-child(9)  { animation-delay: 0.45s; }
-.step-card:nth-child(10) { animation-delay: 0.50s; }
+.step-card:nth-child(1)  { animation-delay: 0.04s; }
+.step-card:nth-child(2)  { animation-delay: 0.08s; }
+.step-card:nth-child(3)  { animation-delay: 0.12s; }
+.step-card:nth-child(4)  { animation-delay: 0.16s; }
+.step-card:nth-child(5)  { animation-delay: 0.20s; }
+.step-card:nth-child(6)  { animation-delay: 0.24s; }
+.step-card:nth-child(7)  { animation-delay: 0.28s; }
+.step-card:nth-child(8)  { animation-delay: 0.32s; }
+.step-card:nth-child(9)  { animation-delay: 0.36s; }
+.step-card:nth-child(10) { animation-delay: 0.40s; }
 .step-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(6, 182, 212, 0.12);
+    border-left-color: var(--violet);
 }
 .step-card .num {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: var(--accent);
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #0891b2);
     color: #fff;
     font-weight: 700;
     font-size: 14px;
     flex-shrink: 0;
+    transition: all 0.25s;
+}
+/* Completed step styling */
+.step-card.done {
+    border-left-color: var(--green);
+}
+.step-card.done .num {
+    background: linear-gradient(135deg, var(--green), #059669);
 }
 .step-card .info .title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
+    color: var(--text);
 }
 .step-card .info .desc {
     font-size: 12px;
     color: var(--text-dim);
+    margin-top: 2px;
+}
+/* Step card status badge */
+.step-card .step-status {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green);
+    flex-shrink: 0;
 }
 
 .hidden { display: none !important; }
@@ -921,8 +982,10 @@ select:hover, .btn:hover {
 .proto-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    gap: 10px;
     margin: 16px 0;
+    max-width: 100%;
+    overflow: hidden;
 }
 .proto-item {
     text-align: center;
@@ -932,7 +995,10 @@ select:hover, .btn:hover {
     border-radius: var(--radius);
     cursor: pointer;
     transition: border-color 0.2s, transform 0.1s;
+    overflow: hidden;
 }
+/* Make digit grids fluid inside proto items */
+.proto-item .digit-grid { width: 100% !important; }
 .proto-item:hover {
     border-color: var(--accent);
     transform: translateY(-2px);

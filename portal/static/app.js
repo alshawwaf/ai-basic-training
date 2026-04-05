@@ -92,12 +92,23 @@ function maskColor(value) {
     return value > 0.5 ? 'var(--green)' : 'rgba(244, 63, 94, 0.2)';
 }
 
-/* Yellow-Orange-Red correlation scale */
+/* Blue → Purple → Red correlation scale (readable on light & dark) */
 function corrColor(value) {
     const t = Math.min(1, value / 0.7);
-    const r = 255;
-    const g = Math.round(255 * (1 - t * 0.7));
-    const b = Math.round(80 * (1 - t));
+    let r, g, b;
+    if (t < 0.5) {
+        // Blue → Purple
+        const s = t / 0.5;
+        r = Math.round(60 + 130 * s);
+        g = Math.round(130 * (1 - s));
+        b = Math.round(220 - 40 * s);
+    } else {
+        // Purple → Red
+        const s = (t - 0.5) / 0.5;
+        r = Math.round(190 + 55 * s);
+        g = Math.round(20 * (1 - s));
+        b = Math.round(180 * (1 - s));
+    }
     return `rgb(${r},${g},${b})`;
 }
 

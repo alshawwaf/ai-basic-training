@@ -164,6 +164,43 @@ CHALLENGES = {
 }
 
 
+# ── Course materials mapping ────────────────────────────────────────────────
+
+_base = "stage1_classic_ml/01_what_is_ml"
+_ex = f"{_base}/2_coding_exercises"
+
+MATERIALS = {
+    0: [("lecture", "What is ML?", f"{_base}/README.md")],
+    1: [("lecture", "Loading Data", f"{_ex}/1_loading_data/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/1_loading_data/handson.md"),
+        ("solution", "Solution", f"{_ex}/1_loading_data/solution_loading_data.py")],
+    2: [("lecture", "Visualisation", f"{_ex}/4_visualise/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/4_visualise/handson.md"),
+        ("solution", "Solution", f"{_ex}/4_visualise/solution_visualise.py")],
+    3: [("lecture", "Loading Data", f"{_ex}/1_loading_data/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/1_loading_data/handson.md"),
+        ("solution", "Solution", f"{_ex}/1_loading_data/solution_loading_data.py")],
+    4: [("lecture", "Statistics", f"{_ex}/2_statistics/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/2_statistics/handson.md"),
+        ("solution", "Solution", f"{_ex}/2_statistics/solution_statistics.py")],
+    5: [("lecture", "Class Balance", f"{_ex}/3_class_balance/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/3_class_balance/handson.md"),
+        ("solution", "Solution", f"{_ex}/3_class_balance/solution_class_balance.py")],
+    6: [("lecture", "Class Balance", f"{_ex}/3_class_balance/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/3_class_balance/handson.md"),
+        ("solution", "Solution", f"{_ex}/3_class_balance/solution_class_balance.py")],
+    7: [("lecture", "Visualisation", f"{_ex}/4_visualise/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/4_visualise/handson.md"),
+        ("solution", "Solution", f"{_ex}/4_visualise/solution_visualise.py")],
+    8: [("lecture", "What Model Sees", f"{_ex}/5_what_model_sees/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/5_what_model_sees/handson.md"),
+        ("solution", "Solution", f"{_ex}/5_what_model_sees/solution_what_model_sees.py")],
+    9: [("lecture", "What Model Sees", f"{_ex}/5_what_model_sees/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_ex}/5_what_model_sees/handson.md"),
+        ("solution", "Solution", f"{_ex}/5_what_model_sees/solution_what_model_sees.py")],
+}
+
+
 # ── Helper to build template context ────────────────────────────────────────
 
 def base_ctx(step_num):
@@ -174,6 +211,7 @@ def base_ctx(step_num):
         "lesson_id": LESSON_ID,
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
+        "materials": MATERIALS.get(step_num, []),
     }
 
 

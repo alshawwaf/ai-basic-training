@@ -175,6 +175,36 @@ CHALLENGES = {
 }
 
 
+# ── Course materials mapping ────────────────────────────────────────────────
+
+_base = "stage3_neural_networks/01_first_neural_network"
+
+MATERIALS = {
+    0: [("lecture", "From NumPy to Keras", f"{_base}/1_from_numpy_to_keras/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_from_numpy_to_keras/handson.md"),
+        ("solution", "Solution", f"{_base}/1_from_numpy_to_keras/solution_from_numpy_to_keras.py")],
+    1: [("lecture", "From NumPy to Keras", f"{_base}/1_from_numpy_to_keras/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_from_numpy_to_keras/handson.md"),
+        ("solution", "Solution", f"{_base}/1_from_numpy_to_keras/solution_from_numpy_to_keras.py")],
+    2: [("lecture", "Build the Network", f"{_base}/2_build_the_network/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_build_the_network/handson.md"),
+        ("solution", "Solution", f"{_base}/2_build_the_network/solution_build_the_network.py")],
+    3: [("lecture", "Build the Network", f"{_base}/2_build_the_network/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_build_the_network/handson.md"),
+        ("solution", "Solution", f"{_base}/2_build_the_network/solution_build_the_network.py")],
+    4: [("lecture", "Compile & Train", f"{_base}/3_compile_and_train/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_compile_and_train/handson.md"),
+        ("solution", "Solution", f"{_base}/3_compile_and_train/solution_compile_and_train.py")],
+    5: [("lecture", "Compile & Train", f"{_base}/3_compile_and_train/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_compile_and_train/handson.md"),
+        ("solution", "Solution", f"{_base}/3_compile_and_train/solution_compile_and_train.py")],
+    6: [("lecture", "Evaluate & Improve", f"{_base}/4_evaluate_and_improve/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/4_evaluate_and_improve/handson.md"),
+        ("solution", "Solution", f"{_base}/4_evaluate_and_improve/solution_evaluate_and_improve.py")],
+    7: [("lecture", "Neural Networks Overview", f"{_base}/README.md")],
+}
+
+
 def base_ctx(step_num):
     return {
         "steps": STEPS,
@@ -183,6 +213,7 @@ def base_ctx(step_num):
         "lesson_id": LESSON_ID,
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
+        "materials": MATERIALS.get(step_num, []),
     }
 
 

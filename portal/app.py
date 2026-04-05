@@ -6,8 +6,10 @@ Open:  http://localhost:5000
 """
 
 import importlib
+import os
 import warnings
-from flask import Flask, render_template
+import markdown
+from flask import Flask, render_template, jsonify, request, abort
 from config import STAGES, get_all_lessons, get_lesson
 
 warnings.filterwarnings("ignore")
@@ -58,6 +60,42 @@ def stage_view(stage_id):
     if not stage:
         return "Stage not found", 404
     return render_template("stage.html", stage=stage, stages=STAGES, registered=registered_lessons)
+
+
+# ── Content API (serve markdown / Python files) ────────────────────────────
+
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+MD_EXTENSIONS = ["fenced_code", "tables", "toc", "nl2br", "sane_lists"]
+
+
+@app.route("/api/content")
+def api_content():
+    """Return rendered markdown or raw source for a file in the repo."""
+    rel_path = request.args.get("path", "")
+    if not rel_path:
+        abort(400, "Missing path parameter")
+
+    # Security: prevent path traversal
+    full = os.path.normpath(os.path.join(REPO_ROOT, rel_path))
+    if not full.startswith(REPO_ROOT):
+        abort(403, "Access denied")
+
+    if not os.path.isfile(full):
+        abort(404, "File not found")
+
+    ext = os.path.splitext(full)[1].lower()
+    if ext not in (".md", ".py"):
+        abort(403, "Only .md and .py files are served")
+
+    with open(full, encoding="utf-8") as f:
+        raw = f.read()
+
+    if ext == ".md":
+        html = markdown.markdown(raw, extensions=MD_EXTENSIONS)
+        return jsonify({"type": "markdown", "html": html, "raw": raw, "path": rel_path})
+    else:
+        return jsonify({"type": "python", "raw": raw, "path": rel_path})
 
 
 # ── Main ────────────────────────────────────────────────────────────────────

@@ -119,6 +119,34 @@ CHALLENGES = {
 }
 
 
+# ── Course materials mapping ────────────────────────────────────────────────
+
+_base = "stage4_genai/01_how_llms_work"
+
+MATERIALS = {
+    0: [("lecture", "How LLMs Work", f"{_base}/README.md")],
+    1: [("lecture", "Tokenisation", f"{_base}/1_tokenisation/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_tokenisation/handson.md"),
+        ("solution", "Solution", f"{_base}/1_tokenisation/solution_tokenisation.py")],
+    2: [("lecture", "Tokenisation", f"{_base}/1_tokenisation/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_tokenisation/handson.md"),
+        ("solution", "Solution", f"{_base}/1_tokenisation/solution_tokenisation.py")],
+    3: [("lecture", "Embeddings", f"{_base}/2_embeddings/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_embeddings/handson.md"),
+        ("solution", "Solution", f"{_base}/2_embeddings/solution_embeddings.py")],
+    4: [("lecture", "Embeddings", f"{_base}/2_embeddings/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_embeddings/handson.md"),
+        ("solution", "Solution", f"{_base}/2_embeddings/solution_embeddings.py")],
+    5: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
+        ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
+    6: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
+        ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
+    7: [("lecture", "How LLMs Work", f"{_base}/README.md")],
+}
+
+
 def base_ctx(step_num):
     return {
         "steps": STEPS,
@@ -127,6 +155,7 @@ def base_ctx(step_num):
         "lesson_id": LESSON_ID,
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
+        "materials": MATERIALS.get(step_num, []),
     }
 
 

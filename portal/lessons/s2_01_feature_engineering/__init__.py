@@ -255,6 +255,36 @@ CHALLENGES = {
 }
 
 
+# ── Course materials mapping ────────────────────────────────────────────────
+
+_base = "stage2_intermediate/01_feature_engineering"
+
+MATERIALS = {
+    0: [("lecture", "Why Raw Logs Fail", f"{_base}/1_why_raw_logs_fail/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_why_raw_logs_fail/handson.md"),
+        ("solution", "Solution", f"{_base}/1_why_raw_logs_fail/solution_why_raw_logs_fail.py")],
+    1: [("lecture", "Why Raw Logs Fail", f"{_base}/1_why_raw_logs_fail/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/1_why_raw_logs_fail/handson.md"),
+        ("solution", "Solution", f"{_base}/1_why_raw_logs_fail/solution_why_raw_logs_fail.py")],
+    2: [("lecture", "Numeric Feature Extraction", f"{_base}/2_numeric_feature_extraction/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_numeric_feature_extraction/handson.md"),
+        ("solution", "Solution", f"{_base}/2_numeric_feature_extraction/solution_numeric_feature_extraction.py")],
+    3: [("lecture", "Numeric Feature Extraction", f"{_base}/2_numeric_feature_extraction/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_numeric_feature_extraction/handson.md"),
+        ("solution", "Solution", f"{_base}/2_numeric_feature_extraction/solution_numeric_feature_extraction.py")],
+    4: [("lecture", "Categorical Encoding", f"{_base}/3_categorical_encoding/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_categorical_encoding/handson.md"),
+        ("solution", "Solution", f"{_base}/3_categorical_encoding/solution_categorical_encoding.py")],
+    5: [("lecture", "Scaling & Validation", f"{_base}/4_scaling_and_validation/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/4_scaling_and_validation/handson.md"),
+        ("solution", "Solution", f"{_base}/4_scaling_and_validation/solution_scaling_and_validation.py")],
+    6: [("lecture", "Scaling & Validation", f"{_base}/4_scaling_and_validation/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/4_scaling_and_validation/handson.md"),
+        ("solution", "Solution", f"{_base}/4_scaling_and_validation/solution_scaling_and_validation.py")],
+    7: [("lecture", "Feature Engineering Overview", f"{_base}/README.md")],
+}
+
+
 # ── Helper to build template context ──────────────────────────────────────
 
 def base_ctx(step_num):
@@ -265,6 +295,7 @@ def base_ctx(step_num):
         "lesson_id": LESSON_ID,
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
+        "materials": MATERIALS.get(step_num, []),
     }
 
 

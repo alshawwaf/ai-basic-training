@@ -146,6 +146,26 @@ CHALLENGES = {
 }
 
 
+# ── Course materials mapping ────────────────────────────────────────────────
+
+_base = "stage5_cp_ai_security/01_workforce_ai_security"
+
+MATERIALS = {
+    0: [("lecture", "Workforce AI Security", f"{_base}/README.md"),
+        ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
+    1: [("lecture", "Workforce AI Security", f"{_base}/README.md"),
+        ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
+    2: [("lecture", "Workforce AI Security", f"{_base}/README.md")],
+    3: [("lecture", "Workforce AI Security", f"{_base}/README.md"),
+        ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
+    4: [("lecture", "Workforce AI Security", f"{_base}/README.md")],
+    5: [("lecture", "Workforce AI Security", f"{_base}/README.md"),
+        ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
+    6: [("lecture", "Workforce AI Security", f"{_base}/README.md")],
+    7: [("lecture", "Workforce AI Security", f"{_base}/README.md")],
+}
+
+
 def base_ctx(step_num):
     return {
         "steps": STEPS,
@@ -154,6 +174,7 @@ def base_ctx(step_num):
         "lesson_id": LESSON_ID,
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
+        "materials": MATERIALS.get(step_num, []),
     }
 
 

@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <!-- Prism.js for syntax highlighting (code modal) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
     <script>if(localStorage.getItem('portalTheme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -50,6 +52,27 @@
             <p>{{ steps[current].sub }}</p>
         </div>
 
+        <!-- Material buttons (floating toolbar) -->
+        {% if materials %}
+        <div class="material-toolbar">
+            {% for mtype, label, path in materials %}
+            {% if mtype == 'lecture' %}
+            <button class="mat-btn mat-lecture" onclick="openDrawer('{{ path }}', '{{ label }}')" title="{{ label }}">
+                <span class="mat-icon">&#128214;</span> Lecture
+            </button>
+            {% elif mtype == 'lab' %}
+            <button class="mat-btn mat-lab" onclick="openDrawer('{{ path }}', '{{ label }}')" title="{{ label }}">
+                <span class="mat-icon">&#128295;</span> {{ label }}
+            </button>
+            {% elif mtype == 'solution' %}
+            <button class="mat-btn mat-solution" onclick="openCodeModal('{{ path }}', '{{ label }}')" title="{{ label }}">
+                <span class="mat-icon">&#128187;</span> Solution
+            </button>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="content-layout">
             <!-- Left: main step content -->
             <div class="content-main">
@@ -89,6 +112,40 @@
         </div>
     </main>
 
+    <!-- ── Content Drawer (markdown) ──────────────────────────────────────── -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="content-drawer" id="contentDrawer">
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-breadcrumb" id="drawerBreadcrumb"></div>
+                <h2 class="drawer-title" id="drawerTitle"></h2>
+            </div>
+            <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+        </div>
+        <div class="drawer-body md-content" id="drawerBody">
+            <div class="drawer-loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- ── Code Modal (Python) ────────────────────────────────────────────── -->
+    <div class="code-modal-overlay" id="codeModalOverlay" onclick="closeCodeModal()"></div>
+    <div class="code-modal" id="codeModal">
+        <div class="code-modal-header">
+            <div class="code-modal-filename" id="codeModalFilename"></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button class="code-copy-btn" onclick="copyCode()" title="Copy to clipboard">&#128203; Copy</button>
+                <button class="drawer-close" onclick="closeCodeModal()">&times;</button>
+            </div>
+        </div>
+        <div class="code-modal-body">
+            <pre class="line-numbers"><code class="language-python" id="codeModalContent"></code></pre>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
     <script src="/static/app.js"></script>
     <script>
         // Track progress per lesson
@@ -115,12 +172,88 @@
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
             const total = {{ steps | length }};
             const cur = {{ current }};
+            if (e.key === 'Escape') { closeDrawer(); closeCodeModal(); return; }
+            if (document.getElementById('contentDrawer').classList.contains('open')) return;
+            if (document.getElementById('codeModal').classList.contains('open')) return;
             if (e.key === 'ArrowLeft' && cur > 0) {
                 window.location.href = urlPrefix + '/step/' + (cur - 1);
             } else if (e.key === 'ArrowRight' && cur < total - 1) {
                 window.location.href = urlPrefix + '/step/' + (cur + 1);
             }
         });
+
+        // ── Drawer logic ──────────────────────────────────────────────────
+        function openDrawer(path, title) {
+            const drawer = document.getElementById('contentDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            document.getElementById('drawerTitle').textContent = title;
+            document.getElementById('drawerBreadcrumb').textContent = '{{ lesson_title }} — Step {{ current }}';
+            document.getElementById('drawerBody').innerHTML = '<div class="drawer-loading">Loading...</div>';
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+
+            fetch('/api/content?path=' + encodeURIComponent(path))
+                .then(r => r.json())
+                .then(data => {
+                    if (data.type === 'markdown') {
+                        document.getElementById('drawerBody').innerHTML = data.html;
+                    } else {
+                        document.getElementById('drawerBody').innerHTML =
+                            '<pre><code>' + escapeHtml(data.raw) + '</code></pre>';
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('drawerBody').innerHTML =
+                        '<div style="color:var(--red);">Failed to load content: ' + err.message + '</div>';
+                });
+        }
+
+        function closeDrawer() {
+            document.getElementById('contentDrawer').classList.remove('open');
+            document.getElementById('drawerOverlay').classList.remove('open');
+        }
+
+        // ── Code Modal logic ──────────────────────────────────────────────
+        function openCodeModal(path, title) {
+            const modal = document.getElementById('codeModal');
+            const overlay = document.getElementById('codeModalOverlay');
+            const filename = path.split('/').pop();
+            document.getElementById('codeModalFilename').textContent = filename;
+            document.getElementById('codeModalContent').textContent = 'Loading...';
+            modal.classList.add('open');
+            overlay.classList.add('open');
+
+            fetch('/api/content?path=' + encodeURIComponent(path))
+                .then(r => r.json())
+                .then(data => {
+                    const codeEl = document.getElementById('codeModalContent');
+                    codeEl.textContent = data.raw;
+                    Prism.highlightElement(codeEl);
+                })
+                .catch(err => {
+                    document.getElementById('codeModalContent').textContent = 'Error: ' + err.message;
+                });
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('open');
+            document.getElementById('codeModalOverlay').classList.remove('open');
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeModalContent').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.code-copy-btn');
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy', 1500);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
     {% block scripts %}{% endblock %}
 </body>

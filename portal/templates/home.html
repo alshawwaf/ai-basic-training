@@ -3,55 +3,98 @@
 
 {% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
 
-{% block body %}
-<div class="portal-home">
-    <h1>AI Ninja Program</h1>
-    <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
-
-    {% for stage in stages %}
-    <div class="stage-section" style="animation-delay: {{ loop.index0 * 0.08 }}s;">
-        <div class="stage-header">
-            <div class="stage-num {{ stage.id }}">{{ stage.num }}</div>
-            <div class="stage-info">
-                <h2>{{ stage.title }}</h2>
-                <p>{{ stage.desc }}</p>
-            </div>
-            <span class="tier-badge">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
-        </div>
-
-        <div class="lesson-cards">
-            {% for lesson in stage.lessons %}
-            {% if lesson.id in registered %}
-            <a href="/lesson/{{ lesson.id }}/" class="lesson-card active">
-                <div class="lesson-num">{{ lesson.num }}</div>
-                <div class="lesson-info">
-                    <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }} &middot; {{ fmt_time(lesson.minutes) }}</div>
-                </div>
-                <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
-            </a>
-            {% else %}
-            <div class="lesson-card locked">
-                <div class="lesson-num">{{ lesson.num }}</div>
-                <div class="lesson-info">
-                    <div class="title">{{ lesson.title }}</div>
-                    <div class="desc">{{ lesson.desc }} &middot; {{ fmt_time(lesson.minutes) }}</div>
-                </div>
-                <span style="margin-left:auto; font-size:11px; color:var(--text-dim);">Coming soon</span>
-            </div>
-            {% endif %}
-            {% endfor %}
+{# ── Reusable stage card (avoids repeating HTML 5 times) ──────────── #}
+{% macro stage_card(stage) %}
+<div class="stage-card {{ stage.id }}">
+    <div class="stage-card-glow {{ stage.id }}"></div>
+    <div class="stage-header">
+        <div class="stage-num {{ stage.id }}">{{ stage.num }}</div>
+        <div class="stage-info">
+            <h2>{{ stage.title }}</h2>
+            <p>{{ stage.desc }}</p>
         </div>
     </div>
-    {% endfor %}
+    <span class="tier-badge {{ stage.id }}">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
+    <div class="lesson-cards roadmap-lessons">
+        {% for lesson in stage.lessons %}
+        <a href="/lesson/{{ lesson.id }}/"
+           class="lesson-card {{ stage.id }} {{ 'active' if lesson.id in registered else 'gated' }}"
+           {% if lesson.id not in registered %}data-gated="true"{% endif %}>
+            <div class="lesson-num {{ stage.id }}">{{ lesson.num }}</div>
+            <div class="lesson-info">
+                <div class="title">{{ lesson.title }}</div>
+                <div class="desc">{{ lesson.desc }}</div>
+            </div>
+            {% if lesson.id in registered %}
+            <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
+            {% else %}
+            <span class="lesson-lock">Soon</span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
 
-    <p style="text-align:center; color:var(--text-dim); font-size:13px; margin-top:32px;">
-        21 lessons &middot; 3 certification tiers
-    </p>
+{% block body %}
+<div class="portal-home">
+    <div class="portal-hero">
+        <div class="hero-glow"></div>
+        <h1>AI Ninja Program</h1>
+        <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-val">21</span>
+                <span class="hero-stat-label">Lessons</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-val">5</span>
+                <span class="hero-stat-label">Stages</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-val">3</span>
+                <span class="hero-stat-label">Tiers</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="roadmap">
+        {# Row 1: Stage 1 → Stage 2 #}
+        <div class="roadmap-stage rpos-1" style="animation-delay: 0s;">
+            {{ stage_card(stages[0]) }}
+        </div>
+        <div class="rm-arrow rm-h rm-r rm-1-2"><span class="pulse-dot"></span></div>
+        <div class="roadmap-stage rpos-2" style="animation-delay: 0.12s;">
+            {{ stage_card(stages[1]) }}
+        </div>
+
+        {# Vertical drop: right side, S2 → S3 #}
+        <div class="rm-arrow rm-v rm-2-3"><span class="pulse-dot"></span></div>
+
+        {# Row 2: Stage 4 ← Stage 3 (S3 on right, S4 on left) #}
+        <div class="roadmap-stage rpos-4" style="animation-delay: 0.36s;">
+            {{ stage_card(stages[3]) }}
+        </div>
+        <div class="rm-arrow rm-h rm-l rm-3-4"><span class="pulse-dot"></span></div>
+        <div class="roadmap-stage rpos-3" style="animation-delay: 0.24s;">
+            {{ stage_card(stages[2]) }}
+        </div>
+
+        {# Vertical drop: left side, S4 → S5 #}
+        <div class="rm-arrow rm-v rm-4-5"><span class="pulse-dot"></span></div>
+
+        {# Row 3: Stage 5 #}
+        <div class="roadmap-stage rpos-5" style="animation-delay: 0.48s;">
+            {{ stage_card(stages[4]) }}
+        </div>
+    </div>
 </div>
 
 <script>
-    // Show completion badges for visited lessons
+    // Completion badges
     try {
         const visited = JSON.parse(localStorage.getItem('portalProgress') || '{}');
         Object.keys(visited).forEach(lessonId => {
@@ -62,5 +105,6 @@
             }
         });
     } catch(e) {}
+
 </script>
 {% endblock %}

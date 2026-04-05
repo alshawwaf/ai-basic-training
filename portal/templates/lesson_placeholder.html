@@ -1,0 +1,24 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ lesson.stage_title }} — {{ lesson.title }}{% endblock %}
+
+{% block body %}
+<div class="placeholder-page">
+    <a href="/" class="back-link">&larr; Back to portal</a>
+
+    <div class="placeholder-card">
+        <div class="placeholder-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 6v6l4 2"/>
+                <circle cx="12" cy="12" r="10"/>
+            </svg>
+        </div>
+        <h1>{{ lesson.title }}</h1>
+        <p class="placeholder-sub">Stage {{ lesson.stage_num }}: {{ lesson.stage_title }} &middot; Lesson {{ lesson.num }}</p>
+        <p class="placeholder-desc">{{ lesson.desc }}</p>
+        <div class="placeholder-notice">
+            Interactive content for this lesson is being built. Check back soon.
+        </div>
+        <a href="/" class="btn btn-primary" style="margin-top: 20px;">Back to roadmap</a>
+    </div>
+</div>
+{% endblock %}

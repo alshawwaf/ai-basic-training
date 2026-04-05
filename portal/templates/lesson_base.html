@@ -8,9 +8,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <script>if(localStorage.getItem('portalTheme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+    <!-- Theme toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="icon-sun">&#9728;</span>
+        <span class="icon-moon">&#9790;</span>
+    </button>
     <!-- Mobile hamburger -->
     <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>

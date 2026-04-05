@@ -8,7 +8,7 @@ Open:  http://localhost:5000
 import importlib
 import warnings
 from flask import Flask, render_template
-from config import STAGES, get_all_lessons
+from config import STAGES, get_all_lessons, get_lesson
 
 warnings.filterwarnings("ignore")
 
@@ -38,6 +38,18 @@ for stage in STAGES:
 @app.route("/")
 def home():
     return render_template("home.html", stages=STAGES, registered=registered_lessons)
+
+
+@app.route("/lesson/<lesson_id>/")
+def lesson_placeholder(lesson_id):
+    """Placeholder page for lessons not yet built (demo mode)."""
+    if lesson_id in registered_lessons:
+        # Blueprint handles this — redirect just in case
+        return render_template("home.html", stages=STAGES, registered=registered_lessons)
+    lesson = get_lesson(lesson_id)
+    if not lesson:
+        return "Not found", 404
+    return render_template("lesson_placeholder.html", lesson=lesson)
 
 
 @app.route("/stage/<stage_id>")

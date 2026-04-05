@@ -1,3 +1,58 @@
+/* ── Theme toggle ───────────────────────────────────────────────────────── */
+
+(function initTheme() {
+    const saved = localStorage.getItem('portalTheme');
+    if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    // Default (no attribute) = light mode
+})();
+
+function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('portalTheme', 'light');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('portalTheme', 'dark');
+    }
+}
+
+/* ── Demo mode ──────────────────────────────────────────────────────────── */
+
+function applyDemoMode(on) {
+    document.querySelectorAll('.lesson-card[data-gated]').forEach(card => {
+        if (on) {
+            card.classList.remove('gated');
+            card.classList.add('active');
+            const lock = card.querySelector('.lesson-lock');
+            if (lock) lock.textContent = 'Preview';
+        } else {
+            card.classList.add('gated');
+            card.classList.remove('active');
+            const lock = card.querySelector('.lesson-lock');
+            if (lock) lock.textContent = 'Soon';
+        }
+    });
+}
+
+function toggleDemoMode() {
+    const on = document.getElementById('demoToggle').checked;
+    localStorage.setItem('portalDemoMode', on ? 'on' : 'off');
+    applyDemoMode(on);
+}
+
+// Restore demo mode on load
+(function initDemoMode() {
+    const saved = localStorage.getItem('portalDemoMode') === 'on';
+    const toggle = document.getElementById('demoToggle');
+    if (toggle) {
+        toggle.checked = saved;
+        if (saved) applyDemoMode(true);
+    }
+})();
+
 /* ── Color maps ──────────────────────────────────────────────────────────── */
 
 /* Default teal theme: dark → bright teal (matches dark UI) */

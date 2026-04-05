@@ -1,15 +1,39 @@
-# Lesson 1.1 — What is Machine Learning?
+# What is Machine Learning?
 
-## Start Here
+Machine learning is a branch of computer science where systems **learn patterns from data** instead of being explicitly programmed with rules.
 
-Work through the two folders **in order**:
+## Traditional Programming vs ML
 
-| # | Folder | What | Time |
-|---|--------|------|------|
-| 1 | [1_interactive_intro](1_interactive_intro/README.md) | **Visual exploration** — run `python app.py`, open localhost:5000, and explore 10 interactive steps in your browser | ~100 min |
-| 2 | 2_coding_exercises | **Write the code** — 5 guided exercises where you build scripts from scratch, with solutions to compare against | ~60 min |
+| Traditional | Machine Learning |
+|-------------|-----------------|
+| You write rules | The algorithm finds rules |
+| Input + Rules → Output | Input + Output → Rules |
+| Breaks when rules change | Adapts when data changes |
 
-Open the interactive intro first — it has its own README with step-by-step instructions.
+A spam filter built with traditional programming needs a human to maintain a list of spam keywords. An ML spam filter learns from thousands of labelled emails and discovers its own patterns — including ones no human would think to check.
+
+## The Three Ingredients
+
+Every ML problem has the same three components:
+
+1. **Data** — rows of observations, each described by numbers (features)
+2. **Labels** — the answer you want the model to predict (supervised learning)
+3. **Algorithm** — the method that finds patterns connecting features to labels
+
+In this lesson you'll work with the **digits dataset**: 1,797 handwritten digit images, each stored as an 8x8 grid of pixel intensities (64 features), labelled 0–9.
+
+## Why This Matters for Security
+
+Security data follows the same structure:
+
+| ML Concept | Security Equivalent |
+|-----------|-------------------|
+| Sample | A network flow, log entry, or executable |
+| Feature | Packet size, entropy, byte frequency, timing |
+| Label | Benign vs malicious |
+| Model | Classifier that flags threats automatically |
+
+The techniques you learn on digits — loading data, checking class balance, finding important features — transfer directly to security datasets.
 
 ## What You'll Learn
 
@@ -17,13 +41,7 @@ Open the interactive intro first — it has its own README with step-by-step ins
 - Why some features are useless and how to find them
 - The class imbalance problem and the accuracy trap
 - How models see data — flat arrays of numbers, not images
-- Why this matters for security (every concept maps to a security analogy)
-
-## Resources
-
-| File | Purpose |
-|------|---------|
-| Lecture-1-What-is-ML.pptx | Slide deck for facilitator-led sessions (open from file explorer) |
+- Why every concept maps to a real security scenario
 
 ## Next Lesson
 

@@ -1,0 +1,82 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>LLMs vs classic ML</h3>
+    <p>You've now built intuition for tokens, embeddings, and attention. Here's when to use LLMs vs the models from Stages 1-3.</p>
+
+    <div class="pipeline-flow">
+        <div class="pipe-stage">
+            <div class="pipe-icon">&#128200;</div>
+            <div class="pipe-title">Classic ML</div>
+            <div class="pipe-detail">Stages 1-3<br>Tabular data</div>
+        </div>
+        <div class="pipe-arrow">vs</div>
+        <div class="pipe-stage highlight">
+            <div class="pipe-icon">&#129302;</div>
+            <div class="pipe-title">LLMs</div>
+            <div class="pipe-detail">Stage 4<br>Text / unstructured</div>
+        </div>
+    </div>
+
+    <table class="log-table" style="font-size:13px; margin-top:20px;">
+        <thead><tr><th></th><th>Classic ML (Stages 1-3)</th><th>LLMs (Stage 4)</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Training</strong></td><td>Train from scratch on your data</td><td>Pre-trained on trillions of tokens</td></tr>
+            <tr><td><strong>Data needed</strong></td><td>Hundreds to thousands of labelled samples</td><td>Zero-shot or few-shot (no labels!)</td></tr>
+            <tr><td><strong>Input</strong></td><td>Structured features (numbers)</td><td>Raw text</td></tr>
+            <tr><td><strong>Parameters</strong></td><td>Hundreds to thousands</td><td>Billions</td></tr>
+            <tr><td><strong>Inference</strong></td><td>Microseconds</td><td>Seconds</td></tr>
+            <tr><td><strong>Cost</strong></td><td>Free (runs locally)</td><td>Pay per token (API)</td></tr>
+            <tr><td><strong>Explainability</strong></td><td>Feature importance, decision paths</td><td>Black box</td></tr>
+        </tbody>
+    </table>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>What you learned</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Step</th><th>Concept</th><th>Key takeaway</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>Next-token prediction</td><td>LLMs predict one token at a time; everything else emerges</td></tr>
+                <tr><td>1</td><td>Tokenisation</td><td>Text → token IDs using a vocabulary</td></tr>
+                <tr><td>2</td><td>Vocabulary limits</td><td>Small vocab = lost meaning; BPE solves this</td></tr>
+                <tr><td>3</td><td>Embeddings</td><td>Each token becomes a dense vector capturing semantics</td></tr>
+                <tr><td>4</td><td>Cosine similarity</td><td>Similar meanings → similar vectors → measurable distance</td></tr>
+                <tr><td>5</td><td>Attention</td><td>Each word selectively focuses on relevant context</td></tr>
+                <tr><td>6</td><td>Context vectors</td><td>Attention creates context-aware representations</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--cyan);">Use LLMs for:</h3>
+            <ul style="font-size:13px; line-height:1.8; color:var(--text);">
+                <li>Parsing unstructured threat reports</li>
+                <li>Summarising incident logs</li>
+                <li>Semantic search over threat intel</li>
+                <li>Generating detection rules from descriptions</li>
+                <li>Chatbot interfaces for SOC analysts</li>
+            </ul>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--green);">Use classic ML for:</h3>
+            <ul style="font-size:13px; line-height:1.8; color:var(--text);">
+                <li>Classifying network connections (attack/benign)</li>
+                <li>Anomaly detection on structured logs</li>
+                <li>Malware feature analysis</li>
+                <li>User behaviour analytics (UEBA)</li>
+                <li>Alert triage and prioritisation</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The best security ML systems combine both approaches:
+    <strong>classic ML</strong> for real-time structured data (firewall logs, NetFlow) and
+    <strong>LLMs</strong> for unstructured text (threat reports, incident summaries, analyst queries).
+    Know which tool fits which problem.
+</div>
+{% endblock %}

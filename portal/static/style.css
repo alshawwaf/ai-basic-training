@@ -2024,3 +2024,48 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     .fp-arrows { transform: rotate(90deg); }
     .ni-row input[type="range"] { width: 70px; }
 }
+
+/* ── LLM Lesson (s4_01) ──────────────────────────────────────────────────── */
+.token-chip {
+    display: inline-flex; flex-direction: column; align-items: center;
+    background: var(--accent-dim); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px; margin: 3px; font-size: 13px;
+    font-weight: 600; color: var(--text); transition: background 0.2s;
+}
+.token-chip.token-unk {
+    background: rgba(244,63,94,0.12); border-color: var(--red); color: var(--red);
+}
+.token-id {
+    font-size: 10px; color: var(--text-dim); font-family: 'Roboto Mono', monospace;
+    margin-top: 2px;
+}
+.token-arrow {
+    display: inline-block; color: var(--text-dim); font-size: 18px;
+    margin: 0 2px; vertical-align: middle;
+}
+.pred-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px; margin: 4px;
+    cursor: pointer; transition: all 0.2s;
+}
+.pred-chip:hover { border-color: var(--accent); background: var(--accent-dim); }
+.pred-chip.selected { border-color: var(--green); background: rgba(16,185,129,0.1); }
+.pred-word { font-weight: 600; font-size: 14px; color: var(--text); }
+.pred-conf {
+    font-size: 11px; color: var(--text-dim); font-family: 'Roboto Mono', monospace;
+}
+.attn-sentence {
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    padding: 16px 0;
+}
+.attn-word {
+    padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 15px;
+    cursor: pointer; background: var(--bg-card); border: 2px solid var(--border);
+    color: var(--text); transition: all 0.2s;
+}
+.attn-word:hover { border-color: var(--accent); }
+.attn-word.attn-selected {
+    border-color: var(--cyan); background: rgba(6,182,212,0.12);
+    box-shadow: 0 0 12px rgba(6,182,212,0.2);
+}

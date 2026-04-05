@@ -1,0 +1,97 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Measuring meaning with cosine similarity</h3>
+    <p>Cosine similarity measures how similar two vectors are: <strong>1.0 = identical</strong>, <strong>0.0 = unrelated</strong>, <strong>-1.0 = opposite</strong>. Pick two words to compare.</p>
+
+    <div class="controls">
+        <label>Word A:
+            <select id="wordA" onchange="comparePair()">
+                {% for w in words %}{% if w not in ['<UNK>', '<EOS>', 'the', 'is'] %}
+                <option value="{{ w }}" {{ 'selected' if w == 'malicious' }}>{{ w }}</option>
+                {% endif %}{% endfor %}
+            </select>
+        </label>
+        <label>Word B:
+            <select id="wordB" onchange="comparePair()">
+                {% for w in words %}{% if w not in ['<UNK>', '<EOS>', 'the', 'is'] %}
+                <option value="{{ w }}" {{ 'selected' if w == 'suspicious' }}>{{ w }}</option>
+                {% endif %}{% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <div id="sim-display" style="margin-top:20px; text-align:center;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Similarity heatmap</h3>
+        <div style="overflow-x:auto;">
+            <table class="log-table" id="sim-table" style="font-size:11px;"></table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Cosine similarity is the foundation of <strong>semantic search</strong> in security.
+    When you search "lateral movement" in a threat intel database, the system finds documents about
+    "network propagation" and "credential hopping" because their embeddings are similar.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const simMatrix = {{ sim_matrix | tojson }};
+    const allWords = {{ words | tojson }};
+    const vocab = {};
+    allWords.forEach((w, i) => vocab[w] = i);
+    const skipWords = new Set(['<UNK>', '<EOS>', 'the', 'is']);
+    const activeWords = allWords.filter(w => !skipWords.has(w));
+
+    function comparePair() {
+        const a = document.getElementById('wordA').value;
+        const b = document.getElementById('wordB').value;
+        const sim = simMatrix[vocab[a]][vocab[b]];
+
+        const color = sim > 0.7 ? 'var(--green)' : sim > 0.3 ? 'var(--cyan)' : sim > -0.3 ? 'var(--text-dim)' : 'var(--red)';
+        const label = sim > 0.7 ? 'Very similar' : sim > 0.3 ? 'Somewhat similar' : sim > -0.3 ? 'Unrelated' : 'Opposite';
+
+        document.getElementById('sim-display').innerHTML = `
+            <div style="font-size:16px;color:var(--text);">
+                <strong>"${a}"</strong> &harr; <strong>"${b}"</strong>
+            </div>
+            <div style="font-size:42px;font-weight:700;color:${color};margin:12px 0;">${sim.toFixed(3)}</div>
+            <div style="font-size:14px;color:${color};">${label}</div>
+            <div style="max-width:300px;margin:12px auto;height:12px;background:var(--grid-bg);border-radius:6px;overflow:hidden;">
+                <div style="width:${Math.max(0,(sim+1)/2*100)}%;height:100%;background:${color};border-radius:6px;transition:width 0.3s;"></div>
+            </div>
+        `;
+    }
+
+    // Build heatmap
+    function buildHeatmap() {
+        const table = document.getElementById('sim-table');
+        let html = '<thead><tr><th></th>';
+        activeWords.forEach(w => html += `<th style="writing-mode:vertical-lr;transform:rotate(180deg);padding:4px 2px;">${w}</th>`);
+        html += '</tr></thead><tbody>';
+
+        activeWords.forEach(w1 => {
+            html += `<tr><td><strong>${w1}</strong></td>`;
+            activeWords.forEach(w2 => {
+                const sim = simMatrix[vocab[w1]][vocab[w2]];
+                const r = sim > 0 ? Math.round(sim * 100) : 0;
+                const g = sim < 0 ? Math.round(-sim * 100) : 0;
+                const bg = sim > 0 ? `rgba(16,185,129,${Math.abs(sim)*0.6})` : `rgba(244,63,94,${Math.abs(sim)*0.6})`;
+                html += `<td style="background:${bg};color:var(--text);text-align:center;font-size:10px;padding:3px;" title="${w1} ↔ ${w2}: ${sim.toFixed(3)}">${sim.toFixed(1)}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody>';
+        table.innerHTML = html;
+    }
+
+    comparePair();
+    buildHeatmap();
+</script>
+{% endblock %}

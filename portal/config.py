@@ -82,7 +82,7 @@ STAGES = [
         "lessons": [
             {"id": "s4_01", "num": 1, "title": "How LLMs Work",
              "desc": "Transformers, tokens, and attention",
-             "folder": "s4_01_how_llms_work", "has_app": False, "minutes": 90},
+             "folder": "s4_01_how_llms_work", "has_app": True, "minutes": 90},
             {"id": "s4_02", "num": 2, "title": "Hugging Face",
              "desc": "Open-source model hub and inference",
              "folder": "s4_02_huggingface", "has_app": False, "minutes": 90},

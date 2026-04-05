@@ -1,0 +1,98 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Context vectors: attention in action</h3>
+    <p>The attention weights determine how much each word contributes to the <strong>context vector</strong> — a new representation that captures meaning from surrounding words.</p>
+
+    <div class="controls">
+        <label>Compute context for:
+            <select id="ctx-word" onchange="computeContext()">
+                {% for w in attn_sentence %}
+                <option value="{{ loop.index0 }}" {{ 'selected' if loop.index0 == 2 }}>{{ w }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <div id="ctx-display" style="margin-top:20px;"></div>
+
+    <div class="info-box blue" id="ctx-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Why this matters</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="info-box" style="background:rgba(244,63,94,0.08);border-left:4px solid var(--red);">
+                <strong>Without attention:</strong> "blocked" would have the same representation regardless of context.
+                "Firewall blocked traffic" = "Road blocked ahead" = same vector. Meaningless!
+            </div>
+            <div class="info-box green">
+                <strong>With attention:</strong> "blocked" in "firewall blocked malicious" gets a context vector
+                enriched by "firewall" and "malicious" — the model knows it's a <em>security action</em>.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Context vectors are why LLMs can distinguish
+    "port 443 is <strong>open</strong>" (network status) from "please <strong>open</strong> the attachment" (phishing).
+    The word "open" gets different context vectors depending on surrounding tokens.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const sentence = {{ attn_sentence | tojson }};
+    const weights = {{ attn_weights | tojson }};
+    const allEmb = {{ embeddings | tojson }};
+    const vocabMap = {{ vocab | tojson }};
+
+    // Get embeddings for attention sentence words
+    const sentenceEmb = sentence.map(w => allEmb[vocabMap[w]]);
+
+    function computeContext() {
+        const idx = parseInt(document.getElementById('ctx-word').value);
+        const attn = weights[idx];
+
+        // Weighted sum: context = sum(attn[j] * embedding[j])
+        const dims = sentenceEmb[0].length;
+        const context = new Array(dims).fill(0);
+        const contributions = [];
+
+        sentence.forEach((w, j) => {
+            const contrib = sentenceEmb[j].map(v => v * attn[j]);
+            contributions.push({word: w, weight: attn[j], contrib});
+            contrib.forEach((v, d) => context[d] += v);
+        });
+
+        // Sort by weight descending
+        contributions.sort((a, b) => b.weight - a.weight);
+
+        const display = document.getElementById('ctx-display');
+        display.innerHTML = `<div style="text-align:center;font-size:14px;margin-bottom:16px;">
+            Context vector for "<strong>${sentence[idx]}</strong>" =
+            <span style="font-family:'Roboto Mono',monospace;">[${context.map(v => v.toFixed(2)).join(', ')}]</span>
+        </div>` +
+        contributions.filter(c => c.weight > 0.01).map(c => {
+            const pct = (c.weight * 100).toFixed(0);
+            return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="min-width:100px;font-weight:600;">${c.word}</span>
+                <span style="min-width:40px;color:var(--text-dim);font-size:12px;">${pct}%</span>
+                <span style="font-family:'Roboto Mono',monospace;font-size:11px;color:var(--text-dim);">
+                    [${c.contrib.map(v => v.toFixed(3)).join(', ')}]
+                </span>
+            </div>`;
+        }).join('');
+
+        const topWord = contributions[0].word;
+        const info = document.getElementById('ctx-info');
+        info.innerHTML = `The context vector for "<strong>${sentence[idx]}</strong>" is dominated by
+            "<strong>${topWord}</strong>" (${(contributions[0].weight*100).toFixed(0)}% weight).
+            This means when the model processes "${sentence[idx]}", it "thinks about" "${topWord}" most.`;
+    }
+
+    computeContext();
+</script>
+{% endblock %}

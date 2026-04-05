@@ -1,0 +1,65 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Text &rarr; Tokens &rarr; IDs</h3>
+    <p>Before an LLM can process text, it must convert words into numbers. Type a sentence to see how a toy 20-token vocabulary encodes it.</p>
+
+    <div class="controls">
+        <input type="text" id="tok-input" placeholder="Type a sentence..."
+               value="the firewall blocked malicious traffic"
+               style="flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-family:'Roboto Mono',monospace;font-size:14px;"
+               oninput="tokenize()">
+    </div>
+
+    <div id="tok-output" style="margin-top:16px;"></div>
+
+    <div class="info-box" id="tok-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>The vocabulary ({{ words | length }} tokens)</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            {% for w in words %}
+            <span class="token-chip" style="font-size:12px;">{{ w }}<span class="token-id">{{ loop.index0 }}</span></span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Security text is <strong>token-expensive</strong>. IP addresses
+    (192.168.1.1), CVE IDs (CVE-2024-1234), and hashes are split into many tokens.
+    This affects API cost and context window usage when building security AI tools.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const vocab = {{ vocab | tojson }};
+
+    function tokenize() {
+        const text = document.getElementById('tok-input').value.trim().toLowerCase();
+        const words = text.split(/\s+/).filter(w => w.length > 0);
+        const tokens = words.map(w => ({word: w, id: vocab[w] !== undefined ? vocab[w] : 0, known: vocab[w] !== undefined}));
+        tokens.push({word: '<EOS>', id: 19, known: true});
+
+        const output = document.getElementById('tok-output');
+        output.innerHTML = tokens.map(t =>
+            `<span class="token-chip ${t.known ? '' : 'token-unk'}">${t.word}<span class="token-id">${t.id}</span></span>`
+        ).join('');
+
+        const unkCount = tokens.filter(t => !t.known).length;
+        const info = document.getElementById('tok-info');
+        if (unkCount === 0) {
+            info.className = 'info-box green';
+            info.innerHTML = `All ${tokens.length} tokens found in vocabulary. No information lost.`;
+        } else {
+            info.className = 'info-box orange';
+            info.innerHTML = `<strong>${unkCount}</strong> word(s) not in vocabulary → mapped to &lt;UNK&gt; (ID 0). Meaning is lost for those words.`;
+        }
+    }
+
+    tokenize();
+</script>
+{% endblock %}

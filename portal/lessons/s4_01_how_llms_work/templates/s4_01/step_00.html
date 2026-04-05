@@ -1,0 +1,89 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>An LLM is a next-token predictor</h3>
+    <p>Type a sentence. The model's only job is to predict what comes next — one token at a time. Everything else (reasoning, coding, summarisation) emerges from this.</p>
+
+    <div class="controls">
+        <input type="text" id="prompt-input" placeholder="Type a sentence..." value="The attacker used a SQL injection to"
+               style="flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-family:'Roboto Mono',monospace;font-size:14px;"
+               oninput="predict()">
+    </div>
+
+    <div class="token-flow" id="token-flow" style="margin-top:20px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Predicted next tokens</h3>
+        <div id="predictions" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+    </div>
+
+    <div class="info-box blue" style="margin-top:16px;">
+        <strong>The loop:</strong> predict next token → append it → predict again → append → repeat.
+        This is how LLMs generate entire paragraphs from a short prompt. Each token is chosen based on <strong>all previous tokens</strong>.
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> When a security analyst asks an LLM to "analyze this log entry",
+    the model predicts the most likely next tokens given the context. It doesn't "understand" the log —
+    it generates the most probable continuation based on patterns learned from training data.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Toy "next token predictor" — pattern-matching for demo purposes
+    const predictions = {
+        'attack': ['vector', 'surface', 'was', 'detected', 'on'],
+        'sql injection': ['to', 'attack', 'vulnerability', 'was'],
+        'injection to': ['exfiltrate', 'bypass', 'extract', 'compromise', 'access'],
+        'firewall': ['blocked', 'rule', 'detected', 'allowed', 'policy'],
+        'malware': ['was', 'detected', 'sample', 'infected', 'analysis'],
+        'the attacker': ['used', 'exploited', 'compromised', 'gained', 'launched'],
+        'password': ['was', 'reset', 'hash', 'spray', 'brute'],
+        'ransomware': ['encrypted', 'attack', 'gang', 'variant', 'payload'],
+        'phishing': ['email', 'attack', 'campaign', 'link', 'attempt'],
+        'vulnerability': ['was', 'in', 'allows', 'CVE', 'exploited'],
+        'endpoint': ['detection', 'protection', 'agent', 'was', 'security'],
+        'network': ['traffic', 'connection', 'scan', 'segmentation', 'anomaly'],
+        'default': ['the', 'a', 'was', 'is', 'and'],
+    };
+
+    function predict() {
+        const text = document.getElementById('prompt-input').value.trim().toLowerCase();
+        const words = text.split(/\s+/);
+
+        // Show token flow
+        const flow = document.getElementById('token-flow');
+        flow.innerHTML = words.map((w, i) =>
+            `<span class="token-chip">${w}<span class="token-id">${i}</span></span>`
+        ).join('<span class="token-arrow">&rarr;</span>') +
+        '<span class="token-arrow">&rarr;</span><span class="token-chip predict">???</span>';
+
+        // Find best matching prediction
+        let matched = null;
+        for (let len = Math.min(3, words.length); len >= 1; len--) {
+            const key = words.slice(-len).join(' ');
+            if (predictions[key]) { matched = predictions[key]; break; }
+        }
+        // Try single last word
+        if (!matched && predictions[words[words.length - 1]]) {
+            matched = predictions[words[words.length - 1]];
+        }
+        if (!matched) matched = predictions['default'];
+
+        const predEl = document.getElementById('predictions');
+        predEl.innerHTML = matched.map((w, i) => {
+            const conf = Math.max(10, 90 - i * 18);
+            return `<div class="pred-chip" style="opacity:${conf/100};">
+                <span class="pred-word">${w}</span>
+                <span class="pred-conf">${conf}%</span>
+            </div>`;
+        }).join('');
+    }
+
+    predict();
+</script>
+{% endblock %}

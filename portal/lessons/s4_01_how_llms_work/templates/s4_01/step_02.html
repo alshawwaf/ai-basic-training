@@ -1,0 +1,102 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>When words go missing</h3>
+    <p>Our vocabulary has only 20 tokens. Real LLMs use 100,000+. See what happens when the vocabulary is too small.</p>
+
+    <div class="controls">
+        <button class="btn" onclick="testSentence('the network connection is suspicious')">Security (in vocab)</button>
+        <button class="btn" onclick="testSentence('the ransomware encrypted all files on the endpoint')">Ransomware attack</button>
+        <button class="btn" onclick="testSentence('CVE-2024-1234 allows remote code execution')">CVE description</button>
+        <button class="btn" onclick="testSentence('normal traffic allowed on port')">Normal log</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+        <div class="card" style="margin:0;">
+            <h3>Original</h3>
+            <div id="orig-display" style="font-size:14px; line-height:2;"></div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>After encode → decode</h3>
+            <div id="decoded-display" style="font-size:14px; line-height:2;"></div>
+        </div>
+    </div>
+
+    <div class="metrics-row" style="margin-top:16px;">
+        <div class="metric-card" id="mc-total"><div class="name">Total words</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-known"><div class="name">Known</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-lost"><div class="name">Lost (&lt;UNK&gt;)</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-survival"><div class="name">Survival rate</div><div class="val">—</div></div>
+    </div>
+
+    <div class="info-box" id="oov-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Real tokenizers: BPE (Byte Pair Encoding)</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Word</th><th>Word-level (our toy)</th><th>BPE (real LLM)</th></tr></thead>
+            <tbody>
+                <tr><td>ransomware</td><td style="color:var(--red);">&lt;UNK&gt; (lost!)</td><td style="color:var(--green);">["ran", "som", "ware"]</td></tr>
+                <tr><td>CVE-2024-1234</td><td style="color:var(--red);">&lt;UNK&gt;</td><td style="color:var(--green);">["CVE", "-", "2024", "-", "1234"]</td></tr>
+                <tr><td>192.168.1.1</td><td style="color:var(--red);">&lt;UNK&gt;</td><td style="color:var(--green);">["192", ".", "168", ".", "1", ".", "1"]</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> BPE tokenizers split technical terms into subwords.
+    A SHA-256 hash becomes ~20 tokens. This means <strong>one log line can consume 50+ tokens</strong>.
+    When building RAG systems for security, token economy matters for cost and context limits.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const vocab = {{ vocab | tojson }};
+    const words = {{ words | tojson }};
+    const idToWord = {};
+    Object.entries(vocab).forEach(([w, id]) => idToWord[id] = w);
+
+    function testSentence(text) {
+        const wordList = text.toLowerCase().split(/\s+/);
+        const tokens = wordList.map(w => ({word: w, id: vocab[w] !== undefined ? vocab[w] : 0, known: vocab[w] !== undefined}));
+
+        document.getElementById('orig-display').innerHTML = wordList.map(w =>
+            `<span class="token-chip ${vocab[w] !== undefined ? '' : 'token-unk'}">${w}</span>`
+        ).join(' ');
+
+        document.getElementById('decoded-display').innerHTML = tokens.map(t =>
+            `<span class="token-chip ${t.known ? '' : 'token-unk'}">${t.known ? t.word : '&lt;UNK&gt;'}</span>`
+        ).join(' ');
+
+        const total = wordList.length;
+        const known = tokens.filter(t => t.known).length;
+        const lost = total - known;
+        const survival = Math.round(known / total * 100);
+
+        document.querySelector('#mc-total .val').textContent = total;
+        document.querySelector('#mc-known .val').textContent = known;
+        document.querySelector('#mc-lost .val').textContent = lost;
+        document.querySelector('#mc-survival .val').textContent = survival + '%';
+
+        document.getElementById('mc-total').className = 'metric-card ok';
+        document.getElementById('mc-known').className = 'metric-card ok';
+        document.getElementById('mc-lost').className = 'metric-card ' + (lost === 0 ? 'ok' : 'bad');
+        document.getElementById('mc-survival').className = 'metric-card ' + (survival >= 80 ? 'ok' : survival >= 50 ? 'warn' : 'bad');
+
+        const info = document.getElementById('oov-info');
+        if (lost === 0) {
+            info.className = 'info-box green';
+            info.innerHTML = 'All words survived. This sentence uses only words in our tiny vocabulary.';
+        } else {
+            info.className = 'info-box red';
+            info.innerHTML = `<strong>${lost}</strong> words lost to &lt;UNK&gt;. Only ${survival}% of meaning preserved. This is why real LLMs need 100,000+ tokens.`;
+        }
+    }
+
+    testSentence('the ransomware encrypted all files on the endpoint');
+</script>
+{% endblock %}

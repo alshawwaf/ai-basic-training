@@ -1,0 +1,94 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Attention: which words matter to which?</h3>
+    <p>When processing a word, the model doesn't treat all other words equally. It <strong>attends</strong> to the most relevant ones. Click a word to see its attention pattern.</p>
+
+    <div class="attn-sentence" id="attn-sentence">
+        {% for w in attn_sentence %}
+        <span class="attn-word" id="aw-{{ loop.index0 }}" onclick="showAttention({{ loop.index0 }})">{{ w }}</span>
+        {% endfor %}
+    </div>
+
+    <div id="attn-bars" style="margin-top:20px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Full attention matrix</h3>
+        <div style="overflow-x:auto;">
+            <table class="log-table" id="attn-table" style="font-size:12px;"></table>
+        </div>
+        <div class="info-box blue" style="margin-top:8px;">
+            Each row sums to 1.0 (softmax). Read row-wise: "When processing [row word], how much does it attend to [column word]?"
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Attention is why LLMs can understand context. In
+    "the firewall <strong>blocked</strong> malicious connection", the model knows "blocked" relates to
+    "firewall" (the blocker) and "malicious" (what was blocked). This contextual understanding
+    is what makes LLMs useful for parsing security logs and threat descriptions.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const sentence = {{ attn_sentence | tojson }};
+    const weights = {{ attn_weights | tojson }};
+    let selectedWord = 2; // "blocked" is most interesting
+
+    function showAttention(idx) {
+        selectedWord = idx;
+        // Highlight selected word
+        document.querySelectorAll('.attn-word').forEach((el, i) => {
+            el.classList.toggle('attn-selected', i === idx);
+        });
+
+        const bars = document.getElementById('attn-bars');
+        bars.innerHTML = `<div style="text-align:center;margin-bottom:12px;font-size:14px;">
+            When processing "<strong>${sentence[idx]}</strong>", it attends to:</div>` +
+        sentence.map((w, j) => {
+            const weight = weights[idx][j];
+            const pct = (weight * 100).toFixed(0);
+            const color = weight > 0.3 ? 'var(--cyan)' : weight > 0.1 ? 'var(--green)' : 'var(--text-dim)';
+            return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+                <span style="min-width:100px;font-weight:600;color:var(--text);">${w}</span>
+                <div style="flex:1;height:24px;background:var(--grid-bg);border-radius:4px;overflow:hidden;">
+                    <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;transition:width 0.3s;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">
+                        <span style="font-size:11px;color:#fff;font-weight:600;">${weight.toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Highlight column in table
+        document.querySelectorAll('.attn-cell').forEach(c => c.style.outline = '');
+        document.querySelectorAll(`.attn-row-${idx}`).forEach(c => c.style.outline = '2px solid var(--cyan)');
+    }
+
+    // Build attention table
+    function buildAttnTable() {
+        const table = document.getElementById('attn-table');
+        let html = '<thead><tr><th>Attends to &rarr;</th>';
+        sentence.forEach(w => html += `<th>${w}</th>`);
+        html += '<th>Sum</th></tr></thead><tbody>';
+
+        sentence.forEach((w, i) => {
+            html += `<tr onclick="showAttention(${i})" style="cursor:pointer;">`;
+            html += `<td><strong>${w}</strong></td>`;
+            weights[i].forEach((v, j) => {
+                const bg = `rgba(6,182,212,${v})`;
+                html += `<td class="attn-cell attn-row-${i}" style="background:${bg};text-align:center;font-weight:${v > 0.2 ? 700 : 400};">${v.toFixed(2)}</td>`;
+            });
+            html += `<td style="color:var(--text-dim);">${weights[i].reduce((a,b)=>a+b,0).toFixed(2)}</td></tr>`;
+        });
+        html += '</tbody>';
+        table.innerHTML = html;
+    }
+
+    buildAttnTable();
+    showAttention(selectedWord);
+</script>
+{% endblock %}

@@ -103,7 +103,7 @@ STAGES = [
         "lessons": [
             {"id": "s5_01", "num": 1, "title": "Workforce AI Security",
              "desc": "Securing workforce AI usage",
-             "folder": "s5_01_workforce_ai_security", "has_app": False, "minutes": 60},
+             "folder": "s5_01_workforce_ai_security", "has_app": True, "minutes": 60},
             {"id": "s5_02", "num": 2, "title": "AI Agent Security",
              "desc": "Protecting autonomous AI agents",
              "folder": "s5_02_ai_agent_security", "has_app": False, "minutes": 60},

@@ -1,0 +1,157 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Dashboard deep dive</h3>
+    <p>This simulated Workforce AI Security dashboard shows 30 days of data from a 2,000-employee enterprise. Explore the metrics and answer: <strong>what's the story this data tells?</strong></p>
+
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px;">
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:24px; font-weight:700; color:var(--cyan);">{{ dashboard.total_interactions | int }}</div>
+            <div style="font-size:11px; color:var(--text-dim);">Total Interactions</div>
+        </div>
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:24px; font-weight:700; color:var(--green);">{{ dashboard.adoption_pct }}%</div>
+            <div style="font-size:11px; color:var(--text-dim);">Employee Adoption</div>
+        </div>
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:24px; font-weight:700; color:var(--red);">{{ dashboard.sensitive_events }}</div>
+            <div style="font-size:11px; color:var(--text-dim);">Sensitive Data Events</div>
+        </div>
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:24px; font-weight:700; color:var(--orange);">{{ dashboard.shadow_apps }}</div>
+            <div style="font-size:11px; color:var(--text-dim);">Shadow AI Apps</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="card" style="margin:0;">
+            <h3 style="font-size:14px;">Daily AI interactions (30 days)</h3>
+            <canvas id="trend-chart" height="180"></canvas>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3 style="font-size:14px;">Traffic by application</h3>
+            <canvas id="app-chart" height="180"></canvas>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3 style="font-size:14px;">Sensitive data by type</h3>
+            <canvas id="sensitive-chart" height="180"></canvas>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3 style="font-size:14px;">Managed vs Unmanaged</h3>
+            <canvas id="managed-chart" height="180"></canvas>
+            <div style="text-align:center; margin-top:8px;">
+                <div style="display:inline-flex; gap:16px; font-size:12px;">
+                    <span><span style="color:var(--green);">&#9632;</span> Managed ({{ dashboard.managed_pct }}%)</span>
+                    <span><span style="color:var(--red);">&#9632;</span> Unmanaged ({{ dashboard.unmanaged_pct }}%)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3 style="font-size:14px;">Policy enforcement breakdown</h3>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(16,185,129,0.08);">
+                <div style="font-size:20px; font-weight:700; color:var(--green);">{{ dashboard.pii_redacted }}</div>
+                <div style="font-size:11px; color:var(--text-dim);">PII Redacted</div>
+            </div>
+            <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(124,58,237,0.08);">
+                <div style="font-size:20px; font-weight:700; color:var(--violet);">{{ dashboard.code_blocked }}</div>
+                <div style="font-size:11px; color:var(--text-dim);">Code Uploads Blocked</div>
+            </div>
+            <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(217,119,6,0.08);">
+                <div style="font-size:20px; font-weight:700; color:var(--orange);">{{ dashboard.warnings_continued }}</div>
+                <div style="font-size:11px; color:var(--text-dim);">Warnings (User Continued)</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A dashboard is only as good as the <strong>questions you ask it</strong>.
+    The same data can tell different stories to a CISO ("we have exposure"), a compliance officer
+    ("we need audit trails"), and an IT manager ("we need to approve more tools").
+    Learn to read dashboards like a SOC analyst reads a SIEM.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+    const dashboard = {{ dashboard | tojson }};
+
+    // Daily trend chart
+    new Chart(document.getElementById('trend-chart'), {
+        type: 'line',
+        data: {
+            labels: dashboard.daily_trend.map((_, i) => 'Day ' + (i + 1)),
+            datasets: [{
+                label: 'AI Interactions',
+                data: dashboard.daily_trend,
+                borderColor: '#06b6d4',
+                backgroundColor: 'rgba(6,182,212,0.1)',
+                fill: true, tension: 0.3, pointRadius: 2,
+            }]
+        },
+        options: {
+            responsive: true, plugins: {legend: {display: false}},
+            scales: {y: {beginAtZero: true, grid: {color: 'rgba(128,128,128,0.1)'}}, x: {display: false}}
+        }
+    });
+
+    // App breakdown (horizontal bar)
+    new Chart(document.getElementById('app-chart'), {
+        type: 'bar',
+        data: {
+            labels: dashboard.by_app.map(a => a.name),
+            datasets: [{
+                data: dashboard.by_app.map(a => a.pct),
+                backgroundColor: ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#6366f1'],
+            }]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, plugins: {legend: {display: false}},
+            scales: {x: {beginAtZero: true, max: 70, grid: {color: 'rgba(128,128,128,0.1)'},
+                ticks: {callback: v => v + '%'}}, y: {grid: {display: false}}}
+        }
+    });
+
+    // Sensitive data by type (doughnut)
+    new Chart(document.getElementById('sensitive-chart'), {
+        type: 'doughnut',
+        data: {
+            labels: dashboard.sensitive_by_type.map(s => s.type),
+            datasets: [{
+                data: dashboard.sensitive_by_type.map(s => s.count),
+                backgroundColor: dashboard.sensitive_by_type.map(s => s.color),
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {legend: {position: 'right', labels: {boxWidth: 12, font: {size: 11}}}}
+        }
+    });
+
+    // Managed vs Unmanaged (doughnut)
+    new Chart(document.getElementById('managed-chart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Managed', 'Unmanaged'],
+            datasets: [{
+                data: [dashboard.managed_pct, dashboard.unmanaged_pct],
+                backgroundColor: ['#10b981', '#e11d48'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {legend: {display: false}},
+            cutout: '65%',
+        }
+    });
+</script>
+{% endblock %}

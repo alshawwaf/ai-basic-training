@@ -1,0 +1,139 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The six policy actions</h3>
+    <p>Workforce AI Security gives you six actions to apply to any AI interaction. Select an action to see what happens to a sample prompt.</p>
+
+    <div class="info-box blue" style="margin-bottom:16px;">
+        <strong>Sample prompt:</strong>
+        <span style="font-family:'Roboto Mono',monospace; font-size:13px;" id="sample-prompt">
+            "Hi Claude, please review this code: def auth(user, pwd='Str0ng!Pass123'): api_key = 'sk-prod-a8f2e1b9c4d7'"
+        </span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:20px;">
+        <button class="btn" onclick="applyAction('allow')" id="btn-allow" style="background:var(--green);">&#10004; Allow</button>
+        <button class="btn" onclick="applyAction('prevent')" id="btn-prevent" style="background:var(--red);">&#10008; Prevent</button>
+        <button class="btn" onclick="applyAction('redact')" id="btn-redact" style="background:var(--orange);">&#9986; Redact</button>
+        <button class="btn" onclick="applyAction('detect')" id="btn-detect" style="background:var(--cyan);">&#128065; Detect</button>
+        <button class="btn" onclick="applyAction('block')" id="btn-block" style="background:var(--violet);">&#128683; Block</button>
+        <button class="btn" onclick="applyAction('ask')" id="btn-ask" style="background:#6366f1;">&#10067; Ask</button>
+    </div>
+
+    <div id="action-result" style="min-height:120px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Action comparison</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Action</th><th>Prompt sent?</th><th>Data modified?</th><th>User notified?</th><th>Logged?</th></tr></thead>
+            <tbody>
+                <tr><td style="color:var(--green); font-weight:600;">Allow</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td></tr>
+                <tr><td style="color:var(--red); font-weight:600;">Prevent</td><td>No</td><td>N/A</td><td>Yes (blocked)</td><td>Yes</td></tr>
+                <tr><td style="color:var(--orange); font-weight:600;">Redact</td><td>Yes (modified)</td><td>Sensitive parts removed</td><td>Yes (redacted)</td><td>Yes</td></tr>
+                <tr><td style="color:var(--cyan); font-weight:600;">Detect</td><td>Yes</td><td>No</td><td>No</td><td>Yes + alert</td></tr>
+                <tr><td style="color:var(--violet); font-weight:600;">Block</td><td>No (app blocked)</td><td>N/A</td><td>Yes (app blocked)</td><td>Yes</td></tr>
+                <tr><td style="color:#6366f1; font-weight:600;">Ask</td><td>If justified</td><td>No</td><td>Yes (justification prompt)</td><td>Yes + reason</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The six actions map to a <strong>graduated response</strong> model —
+    the same principle as firewall rules. You don't need a single policy for everything;
+    you need the right action for the right data type in the right context.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const originalPrompt = "Hi Claude, please review this code: def auth(user, pwd='Str0ng!Pass123'): api_key = 'sk-prod-a8f2e1b9c4d7'";
+
+    const actions = {
+        allow: {
+            color: 'var(--green)',
+            icon: '&#10004;',
+            title: 'ALLOWED — Prompt sent as-is',
+            body: `<div style="font-family:'Roboto Mono',monospace; font-size:13px; padding:12px; background:var(--grid-bg); border-radius:6px; margin:8px 0;">
+                ${originalPrompt}
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">The full prompt — including the password and API key — is sent to the AI service. If the service is compromised, retains data, or trains on it, these credentials are exposed.</div>`,
+        },
+        prevent: {
+            color: 'var(--red)',
+            icon: '&#10008;',
+            title: 'PREVENTED — Prompt blocked',
+            body: `<div style="padding:16px; background:rgba(244,63,94,0.08); border:2px solid var(--red); border-radius:8px; text-align:center; margin:8px 0;">
+                <div style="font-size:24px;">&#128683;</div>
+                <div style="font-weight:600; color:var(--red); margin:8px 0;">This interaction has been blocked</div>
+                <div style="font-size:13px; color:var(--text-dim);">Reason: Credentials detected (API key, password)<br>Policy: Prevent — no sensitive credentials may be sent to external AI services</div>
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">The user sees a block notification. No data leaves the organisation. The event is logged for security review.</div>`,
+        },
+        redact: {
+            color: 'var(--orange)',
+            icon: '&#9986;',
+            title: 'REDACTED — Sensitive data stripped',
+            body: `<div style="font-family:'Roboto Mono',monospace; font-size:13px; padding:12px; background:var(--grid-bg); border-radius:6px; margin:8px 0;">
+                Hi Claude, please review this code: def auth(user, pwd='<span style="background:var(--orange); color:#fff; padding:1px 4px; border-radius:3px;">[REDACTED]</span>'): api_key = '<span style="background:var(--orange); color:#fff; padding:1px 4px; border-radius:3px;">[REDACTED]</span>'
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">The prompt is sent, but credentials are replaced with [REDACTED] tokens. The user can still get a code review — just without exposing secrets. The AI receives the structure but not the sensitive values.</div>`,
+        },
+        detect: {
+            color: 'var(--cyan)',
+            icon: '&#128065;',
+            title: 'DETECTED — Sent but flagged',
+            body: `<div style="font-family:'Roboto Mono',monospace; font-size:13px; padding:12px; background:var(--grid-bg); border-radius:6px; margin:8px 0;">
+                ${originalPrompt}
+            </div>
+            <div style="padding:10px; background:rgba(6,182,212,0.08); border-left:4px solid var(--cyan); border-radius:4px; margin:8px 0;">
+                <strong>&#128276; Alert generated:</strong> Credentials detected in AI prompt<br>
+                <span style="font-size:12px; color:var(--text-dim);">User: j.smith@corp.com | App: Claude | Types: API key, password | Severity: Critical</span>
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">The prompt is sent unchanged, but the security team is alerted. Useful during initial deployment to understand usage patterns before enforcing restrictions.</div>`,
+        },
+        block: {
+            color: 'var(--violet)',
+            icon: '&#128683;',
+            title: 'BLOCKED — Application blocked entirely',
+            body: `<div style="padding:16px; background:rgba(124,58,237,0.08); border:2px solid var(--violet); border-radius:8px; text-align:center; margin:8px 0;">
+                <div style="font-size:24px;">&#128683;</div>
+                <div style="font-weight:600; color:var(--violet); margin:8px 0;">Access to Claude is blocked</div>
+                <div style="font-size:13px; color:var(--text-dim);">This AI application is not approved for use.<br>Contact IT Security for approved alternatives.</div>
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">Unlike Prevent (which blocks specific interactions), Block prevents access to the entire application. No prompt analysis needed — the app itself is disallowed.</div>`,
+        },
+        ask: {
+            color: '#6366f1',
+            icon: '&#10067;',
+            title: 'ASK — User must justify',
+            body: `<div style="padding:16px; background:rgba(99,102,241,0.08); border:2px solid #6366f1; border-radius:8px; margin:8px 0;">
+                <div style="font-weight:600; color:#6366f1; margin-bottom:8px;">&#9888; Sensitive content detected</div>
+                <div style="font-size:13px; color:var(--text);">Your prompt contains <strong>credentials</strong> (API key, password). Please provide a business justification to continue:</div>
+                <div style="margin-top:10px;">
+                    <textarea style="width:100%; height:50px; background:var(--input-bg); border:1px solid var(--border); border-radius:6px; padding:8px; font-size:13px; color:var(--text); resize:none;" placeholder="e.g., Testing authentication flow for security audit #SEC-2024-089"></textarea>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end;">
+                    <button class="btn" style="background:var(--border); font-size:12px; padding:6px 14px;">Cancel</button>
+                    <button class="btn" style="font-size:12px; padding:6px 14px;">Submit & Continue</button>
+                </div>
+            </div>
+            <div style="color:var(--text-dim); font-size:13px;">The user can proceed only after providing a justification. This creates an audit trail linking sensitive data exposure to a business reason — useful for compliance reviews.</div>`,
+        },
+    };
+
+    function applyAction(action) {
+        const a = actions[action];
+        document.querySelectorAll('.btn').forEach(b => b.style.opacity = '0.5');
+        document.getElementById('btn-' + action).style.opacity = '1';
+
+        document.getElementById('action-result').innerHTML = `
+            <div style="border-left:4px solid ${a.color}; padding-left:16px; margin-top:8px;">
+                <div style="font-weight:700; color:${a.color}; font-size:15px; margin-bottom:8px;">${a.icon} ${a.title}</div>
+                ${a.body}
+            </div>`;
+    }
+</script>
+{% endblock %}

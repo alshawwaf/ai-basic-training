@@ -1,0 +1,131 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The shadow AI problem</h3>
+    <p>Employees are using AI tools across your organisation — many without IT's knowledge. Click <strong>"Scan Network"</strong> to discover what's really happening.</p>
+
+    <div style="text-align:center; margin:20px 0;">
+        <button class="btn" id="scan-btn" onclick="runScan()">&#128269; Scan Network</button>
+        <div id="scan-progress" style="display:none; margin-top:12px;">
+            <div style="max-width:400px; margin:0 auto; height:8px; background:var(--grid-bg); border-radius:4px; overflow:hidden;">
+                <div id="scan-bar" style="width:0%; height:100%; background:var(--cyan); border-radius:4px; transition:width 0.3s;"></div>
+            </div>
+            <div id="scan-status" style="font-size:12px; color:var(--text-dim); margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <div id="scan-results" style="display:none;">
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px;" id="summary-cards"></div>
+
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr>
+                <th>Application</th><th>Vendor</th><th>Category</th><th>Status</th><th>Risk</th><th>Users</th><th>Sessions</th>
+            </tr></thead>
+            <tbody id="app-table"></tbody>
+        </table>
+
+        <div class="info-box" style="margin-top:16px; background:rgba(244,63,94,0.08); border-left:4px solid var(--red);">
+            <strong>&#9888; Key finding:</strong>
+            <span id="finding-text"></span>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Department breakdown</h3>
+        <p style="font-size:13px; color:var(--text-dim);">Who is using AI the most? Click a department to see details.</p>
+        <div id="dept-bars" style="margin-top:12px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Shadow AI is the new shadow IT. Just as unapproved SaaS apps
+    created blind spots 10 years ago, unapproved AI tools create <strong>data exfiltration paths</strong>
+    that traditional firewalls and DLP cannot see. Discovery is the first step to governance.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const apps = {{ ai_apps | tojson }};
+    const depts = {{ departments | tojson }};
+    let scanComplete = false;
+
+    function runScan() {
+        if (scanComplete) return;
+        document.getElementById('scan-btn').disabled = true;
+        document.getElementById('scan-progress').style.display = 'block';
+
+        const bar = document.getElementById('scan-bar');
+        const status = document.getElementById('scan-status');
+        let found = 0;
+        const phases = [
+            {pct: 15, msg: 'Analysing DNS queries...'},
+            {pct: 30, msg: 'Inspecting TLS certificates...'},
+            {pct: 50, msg: 'Fingerprinting API endpoints...'},
+            {pct: 70, msg: 'Correlating user sessions...'},
+            {pct: 85, msg: 'Classifying applications...'},
+            {pct: 100, msg: 'Scan complete.'},
+        ];
+
+        phases.forEach((phase, i) => {
+            setTimeout(() => {
+                bar.style.width = phase.pct + '%';
+                status.textContent = phase.msg;
+                if (phase.pct === 100) {
+                    setTimeout(showResults, 400);
+                }
+            }, (i + 1) * 600);
+        });
+    }
+
+    function showResults() {
+        scanComplete = true;
+        document.getElementById('scan-results').style.display = 'block';
+
+        const managed = apps.filter(a => a.managed).length;
+        const unmanaged = apps.filter(a => !a.managed).length;
+        const totalUsers = apps.reduce((s, a) => s + a.users, 0);
+
+        document.getElementById('summary-cards').innerHTML = [
+            {label: 'AI Apps Found', value: apps.length, color: 'var(--cyan)'},
+            {label: 'Unmanaged (Shadow)', value: unmanaged, color: 'var(--red)'},
+            {label: 'Total Users', value: totalUsers, color: 'var(--green)'},
+        ].map(c => `<div class="metric-card" style="text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:${c.color};">${c.value}</div>
+            <div style="font-size:12px; color:var(--text-dim);">${c.label}</div>
+        </div>`).join('');
+
+        document.getElementById('app-table').innerHTML = apps.map(a => {
+            const statusColor = a.managed ? 'var(--green)' : 'var(--red)';
+            const statusText = a.managed ? 'Managed' : 'Unmanaged';
+            const riskColor = a.risk === 'High' ? 'var(--red)' : a.risk === 'Medium' ? 'var(--orange)' : 'var(--green)';
+            return `<tr>
+                <td><strong>${a.name}</strong></td><td>${a.vendor}</td><td>${a.cat}</td>
+                <td style="color:${statusColor}; font-weight:600;">${statusText}</td>
+                <td style="color:${riskColor}; font-weight:600;">${a.risk}</td>
+                <td>${a.users}</td><td>${a.sessions.toLocaleString()}</td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('finding-text').innerHTML =
+            `<strong>${unmanaged} of ${apps.length}</strong> AI applications are unmanaged — no policy, no visibility, no audit trail.
+            These tools are actively being used by <strong>${apps.filter(a=>!a.managed).reduce((s,a)=>s+a.users,0)} employees</strong>.
+            Traditional DLP and firewall rules do not cover these interactions.`;
+    }
+
+    // Department bars
+    document.getElementById('dept-bars').innerHTML = depts.map(d => {
+        return `<div style="display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border);">
+            <span style="min-width:100px; font-weight:600; font-size:13px;">${d.name}</span>
+            <div style="flex:1; height:22px; background:var(--grid-bg); border-radius:4px; overflow:hidden;">
+                <div style="width:${d.pct}%; height:100%; background:var(--cyan); border-radius:4px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px;">
+                    <span style="font-size:11px; color:#fff; font-weight:600;">${d.pct}%</span>
+                </div>
+            </div>
+            <span style="min-width:60px; font-size:12px; color:var(--text-dim);">${d.users} users</span>
+        </div>`;
+    }).join('');
+</script>
+{% endblock %}

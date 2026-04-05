@@ -1,0 +1,150 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Redaction in action</h3>
+    <p>Type or paste a prompt below. The real-time scanner highlights sensitive content and shows what gets redacted before it reaches the AI service.</p>
+
+    <textarea id="prompt-input" rows="5" style="width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:14px; font-family:'Roboto Mono',monospace; color:var(--text); resize:vertical;"
+        placeholder="Try: My name is John Smith, SSN 412-55-8901. Our API key is sk-prod-a8f2e1b9c4d7..."
+    >My name is John Smith, SSN 412-55-8901. Please review this code: api_key = 'sk-prod-a8f2e1b9c4d7' and connect to 10.0.5.23:4444</textarea>
+
+    <button class="btn" onclick="scanPrompt()" style="margin-top:10px;">&#128270; Scan &amp; Redact</button>
+
+    <div id="scan-output" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Detection patterns</h3>
+        <table class="log-table" style="font-size:12px;">
+            <thead><tr><th>Pattern</th><th>Category</th><th>Regex</th><th>Example match</th></tr></thead>
+            <tbody>
+                <tr><td>SSN</td><td style="color:var(--red);">PII</td><td><code>\d{3}-\d{2}-\d{4}</code></td><td>412-55-8901</td></tr>
+                <tr><td>API Key</td><td style="color:var(--orange);">Credentials</td><td><code>sk-[a-zA-Z0-9-]+</code></td><td>sk-prod-a8f2e1b9</td></tr>
+                <tr><td>AWS Key</td><td style="color:var(--orange);">Credentials</td><td><code>AKIA[A-Z0-9]{12,}</code></td><td>AKIA3EXAMPLE7KEY</td></tr>
+                <tr><td>IP:Port</td><td style="color:var(--violet);">Network</td><td><code>\d+\.\d+\.\d+\.\d+:\d+</code></td><td>10.0.5.23:4444</td></tr>
+                <tr><td>Email</td><td style="color:var(--red);">PII</td><td><code>[a-z.]+@[a-z]+\.[a-z]+</code></td><td>j.smith@corp.com</td></tr>
+                <tr><td>Person name</td><td style="color:var(--red);">PII</td><td>NLP entity recognition</td><td>John Smith</td></tr>
+            </tbody>
+        </table>
+        <div class="info-box blue" style="margin-top:8px;">
+            Real Workforce AI Security uses ML-based NER (Named Entity Recognition) — far more sophisticated than regex.
+            These patterns are a simplified demo of the same principle.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Redaction preserves the <strong>utility</strong> of the AI interaction
+    while removing the <strong>risk</strong>. The AI still receives the structure of the prompt — just not the
+    sensitive values. This is the same principle as data masking in database security.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const patterns = [
+        {regex: /\b\d{3}-\d{2}-\d{4}\b/g, label: 'SSN', cat: 'PII', color: 'var(--red)'},
+        {regex: /\bsk-[a-zA-Z0-9_-]{8,}\b/g, label: 'API Key', cat: 'Credentials', color: 'var(--orange)'},
+        {regex: /\bAKIA[A-Z0-9]{12,}\b/g, label: 'AWS Key', cat: 'Credentials', color: 'var(--orange)'},
+        {regex: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}\b/g, label: 'IP:Port', cat: 'Network', color: 'var(--violet)'},
+        {regex: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g, label: 'IP Address', cat: 'Network', color: 'var(--violet)'},
+        {regex: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g, label: 'Email', cat: 'PII', color: 'var(--red)'},
+        {regex: /\b(?:password|pwd|passwd)\s*[=:]\s*['"][^'"]+['"]/gi, label: 'Password', cat: 'Credentials', color: 'var(--orange)'},
+    ];
+
+    // Simple name detection (common patterns after "My name is", "I am", etc.)
+    const namePatterns = [
+        {regex: /(?:my name is|I am|I'm|name:\s*|patient:?\s*)\s*([A-Z][a-z]+ [A-Z][a-z]+)/gi, label: 'Person Name', cat: 'PII', color: 'var(--red)', group: 1},
+    ];
+
+    function scanPrompt() {
+        const text = document.getElementById('prompt-input').value;
+        if (!text.trim()) return;
+
+        const findings = [];
+        let highlighted = escapeHtml(text);
+        let redacted = text;
+
+        // Apply regex patterns
+        patterns.forEach(p => {
+            let match;
+            const re = new RegExp(p.regex.source, p.regex.flags);
+            while ((match = re.exec(text)) !== null) {
+                findings.push({
+                    text: match[0],
+                    label: p.label,
+                    cat: p.cat,
+                    color: p.color,
+                    start: match.index,
+                    end: match.index + match[0].length,
+                });
+            }
+        });
+
+        // Apply name patterns
+        namePatterns.forEach(p => {
+            let match;
+            const re = new RegExp(p.regex.source, p.regex.flags);
+            while ((match = re.exec(text)) !== null) {
+                const name = match[p.group || 0];
+                const nameStart = text.indexOf(name, match.index);
+                findings.push({
+                    text: name,
+                    label: p.label,
+                    cat: p.cat,
+                    color: p.color,
+                    start: nameStart,
+                    end: nameStart + name.length,
+                });
+            }
+        });
+
+        // Sort by position (reverse for replacement)
+        findings.sort((a, b) => b.start - a.start);
+
+        // Build redacted version
+        redacted = text;
+        findings.forEach(f => {
+            redacted = redacted.substring(0, f.start) + `[${f.label.toUpperCase()}_REDACTED]` + redacted.substring(f.end);
+        });
+
+        // Build highlighted original
+        let html = escapeHtml(text);
+        // We need to rebuild with highlights — sort findings by start ascending
+        const sorted = [...findings].sort((a, b) => a.start - b.start);
+
+        const output = document.getElementById('scan-output');
+        const findingsList = findings.length > 0
+            ? findings.map(f => `<span style="display:inline-block; padding:2px 8px; margin:2px; border-radius:4px; font-size:12px; background:${f.color}20; color:${f.color}; border:1px solid ${f.color}40;">
+                ${f.label}: "${f.text}"
+            </span>`).join('')
+            : '<span style="color:var(--green);">No sensitive content detected.</span>';
+
+        output.innerHTML = `
+            <div style="margin-bottom:12px;">
+                <div style="font-size:12px; font-weight:600; color:var(--text-dim); margin-bottom:6px;">FINDINGS (${findings.length}):</div>
+                <div style="display:flex; flex-wrap:wrap; gap:4px;">${findingsList}</div>
+            </div>
+            ${findings.length > 0 ? `
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div>
+                    <div style="font-size:12px; font-weight:600; color:var(--red); margin-bottom:6px;">ORIGINAL (sent with Allow):</div>
+                    <div style="font-family:'Roboto Mono',monospace; font-size:12px; padding:12px; background:rgba(244,63,94,0.05); border:1px solid var(--red); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(text)}</div>
+                </div>
+                <div>
+                    <div style="font-size:12px; font-weight:600; color:var(--green); margin-bottom:6px;">REDACTED (sent with Redact):</div>
+                    <div style="font-family:'Roboto Mono',monospace; font-size:12px; padding:12px; background:rgba(16,185,129,0.05); border:1px solid var(--green); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(redacted)}</div>
+                </div>
+            </div>` : ''}
+        `;
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Auto-scan on load
+    scanPrompt();
+</script>
+{% endblock %}

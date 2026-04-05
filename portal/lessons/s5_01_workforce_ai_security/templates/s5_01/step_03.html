@@ -1,0 +1,154 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Build your policy matrix</h3>
+    <p>Design a real policy: for each combination of <strong>AI tool</strong> and <strong>data type</strong>, choose a policy action. Click cells to cycle through actions.</p>
+
+    <div style="overflow-x:auto;">
+        <table class="log-table" id="policy-table" style="font-size:12px;">
+            <thead>
+                <tr>
+                    <th>Data Type \ AI Tool</th>
+                    <th>ChatGPT</th>
+                    <th>GitHub Copilot</th>
+                    <th>Claude</th>
+                    <th>Gemini (Shadow)</th>
+                </tr>
+            </thead>
+            <tbody id="policy-body"></tbody>
+        </table>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; font-size:11px;">
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.15); color:var(--green);">Allow</span>
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(244,63,94,0.15); color:var(--red);">Prevent</span>
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(217,119,6,0.15); color:var(--orange);">Redact</span>
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(8,145,178,0.15); color:var(--cyan);">Detect</span>
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(124,58,237,0.15); color:var(--violet);">Block</span>
+        <span style="padding:2px 8px; border-radius:4px; background:rgba(99,102,241,0.15); color:#6366f1;">Ask</span>
+    </div>
+
+    <div class="info-box blue" style="margin-top:16px;" id="policy-analysis"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Recommended baseline</h3>
+        <p style="font-size:13px; color:var(--text-dim);">Click <strong>"Show Recommended"</strong> to see a best-practice policy and compare with yours.</p>
+        <button class="btn" onclick="showRecommended()" style="margin-top:8px;">Show Recommended</button>
+        <div id="recommended" style="display:none; margin-top:12px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Policy design is the bridge between technology and governance.
+    A CISO doesn't need to understand embeddings — they need a clear matrix showing which data types
+    are protected, which tools are governed, and what action is taken in each case.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const tools = ['ChatGPT', 'GitHub Copilot', 'Claude', 'Gemini (Shadow)'];
+    const dataTypes = ['PII', 'Credentials', 'Source Code', 'Financial', 'Medical/PHI', 'General queries'];
+    const actionCycle = ['Allow', 'Prevent', 'Redact', 'Detect', 'Block', 'Ask'];
+    const actionColors = {
+        Allow: {bg: 'rgba(16,185,129,0.15)', fg: 'var(--green)'},
+        Prevent: {bg: 'rgba(244,63,94,0.15)', fg: 'var(--red)'},
+        Redact: {bg: 'rgba(217,119,6,0.15)', fg: 'var(--orange)'},
+        Detect: {bg: 'rgba(8,145,178,0.15)', fg: 'var(--cyan)'},
+        Block: {bg: 'rgba(124,58,237,0.15)', fg: 'var(--violet)'},
+        Ask: {bg: 'rgba(99,102,241,0.15)', fg: '#6366f1'},
+    };
+
+    // Initial state: all Detect (monitoring mode)
+    const policy = {};
+    dataTypes.forEach(dt => {
+        policy[dt] = {};
+        tools.forEach(t => policy[dt][t] = 'Detect');
+    });
+
+    const recommended = {
+        'PII':              ['Redact',  'Redact',  'Redact',  'Block'],
+        'Credentials':      ['Prevent', 'Prevent', 'Prevent', 'Block'],
+        'Source Code':      ['Ask',     'Allow',   'Ask',     'Block'],
+        'Financial':        ['Prevent', 'Prevent', 'Prevent', 'Block'],
+        'Medical/PHI':      ['Prevent', 'Prevent', 'Prevent', 'Block'],
+        'General queries':  ['Allow',   'Allow',   'Allow',   'Block'],
+    };
+
+    function renderTable() {
+        const body = document.getElementById('policy-body');
+        body.innerHTML = dataTypes.map(dt => {
+            const cells = tools.map((t, ti) => {
+                const action = policy[dt][t];
+                const c = actionColors[action];
+                return `<td onclick="cycleAction('${dt}', '${t}')"
+                    style="cursor:pointer; text-align:center; font-weight:600; background:${c.bg}; color:${c.fg}; user-select:none;">
+                    ${action}
+                </td>`;
+            }).join('');
+            return `<tr><td><strong>${dt}</strong></td>${cells}</tr>`;
+        }).join('');
+        analysePolicy();
+    }
+
+    function cycleAction(dt, tool) {
+        const current = policy[dt][tool];
+        const idx = actionCycle.indexOf(current);
+        policy[dt][tool] = actionCycle[(idx + 1) % actionCycle.length];
+        renderTable();
+    }
+
+    function analysePolicy() {
+        let prevents = 0, allows = 0, redacts = 0, blocks = 0, asks = 0, detects = 0;
+        dataTypes.forEach(dt => tools.forEach(t => {
+            const a = policy[dt][t];
+            if (a === 'Prevent') prevents++;
+            else if (a === 'Allow') allows++;
+            else if (a === 'Redact') redacts++;
+            else if (a === 'Block') blocks++;
+            else if (a === 'Ask') asks++;
+            else detects++;
+        }));
+        const total = dataTypes.length * tools.length;
+        const strictness = ((prevents + blocks) / total * 100).toFixed(0);
+
+        let assessment;
+        if (strictness > 60) assessment = 'Your policy is <strong>very restrictive</strong>. Effective for compliance, but may drive users to personal devices (shadow IT).';
+        else if (strictness > 30) assessment = 'Your policy is <strong>balanced</strong>. Good mix of protection and productivity.';
+        else assessment = 'Your policy is <strong>permissive</strong>. Great for adoption, but sensitive data may still leak.';
+
+        document.getElementById('policy-analysis').innerHTML =
+            `<strong>Policy analysis:</strong> ${prevents + blocks} blocked, ${redacts} redacted, ${asks} conditional, ${allows} allowed, ${detects} monitoring.
+            <br>Strictness score: <strong>${strictness}%</strong>. ${assessment}`;
+    }
+
+    function showRecommended() {
+        const div = document.getElementById('recommended');
+        div.style.display = 'block';
+
+        let html = '<table class="log-table" style="font-size:12px;"><thead><tr><th>Data Type</th>';
+        tools.forEach(t => html += `<th>${t}</th>`);
+        html += '</tr></thead><tbody>';
+
+        dataTypes.forEach(dt => {
+            html += `<tr><td><strong>${dt}</strong></td>`;
+            recommended[dt].forEach(action => {
+                const c = actionColors[action];
+                html += `<td style="text-align:center; font-weight:600; background:${c.bg}; color:${c.fg};">${action}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        html += `<div class="info-box green" style="margin-top:8px;">
+            <strong>Key principle:</strong> Shadow/unmanaged apps get <strong>Block</strong> by default.
+            Credentials are <strong>always prevented</strong>. PII is <strong>redacted</strong> (not blocked) to preserve productivity.
+            Source code uses <strong>Ask</strong> — developers can justify, creating an audit trail.
+        </div>`;
+        div.innerHTML = html;
+    }
+
+    renderTable();
+</script>
+{% endblock %}

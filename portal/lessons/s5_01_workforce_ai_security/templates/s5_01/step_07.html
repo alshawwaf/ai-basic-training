@@ -1,0 +1,102 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The full picture: connecting all stages</h3>
+    <p>Every concept you've learned across the program powers Workforce AI Security. Here's the complete map.</p>
+
+    <div class="pipeline-flow">
+        <div class="pipe-stage">
+            <div class="pipe-icon">&#128200;</div>
+            <div class="pipe-title">Discover</div>
+            <div class="pipe-detail">Find all AI apps</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage">
+            <div class="pipe-icon">&#128269;</div>
+            <div class="pipe-title">Classify</div>
+            <div class="pipe-detail">Tag sensitive data</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage">
+            <div class="pipe-icon">&#128737;</div>
+            <div class="pipe-title">Enforce</div>
+            <div class="pipe-detail">Apply policy actions</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-stage highlight">
+            <div class="pipe-icon">&#128202;</div>
+            <div class="pipe-title">Monitor</div>
+            <div class="pipe-detail">Dashboard &amp; alerts</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Program knowledge map</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Stage</th><th>What You Learned</th><th>Where It Appears in Workforce AI Security</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Stage 1</strong><br>Classic ML</td>
+                    <td>Classification, features, labels, accuracy traps</td>
+                    <td>Sensitive data classification — PII, credentials, source code detection in real time</td></tr>
+                <tr><td><strong>Stage 2</strong><br>Intermediate ML</td>
+                    <td>Feature engineering, anomaly detection, scaling</td>
+                    <td>Risk scoring, UEBA for AI usage, extracting signals from prompt metadata</td></tr>
+                <tr><td><strong>Stage 3</strong><br>Neural Networks</td>
+                    <td>Deep learning, activation functions, architecture</td>
+                    <td>NLP models for content analysis, NER for entity extraction</td></tr>
+                <tr><td><strong>Stage 4</strong><br>Generative AI</td>
+                    <td>Tokenisation, embeddings, attention, LLM internals</td>
+                    <td>Understanding what data enters the AI service, token-level inspection</td></tr>
+                <tr><td><strong>Stage 5</strong><br>CP AI Security</td>
+                    <td>Policy design, dashboard interpretation, risk governance</td>
+                    <td>This lesson — and the foundation for Sessions 5.2 (Agent Security) and 5.3 (Guardrails)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>What you learned in this lesson</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Step</th><th>Concept</th><th>Key takeaway</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>Shadow AI discovery</td><td>You can't govern what you can't see — discovery comes first</td></tr>
+                <tr><td>1</td><td>Data classification</td><td>Every prompt is classified in real time: PII, credentials, code, financial, medical</td></tr>
+                <tr><td>2</td><td>Six policy actions</td><td>Allow, Prevent, Redact, Detect, Block, Ask — graduated response, not binary</td></tr>
+                <tr><td>3</td><td>Policy matrix</td><td>Different tools + different data types = different actions</td></tr>
+                <tr><td>4</td><td>Redaction</td><td>Strip sensitive data while preserving prompt utility</td></tr>
+                <tr><td>5</td><td>Dashboard</td><td>Metrics tell a story — adoption, risk, enforcement, shadow AI</td></tr>
+                <tr><td>6</td><td>Risk scoring</td><td>UEBA for AI usage — same anomaly detection from Stage 2, new data source</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--red);">Common customer objections</h3>
+            <ul style="font-size:13px; line-height:1.8; color:var(--text);">
+                <li>"We just block all AI" &rarr; Drives usage underground</li>
+                <li>"Our DLP handles this" &rarr; DLP doesn't understand AI context</li>
+                <li>"Our employees don't use AI" &rarr; 41% adoption is typical</li>
+                <li>"We'll build our own" &rarr; Real-time inline scanning at scale is hard</li>
+            </ul>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--green);">What's next</h3>
+            <ul style="font-size:13px; line-height:1.8; color:var(--text);">
+                <li><strong>5.2</strong> — AI Agent Security: securing autonomous AI workflows</li>
+                <li><strong>5.3</strong> — AI Guardrails: defending LLM apps against attacks</li>
+                <li><strong>5.4</strong> — Positioning: building customer-facing demos</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Workforce AI Security is where <strong>everything converges</strong>.
+    Classification from Stage 1, anomaly detection from Stage 2, neural networks from Stage 3,
+    LLM understanding from Stage 4 — all working together to solve a real, immediate security problem.
+    You now understand <em>how</em> it works, not just <em>what</em> it does.
+</div>
+{% endblock %}

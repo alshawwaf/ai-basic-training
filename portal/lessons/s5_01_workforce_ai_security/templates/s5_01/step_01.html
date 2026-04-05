@@ -1,0 +1,98 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Classify the risk: what data is at stake?</h3>
+    <p>Workforce AI Security classifies every prompt in real time. Your job: read each prompt and tag the sensitive data types. Click the prompt to reveal the answer.</p>
+
+    <div id="prompts-list"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;" id="score-area" style="display:none;">
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:var(--cyan);" id="score-correct">0</div>
+            <div style="font-size:12px; color:var(--text-dim);">Correctly classified</div>
+        </div>
+        <div class="metric-card" style="text-align:center;">
+            <div style="font-size:28px; font-weight:700; color:var(--text-dim);" id="score-total">0 / {{ prompts | length }}</div>
+            <div style="font-size:12px; color:var(--text-dim);">Prompts reviewed</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Data classification categories</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Category</th><th>Examples</th><th>Typical Action</th></tr></thead>
+            <tbody>
+                <tr><td><span style="color:var(--red); font-weight:600;">PII</span></td>
+                    <td>Names, SSNs, DOBs, addresses, phone numbers</td><td>Redact or Prevent</td></tr>
+                <tr><td><span style="color:var(--orange); font-weight:600;">Credentials</span></td>
+                    <td>API keys, passwords, tokens, certificates</td><td>Prevent (always)</td></tr>
+                <tr><td><span style="color:var(--violet); font-weight:600;">Source Code</span></td>
+                    <td>Proprietary code, internal libraries, config files</td><td>Prevent or Ask</td></tr>
+                <tr><td><span style="color:var(--cyan); font-weight:600;">Financial</span></td>
+                    <td>Revenue, forecasts, M&A data, salaries</td><td>Prevent or Redact</td></tr>
+                <tr><td><span style="color:var(--green); font-weight:600;">Medical/PHI</span></td>
+                    <td>Patient records, diagnoses, treatment plans</td><td>Prevent (HIPAA)</td></tr>
+                <tr><td><span style="color:#6366f1; font-weight:600;">Confidential</span></td>
+                    <td>Unreleased plans, partnerships, internal strategy</td><td>Ask or Detect</td></tr>
+                <tr><td style="color:var(--text-dim);">Safe</td>
+                    <td>General queries, public info, learning questions</td><td>Allow</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> This classification task is exactly what Workforce AI Security does
+    <strong>automatically on every prompt</strong> — using NLP models trained on millions of examples.
+    The same supervised learning approach from Stage 1, running inline at millisecond latency.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const prompts = {{ prompts | tojson }};
+    const typeColors = {
+        pii: {label: 'PII', color: 'var(--red)'},
+        credentials: {label: 'Credentials', color: 'var(--orange)'},
+        source_code: {label: 'Source Code', color: 'var(--violet)'},
+        financial: {label: 'Financial', color: 'var(--cyan)'},
+        medical: {label: 'Medical/PHI', color: 'var(--green)'},
+        confidential: {label: 'Confidential', color: '#6366f1'},
+        safe: {label: 'Safe', color: 'var(--text-dim)'},
+    };
+    const riskColors = {critical: 'var(--red)', high: 'var(--orange)', medium: 'var(--cyan)', low: 'var(--green)'};
+
+    let reviewed = 0, correct = 0;
+
+    const list = document.getElementById('prompts-list');
+    list.innerHTML = prompts.map((p, i) => {
+        const tags = p.types.map(t => {
+            const tc = typeColors[t] || {label: t, color: 'var(--text-dim)'};
+            return `<span style="display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; background:${tc.color}20; color:${tc.color}; border:1px solid ${tc.color}40; margin-right:4px;">${tc.label}</span>`;
+        }).join('');
+
+        return `<div class="card" id="prompt-${i}" style="margin:8px 0; cursor:pointer;" onclick="revealPrompt(${i})">
+            <div style="font-size:13px; color:var(--text); line-height:1.6; padding:4px 0; font-family:'Roboto Mono',monospace;">
+                "${p.text}"
+            </div>
+            <div id="prompt-answer-${i}" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:12px; color:var(--text-dim);">Classification:</span>
+                    ${tags}
+                    <span style="margin-left:auto; font-size:12px; font-weight:600; color:${riskColors[p.risk]};">Risk: ${p.risk.toUpperCase()}</span>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    function revealPrompt(i) {
+        const answer = document.getElementById('prompt-answer-' + i);
+        if (answer.style.display !== 'none') return;
+        answer.style.display = 'block';
+        reviewed++;
+        document.getElementById('score-total').textContent = reviewed + ' / ' + prompts.length;
+    }
+</script>
+{% endblock %}

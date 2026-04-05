@@ -1,0 +1,171 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Risk scoring: anomaly detection for AI usage</h3>
+    <p>Each user gets a <strong>risk score</strong> based on their AI usage patterns. Adjust the sliders to simulate a user's behaviour and watch the risk score change in real time.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div>
+            <div class="controls" style="flex-direction:column; align-items:stretch;">
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    Daily prompts: <strong id="val-prompts">15</strong>
+                    <input type="range" min="1" max="200" value="15" id="sl-prompts" oninput="updateRisk()" style="width:180px;">
+                </label>
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    Sensitive data %: <strong id="val-sensitive">5</strong>
+                    <input type="range" min="0" max="100" value="5" id="sl-sensitive" oninput="updateRisk()" style="width:180px;">
+                </label>
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    AI apps used: <strong id="val-apps">2</strong>
+                    <input type="range" min="1" max="10" value="2" id="sl-apps" oninput="updateRisk()" style="width:180px;">
+                </label>
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    After-hours %: <strong id="val-afterhours">10</strong>
+                    <input type="range" min="0" max="100" value="10" id="sl-afterhours" oninput="updateRisk()" style="width:180px;">
+                </label>
+                <label style="display:flex; justify-content:space-between; align-items:center;">
+                    File uploads/day: <strong id="val-uploads">0</strong>
+                    <input type="range" min="0" max="50" value="0" id="sl-uploads" oninput="updateRisk()" style="width:180px;">
+                </label>
+            </div>
+
+            <div style="margin-top:16px;">
+                <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;">Preset scenarios:</div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn" style="font-size:11px; padding:4px 10px;" onclick="setScenario('normal')">Normal user</button>
+                    <button class="btn" style="font-size:11px; padding:4px 10px;" onclick="setScenario('power')">Power user</button>
+                    <button class="btn" style="font-size:11px; padding:4px 10px;" onclick="setScenario('suspicious')">Suspicious</button>
+                    <button class="btn" style="font-size:11px; padding:4px 10px;" onclick="setScenario('exfil')">Data exfiltration</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;">
+            <div id="risk-gauge" style="position:relative; width:200px; height:120px; margin:0 auto;">
+                <svg width="200" height="120" viewBox="0 0 200 120">
+                    <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="var(--grid-bg)" stroke-width="16" stroke-linecap="round"/>
+                    <path id="risk-arc" d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="var(--green)" stroke-width="16" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="226"/>
+                </svg>
+                <div style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); text-align:center;">
+                    <div id="risk-value" style="font-size:36px; font-weight:700; color:var(--green);">12</div>
+                    <div style="font-size:11px; color:var(--text-dim);">Risk Score</div>
+                </div>
+            </div>
+            <div id="risk-label" style="font-size:14px; font-weight:600; margin-top:8px; color:var(--green);">LOW RISK</div>
+            <div id="risk-detail" style="font-size:12px; color:var(--text-dim); margin-top:4px;"></div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Risk factor breakdown</h3>
+        <div id="factor-bars"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>How risk scoring works</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="info-box green">
+                <strong>Baseline (learned):</strong> Average usage patterns across the organisation.
+                15 prompts/day, 3% sensitive content, 1-2 apps, minimal after-hours usage.
+                This is the "normal" the model learns.
+            </div>
+            <div class="info-box" style="background:rgba(244,63,94,0.08); border-left:4px solid var(--red);">
+                <strong>Anomaly (flagged):</strong> Deviations from baseline trigger risk score increases.
+                The same <strong>anomaly detection</strong> approach from Stage 2 —
+                but applied to AI usage instead of network traffic.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Risk scoring is <strong>UEBA (User and Entity Behaviour Analytics)</strong>
+    applied to AI usage. The same principle you learned in Stage 2 for detecting anomalous network
+    connections — now detecting anomalous AI interactions. The math is the same; the data source is new.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const baselines = {prompts: 15, sensitive: 3, apps: 2, afterhours: 8, uploads: 1};
+
+    const scenarios = {
+        normal:     {prompts: 15, sensitive: 5, apps: 2, afterhours: 10, uploads: 0},
+        power:      {prompts: 80, sensitive: 8, apps: 4, afterhours: 25, uploads: 3},
+        suspicious: {prompts: 45, sensitive: 35, apps: 6, afterhours: 60, uploads: 8},
+        exfil:      {prompts: 150, sensitive: 70, apps: 8, afterhours: 85, uploads: 40},
+    };
+
+    function setScenario(name) {
+        const s = scenarios[name];
+        document.getElementById('sl-prompts').value = s.prompts;
+        document.getElementById('sl-sensitive').value = s.sensitive;
+        document.getElementById('sl-apps').value = s.apps;
+        document.getElementById('sl-afterhours').value = s.afterhours;
+        document.getElementById('sl-uploads').value = s.uploads;
+        updateRisk();
+    }
+
+    function updateRisk() {
+        const prompts = parseInt(document.getElementById('sl-prompts').value);
+        const sensitive = parseInt(document.getElementById('sl-sensitive').value);
+        const apps = parseInt(document.getElementById('sl-apps').value);
+        const afterhours = parseInt(document.getElementById('sl-afterhours').value);
+        const uploads = parseInt(document.getElementById('sl-uploads').value);
+
+        document.getElementById('val-prompts').textContent = prompts;
+        document.getElementById('val-sensitive').textContent = sensitive;
+        document.getElementById('val-apps').textContent = apps;
+        document.getElementById('val-afterhours').textContent = afterhours;
+        document.getElementById('val-uploads').textContent = uploads;
+
+        // Risk factors (0-20 each, total 0-100)
+        const factors = {
+            'Volume':        Math.min(20, Math.max(0, (prompts - baselines.prompts) / 10) * 2),
+            'Sensitive data': Math.min(20, sensitive / 5),
+            'App diversity':  Math.min(20, Math.max(0, (apps - baselines.apps)) * 4),
+            'After-hours':    Math.min(20, afterhours / 5),
+            'File uploads':   Math.min(20, uploads * 2),
+        };
+
+        const score = Math.min(100, Math.round(Object.values(factors).reduce((s, v) => s + v, 0)));
+
+        const color = score > 70 ? 'var(--red)' : score > 40 ? 'var(--orange)' : score > 20 ? 'var(--cyan)' : 'var(--green)';
+        const label = score > 70 ? 'CRITICAL RISK' : score > 40 ? 'HIGH RISK' : score > 20 ? 'MEDIUM RISK' : 'LOW RISK';
+
+        document.getElementById('risk-value').textContent = score;
+        document.getElementById('risk-value').style.color = color;
+        document.getElementById('risk-label').textContent = label;
+        document.getElementById('risk-label').style.color = color;
+
+        // Gauge arc
+        const arc = document.getElementById('risk-arc');
+        const maxLen = 251.2;
+        arc.style.strokeDashoffset = maxLen * (1 - score / 100);
+        arc.style.stroke = color === 'var(--red)' ? '#e11d48' : color === 'var(--orange)' ? '#d97706' : color === 'var(--cyan)' ? '#06b6d4' : '#10b981';
+
+        // Factor bars
+        document.getElementById('factor-bars').innerHTML = Object.entries(factors).map(([name, val]) => {
+            const pct = (val / 20 * 100).toFixed(0);
+            const c = val > 14 ? 'var(--red)' : val > 8 ? 'var(--orange)' : val > 4 ? 'var(--cyan)' : 'var(--green)';
+            return `<div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--border);">
+                <span style="min-width:110px; font-size:13px; font-weight:600;">${name}</span>
+                <div style="flex:1; height:18px; background:var(--grid-bg); border-radius:4px; overflow:hidden;">
+                    <div style="width:${pct}%; height:100%; background:${c}; border-radius:4px; transition:width 0.3s;"></div>
+                </div>
+                <span style="min-width:30px; font-size:12px; font-weight:600; color:${c}; text-align:right;">${val.toFixed(0)}</span>
+            </div>`;
+        }).join('');
+
+        // Detail
+        const top = Object.entries(factors).sort((a, b) => b[1] - a[1])[0];
+        document.getElementById('risk-detail').textContent = score > 20
+            ? `Highest factor: ${top[0]} (${top[1].toFixed(0)}/20)`
+            : 'All factors within normal range';
+    }
+
+    updateRisk();
+</script>
+{% endblock %}

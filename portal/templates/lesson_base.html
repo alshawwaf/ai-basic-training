@@ -330,8 +330,13 @@
                 openCodeModal(resolved, resolved.split('/').pop());
             } else if (/\.md$/.test(resolved)) {
                 openDrawer(resolved, resolved.split('/').pop().replace(/\.md$/, ''));
+            } else if (/\/$/.test(resolved) || !/\.\w+$/.test(resolved)) {
+                // Folder link — try loading README.md inside it
+                var folderPath = resolved.replace(/\/$/, '') + '/README.md';
+                var folderName = resolved.replace(/\/$/, '').split('/').pop();
+                openDrawer(folderPath, folderName);
             }
-            // other links (folders, anchors) — do nothing
+            // non-servable files (.pptx, etc.) — do nothing
         });
 
         function copyDrawerContent() {

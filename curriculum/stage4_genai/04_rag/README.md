@@ -165,4 +165,4 @@ python stage4_genai/04_rag/1_chunking/solution_rag.py
 
 **Congratulations — you have completed all 4 modules.**
 
-Review the [milestone project](../../project/) to build a complete security analyst assistant.
+Review the [milestone project](../../project/security_assistant.py) to build a complete security analyst assistant.

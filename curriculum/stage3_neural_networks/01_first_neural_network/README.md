@@ -1,6 +1,6 @@
 # Lesson 3.1 — Your First Neural Network in Keras
 
-**Pre-reading:** Work through the [foundations scripts](../foundations/) first.
+**Pre-reading:** Work through the [foundations scripts](../foundations/1_basic_neuron.py) first.
 
 ---
 

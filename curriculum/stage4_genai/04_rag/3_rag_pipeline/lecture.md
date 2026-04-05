@@ -132,4 +132,4 @@ Ask a question whose answer is NOT in the knowledge base. Observe whether the mo
 
 You have built a complete RAG pipeline. Compare your code against the matching solution files.
 
-**You have now completed all 4 modules.** Review the [milestone project](../../project/) to build a full security analyst assistant.
+**You have now completed all 4 modules.** Review the [milestone project](../../project/security_assistant.py) to build a full security analyst assistant.

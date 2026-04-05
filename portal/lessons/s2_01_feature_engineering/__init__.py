@@ -257,7 +257,7 @@ CHALLENGES = {
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
-_base = "stage2_intermediate/01_feature_engineering"
+_base = "curriculum/stage2_intermediate/01_feature_engineering"
 
 MATERIALS = {
     0: [("lecture", "Why Raw Logs Fail", f"{_base}/1_why_raw_logs_fail/lecture.md"),

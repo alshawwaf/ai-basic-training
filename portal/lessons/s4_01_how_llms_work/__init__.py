@@ -121,7 +121,7 @@ CHALLENGES = {
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
-_base = "stage4_genai/01_how_llms_work"
+_base = "curriculum/stage4_genai/01_how_llms_work"
 
 MATERIALS = {
     0: [("lecture", "How LLMs Work", f"{_base}/README.md")],

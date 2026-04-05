@@ -15,17 +15,23 @@ The program starts with AI positioning for customer conversations, progresses th
 
 **6 stages | 21 sessions | 67 exercises | 4 capstone projects | 3-tier certification**
 
+### Quick Start
+
+```bash
+docker-compose up --build        # start the portal at http://localhost:5000
+```
+
 ### Program Documents
 
 | Document | Description |
 |----------|-------------|
-| [Program Syllabus](PROGRAM_SYLLABUS.md) | 15-week schedule, tier system, assessment gates, participant expectations |
-| [Ninja Program Blueprint](NINJA_PROGRAM_BLUEPRINT.md) | Strategic plan, recommendations, and success metrics |
-| [Facilitator Guides](facilitator_guides/) | Teacher notes template and per-lecture delivery guides |
-| [Assessments](assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
-| [Security Corpus](stage4_genai/data/) | 31 curated documents: CVEs, threat actors, runbooks, detection guides, and Check Point AI products |
-| [Customer Demo Kit](demo_kit/) | Packaged demo assistant, presentation script, architecture one-pager |
-| [Program Operations](program_ops/) | Welcome packet, recruitment pitch, skills survey, certificates, dry-run checklist |
+| [Program Syllabus](docs/PROGRAM_SYLLABUS.md) | 15-week schedule, tier system, assessment gates, participant expectations |
+| [Ninja Program Blueprint](docs/NINJA_PROGRAM_BLUEPRINT.md) | Strategic plan, recommendations, and success metrics |
+| [Facilitator Guides](ops/facilitator_guides/) | Teacher notes template and per-lecture delivery guides |
+| [Assessments](ops/assessments/) | Quiz, challenge, review, and capstone rubrics per stage gate |
+| [Security Corpus](curriculum/stage4_genai/data/) | 31 curated documents: CVEs, threat actors, runbooks, detection guides, and Check Point AI products |
+| [Customer Demo Kit](ops/demo_kit/) | Packaged demo assistant, presentation script, architecture one-pager |
+| [Program Operations](ops/program_ops/) | Welcome packet, recruitment pitch, skills survey, certificates, dry-run checklist |
 
 ---
 
@@ -138,10 +144,10 @@ This stage is non-technical. It builds the vocabulary, market awareness, and con
 
 | # | Session | Format | Time |
 |---|---------|--------|------|
-| 0.1 | [The AI Landscape in Cybersecurity](stage0_positioning/01_ai_landscape/README.md) | Lecture + discussion | 60 min |
-| 0.2 | [How Competitors Position AI](stage0_positioning/02_competitor_analysis/README.md) | Lecture + group exercise | 60 min |
-| 0.3 | [AI Objection Handling](stage0_positioning/03_objection_handling/README.md) | Lecture + role-play | 60 min |
-| 0.4 | [Discovery Questions for AI Use Cases](stage0_positioning/04_discovery_questions/README.md) | Workshop | 60 min |
+| 0.1 | [The AI Landscape in Cybersecurity](ops/stage0_positioning/01_ai_landscape/README.md) | Lecture + discussion | 60 min |
+| 0.2 | [How Competitors Position AI](ops/stage0_positioning/02_competitor_analysis/README.md) | Lecture + group exercise | 60 min |
+| 0.3 | [AI Objection Handling](ops/stage0_positioning/03_objection_handling/README.md) | Lecture + role-play | 60 min |
+| 0.4 | [Discovery Questions for AI Use Cases](ops/stage0_positioning/04_discovery_questions/README.md) | Workshop | 60 min |
 
 ---
 
@@ -183,13 +189,13 @@ Classic ML is the foundation everything else builds on. These algorithms are fas
 
 | # | Lesson | Exercises | What You Learn |
 |---|--------|-----------|----------------|
-| 1.1 | [What is ML?](stage1_classic_ml/01_what_is_ml/README.md) | 5 | The ML workflow — loading data, exploring features, EDA, class balance |
-| 1.2 | [Linear Regression](stage1_classic_ml/02_linear_regression/README.md) | 4 | Predicting continuous values — server response time from traffic load |
-| 1.3 | [Logistic Regression](stage1_classic_ml/03_logistic_regression/README.md) | 4 | Binary classification — phishing or legitimate from URL features |
-| 1.4 | [Decision Trees](stage1_classic_ml/04_decision_trees/README.md) | 4 | Interpretable rule-based splits — network traffic as threat or benign |
-| 1.5 | [Model Evaluation](stage1_classic_ml/05_model_evaluation/README.md) | 5 | Precision, recall, F1, ROC AUC — why accuracy alone is meaningless in security |
+| 1.1 | [What is ML?](curriculum/stage1_classic_ml/01_what_is_ml/README.md) | 5 | The ML workflow — loading data, exploring features, EDA, class balance |
+| 1.2 | [Linear Regression](curriculum/stage1_classic_ml/02_linear_regression/README.md) | 4 | Predicting continuous values — server response time from traffic load |
+| 1.3 | [Logistic Regression](curriculum/stage1_classic_ml/03_logistic_regression/README.md) | 4 | Binary classification — phishing or legitimate from URL features |
+| 1.4 | [Decision Trees](curriculum/stage1_classic_ml/04_decision_trees/README.md) | 4 | Interpretable rule-based splits — network traffic as threat or benign |
+| 1.5 | [Model Evaluation](curriculum/stage1_classic_ml/05_model_evaluation/README.md) | 5 | Precision, recall, F1, ROC AUC — why accuracy alone is meaningless in security |
 
-**Project:** [Phishing URL Classifier](stage1_classic_ml/project/phishing_detector.py) — end-to-end pipeline from feature extraction through training to evaluation on a real phishing dataset.
+**Project:** [Phishing URL Classifier](curriculum/stage1_classic_ml/project/phishing_detector.py) — end-to-end pipeline from feature extraction through training to evaluation on a real phishing dataset.
 
 <details>
 <summary><strong>Key concepts in this stage</strong></summary>
@@ -207,12 +213,12 @@ Real security data is never clean. Logs have missing fields, features need to be
 
 | # | Lesson | Exercises | What You Learn |
 |---|--------|-----------|----------------|
-| 2.1 | [Feature Engineering](stage2_intermediate/01_feature_engineering/README.md) | 4 | Extracting numerical signals from raw firewall and NetFlow logs |
-| 2.2 | [Random Forests](stage2_intermediate/02_random_forests/README.md) | 4 | Ensemble of decision trees — malware vs. benign file classifier |
-| 2.3 | [Clustering & Anomaly Detection](stage2_intermediate/03_clustering_anomaly/README.md) | 4 | K-Means to find anomalous network connections — no labels needed |
-| 2.4 | [Overfitting & Cross-Validation](stage2_intermediate/04_overfitting_crossval/README.md) | 4 | Why models fail in production — k-fold CV, bias-variance tradeoff |
+| 2.1 | [Feature Engineering](curriculum/stage2_intermediate/01_feature_engineering/README.md) | 4 | Extracting numerical signals from raw firewall and NetFlow logs |
+| 2.2 | [Random Forests](curriculum/stage2_intermediate/02_random_forests/README.md) | 4 | Ensemble of decision trees — malware vs. benign file classifier |
+| 2.3 | [Clustering & Anomaly Detection](curriculum/stage2_intermediate/03_clustering_anomaly/README.md) | 4 | K-Means to find anomalous network connections — no labels needed |
+| 2.4 | [Overfitting & Cross-Validation](curriculum/stage2_intermediate/04_overfitting_crossval/README.md) | 4 | Why models fail in production — k-fold CV, bias-variance tradeoff |
 
-**Project:** [Network Intrusion Detector](stage2_intermediate/project/intrusion_detector.py) — full pipeline trained and evaluated on KDD Cup-style network connection data.
+**Project:** [Network Intrusion Detector](curriculum/stage2_intermediate/project/intrusion_detector.py) — full pipeline trained and evaluated on KDD Cup-style network connection data.
 
 <details>
 <summary><strong>Key concepts in this stage</strong></summary>
@@ -234,25 +240,25 @@ No ML framework — just arrays and arithmetic. Each script builds one component
 
 | # | Script | What You Build |
 |---|--------|----------------|
-| 3.1 | [1_basic_neuron.py](stage3_neural_networks/foundations/1_basic_neuron.py) | A single neuron — inputs x weights + bias |
-| 3.2 | [2_neuron_layer.py](stage3_neural_networks/foundations/2_neuron_layer.py) | Multiple neurons computing in parallel — a full layer |
-| 3.3 | [3_dot_product.py](stage3_neural_networks/foundations/3_dot_product.py) | Vectorising computation with NumPy matrix multiplication |
-| 3.4 | [4_layers_as_classes.py](stage3_neural_networks/foundations/4_layers_as_classes.py) | Structuring layers as reusable Python objects |
-| 3.5 | [5_relu_activation.py](stage3_neural_networks/foundations/5_relu_activation.py) | ReLU — adding non-linearity so the network can learn complex patterns |
-| 3.6 | [6_softmax_activation.py](stage3_neural_networks/foundations/6_softmax_activation.py) | Softmax — converting raw outputs into a probability distribution |
-| 3.7 | [7_cross_entropy_loss.py](stage3_neural_networks/foundations/7_cross_entropy_loss.py) | Cross-entropy loss — quantifying how wrong the predictions are |
-| 3.8 | [8_full_forward_pass.py](stage3_neural_networks/foundations/8_full_forward_pass.py) | Complete forward pass — input through layers, activations, to loss |
+| 3.1 | [1_basic_neuron.py](curriculum/stage3_neural_networks/foundations/1_basic_neuron.py) | A single neuron — inputs x weights + bias |
+| 3.2 | [2_neuron_layer.py](curriculum/stage3_neural_networks/foundations/2_neuron_layer.py) | Multiple neurons computing in parallel — a full layer |
+| 3.3 | [3_dot_product.py](curriculum/stage3_neural_networks/foundations/3_dot_product.py) | Vectorising computation with NumPy matrix multiplication |
+| 3.4 | [4_layers_as_classes.py](curriculum/stage3_neural_networks/foundations/4_layers_as_classes.py) | Structuring layers as reusable Python objects |
+| 3.5 | [5_relu_activation.py](curriculum/stage3_neural_networks/foundations/5_relu_activation.py) | ReLU — adding non-linearity so the network can learn complex patterns |
+| 3.6 | [6_softmax_activation.py](curriculum/stage3_neural_networks/foundations/6_softmax_activation.py) | Softmax — converting raw outputs into a probability distribution |
+| 3.7 | [7_cross_entropy_loss.py](curriculum/stage3_neural_networks/foundations/7_cross_entropy_loss.py) | Cross-entropy loss — quantifying how wrong the predictions are |
+| 3.8 | [8_full_forward_pass.py](curriculum/stage3_neural_networks/foundations/8_full_forward_pass.py) | Complete forward pass — input through layers, activations, to loss |
 
 ### Phase 2 — Keras and Real Security Data (Lessons 3.9–3.12)
 
 | # | Lesson | Exercises | What You Learn |
 |---|--------|-----------|----------------|
-| 3.9 | [First Neural Network](stage3_neural_networks/01_first_neural_network/README.md) | 4 | Rebuild the NumPy network in Keras in ~10 lines of code |
-| 3.10 | [Dropout & Regularisation](stage3_neural_networks/02_dropout_regularisation/README.md) | 4 | Dropout, batch normalisation, early stopping — prevent memorisation |
-| 3.11 | [Convolutional Networks](stage3_neural_networks/03_convolutional_networks/README.md) | 4 | CNNs for spatial data — applied to malware binary visualisation |
-| 3.12 | [Hyperparameter Tuning](stage3_neural_networks/04_hyperparameter_tuning/README.md) | 4 | Learning rate, batch size, architecture — systematic search |
+| 3.9 | [First Neural Network](curriculum/stage3_neural_networks/01_first_neural_network/README.md) | 4 | Rebuild the NumPy network in Keras in ~10 lines of code |
+| 3.10 | [Dropout & Regularisation](curriculum/stage3_neural_networks/02_dropout_regularisation/README.md) | 4 | Dropout, batch normalisation, early stopping — prevent memorisation |
+| 3.11 | [Convolutional Networks](curriculum/stage3_neural_networks/03_convolutional_networks/README.md) | 4 | CNNs for spatial data — applied to malware binary visualisation |
+| 3.12 | [Hyperparameter Tuning](curriculum/stage3_neural_networks/04_hyperparameter_tuning/README.md) | 4 | Learning rate, batch size, architecture — systematic search |
 
-**Project:** [Malicious Packet Classifier](stage3_neural_networks/project/packet_classifier.py) — neural network trained on network packet feature vectors to classify malicious traffic.
+**Project:** [Malicious Packet Classifier](curriculum/stage3_neural_networks/project/packet_classifier.py) — neural network trained on network packet feature vectors to classify malicious traffic.
 
 <details>
 <summary><strong>Key concepts in this stage</strong></summary>
@@ -270,14 +276,14 @@ This stage bridges traditional ML and modern AI. You will learn what an LLM actu
 
 | # | Lesson | Exercises | What You Learn |
 |---|--------|-----------|----------------|
-| 4.1 | [How LLMs Work](stage4_genai/01_how_llms_work/README.md) | 3 | Tokenisation, embeddings, attention — pure NumPy, no API key needed |
-| 4.2 | [HuggingFace Models](stage4_genai/02_huggingface/README.md) | 3 | Zero-shot classification, sentence embeddings, semantic search |
-| 4.3 | [The LLM API](stage4_genai/03_llm_api/README.md) | 4 | System prompts, structured JSON output, multi-turn conversation |
-| 4.4 | [Retrieval-Augmented Generation](stage4_genai/04_rag/README.md) | 3 | Document chunking, vector retrieval, full RAG pipeline |
+| 4.1 | [How LLMs Work](curriculum/stage4_genai/01_how_llms_work/README.md) | 3 | Tokenisation, embeddings, attention — pure NumPy, no API key needed |
+| 4.2 | [HuggingFace Models](curriculum/stage4_genai/02_huggingface/README.md) | 3 | Zero-shot classification, sentence embeddings, semantic search |
+| 4.3 | [The LLM API](curriculum/stage4_genai/03_llm_api/README.md) | 4 | System prompts, structured JSON output, multi-turn conversation |
+| 4.4 | [Retrieval-Augmented Generation](curriculum/stage4_genai/04_rag/README.md) | 3 | Document chunking, vector retrieval, full RAG pipeline |
 
-**Project:** [Security Analyst Assistant](stage4_genai/project/security_assistant.py) — interactive Q&A over a knowledge base of CVEs, threat reports, and security runbooks.
+**Project:** [Security Analyst Assistant](curriculum/stage4_genai/project/security_assistant.py) — interactive Q&A over a knowledge base of CVEs, threat reports, and security runbooks.
 
-> **Multi-provider support:** All Stage 4 scripts work with Claude, OpenAI, Gemini, or Ollama. The [`llm_client.py`](stage4_genai/llm_client.py) helper abstracts the provider — set whichever key you have.
+> **Multi-provider support:** All Stage 4 scripts work with Claude, OpenAI, Gemini, or Ollama. The [`llm_client.py`](curriculum/stage4_genai/llm_client.py) helper abstracts the provider — set whichever key you have.
 
 <details>
 <summary><strong>Key concepts in this stage</strong></summary>
@@ -295,10 +301,10 @@ This stage connects your AI fundamentals to the products you sell. You will lear
 
 | # | Session | Format | Time | Hands-On |
 |---|---------|--------|------|----------|
-| 5.1 | [Workforce AI Security](stage5_cp_ai_security/01_workforce_ai_security/README.md) | Lecture + walkthrough | 60 min | Dashboard exploration, policy design |
-| 5.2 | [AI Agent Security + MCP](stage5_cp_ai_security/02_ai_agent_security/README.md) | Lecture + lab | 90 min | [cp-agentic-mcp-playground](https://github.com/alshawwaf/cp-agentic-mcp-playground) |
-| 5.3 | [AI Guardrails](stage5_cp_ai_security/03_ai_guardrails/README.md) | Lecture + lab | 90 min | [Lakera-Demo](https://github.com/alshawwaf/Lakera-Demo) |
-| 5.4 | [Positioning Check Point AI Security](stage5_cp_ai_security/04_positioning_cp_ai/README.md) | Workshop | 60 min | Customer demo rehearsal |
+| 5.1 | [Workforce AI Security](curriculum/stage5_cp_ai_security/01_workforce_ai_security/README.md) | Lecture + walkthrough | 60 min | Dashboard exploration, policy design |
+| 5.2 | [AI Agent Security + MCP](curriculum/stage5_cp_ai_security/02_ai_agent_security/README.md) | Lecture + lab | 90 min | [cp-agentic-mcp-playground](https://github.com/alshawwaf/cp-agentic-mcp-playground) |
+| 5.3 | [AI Guardrails](curriculum/stage5_cp_ai_security/03_ai_guardrails/README.md) | Lecture + lab | 90 min | [Lakera-Demo](https://github.com/alshawwaf/Lakera-Demo) |
+| 5.4 | [Positioning Check Point AI Security](curriculum/stage5_cp_ai_security/04_positioning_cp_ai/README.md) | Workshop | 60 min | Customer demo rehearsal |
 
 <details>
 <summary><strong>Key concepts in this stage</strong></summary>
@@ -313,89 +319,37 @@ AI governance, shadow AI, sensitive data classification, policy enforcement (all
 
 ```
 AI Basic Training/
+├── Dockerfile                              Docker build for the portal + ML runtime
+├── docker-compose.yml                      One-command startup
+├── README.md                               This file
 │
-├── PROGRAM_SYLLABUS.md                         13-week schedule + participant guide
-├── NINJA_PROGRAM_BLUEPRINT.md                  Strategic plan + recommendations
+├── portal/                                 Web application (Flask)
+│   ├── app.py                                  Main Flask app + content/run APIs
+│   ├── config.py                               Stage/lesson registry
+│   ├── runner.py                               Script executor (subprocess + matplotlib capture)
+│   ├── requirements.txt                        Python dependencies
+│   ├── static/                                 CSS + JS
+│   ├── templates/                              Jinja2 base templates
+│   └── lessons/                                Interactive lesson Blueprints (s1_01 — s5_01)
 │
-├── stage0_positioning/                         Stage 0 — AI for Security Positioning
-│   ├── README.md                                   Overview + session index
-│   ├── 01_ai_landscape/
-│   ├── 02_competitor_analysis/
-│   ├── 03_objection_handling/
-│   └── 04_discovery_questions/
+├── curriculum/                             Course content (5 stages, 21 lessons, 67 exercises)
+│   ├── stage1_classic_ml/                      5 lessons: ML basics → model evaluation
+│   ├── stage2_intermediate/                    4 lessons: feature engineering → cross-validation
+│   ├── stage3_neural_networks/                 4 lessons: Keras → CNNs → hyperparameter tuning
+│   ├── stage4_genai/                           4 lessons: tokenisation → RAG pipelines
+│   └── stage5_cp_ai_security/                  4 lessons: workforce AI → guardrails → demos
 │
-├── stage1_classic_ml/                          Stage 1 — Classic ML (5 lessons)
-│   ├── 01_what_is_ml/
-│   │   ├── README.md                                Theory + exercise overview
-│   │   ├── 1_loading_data/                          lecture.md, handson.md, solution_*.py
-│   │   ├── 2_statistics/
-│   │   ├── 3_class_balance/
-│   │   ├── 4_visualise/
-│   │   └── 5_what_model_sees/
-│   ├── 02_linear_regression/                        Same structure — 4 exercises
-│   ├── 03_logistic_regression/                      4 exercises
-│   ├── 04_decision_trees/                           4 exercises
-│   ├── 05_model_evaluation/                         5 exercises
-│   └── project/
-│       └── phishing_detector.py
+├── ops/                                    Program operations (non-technical)
+│   ├── assessments/                            Stage gate quizzes and rubrics
+│   ├── facilitator_guides/                     22 per-session delivery guides
+│   ├── demo_kit/                               Customer demo assistant + scripts
+│   ├── program_ops/                            Welcome packet, recruitment, certificates
+│   ├── stage0_positioning/                     Pre-technical AI positioning sessions
+│   └── assets/                                 Generated diagrams for lessons
 │
-├── stage2_intermediate/                        Stage 2 — Intermediate ML (4 lessons)
-│   ├── 01_feature_engineering/                      4 exercises
-│   ├── 02_random_forests/                           4 exercises
-│   ├── 03_clustering_anomaly/                       4 exercises
-│   ├── 04_overfitting_crossval/                     4 exercises
-│   └── project/
-│       └── intrusion_detector.py
-│
-├── stage3_neural_networks/                     Stage 3 — Neural Networks
-│   ├── foundations/                                  Lessons 3.1–3.8 (NumPy from scratch)
-│   │   ├── 1_basic_neuron.py ... 8_full_forward_pass.py
-│   ├── 01_first_neural_network/                     4 exercises
-│   ├── 02_dropout_regularisation/                   4 exercises
-│   ├── 03_convolutional_networks/                   4 exercises
-│   ├── 04_hyperparameter_tuning/                    4 exercises
-│   └── project/
-│       └── packet_classifier.py
-│
-├── stage4_genai/                               Stage 4 — Generative AI (4 lessons)
-│   ├── llm_client.py                                Multi-provider LLM helper
-│   ├── 01_how_llms_work/                            3 exercises
-│   ├── 02_huggingface/                              3 exercises
-│   ├── 03_llm_api/                                  4 exercises
-│   ├── 04_rag/                                      3 exercises
-│   ├── data/                                        31-document security corpus for RAG
-│   └── project/
-│       └── security_assistant.py
-│
-├── stage5_cp_ai_security/                       Stage 5 — Check Point AI Security
-│   ├── 01_workforce_ai_security/                    Dashboard, policy, data classification
-│   ├── 02_ai_agent_security/                        Agents, MCP, playground lab
-│   ├── 03_ai_guardrails/                            LLM defense, Lakera-Demo lab
-│   └── 04_positioning_cp_ai/                        Competitive positioning, demo workshop
-│
-├── demo_kit/                                    Customer demo kit
-│   ├── demo_assistant.py                            File-loading RAG demo
-│   ├── demo_script.md                               5-minute presentation script
-│   ├── architecture.md                              One-pager for technical buyers
-│   └── demo_queries.md                              10 pre-built demo queries
-│
-├── assessments/                                 Assessment gates (quizzes, challenges, rubrics)
-│   └── README.md                                    Gate overview + tier requirements
-│
-├── facilitator_guides/                          Teacher notes for live sessions
-│   ├── README.md                                    Guide index (22 guides)
-│   ├── guide_00_kickoff.md                          Week 0 kickoff (90 min)
-│   └── TEMPLATE.md                                  Standard format for all guides
-│
-├── program_ops/                                 Cohort launch operations
-│   ├── welcome_packet.md                            Participant onboarding packet
-│   ├── recruitment_pitch.md                         Internal pitch for managers
-│   ├── skills_survey.md                             Pre-program assessment
-│   ├── certificates.md                              Tier 1/2/3 certificate specs
-│   └── dry_run_checklist.md                         Session 0.1 dry-run guide
-│
-├── assets/                                      Diagrams embedded in lesson notes
-└── README.md                                    This file
+└── docs/                                   Planning documents
+    ├── PROGRAM_SYLLABUS.md                     15-week schedule + tier system
+    └── NINJA_PROGRAM_BLUEPRINT.md              Strategic plan + recommendations
 ```
 
 </details>

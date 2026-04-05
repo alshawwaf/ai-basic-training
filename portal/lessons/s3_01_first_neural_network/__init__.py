@@ -177,7 +177,7 @@ CHALLENGES = {
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
-_base = "stage3_neural_networks/01_first_neural_network"
+_base = "curriculum/stage3_neural_networks/01_first_neural_network"
 
 MATERIALS = {
     0: [("lecture", "From NumPy to Keras", f"{_base}/1_from_numpy_to_keras/lecture.md"),

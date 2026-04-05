@@ -166,7 +166,7 @@ CHALLENGES = {
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
-_base = "stage1_classic_ml/01_what_is_ml"
+_base = "curriculum/stage1_classic_ml/01_what_is_ml"
 _ex = f"{_base}/2_coding_exercises"
 
 MATERIALS = {

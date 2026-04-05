@@ -148,7 +148,7 @@ CHALLENGES = {
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
-_base = "stage5_cp_ai_security/01_workforce_ai_security"
+_base = "curriculum/stage5_cp_ai_security/01_workforce_ai_security"
 
 MATERIALS = {
     0: [("lecture", "Workforce AI Security", f"{_base}/README.md"),

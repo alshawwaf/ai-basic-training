@@ -1,7 +1,9 @@
 __pycache__/
+*.pyc
 .ipynb_checkpoints/
+venv/
 
 # Generated plots from exercise scripts
 *.png
 # Keep asset images
-!assets/*.png
+!ops/assets/*.png

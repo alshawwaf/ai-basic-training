@@ -148,14 +148,22 @@
         <div class="code-modal-body">
             <pre class="line-numbers"><code class="language-python" id="codeModalContent"></code></pre>
         </div>
-        <div class="run-output" id="runOutput">
-            <div class="run-output-resize" id="runOutputResize"></div>
-            <div class="run-output-header">
-                <span>Output</span>
-                <button class="run-output-close" onclick="closeRunOutput()">&times;</button>
+    </div>
+
+    <!-- ── Run Output Modal ──────────────────────────────────────────────── -->
+    <div class="run-modal-overlay" id="runModalOverlay" onclick="closeRunModal()"></div>
+    <div class="run-modal" id="runModal">
+        <div class="run-modal-header">
+            <div class="run-modal-title">
+                <span class="run-modal-icon">&#9654;</span>
+                <span id="runModalFilename"></span>
             </div>
-            <div class="run-output-body" id="runOutputBody"></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button class="code-run-btn" id="runModalRerun" onclick="runScript()" title="Re-run">&#8635; Re-run</button>
+                <button class="drawer-close" onclick="closeRunModal()">&times;</button>
+            </div>
         </div>
+        <div class="run-modal-body" id="runModalBody"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -188,7 +196,10 @@
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
             const total = {{ steps | length }};
             const cur = {{ current }};
-            if (e.key === 'Escape') { closeDrawer(); closeCodeModal(); closeHintModal(); return; }
+            if (e.key === 'Escape') {
+                if (document.getElementById('runModal').classList.contains('open')) { closeRunModal(); return; }
+                closeDrawer(); closeCodeModal(); closeHintModal(); return;
+            }
             if (document.getElementById('contentDrawer').classList.contains('open')) return;
             if (document.getElementById('codeModal').classList.contains('open')) return;
             if (document.getElementById('hintModal').classList.contains('open')) return;
@@ -346,52 +357,34 @@
             document.getElementById('codeModalOverlay').classList.remove('open');
         }
 
-        function closeRunOutput() {
-            document.getElementById('runOutput').style.display = 'none';
+        // ── Run Output Modal ──────────────────────────────────────────────
+        function openRunModal() {
+            var filename = _currentScriptPath.split('/').pop();
+            document.getElementById('runModalFilename').textContent = filename;
+            document.getElementById('runModal').classList.add('open');
+            document.getElementById('runModalOverlay').classList.add('open');
         }
 
-        // ── Run output resize ────────────────────────────────────────────
-        (function() {
-            var handle = document.getElementById('runOutputResize');
-            var panel = document.getElementById('runOutput');
-            var dragging = false;
-            var startY, startH;
-
-            handle.addEventListener('mousedown', function(e) {
-                dragging = true;
-                startY = e.clientY;
-                startH = panel.offsetHeight;
-                document.body.style.cursor = 'ns-resize';
-                document.body.style.userSelect = 'none';
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!dragging) return;
-                var newH = startH - (e.clientY - startY);
-                if (newH < 80) newH = 80;
-                if (newH > window.innerHeight * 0.7) newH = window.innerHeight * 0.7;
-                panel.style.height = newH + 'px';
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (!dragging) return;
-                dragging = false;
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-            });
-        })();
+        function closeRunModal() {
+            document.getElementById('runModal').classList.remove('open');
+            document.getElementById('runModalOverlay').classList.remove('open');
+        }
 
         function runScript() {
             if (!_currentScriptPath) return;
             var btn = document.getElementById('codeRunBtn');
-            var output = document.getElementById('runOutput');
-            var body = document.getElementById('runOutputBody');
+            var rerunBtn = document.getElementById('runModalRerun');
+            var body = document.getElementById('runModalBody');
 
+            // Open the output modal
+            openRunModal();
+            body.innerHTML = '<div class="run-loading"><span class="spinner"></span> Executing script...</div>';
+
+            // Disable both run buttons
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Running...';
-            output.style.display = 'flex';
-            body.innerHTML = '<div class="run-loading">Executing script...</div>';
+            rerunBtn.disabled = true;
+            rerunBtn.innerHTML = '<span class="spinner"></span> Running...';
 
             fetch('/api/run', {
                 method: 'POST',
@@ -407,21 +400,24 @@
                 } else {
                     // stdout
                     if (data.stdout) {
+                        html += '<div class="run-section-label">Console Output</div>';
                         html += '<pre class="run-stdout">' + escapeHtml(data.stdout) + '</pre>';
                     }
                     // stderr (warnings, errors)
                     if (data.stderr) {
+                        html += '<div class="run-section-label run-section-warn">Warnings / Errors</div>';
                         html += '<pre class="run-stderr">' + escapeHtml(data.stderr) + '</pre>';
                     }
                     // matplotlib figures
                     if (data.images && data.images.length > 0) {
+                        html += '<div class="run-section-label">Figures (' + data.images.length + ')</div>';
                         html += '<div class="run-figures">';
                         data.images.forEach(function(b64, i) {
                             html += '<img src="data:image/png;base64,' + b64 + '" alt="Figure ' + (i+1) + '" class="run-figure">';
                         });
                         html += '</div>';
                     }
-                    // timeout indicator
+                    // timeout
                     if (data.timed_out) {
                         html += '<div class="run-error">Script timed out.</div>';
                     }
@@ -442,6 +438,8 @@
             .finally(() => {
                 btn.disabled = false;
                 btn.innerHTML = '&#9654; Run';
+                rerunBtn.disabled = false;
+                rerunBtn.innerHTML = '&#8635; Re-run';
             });
         }
 

@@ -115,6 +115,7 @@
     <!-- ── Content Drawer (markdown) ──────────────────────────────────────── -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
     <div class="content-drawer" id="contentDrawer">
+        <div class="drawer-resize-handle" id="drawerResizeHandle"></div>
         <div class="drawer-header">
             <div>
                 <div class="drawer-breadcrumb" id="drawerBreadcrumb"></div>
@@ -181,6 +182,37 @@
                 window.location.href = urlPrefix + '/step/' + (cur + 1);
             }
         });
+
+        // ── Drawer resize logic ────────────────────────────────────────────
+        (function() {
+            const handle = document.getElementById('drawerResizeHandle');
+            const drawer = document.getElementById('contentDrawer');
+            let dragging = false, startX, startW;
+
+            handle.addEventListener('mousedown', (e) => {
+                dragging = true;
+                startX = e.clientX;
+                startW = drawer.offsetWidth;
+                drawer.style.transition = 'none';
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!dragging) return;
+                const newW = Math.max(340, Math.min(window.innerWidth - 40, startW + (startX - e.clientX)));
+                drawer.style.width = newW + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (!dragging) return;
+                dragging = false;
+                drawer.style.transition = '';
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            });
+        })();
 
         // ── Drawer logic ──────────────────────────────────────────────────
         function openDrawer(path, title) {

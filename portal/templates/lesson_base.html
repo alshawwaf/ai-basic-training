@@ -332,7 +332,7 @@
             _currentScriptPath = path;
             document.getElementById('codeModalFilename').textContent = filename;
             document.getElementById('codeModalContent').textContent = 'Loading...';
-            document.getElementById('runOutput').style.display = 'none';
+            closeRunModal();
             modal.classList.add('open');
             overlay.classList.add('open');
 

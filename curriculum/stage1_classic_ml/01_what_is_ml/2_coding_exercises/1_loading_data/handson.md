@@ -64,17 +64,14 @@ Every supervised ML dataset has two parts:
 
 They are stored as two separate arrays that line up by row — row 0 of X pairs with row 0 of y, row 1 with row 1, and so on:
 
-```
-Features (X)                          Labels (y)
-┌──────────────────────────────┐      ┌───┐
-│ sample 0:  0  0  5 13 ...    │ ───► │ 0 │   ← this image is a "0"
-│ sample 1:  0  0  0 12 ...    │ ───► │ 1 │   ← this image is a "1"
-│ sample 2:  0  0  0 12 ...    │ ───► │ 2 │   ← this image is a "2"
-│ ...        (1797 rows)       │      │...│
-│ sample 1796: 0  0 10 14 ...  │ ───► │ 8 │
-└──────────────────────────────┘      └───┘
-  1797 rows × 64 columns               1797 values
-```
+| | Features (X) | | Labels (y) | |
+|---|---|---|---|---|
+| sample 0: | 0  0  5  13 ... | --> | 0 | this image is a "0" |
+| sample 1: | 0  0  0  12 ... | --> | 1 | this image is a "1" |
+| sample 2: | 0  0  0  12 ... | --> | 2 | this image is a "2" |
+| ... | (1797 rows) | | ... | |
+| sample 1796: | 0  0  10  14 ... | --> | 8 | |
+| | **1797 rows x 64 columns** | | **1797 values** | |
 
 `.shape` tells you the dimensions. Add this to your file:
 

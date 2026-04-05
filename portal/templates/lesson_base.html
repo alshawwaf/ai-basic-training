@@ -215,14 +215,29 @@
         })();
 
         // ── Drawer logic ──────────────────────────────────────────────────
+        var _drawerBasePath = '';   // directory of the currently loaded file
+
+        function _resolveRelative(base, rel) {
+            // resolve a relative path against a base directory
+            var parts = base.split('/').filter(Boolean);
+            rel.split('/').forEach(function(seg) {
+                if (seg === '..') parts.pop();
+                else if (seg && seg !== '.') parts.push(seg);
+            });
+            return parts.join('/');
+        }
+
         function openDrawer(path, title) {
-            const drawer = document.getElementById('contentDrawer');
-            const overlay = document.getElementById('drawerOverlay');
+            var drawer = document.getElementById('contentDrawer');
+            var overlay = document.getElementById('drawerOverlay');
             document.getElementById('drawerTitle').textContent = title;
             document.getElementById('drawerBreadcrumb').textContent = '{{ lesson_title }} — Step {{ current }}';
             document.getElementById('drawerBody').innerHTML = '<div class="drawer-loading">Loading...</div>';
             drawer.classList.add('open');
             overlay.classList.add('open');
+
+            // store base directory for resolving relative links
+            _drawerBasePath = path.replace(/\/[^\/]*$/, '');
 
             fetch('/api/content?path=' + encodeURIComponent(path))
                 .then(r => r.json())
@@ -233,12 +248,39 @@
                         document.getElementById('drawerBody').innerHTML =
                             '<pre><code>' + escapeHtml(data.raw) + '</code></pre>';
                     }
+                    document.getElementById('drawerBody').scrollTop = 0;
                 })
                 .catch(err => {
                     document.getElementById('drawerBody').innerHTML =
                         '<div style="color:var(--red);">Failed to load content: ' + err.message + '</div>';
                 });
         }
+
+        // Intercept link clicks inside the drawer
+        document.getElementById('drawerBody').addEventListener('click', function(e) {
+            var a = e.target.closest('a');
+            if (!a) return;
+            var href = a.getAttribute('href');
+            if (!href) return;
+
+            // external links → new tab
+            if (/^https?:\/\//.test(href)) {
+                a.target = '_blank';
+                a.rel = 'noopener';
+                return;
+            }
+
+            e.preventDefault();
+            // resolve relative path
+            var resolved = _resolveRelative(_drawerBasePath, href);
+
+            if (/\.py$/.test(resolved)) {
+                openCodeModal(resolved, resolved.split('/').pop());
+            } else if (/\.md$/.test(resolved)) {
+                openDrawer(resolved, resolved.split('/').pop().replace(/\.md$/, ''));
+            }
+            // other links (folders, anchors) — do nothing
+        });
 
         function closeDrawer() {
             document.getElementById('contentDrawer').classList.remove('open');

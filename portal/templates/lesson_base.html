@@ -242,13 +242,21 @@
             fetch('/api/content?path=' + encodeURIComponent(path))
                 .then(r => r.json())
                 .then(data => {
+                    var body = document.getElementById('drawerBody');
                     if (data.type === 'markdown') {
-                        document.getElementById('drawerBody').innerHTML = data.html;
+                        body.innerHTML = data.html;
                     } else {
-                        document.getElementById('drawerBody').innerHTML =
+                        body.innerHTML =
                             '<pre><code>' + escapeHtml(data.raw) + '</code></pre>';
                     }
-                    document.getElementById('drawerBody').scrollTop = 0;
+                    // mark links that aren't .md, .py, or external as dead
+                    body.querySelectorAll('a').forEach(function(a) {
+                        var h = a.getAttribute('href');
+                        if (!h || /^#/.test(h)) return;
+                        if (/^https?:\/\//.test(h)) { a.target = '_blank'; a.rel = 'noopener'; return; }
+                        if (!/\.(md|py)$/i.test(h)) a.classList.add('dead-link');
+                    });
+                    body.scrollTop = 0;
                 })
                 .catch(err => {
                     document.getElementById('drawerBody').innerHTML =

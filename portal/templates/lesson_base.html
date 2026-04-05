@@ -149,6 +149,7 @@
             <pre class="line-numbers"><code class="language-python" id="codeModalContent"></code></pre>
         </div>
         <div class="run-output" id="runOutput">
+            <div class="run-output-resize" id="runOutputResize"></div>
             <div class="run-output-header">
                 <span>Output</span>
                 <button class="run-output-close" onclick="closeRunOutput()">&times;</button>
@@ -348,6 +349,38 @@
         function closeRunOutput() {
             document.getElementById('runOutput').style.display = 'none';
         }
+
+        // ── Run output resize ────────────────────────────────────────────
+        (function() {
+            var handle = document.getElementById('runOutputResize');
+            var panel = document.getElementById('runOutput');
+            var dragging = false;
+            var startY, startH;
+
+            handle.addEventListener('mousedown', function(e) {
+                dragging = true;
+                startY = e.clientY;
+                startH = panel.offsetHeight;
+                document.body.style.cursor = 'ns-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!dragging) return;
+                var newH = startH - (e.clientY - startY);
+                if (newH < 80) newH = 80;
+                if (newH > window.innerHeight * 0.7) newH = window.innerHeight * 0.7;
+                panel.style.height = newH + 'px';
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (!dragging) return;
+                dragging = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            });
+        })();
 
         function runScript() {
             if (!_currentScriptPath) return;

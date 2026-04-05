@@ -2239,11 +2239,23 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .run-output {
     display: none; flex-direction: column;
     border-top: 2px solid #40a02b;
-    max-height: 45%; overflow: hidden;
+    min-height: 80px; height: 220px; overflow: hidden;
+    position: relative;
 }
+.run-output-resize {
+    height: 6px; cursor: ns-resize; background: #181825;
+    position: relative;
+}
+.run-output-resize::after {
+    content: ''; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px; height: 3px; border-radius: 2px;
+    background: #45475a;
+}
+.run-output-resize:hover::after { background: #a6adc8; }
 .run-output-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 16px; background: #181825; color: #a6adc8;
+    padding: 6px 16px; background: #181825; color: #a6adc8;
     font-size: 12px; font-weight: 600; font-family: 'Roboto Mono', monospace;
 }
 .run-output-close {

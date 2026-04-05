@@ -55,10 +55,17 @@ MAX_IMAGES = 10                # max matplotlib figures returned
 ALLOWED_PREFIX = "curriculum/" # scripts must live under curriculum/
 
 # Minimal env — strip secrets, API keys, etc.
+# Keep OS essentials + Python/venv vars, block everything else
 _SAFE_ENV_KEYS = {
-    "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "USER",
-    "MPLBACKEND", "_FIG_DIR", "PYTHONDONTWRITEBYTECODE",
-    "PYTHONUNBUFFERED", "PYTHONPATH",
+    # OS essentials
+    "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "USER", "LOGNAME",
+    # Windows essentials (Python crashes without these)
+    "SYSTEMROOT", "COMSPEC", "WINDIR", "TEMP", "TMP",
+    "HOMEDRIVE", "HOMEPATH", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
+    # Python / venv
+    "VIRTUAL_ENV", "PYTHONPATH", "PYTHONHOME",
+    # Runner-specific
+    "MPLBACKEND", "_FIG_DIR", "PYTHONDONTWRITEBYTECODE", "PYTHONUNBUFFERED",
 }
 
 

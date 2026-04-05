@@ -61,7 +61,7 @@ STAGES = [
         "lessons": [
             {"id": "s3_01", "num": 1, "title": "First Neural Network",
              "desc": "Build a neural network from scratch",
-             "folder": "s3_01_first_neural_network", "has_app": False, "minutes": 120},
+             "folder": "s3_01_first_neural_network", "has_app": True, "minutes": 120},
             {"id": "s3_02", "num": 2, "title": "Dropout & Regularisation",
              "desc": "Prevent overfitting in deep networks",
              "folder": "s3_02_dropout_regularisation", "has_app": False, "minutes": 90},

@@ -1,0 +1,139 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Neural network vs logistic regression</h3>
+    <p>A neural network is more powerful — but is it better? Compare architectures against a simple LogisticRegression baseline on the same test set.</p>
+
+    <div class="controls">
+        <label>Neural network:
+            <select id="nn-select" onchange="compareModels()">
+                {% for name, arch in arch_strings.items() %}
+                <option value="{{ name }}" {{ 'selected' if name == 'medium' }}>{{ arch }} ({{ name }})</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3 id="nn-title">Neural Network</h3>
+            <div class="metrics-row" id="nn-metrics"></div>
+            <div style="margin-top:12px;">
+                <h4 style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">Confusion Matrix</h4>
+                <div id="nn-cm"></div>
+            </div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>Logistic Regression (baseline)</h3>
+            <div class="metrics-row" id="lr-metrics"></div>
+            <div style="margin-top:12px;">
+                <h4 style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">Confusion Matrix</h4>
+                <div id="lr-cm"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>AUC comparison</h3>
+        <div class="chart-wrap"><canvas id="auc-chart"></canvas></div>
+    </div>
+
+    <div class="info-box" id="compare-info" style="margin-top:16px;"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In real SOC deployments, <strong>simpler models win</strong> on tabular data.
+    LogisticRegression and Random Forest are fast, explainable, and easy to maintain.
+    Neural networks shine on unstructured data (images, text, raw bytes) — not CSV logs.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const nnResults = {{ nn_results | tojson }};
+    const nnConfusion = {{ nn_confusion | tojson }};
+    const baseline = {{ baseline | tojson }};
+    const archStrings = {{ arch_strings | tojson }};
+    let aucChart = null;
+
+    function renderMetrics(containerId, m) {
+        const el = document.getElementById(containerId);
+        el.innerHTML = ['acc', 'prec', 'rec', 'f1', 'auc'].map(k => {
+            const val = m[k];
+            const cls = val < 0.5 ? 'bad' : val < 0.75 ? 'warn' : 'ok';
+            const label = k === 'acc' ? 'Accuracy' : k === 'prec' ? 'Precision' :
+                          k === 'rec' ? 'Recall' : k === 'f1' ? 'F1' : 'AUC';
+            return `<div class="metric-card ${cls}"><div class="name">${label}</div><div class="val">${(val*100).toFixed(0)}%</div></div>`;
+        }).join('');
+    }
+
+    function renderCM(containerId, cm) {
+        const el = document.getElementById(containerId);
+        el.innerHTML = `<table class="log-table" style="font-size:12px;width:auto;">
+            <thead><tr><th></th><th>Pred Benign</th><th>Pred Attack</th></tr></thead>
+            <tbody>
+                <tr><td><strong>True Benign</strong></td>
+                    <td style="background:rgba(16,185,129,0.15);font-weight:700;">${cm[0][0]}</td>
+                    <td style="background:rgba(244,63,94,0.1);">${cm[0][1]}</td></tr>
+                <tr><td><strong>True Attack</strong></td>
+                    <td style="background:rgba(244,63,94,0.1);">${cm[1][0]}</td>
+                    <td style="background:rgba(16,185,129,0.15);font-weight:700;">${cm[1][1]}</td></tr>
+            </tbody></table>`;
+    }
+
+    function compareModels() {
+        const name = document.getElementById('nn-select').value;
+        document.getElementById('nn-title').textContent = 'Neural Network (' + name + ')';
+
+        renderMetrics('nn-metrics', nnResults[name]);
+        renderMetrics('lr-metrics', baseline);
+        renderCM('nn-cm', nnConfusion[name]);
+        renderCM('lr-cm', baseline.confusion);
+
+        // AUC comparison chart
+        const labels = Object.keys(nnResults).map(k => archStrings[k]);
+        const aucs = Object.keys(nnResults).map(k => nnResults[k].auc);
+
+        if (aucChart) aucChart.destroy();
+        aucChart = new Chart(document.getElementById('auc-chart'), {
+            type: 'bar',
+            data: {
+                labels: [...labels, 'LogReg (baseline)'],
+                datasets: [{
+                    label: 'AUC',
+                    data: [...aucs, baseline.auc],
+                    backgroundColor: [...aucs.map((a, i) =>
+                        Object.keys(nnResults)[i] === name ? '#06b6d4' : 'rgba(6,182,212,0.3)'
+                    ), '#10b981'],
+                }],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {min: 0.5, max: 1.02, ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim'), font: {size: 10}}, grid: {display: false}},
+                },
+                plugins: {legend: {display: false}},
+            },
+        });
+
+        const diff = nnResults[name].auc - baseline.auc;
+        const info = document.getElementById('compare-info');
+        if (Math.abs(diff) < 0.01) {
+            info.className = 'info-box blue';
+            info.innerHTML = `AUC difference: <strong>${(diff*100).toFixed(1)}%</strong> — nearly identical. The simpler model (LogReg) is the better choice: faster, more explainable, fewer failure modes.`;
+        } else if (diff > 0) {
+            info.className = 'info-box green';
+            info.innerHTML = `Neural network wins by <strong>${(diff*100).toFixed(1)}%</strong> AUC. But verify the margin justifies the extra complexity.`;
+        } else {
+            info.className = 'info-box orange';
+            info.innerHTML = `LogReg wins by <strong>${(-diff*100).toFixed(1)}%</strong> AUC. The neural network may be overfitting or the problem is too simple for deep learning.`;
+        }
+    }
+
+    compareModels();
+</script>
+{% endblock %}

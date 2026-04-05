@@ -1,0 +1,60 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}
+
+{% block body %}
+<div class="welcome">
+    <p style="margin-bottom: 8px;">
+        <a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 14px;">&larr; Back to portal</a>
+    </p>
+    <h1>{{ lesson_title }}</h1>
+    <p class="tagline">Build and train a neural network from scratch concepts to Keras</p>
+
+    <div class="welcome-progress">
+        <div class="progress-ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle class="progress-ring-bg" cx="32" cy="32" r="26" fill="none" stroke-width="5"/>
+                <circle class="progress-ring-fill" id="progRing" cx="32" cy="32" r="26" fill="none" stroke-width="5"
+                    stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="163.36"/>
+            </svg>
+            <span class="progress-ring-text" id="progPct">0%</span>
+        </div>
+        <div class="progress-detail">
+            <div class="prog-label" id="progLabel">0 of {{ steps | length }} steps completed</div>
+            <div class="prog-sub">~120 min &middot; From neurons to trained models</div>
+        </div>
+    </div>
+
+    <div class="step-cards">
+        {% for s in steps %}
+        <a href="{{ url_prefix }}/step/{{ s.id }}" class="step-card" id="card-{{ s.id }}">
+            <div class="num">{{ s.id }}</div>
+            <div class="info">
+                <div class="title">{{ s.title }}</div>
+                <div class="desc">{{ s.sub }}</div>
+            </div>
+            <span class="step-status"></span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    const visited = getVisitedSteps();
+    const total = {{ steps | length }};
+    const count = visited.length;
+    visited.forEach(step => {
+        const card = document.getElementById('card-' + step);
+        if (card) {
+            card.classList.add('done');
+            card.querySelector('.num').textContent = '\u2713';
+            card.querySelector('.step-status').textContent = 'Done';
+        }
+    });
+    const circumference = 163.36;
+    const pct = total > 0 ? count / total : 0;
+    const ring = document.getElementById('progRing');
+    if (ring) ring.style.strokeDashoffset = circumference * (1 - pct);
+    document.getElementById('progPct').textContent = Math.round(pct * 100) + '%';
+    document.getElementById('progLabel').textContent = count + ' of ' + total + ' steps completed';
+</script>
+{% endblock %}

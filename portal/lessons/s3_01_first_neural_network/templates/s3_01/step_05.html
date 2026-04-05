@@ -1,0 +1,138 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Overfitting: train vs validation</h3>
+    <p>Select an architecture and watch how training accuracy and validation accuracy diverge. The gap between them is the <strong>overfitting signal</strong>.</p>
+
+    <div class="controls">
+        <label>Architecture:
+            <select id="arch-select" onchange="drawOverfit()">
+                {% for name, data in architectures.items() %}
+                <option value="{{ name }}" {{ 'selected' if name == 'medium' }}>{{ data.arch_str }} ({{ name }})</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3>Accuracy curves</h3>
+            <div class="chart-wrap"><canvas id="acc-chart"></canvas></div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>Overfit gap (train - val)</h3>
+            <div class="chart-wrap"><canvas id="gap-chart"></canvas></div>
+        </div>
+    </div>
+
+    <div class="info-box" id="overfit-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>How to fight overfitting</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Technique</th><th>How it works</th><th>When to use</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Early stopping</strong></td><td>Stop training when val accuracy peaks</td><td>Always — cheapest fix</td></tr>
+                <tr><td><strong>Dropout</strong></td><td>Randomly zero out neurons during training</td><td>Large networks</td></tr>
+                <tr><td><strong>Reduce capacity</strong></td><td>Fewer neurons/layers</td><td>When params >> samples</td></tr>
+                <tr><td><strong>More data</strong></td><td>Collect more training examples</td><td>Best long-term solution</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> An overfit intrusion detector memorises specific attack patterns from training
+    instead of learning general attack behaviour. It catches known attacks perfectly but misses <strong>new variants</strong>.
+    Early stopping and validation are essential in security ML.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const architectures = {{ architectures | tojson }};
+    let accChart, gapChart;
+
+    function drawOverfit() {
+        const name = document.getElementById('arch-select').value;
+        const data = architectures[name];
+        const epochs = Array.from({length: data.train_accs.length}, (_, i) => i + 1);
+
+        const gap = data.train_accs.map((t, i) => Math.round((t - data.val_accs[i]) * 1000) / 1000);
+        const maxGap = Math.max(...gap);
+        const peakValEpoch = data.val_accs.indexOf(Math.max(...data.val_accs)) + 1;
+
+        if (accChart) accChart.destroy();
+        accChart = new Chart(document.getElementById('acc-chart'), {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [
+                    {label: 'Train accuracy', data: data.train_accs, borderColor: '#10b981', tension: 0.3, pointRadius: 0, borderWidth: 2},
+                    {label: 'Val accuracy', data: data.val_accs, borderColor: '#06b6d4', tension: 0.3, pointRadius: 0, borderWidth: 2, borderDash: [4,4]},
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {min: 0.6, max: 1.02, ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim')}, grid: {display: false}},
+                },
+                plugins: {
+                    legend: {labels: {color: getCSS('--text'), font: {family: "'Space Grotesk'"}}},
+                    annotation: {
+                        annotations: {
+                            peak: {type: 'line', xMin: peakValEpoch-1, xMax: peakValEpoch-1,
+                                   borderColor: '#f59e0b', borderDash: [4,4], borderWidth: 2,
+                                   label: {display: true, content: 'Best val', color: '#f59e0b', position: 'start'}},
+                        },
+                    },
+                },
+            },
+        });
+
+        if (gapChart) gapChart.destroy();
+        gapChart = new Chart(document.getElementById('gap-chart'), {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [{
+                    label: 'Overfit gap',
+                    data: gap,
+                    borderColor: '#f43f5e',
+                    backgroundColor: 'rgba(244,63,94,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 0,
+                    borderWidth: 2,
+                }],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    x: {ticks: {color: getCSS('--text-dim')}, grid: {display: false}},
+                },
+                plugins: {legend: {display: false}},
+            },
+        });
+
+        const info = document.getElementById('overfit-info');
+        if (maxGap < 0.02) {
+            info.className = 'info-box green';
+            info.innerHTML = `<strong>${data.arch_str}</strong> — Minimal overfitting. Gap stays under 2%. Good generalisation.`;
+        } else if (maxGap < 0.05) {
+            info.className = 'info-box orange';
+            info.innerHTML = `<strong>${data.arch_str}</strong> — Moderate overfitting (max gap: ${(maxGap*100).toFixed(1)}%). Best val accuracy at epoch ${peakValEpoch}. Consider early stopping.`;
+        } else {
+            info.className = 'info-box red';
+            info.innerHTML = `<strong>${data.arch_str}</strong> — Significant overfitting (max gap: ${(maxGap*100).toFixed(1)}%). The model memorises training data. Reduce capacity or add dropout.`;
+        }
+    }
+
+    drawOverfit();
+</script>
+{% endblock %}

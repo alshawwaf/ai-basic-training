@@ -1,0 +1,137 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Build a network</h3>
+    <p>Stack neurons into layers. Each layer's output feeds into the next. The total <strong>parameter count</strong> (weights + biases) determines model capacity.</p>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>Hidden layer 1</label>
+            <input type="range" id="l1" min="4" max="128" step="4" value="32" oninput="updateArch()">
+            <span class="slider-value" id="l1-val">32</span>
+        </div>
+        <div class="slider-group">
+            <label>Hidden layer 2</label>
+            <input type="range" id="l2" min="0" max="64" step="4" value="16" oninput="updateArch()">
+            <span class="slider-value" id="l2-val">16</span>
+        </div>
+        <div class="slider-group">
+            <label>Hidden layer 3</label>
+            <input type="range" id="l3" min="0" max="32" step="4" value="0" oninput="updateArch()">
+            <span class="slider-value" id="l3-val">0 (off)</span>
+        </div>
+    </div>
+
+    <div class="derive-display" style="margin-top:16px;">
+        <div class="derive-step">
+            <div class="derive-label">Input</div>
+            <div class="derive-val">10</div>
+        </div>
+        <div class="derive-arrow">&rarr;</div>
+        <div class="derive-step" id="arch-l1"><div class="derive-label">Layer 1</div><div class="derive-val">32</div></div>
+        <div class="derive-arrow" id="arr-l2">&rarr;</div>
+        <div class="derive-step" id="arch-l2"><div class="derive-label">Layer 2</div><div class="derive-val">16</div></div>
+        <div class="derive-arrow hidden" id="arr-l3">&rarr;</div>
+        <div class="derive-step hidden" id="arch-l3"><div class="derive-label">Layer 3</div><div class="derive-val">0</div></div>
+        <div class="derive-arrow">&rarr;</div>
+        <div class="derive-step highlight">
+            <div class="derive-label">Output</div>
+            <div class="derive-val">1</div>
+        </div>
+    </div>
+
+    <div class="info-box blue" id="param-info" style="margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:13px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Parameter count examples</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Name</th><th>Architecture</th><th>Parameters</th></tr></thead>
+            <tbody>
+                {% for p in param_examples %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                    <td style="font-family:'JetBrains Mono',monospace;">{{ p.layers | join(' → ') }}</td>
+                    <td style="font-weight:700;">{{ "{:,}".format(p.params) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Security datasets are often small (hundreds of labelled attacks, not millions).
+    A network with 50,000 parameters trained on 2,000 samples will memorise the training data.
+    Keep architectures <strong>small</strong> for tabular security data.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateArch() {
+        const l1 = parseInt(document.getElementById('l1').value);
+        const l2 = parseInt(document.getElementById('l2').value);
+        const l3 = parseInt(document.getElementById('l3').value);
+
+        document.getElementById('l1-val').textContent = l1;
+        document.getElementById('l2-val').textContent = l2 || '0 (off)';
+        document.getElementById('l3-val').textContent = l3 || '0 (off)';
+
+        // Update arch display
+        document.querySelector('#arch-l1 .derive-val').textContent = l1;
+
+        const showL2 = l2 > 0;
+        document.getElementById('arch-l2').classList.toggle('hidden', !showL2);
+        document.getElementById('arr-l2').classList.toggle('hidden', !showL2);
+        if (showL2) document.querySelector('#arch-l2 .derive-val').textContent = l2;
+
+        const showL3 = l3 > 0 && l2 > 0;
+        document.getElementById('arch-l3').classList.toggle('hidden', !showL3);
+        document.getElementById('arr-l3').classList.toggle('hidden', !showL3);
+        if (showL3) document.querySelector('#arch-l3 .derive-val').textContent = l3;
+
+        // Compute params
+        let total = 0;
+        let breakdown = [];
+        const input = 10;
+
+        // Layer 1
+        const p1 = (input * l1) + l1;
+        total += p1;
+        breakdown.push(`L1: (${input}×${l1})+${l1} = ${p1}`);
+
+        let prev = l1;
+        if (l2 > 0) {
+            const p2 = (prev * l2) + l2;
+            total += p2;
+            breakdown.push(`L2: (${prev}×${l2})+${l2} = ${p2}`);
+            prev = l2;
+        }
+        if (l3 > 0 && l2 > 0) {
+            const p3 = (prev * l3) + l3;
+            total += p3;
+            breakdown.push(`L3: (${prev}×${l3})+${l3} = ${p3}`);
+            prev = l3;
+        }
+
+        const pOut = (prev * 1) + 1;
+        total += pOut;
+        breakdown.push(`Out: (${prev}×1)+1 = ${pOut}`);
+
+        const info = document.getElementById('param-info');
+        info.innerHTML = breakdown.join('<br>') +
+            `<br><strong>Total: ${total.toLocaleString()} parameters</strong>`;
+
+        if (total > 5000) {
+            info.className = 'info-box red';
+            info.innerHTML += '<br><span style="color:var(--red);">Warning: too many parameters for 2,000 samples!</span>';
+        } else {
+            info.className = 'info-box blue';
+        }
+    }
+
+    updateArch();
+</script>
+{% endblock %}

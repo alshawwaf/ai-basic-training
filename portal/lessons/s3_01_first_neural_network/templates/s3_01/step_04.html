@@ -1,0 +1,146 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The training loop</h3>
+    <p>Training repeats: forward pass → compute loss → backward pass (adjust weights) → repeat.
+       Each full pass through all data is one <strong>epoch</strong>.</p>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>Epoch</label>
+            <input type="range" id="epoch-slider" min="1" max="{{ training.epochs }}" step="1" value="1"
+                   oninput="showEpoch()">
+        </div>
+        <div class="slider-value" id="epoch-val">Epoch 1</div>
+        <button class="btn btn-play" id="btn-play" onclick="togglePlay()">&#9654; Play training</button>
+    </div>
+
+    <div class="metrics-row" style="margin-top:16px;">
+        <div class="metric-card" id="mc-loss"><div class="name">Loss</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-tacc"><div class="name">Train Acc</div><div class="val">—</div></div>
+        <div class="metric-card" id="mc-vacc"><div class="name">Val Acc</div><div class="val">—</div></div>
+    </div>
+
+    <div class="chart-wrap" style="margin-top:16px;"><canvas id="loss-chart"></canvas></div>
+
+    <div class="info-box" id="train-info" style="margin-top:16px;"></div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Each epoch is one pass through all your training logs.
+    With 100,000 firewall entries and batch_size=32, each epoch makes ~3,125 weight updates.
+    More epochs = more chances to learn, but also more risk of memorising noise.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const training = {{ training | tojson }};
+    let lossChart = null;
+    let playTimer = null;
+
+    function showEpoch() {
+        const e = parseInt(document.getElementById('epoch-slider').value);
+        document.getElementById('epoch-val').textContent = 'Epoch ' + e;
+
+        const loss = training.train_losses[e - 1];
+        const tacc = training.train_accs[e - 1];
+        const vacc = training.val_accs[e - 1];
+
+        document.querySelector('#mc-loss .val').textContent = loss.toFixed(4);
+        document.querySelector('#mc-tacc .val').textContent = (tacc * 100).toFixed(1) + '%';
+        document.querySelector('#mc-vacc .val').textContent = (vacc * 100).toFixed(1) + '%';
+
+        // Color code
+        document.getElementById('mc-loss').className = 'metric-card ' + (loss < 0.3 ? 'ok' : loss < 0.5 ? 'warn' : 'bad');
+        document.getElementById('mc-tacc').className = 'metric-card ' + (tacc > 0.9 ? 'ok' : tacc > 0.8 ? 'warn' : 'bad');
+
+        const gap = tacc - vacc;
+        document.getElementById('mc-vacc').className = 'metric-card ' + (gap > 0.05 ? 'warn' : 'ok');
+
+        drawLossChart(e);
+
+        const info = document.getElementById('train-info');
+        if (e < 5) {
+            info.className = 'info-box blue';
+            info.innerHTML = 'Early training — loss is high, the model is learning basic patterns.';
+        } else if (e < 20) {
+            info.className = 'info-box green';
+            info.innerHTML = 'Rapid improvement — loss falling, accuracy rising. The model is finding signal.';
+        } else if (gap < 0.03) {
+            info.className = 'info-box green';
+            info.innerHTML = 'Good fit — train and validation accuracy track closely. No overfitting.';
+        } else {
+            info.className = 'info-box orange';
+            info.innerHTML = `Overfitting gap: ${(gap*100).toFixed(1)}% — train accuracy exceeds validation. Consider stopping early.`;
+        }
+    }
+
+    function drawLossChart(currentEpoch) {
+        const epochs = Array.from({length: currentEpoch}, (_, i) => i + 1);
+        const losses = training.train_losses.slice(0, currentEpoch);
+        const taccs = training.train_accs.slice(0, currentEpoch);
+        const vaccs = training.val_accs.slice(0, currentEpoch);
+
+        if (lossChart) lossChart.destroy();
+        lossChart = new Chart(document.getElementById('loss-chart'), {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [
+                    {label: 'Loss', data: losses, borderColor: '#f43f5e', tension: 0.3, pointRadius: 1, yAxisID: 'y1'},
+                    {label: 'Train Acc', data: taccs, borderColor: '#10b981', tension: 0.3, pointRadius: 1, yAxisID: 'y2'},
+                    {label: 'Val Acc', data: vaccs, borderColor: '#06b6d4', tension: 0.3, pointRadius: 1, borderDash: [4,4], yAxisID: 'y2'},
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y1: {position: 'left', title: {display: true, text: 'Loss', color: getCSS('--text-dim')},
+                         ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    y2: {position: 'right', min: 0.5, max: 1.02,
+                         title: {display: true, text: 'Accuracy', color: getCSS('--text-dim')},
+                         ticks: {color: getCSS('--text-dim')}, grid: {drawOnChartArea: false}},
+                    x: {title: {display: true, text: 'Epoch', color: getCSS('--text-dim')},
+                        ticks: {color: getCSS('--text-dim')}, grid: {display: false}},
+                },
+                plugins: {legend: {labels: {color: getCSS('--text'), font: {family: "'Space Grotesk'"}}}},
+            },
+        });
+    }
+
+    function togglePlay() {
+        const btn = document.getElementById('btn-play');
+        if (playTimer) {
+            clearInterval(playTimer);
+            playTimer = null;
+            btn.innerHTML = '&#9654; Play training';
+            btn.classList.remove('playing');
+            return;
+        }
+        btn.innerHTML = '&#9632; Stop';
+        btn.classList.add('playing');
+        document.getElementById('epoch-slider').value = 1;
+        showEpoch();
+
+        playTimer = setInterval(() => {
+            const slider = document.getElementById('epoch-slider');
+            const val = parseInt(slider.value) + 1;
+            if (val > training.epochs) {
+                clearInterval(playTimer);
+                playTimer = null;
+                btn.innerHTML = '&#9654; Play training';
+                btn.classList.remove('playing');
+                return;
+            }
+            slider.value = val;
+            showEpoch();
+        }, 200);
+    }
+
+    showEpoch();
+</script>
+{% endblock %}

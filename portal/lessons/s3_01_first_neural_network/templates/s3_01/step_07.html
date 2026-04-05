@@ -1,0 +1,95 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>When to go deep</h3>
+    <p>Neural networks are powerful — but power without need is just complexity. Here's when depth helps and when simplicity wins.</p>
+
+    <div class="pipeline-flow">
+        <div class="pipe-stage">
+            <div class="pipe-icon">&#128202;</div>
+            <div class="pipe-title">Tabular Data</div>
+            <div class="pipe-detail">CSV logs, features<br><strong>Use: LogReg, RF, XGBoost</strong></div>
+        </div>
+        <div class="pipe-arrow">vs</div>
+        <div class="pipe-stage highlight">
+            <div class="pipe-icon">&#129302;</div>
+            <div class="pipe-title">Unstructured Data</div>
+            <div class="pipe-detail">Images, text, raw bytes<br><strong>Use: Neural Networks</strong></div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px;">
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--green);">Use neural networks when:</h3>
+            <ul style="font-size:13px; color:var(--text); line-height:1.8;">
+                <li>Data is <strong>unstructured</strong> (images, text, audio, raw packets)</li>
+                <li>You have <strong>100,000+ labelled samples</strong></li>
+                <li>Simple models have <strong>plateaued</strong> and you need more capacity</li>
+                <li>You're doing <strong>transfer learning</strong> from pre-trained models</li>
+            </ul>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3 style="color:var(--cyan);">Use simple models when:</h3>
+            <ul style="font-size:13px; color:var(--text); line-height:1.8;">
+                <li>Data is <strong>tabular</strong> (structured features in rows/columns)</li>
+                <li>You have <strong>fewer than 10,000 samples</strong></li>
+                <li>You need <strong>explainability</strong> (SOC analysts need to understand why)</li>
+                <li>You need <strong>fast inference</strong> and easy deployment</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>What you learned</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Step</th><th>Concept</th><th>Key takeaway</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>Single neuron</td><td>weighted sum + bias + activation</td></tr>
+                <tr><td>1</td><td>Activations</td><td>ReLU for hidden, sigmoid/softmax for output</td></tr>
+                <tr><td>2</td><td>Architecture</td><td>params = (inputs &times; neurons) + neurons per layer</td></tr>
+                <tr><td>3</td><td>Forward pass</td><td>Data flows input → hidden → output in milliseconds</td></tr>
+                <tr><td>4</td><td>Training loop</td><td>Epochs of forward → loss → backward → update</td></tr>
+                <tr><td>5</td><td>Overfitting</td><td>Stop when val accuracy peaks, not when train accuracy is perfect</td></tr>
+                <tr><td>6</td><td>Baseline comparison</td><td>Simple models often match neural nets on tabular data</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+        <div class="card" style="margin:0;">
+            <h3>This lesson's model</h3>
+            <div class="metrics-row">
+                <div class="metric-card {{ 'ok' if best_nn.auc > 0.75 else 'warn' }}">
+                    <div class="name">NN AUC</div>
+                    <div class="val">{{ (best_nn.auc * 100) | round(0) }}%</div>
+                </div>
+                <div class="metric-card {{ 'ok' if baseline.auc > 0.75 else 'warn' }}">
+                    <div class="name">LogReg AUC</div>
+                    <div class="val">{{ (baseline.auc * 100) | round(0) }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="margin:0;">
+            <h3>Dataset</h3>
+            <div class="metrics-row">
+                <div class="metric-card ok">
+                    <div class="name">Samples</div>
+                    <div class="val">2,000</div>
+                </div>
+                <div class="metric-card warn">
+                    <div class="name">Attack rate</div>
+                    <div class="val">{{ attack_rate }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Most SOC ML tasks (alert triage, malware classification, user behaviour analytics)
+    work on <strong>tabular data</strong> with limited labels. Start with Random Forest or XGBoost.
+    Reserve neural networks for <strong>raw packet analysis, NLP on threat reports, or image-based malware detection</strong>.
+</div>
+{% endblock %}

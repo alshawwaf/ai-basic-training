@@ -1958,10 +1958,69 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 /* Info box variants */
 .info-box.orange { background: rgba(217,119,6,0.1); border-left: 4px solid var(--orange); }
 
+/* ── Neural Network lesson (s3_01) ───────────────────────────────────────── */
+
+/* Neuron lab */
+.neuron-lab { padding: 16px 0; }
+.ni-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+}
+.ni-row label { min-width: 30px; font-weight: 600; color: var(--text); font-size: 14px; }
+.ni-row input[type="range"] { width: 100px; }
+.ni-val { min-width: 40px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--cyan); font-weight: 600; }
+.ni-times { color: var(--text-dim); font-size: 16px; }
+.neuron-compute {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+/* Forward pass visualization */
+.forward-pass-viz {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 0;
+    flex-wrap: wrap;
+}
+.fp-layer {
+    text-align: center;
+    transition: opacity 0.4s ease;
+}
+.fp-title { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; font-weight: 600; }
+.fp-nodes { display: flex; flex-direction: column; gap: 6px; }
+.fp-node {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+}
+.fp-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: var(--text); }
+.fp-label { font-size: 10px; color: var(--text-dim); }
+.fp-arrows {
+    font-size: 24px;
+    color: var(--text-dim);
+    transition: opacity 0.4s ease, color 0.4s ease;
+}
+
 @media (max-width: 700px) {
     .derive-display { flex-direction: column; }
     .pipeline-flow { flex-direction: column; }
     .pipe-arrow { transform: rotate(90deg); }
     .transform-grid { grid-template-columns: 1fr; }
     .feature-toggles { flex-direction: column; }
+    .forward-pass-viz { flex-direction: column; }
+    .fp-arrows { transform: rotate(90deg); }
+    .ni-row input[type="range"] { width: 70px; }
 }

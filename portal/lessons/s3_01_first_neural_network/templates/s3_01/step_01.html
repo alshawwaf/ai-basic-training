@@ -1,0 +1,120 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Activation functions</h3>
+    <p>The activation function decides whether a neuron "fires." Without it, stacking layers would just be one big linear equation — no better than logistic regression.</p>
+
+    <div class="controls">
+        <label>Function:
+            <select id="act-select" onchange="drawActivation()">
+                <option value="relu" selected>ReLU</option>
+                <option value="sigmoid">Sigmoid</option>
+                <option value="softmax">Softmax (3 classes)</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="chart-wrap"><canvas id="act-chart"></canvas></div>
+
+    <div class="info-box" id="act-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>When to use which?</h3>
+        <table class="log-table" style="font-size:13px;">
+            <thead><tr><th>Function</th><th>Output range</th><th>Use for</th><th>Layer</th></tr></thead>
+            <tbody>
+                <tr><td><strong>ReLU</strong></td><td>[0, +inf)</td><td>General purpose</td><td>Hidden layers</td></tr>
+                <tr><td><strong>Sigmoid</strong></td><td>[0, 1]</td><td>Binary classification</td><td>Output (1 neuron)</td></tr>
+                <tr><td><strong>Softmax</strong></td><td>[0, 1], sum=1</td><td>Multi-class</td><td>Output (N neurons)</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> For a binary intrusion detector (attack/benign), use <strong>sigmoid</strong>
+    output — it gives you P(attack). For classifying traffic into categories (malware, C2, scan, benign),
+    use <strong>softmax</strong> with one output per class.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    let actChart = null;
+
+    function relu(x) { return Math.max(0, x); }
+    function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+    function drawActivation() {
+        const fn = document.getElementById('act-select').value;
+        const info = document.getElementById('act-info');
+
+        const xs = [];
+        for (let x = -6; x <= 6; x += 0.2) xs.push(Math.round(x * 10) / 10);
+
+        let datasets, infoHtml;
+
+        if (fn === 'relu') {
+            datasets = [{
+                label: 'ReLU(x) = max(0, x)',
+                data: xs.map(x => ({x, y: relu(x)})),
+                borderColor: '#10b981', pointRadius: 0, borderWidth: 2,
+            }];
+            infoHtml = '<strong>ReLU</strong> — zeroes out negatives, passes positives unchanged. Fast to compute, avoids vanishing gradients. The default for hidden layers.';
+            info.className = 'info-box green';
+        } else if (fn === 'sigmoid') {
+            datasets = [{
+                label: 'σ(x) = 1/(1+e⁻ˣ)',
+                data: xs.map(x => ({x, y: sigmoid(x)})),
+                borderColor: '#06b6d4', pointRadius: 0, borderWidth: 2,
+            }];
+            infoHtml = '<strong>Sigmoid</strong> — squashes any value into [0, 1]. Interpret as a probability. Used in the output layer for binary classification.';
+            info.className = 'info-box blue';
+        } else {
+            // Softmax: show 3 "logits" varying
+            const d1 = xs.map(x => {
+                const e = [Math.exp(x), Math.exp(1), Math.exp(-0.5)];
+                return {x, y: e[0] / (e[0]+e[1]+e[2])};
+            });
+            const d2 = xs.map(x => {
+                const e = [Math.exp(x), Math.exp(1), Math.exp(-0.5)];
+                return {x, y: e[1] / (e[0]+e[1]+e[2])};
+            });
+            const d3 = xs.map(x => {
+                const e = [Math.exp(x), Math.exp(1), Math.exp(-0.5)];
+                return {x, y: e[2] / (e[0]+e[1]+e[2])};
+            });
+            datasets = [
+                {label: 'Class A (varies)', data: d1, borderColor: '#f43f5e', pointRadius: 0, borderWidth: 2},
+                {label: 'Class B (fixed)', data: d2, borderColor: '#06b6d4', pointRadius: 0, borderWidth: 2},
+                {label: 'Class C (fixed)', data: d3, borderColor: '#f59e0b', pointRadius: 0, borderWidth: 2},
+            ];
+            infoHtml = '<strong>Softmax</strong> — converts logits into probabilities that sum to 1.0. As one class probability rises, the others fall. Used for multi-class output.';
+            info.className = 'info-box orange';
+        }
+        info.innerHTML = infoHtml;
+
+        if (actChart) actChart.destroy();
+        actChart = new Chart(document.getElementById('act-chart'), {
+            type: 'scatter',
+            data: {datasets},
+            options: {
+                responsive: true,
+                showLine: true,
+                scales: {
+                    x: {title: {display: true, text: 'Input', color: getCSS('--text-dim')},
+                        ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                    y: {title: {display: true, text: 'Output', color: getCSS('--text-dim')},
+                        ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
+                },
+                plugins: {legend: {labels: {color: getCSS('--text'), font: {family: "'Space Grotesk'"}}}},
+            },
+        });
+    }
+
+    drawActivation();
+</script>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The forward pass</h3>
+    <p>Data enters the input layer and flows through each hidden layer until it reaches the output.
+       Each layer multiplies by weights, adds bias, and applies activation.</p>
+
+    <div class="controls">
+        <button class="btn" onclick="randomWeights()">New random weights</button>
+        <button class="btn btn-play" onclick="animateForward()">&#9654; Animate forward pass</button>
+    </div>
+
+    <div class="forward-pass-viz" id="fp-viz">
+        <div class="fp-layer" id="fp-input">
+            <div class="fp-title">Input (3 features)</div>
+            <div class="fp-nodes" id="fp-in-nodes"></div>
+        </div>
+        <div class="fp-arrows" id="fp-arr1">&#10230;</div>
+        <div class="fp-layer" id="fp-hidden">
+            <div class="fp-title">Hidden (4 neurons, ReLU)</div>
+            <div class="fp-nodes" id="fp-h-nodes"></div>
+        </div>
+        <div class="fp-arrows" id="fp-arr2">&#10230;</div>
+        <div class="fp-layer" id="fp-output">
+            <div class="fp-title">Output (sigmoid)</div>
+            <div class="fp-nodes" id="fp-out-nodes"></div>
+        </div>
+    </div>
+
+    <div class="info-box blue" id="fp-explain" style="margin-top:16px;">
+        Click <strong>Animate</strong> to watch values flow through the network.
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Before vs after training</h3>
+        <div class="info-box" style="background:rgba(244,63,94,0.08);border-left:4px solid var(--red);">
+            <strong>Before training:</strong> Weights are random → output is random → predictions are meaningless.
+        </div>
+        <div class="info-box green" style="margin-top:8px;">
+            <strong>After training:</strong> Weights are tuned → output matches labels → predictions are useful.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The forward pass is what happens during <strong>inference</strong> —
+    when the model classifies a new connection as attack or benign. It runs in milliseconds,
+    making neural networks fast enough for real-time intrusion detection.
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let W1, b1, W2, b2;
+    const inputVals = [2.1, -0.5, 1.3];
+
+    function randMatrix(rows, cols) {
+        return Array.from({length: rows}, () =>
+            Array.from({length: cols}, () => Math.round((Math.random() * 2 - 1) * 100) / 100));
+    }
+    function randVec(n) { return Array.from({length: n}, () => Math.round((Math.random() * 0.4 - 0.2) * 100) / 100); }
+
+    function relu(x) { return Math.max(0, x); }
+    function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+    function matmul(inputs, weights, biases, activation) {
+        const out = [];
+        for (let j = 0; j < weights[0].length; j++) {
+            let sum = biases[j];
+            for (let i = 0; i < inputs.length; i++) sum += inputs[i] * weights[i][j];
+            out.push(activation(sum));
+        }
+        return out;
+    }
+
+    function randomWeights() {
+        W1 = randMatrix(3, 4);
+        b1 = randVec(4);
+        W2 = randMatrix(4, 1);
+        b2 = randVec(1);
+        renderNetwork();
+    }
+
+    function renderNetwork() {
+        // Input nodes
+        const inN = document.getElementById('fp-in-nodes');
+        inN.innerHTML = inputVals.map((v, i) =>
+            `<div class="fp-node"><span class="fp-val">${v.toFixed(1)}</span><span class="fp-label">x${i+1}</span></div>`
+        ).join('');
+
+        // Hidden nodes (compute)
+        const hidden = matmul(inputVals, W1, b1, relu);
+        const hN = document.getElementById('fp-h-nodes');
+        hN.innerHTML = hidden.map((v, i) =>
+            `<div class="fp-node"><span class="fp-val">${v.toFixed(2)}</span><span class="fp-label">h${i+1}</span></div>`
+        ).join('');
+
+        // Output
+        const output = matmul(hidden, W2, b2, sigmoid);
+        const oN = document.getElementById('fp-out-nodes');
+        const cls = output[0] >= 0.5 ? 'attack' : 'benign';
+        const color = output[0] >= 0.5 ? 'var(--red)' : 'var(--green)';
+        oN.innerHTML = `<div class="fp-node" style="border-color:${color};">
+            <span class="fp-val" style="color:${color};">${output[0].toFixed(3)}</span>
+            <span class="fp-label">${cls}</span></div>`;
+    }
+
+    function animateForward() {
+        const layers = document.querySelectorAll('.fp-layer');
+        const arrows = document.querySelectorAll('.fp-arrows');
+
+        // Reset
+        layers.forEach(l => l.style.opacity = '0.2');
+        arrows.forEach(a => { a.style.opacity = '0.2'; a.style.color = 'var(--text-dim)'; });
+
+        // Animate in sequence
+        setTimeout(() => { layers[0].style.opacity = '1'; }, 0);
+        setTimeout(() => { arrows[0].style.opacity = '1'; arrows[0].style.color = 'var(--cyan)'; }, 400);
+        setTimeout(() => { layers[1].style.opacity = '1'; }, 800);
+        setTimeout(() => { arrows[1].style.opacity = '1'; arrows[1].style.color = 'var(--cyan)'; }, 1200);
+        setTimeout(() => { layers[2].style.opacity = '1'; }, 1600);
+        setTimeout(() => {
+            document.getElementById('fp-explain').innerHTML =
+                'Forward pass complete. The output is P(attack) — how confident the model is that this is an attack.';
+        }, 2000);
+    }
+
+    randomWeights();
+</script>
+{% endblock %}

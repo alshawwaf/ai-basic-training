@@ -545,74 +545,76 @@ select:hover, .btn:hover {
     flex: 1;
     min-width: 0;
 }
-.content-aside {
-    width: 280px;
-    min-width: 280px;
-    position: sticky;
-    top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+/* ── Hint FAB (floating action button) ───────────────────────────────────── */
+.hint-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 50;
+    width: 48px; height: 48px; border-radius: 50%; border: none;
+    background: var(--orange); color: #fff; font-size: 22px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(245,158,11,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
 }
-.content-aside .challenge-box {
-    margin: 0;
+.hint-fab:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(245,158,11,0.5); }
+
+/* ── Hint modal overlay ──────────────────────────────────────────────────── */
+.hint-modal-overlay {
+    position: fixed; inset: 0; background: var(--overlay-bg);
+    z-index: 800; opacity: 0; pointer-events: none; transition: opacity 0.3s;
 }
-.content-aside .security-callout {
-    margin: 0;
+.hint-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* ── Hint modal ──────────────────────────────────────────────────────────── */
+.hint-modal {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+    width: 480px; max-width: 92vw; max-height: 80vh;
+    background: var(--bg-card); border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    z-index: 810; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    display: flex; flex-direction: column;
+}
+.hint-modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+
+.hint-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.hint-modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 700; color: var(--text);
+}
+.hint-modal-close {
+    background: none; border: none; font-size: 24px;
+    color: var(--text-dim); cursor: pointer; padding: 0 4px;
+}
+.hint-modal-close:hover { color: var(--text); }
+
+.hint-modal-body {
+    padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
 }
 
-/* ── Challenge box ───────────────────────────────────────────────────────── */
+/* ── Challenge box (inside hint modal) ───────────────────────────────────── */
 .challenge-box {
     background: rgba(245, 158, 11, 0.06);
     border: 1px solid rgba(245, 158, 11, 0.35);
     border-left: 4px solid var(--orange);
     border-radius: var(--radius);
-    margin: 28px 0 20px;
-    overflow: hidden;
-    animation: fadeSlideUp 0.5s ease 0.3s both;
+    padding: 16px 20px;
 }
-.challenge-toggle {
-    width: 100%;
-    padding: 14px 20px;
-    background: none;
-    border: none;
-    color: var(--orange);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.15s;
+.challenge-section-label {
+    font-size: 15px; font-weight: 600; color: var(--orange);
+    margin-bottom: 8px; font-family: 'Space Grotesk', sans-serif;
 }
-.challenge-toggle:hover {
-    background: rgba(245, 158, 11, 0.08);
+.challenge-box p {
+    font-size: 14px; line-height: 1.7; color: var(--text-dim); margin: 0;
 }
-.challenge-toggle::before {
-    content: '\25B6';
-    font-size: 10px;
-    transition: transform 0.2s;
-}
-.challenge-toggle.open::before {
-    transform: rotate(90deg);
-}
-.challenge-body {
-    padding: 0 20px 16px;
-    display: none;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text-dim);
-}
-.challenge-body.open { display: block; }
-.challenge-body .answer {
-    margin-top: 12px;
-    padding: 12px;
+.challenge-box .answer {
+    margin-top: 12px; padding: 12px;
     background: rgba(16, 185, 129, 0.08);
-    border-radius: var(--radius);
-    display: none;
+    border-radius: var(--radius); display: none;
+    font-size: 14px; line-height: 1.7; color: var(--text);
 }
-.challenge-body .answer.open { display: block; }
+.challenge-box .answer.open { display: block; }
 
 /* ── Security callout ────────────────────────────────────────────────────── */
 .security-callout {
@@ -621,11 +623,7 @@ select:hover, .btn:hover {
     border-left: 4px solid var(--red);
     border-radius: var(--radius);
     padding: 16px 20px;
-    margin: 20px 0;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text);
-    animation: fadeSlideUp 0.5s ease 0.4s both;
+    font-size: 13px; line-height: 1.7; color: var(--text);
 }
 .security-callout strong { color: var(--red); }
 
@@ -1092,7 +1090,6 @@ select:hover, .btn:hover {
     .metric-card .val { font-size: 22px; }
     .nav-buttons a { padding: 8px 16px; font-size: 13px; }
     .content-layout { flex-direction: column; }
-    .content-aside { width: 100%; min-width: 0; position: static; }
 }
 @media (max-width: 480px) {
     .digit-grid.large { width: 240px; }

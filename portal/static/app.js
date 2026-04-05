@@ -182,17 +182,20 @@ function animateValue(el, start, end, duration = 600, suffix = '') {
     requestAnimationFrame(step);
 }
 
-/* ── Challenge toggle ────────────────────────────────────────────────────── */
+/* ── Hint modal (challenge + security) ───────────────────────────────────── */
 
-function toggleChallenge() {
-    const toggle = document.querySelector('.challenge-toggle');
-    const body = document.querySelector('.challenge-body');
-    toggle.classList.toggle('open');
-    body.classList.toggle('open');
+function openHintModal() {
+    document.getElementById('hintModal').classList.add('open');
+    document.getElementById('hintOverlay').classList.add('open');
+}
+
+function closeHintModal() {
+    document.getElementById('hintModal').classList.remove('open');
+    document.getElementById('hintOverlay').classList.remove('open');
 }
 
 function showAnswer() {
-    document.querySelector('.challenge-body .answer').classList.toggle('open');
+    document.querySelector('.challenge-box .answer').classList.toggle('open');
 }
 
 /* ── Step completion tracking (localStorage) ─────────────────────────────── */

@@ -1,0 +1,12 @@
+services:
+  portal:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount project for live editing (dev mode)
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - MPLBACKEND=Agg
+    restart: unless-stopped

@@ -1,4 +1,16 @@
 flask
+markdown
+
+# ML / Data
 numpy
 pandas
 scikit-learn
+matplotlib
+seaborn
+
+# Deep learning (CPU only — keeps image smaller)
+tensorflow-cpu
+
+# GenAI / NLP
+transformers
+sentence-transformers

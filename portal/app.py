@@ -11,6 +11,7 @@ import warnings
 import markdown
 from flask import Flask, render_template, jsonify, request, abort
 from config import STAGES, get_all_lessons, get_lesson
+from runner import run_script
 
 warnings.filterwarnings("ignore")
 
@@ -96,6 +97,25 @@ def api_content():
         return jsonify({"type": "markdown", "html": html, "raw": raw, "path": rel_path})
     else:
         return jsonify({"type": "python", "raw": raw, "path": rel_path})
+
+
+# ── Script execution API ─────────────────────────────────────────────────────
+
+@app.route("/api/run", methods=["POST"])
+def api_run():
+    """Execute a Python script and return stdout + matplotlib figures."""
+    data = request.get_json(silent=True) or {}
+    rel_path = data.get("path", "")
+    if not rel_path:
+        return jsonify({"error": "Missing path"}), 400
+
+    # Only allow solution_*.py files
+    filename = os.path.basename(rel_path)
+    if not filename.startswith("solution_") or not filename.endswith(".py"):
+        return jsonify({"error": "Only solution_*.py files can be executed"}), 403
+
+    result = run_script(rel_path, timeout=120)
+    return jsonify(result)
 
 
 # ── Main ────────────────────────────────────────────────────────────────────

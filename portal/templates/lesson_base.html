@@ -140,12 +140,20 @@
         <div class="code-modal-header">
             <div class="code-modal-filename" id="codeModalFilename"></div>
             <div style="display:flex; gap:8px; align-items:center;">
+                <button class="code-run-btn" id="codeRunBtn" onclick="runScript()" title="Run this script">&#9654; Run</button>
                 <button class="code-copy-btn" onclick="copyCode()" title="Copy to clipboard">&#128203; Copy</button>
                 <button class="drawer-close" onclick="closeCodeModal()">&times;</button>
             </div>
         </div>
         <div class="code-modal-body">
             <pre class="line-numbers"><code class="language-python" id="codeModalContent"></code></pre>
+        </div>
+        <div class="run-output" id="runOutput">
+            <div class="run-output-header">
+                <span>Output</span>
+                <button class="run-output-close" onclick="closeRunOutput()">&times;</button>
+            </div>
+            <div class="run-output-body" id="runOutputBody"></div>
         </div>
     </div>
 
@@ -303,19 +311,27 @@
         }
 
         // ── Code Modal logic ──────────────────────────────────────────────
+        var _currentScriptPath = '';
+
         function openCodeModal(path, title) {
-            const modal = document.getElementById('codeModal');
-            const overlay = document.getElementById('codeModalOverlay');
-            const filename = path.split('/').pop();
+            var modal = document.getElementById('codeModal');
+            var overlay = document.getElementById('codeModalOverlay');
+            var filename = path.split('/').pop();
+            _currentScriptPath = path;
             document.getElementById('codeModalFilename').textContent = filename;
             document.getElementById('codeModalContent').textContent = 'Loading...';
+            document.getElementById('runOutput').style.display = 'none';
             modal.classList.add('open');
             overlay.classList.add('open');
+
+            // Show/hide run button — only for solution_*.py files
+            var runBtn = document.getElementById('codeRunBtn');
+            runBtn.style.display = /^solution_.*\.py$/.test(filename) ? '' : 'none';
 
             fetch('/api/content?path=' + encodeURIComponent(path))
                 .then(r => r.json())
                 .then(data => {
-                    const codeEl = document.getElementById('codeModalContent');
+                    var codeEl = document.getElementById('codeModalContent');
                     codeEl.textContent = data.raw;
                     Prism.highlightElement(codeEl);
                 })
@@ -329,12 +345,79 @@
             document.getElementById('codeModalOverlay').classList.remove('open');
         }
 
+        function closeRunOutput() {
+            document.getElementById('runOutput').style.display = 'none';
+        }
+
+        function runScript() {
+            if (!_currentScriptPath) return;
+            var btn = document.getElementById('codeRunBtn');
+            var output = document.getElementById('runOutput');
+            var body = document.getElementById('runOutputBody');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Running...';
+            output.style.display = 'flex';
+            body.innerHTML = '<div class="run-loading">Executing script...</div>';
+
+            fetch('/api/run', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({path: _currentScriptPath})
+            })
+            .then(r => r.json())
+            .then(data => {
+                var html = '';
+
+                if (data.error) {
+                    html = '<div class="run-error">' + escapeHtml(data.error) + '</div>';
+                } else {
+                    // stdout
+                    if (data.stdout) {
+                        html += '<pre class="run-stdout">' + escapeHtml(data.stdout) + '</pre>';
+                    }
+                    // stderr (warnings, errors)
+                    if (data.stderr) {
+                        html += '<pre class="run-stderr">' + escapeHtml(data.stderr) + '</pre>';
+                    }
+                    // matplotlib figures
+                    if (data.images && data.images.length > 0) {
+                        html += '<div class="run-figures">';
+                        data.images.forEach(function(b64, i) {
+                            html += '<img src="data:image/png;base64,' + b64 + '" alt="Figure ' + (i+1) + '" class="run-figure">';
+                        });
+                        html += '</div>';
+                    }
+                    // timeout indicator
+                    if (data.timed_out) {
+                        html += '<div class="run-error">Script timed out.</div>';
+                    }
+                    // exit code
+                    if (data.exit_code !== 0 && !data.timed_out) {
+                        html += '<div class="run-exit">Exit code: ' + data.exit_code + '</div>';
+                    }
+                    if (!data.stdout && !data.stderr && (!data.images || data.images.length === 0)) {
+                        html = '<div class="run-empty">Script produced no output.</div>';
+                    }
+                }
+
+                body.innerHTML = html;
+            })
+            .catch(err => {
+                body.innerHTML = '<div class="run-error">Request failed: ' + escapeHtml(err.message) + '</div>';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '&#9654; Run';
+            });
+        }
+
         function copyCode() {
-            const code = document.getElementById('codeModalContent').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = document.querySelector('.code-copy-btn');
-                btn.textContent = '✓ Copied!';
-                setTimeout(() => btn.textContent = '📋 Copy', 1500);
+            var code = document.getElementById('codeModalContent').textContent;
+            navigator.clipboard.writeText(code).then(function() {
+                var btn = document.querySelector('.code-copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(function() { btn.innerHTML = '&#128203; Copy'; }, 1500);
             });
         }
 

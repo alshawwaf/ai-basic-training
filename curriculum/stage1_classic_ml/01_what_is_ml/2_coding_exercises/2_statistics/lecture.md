@@ -69,18 +69,13 @@ Low std   →  the feature is nearly constant            →  little or no infor
 Zero std  →  the feature never changes                 →  completely useless
 ```
 
-```
-  Feature usefulness spectrum
+**Feature usefulness spectrum**
 
-  std = 0              std = 4.5            std = 16
-  │                    │                    │
-  ▼                    ▼                    ▼
-  ┌─────────────────────────────────────────────┐
-  │  USELESS  │    SOME SIGNAL    │  HIGH SIGNAL│
-  └─────────────────────────────────────────────┘
-  pixel_0              pixel_32             (hypothetical)
-  always 0             varies 0–16          max variation
-```
+| Standard deviation | Verdict | Example | Why |
+|:---:|:---:|---|---|
+| `std = 0`    | **USELESS**     | `pixel_0`       | always 0 — never changes |
+| `std ≈ 4.5`  | **SOME SIGNAL** | `pixel_32`      | varies 0–16 across samples |
+| `std = 16`   | **HIGH SIGNAL** | *(hypothetical)* | maximum possible variation |
 
 A feature that is always the same value for every sample tells the model nothing at all. When you are working with real data, removing zero-variance features before training is standard practice.
 
@@ -127,21 +122,22 @@ Feature C:  syn_flag_ratio     range 0.0 – 1.0
 
 An algorithm using Euclidean distance will be dominated entirely by `bytes_sent` — one feature will overwhelm all others simply because its numbers are bigger. This is not what you want.
 
-```
-  Distance dominated by bytes_sent alone:
+**Three features on wildly different scales:**
 
-  Feature A (bytes_sent):       0 ─────────────────────────── 2,000,000,000
-  Feature B (unique_ports):     0 ───── 65,535
-  Feature C (syn_flag_ratio):   0 ─ 1.0
+| Feature | Range |
+|---|---|
+| `bytes_sent`     | 0 – 2,000,000,000 |
+| `unique_ports`   | 0 – 65,535        |
+| `syn_flag_ratio` | 0 – 1.0           |
 
-  ┌──────────────────────────────────────────────────┐
-  │  Point 1: [1000000000, 443, 0.8]                 │
-  │  Point 2: [1000000500,  80, 0.1]                 │
-  │                                                  │
-  │  Euclidean distance ≈ 500  (bytes_sent dominates)│
-  │  port and ratio differences are invisible        │
-  └──────────────────────────────────────────────────┘
-```
+**Two data points fed into a distance calculation:**
+
+| Point | bytes_sent | unique_ports | syn_flag_ratio |
+|---|---:|---:|---:|
+| Point 1 | 1,000,000,000 | 443 | 0.8 |
+| Point 2 | 1,000,000,500 |  80 | 0.1 |
+
+**Euclidean distance ≈ 500** — and that 500 comes almost entirely from `bytes_sent`. The differences in `unique_ports` and `syn_flag_ratio` are invisible to the math, even though they may be the most important signals.
 
 The fix is **normalisation** (also called scaling) — you will apply it properly in Stage 2. For now, notice the problem exists.
 

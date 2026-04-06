@@ -37,25 +37,16 @@ In security, FN cost >> FP cost. A missed attack is almost always more damaging 
 
 Once you have TP, TN, FP, FN, every metric follows:
 
-```
-  Confusion matrix with metric zones highlighted
+**Confusion matrix with metric zones**
 
-                       Predicted
-                   Benign       Attack
-              ┌────────────┬────────────┐
-  Actual      │            │            │
-  Benign      │  TN=1888   │   FP=12    │
-              │            │            │
-              ├────────────┼────────────┤
-  Actual      │            │            │
-  Attack      │   FN=28    │   TP=72    │
-              │            │            │
-              └────────────┴────────────┘
+|              | Predicted **Benign** | Predicted **Attack** |
+|---           |---:                  |---:                  |
+| **Actual Benign** | TN = 1,888           | FP = 12              |
+| **Actual Attack** | FN = 28              | TP = 72              |
 
-  Precision uses this column ──────────►│ FP + TP │
-  Recall uses this row ───► │ FN + TP │
-  Accuracy uses the diagonal: TN + TP
-```
+- **Precision** uses the *Predicted Attack* column → `TP / (FP + TP)`
+- **Recall** uses the *Actual Attack* row → `TP / (FN + TP)`
+- **Accuracy** uses the diagonal → `(TN + TP) / total`
 
 | Metric | Formula |
 |--------|---------|

@@ -31,26 +31,15 @@ The structure is always the same. Only the domain changes:
 
 No matter the domain, the code follows the same pattern:
 
-```
-      ┌──────────────────────────────┐
-      │          Raw Data            │
-      │   (logs, images, URLs,       │
-      │    packets, sensor data)     │
-      └──────────────┬───────────────┘
-                     ▼
-      ┌──────────────────────────────┐
-      │   Extract Features (X)       │   ← turn raw data into numbers
-      │   and Labels (y)             │   ← identify what you're predicting
-      └──────────────┬───────────────┘
-                     ▼
-      ┌──────────────────────────────┐
-      │       model.fit(X, y)        │   ← the model finds the pattern
-      └──────────────┬───────────────┘
-                     ▼
-      ┌──────────────────────────────┐
-      │      model.predict(X_new)    │   ← apply the pattern to new data
-      └──────────────────────────────┘
-```
+| Stage | What it does |
+|---|---|
+| **1. Raw Data** | logs, images, URLs, packets, sensor data — whatever you have |
+| ⬇ | |
+| **2. Extract Features (X) and Labels (y)** | turn raw data into numbers · identify what you're predicting |
+| ⬇ | |
+| **3. `model.fit(X, y)`** | the model finds the pattern |
+| ⬇ | |
+| **4. `model.predict(X_new)`** | apply the pattern to new data |
 
 > **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
 
@@ -116,18 +105,12 @@ Most of the fields inside are **ndarray** objects. An `ndarray` (short for *n-di
 
 `digits.data` and `digits.images` contain **identical pixel values** — just different shapes. Use `.data` for feeding the model (it wants flat rows), `.images` for plotting (you need the 8x8 grid).
 
-```
-Same pixels, two shapes:
+**Same pixels, two shapes:**
 
-.data[0]    →  [ 0, 0, 5, 13, 9, 1, 0, 0, 0, 0, ... ]    64 values in a flat row
-                 ↑  ↑  ↑   ↑                               (what the model sees)
-
-.images[0]  →  ┌  0  0  5 13  9  1  0  0  ┐               8 rows × 8 columns
-               │  0  0 13 15 10 15  5  0  │                (what the image looks like)
-               │  0  3 15  2  0 11  8  0  │
-               │  ...                     │
-               └  0  0  6 13 10  0  0  0  ┘
-```
+| Field | Shape | Looks like | Used for |
+|---|---|---|---|
+| `.data[0]`   | `(64,)`   | `[0, 0, 5, 13, 9, 1, 0, 0, 0, 0, …]` — 64 values in one flat row | what the **model** sees |
+| `.images[0]` | `(8, 8)`  | the same 64 numbers reshaped into an 8 × 8 grid                  | what the **image** looks like (for plotting) |
 
 > **Want to go deeper?** [NumPy ndarray — Wikipedia](https://en.wikipedia.org/wiki/NumPy)
 
@@ -181,34 +164,23 @@ df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 ```
 
-```
-digits.data (ndarray)                   digits.target (ndarray)
-┌───────────────────────────┐           ┌───┐
-│  0  0  5 13  9 ...  (x64) │           │ 0 │
-│  0  0  0 12  6 ...  (x64) │           │ 1 │
-│  ...      (1797 rows)     │           │...│
-└─────────────┬─────────────┘           └─┬─┘
-              │                           │
-              │  64 pixel columns         │
-              │  + target column          │
-              │       pd.DataFrame()      │
-              └────────────┬──────────────┘
-                           ▼
-┌─────────────────────────────────────────────┐
-│  DataFrame  (1797 rows x 65 columns)        │
-│                                             │
-│  pixel_0  pixel_21  ...  pixel_63   target  │
-│  ------   --------       --------   ------  │
-│     0.0      11.0   ...     0.0        0    │
-│     0.0       6.0   ...     0.0        1    │
-│     0.0      16.0   ...     0.0        2    │
-│    ...                                      │
-└─────────────────────────────────────────────┘
-  <---- 64 feature columns ---->  + 1 target
+**Two ndarrays go in:**
 
-columns= gave each of the 64 data columns a name (pixel_0 ... pixel_63).
-df["target"] = added a 65th column with the labels.
-```
+| Source | Shape | Becomes |
+|---|---|---|
+| `digits.data` | `(1797, 64)` — 64 pixel values per row | 64 columns named `pixel_0` … `pixel_63` |
+| `digits.target` | `(1797,)` — one label per row | 1 column named `target` |
+
+**One DataFrame comes out** — `df` with shape `(1797, 65)`:
+
+| pixel_0 | pixel_21 | … | pixel_63 | target |
+|---:|---:|:---:|---:|:---:|
+| 0.0 | 11.0 | … | 0.0 | 0 |
+| 0.0 |  6.0 | … | 0.0 | 1 |
+| 0.0 | 16.0 | … | 0.0 | 2 |
+| … | … | … | … | … |
+
+`columns=` gave each of the 64 data columns a name (`pixel_0` … `pixel_63`). `df["target"] =` added a 65th column with the labels — so the final shape is **64 feature columns + 1 target column**.
 
 > **Want to go deeper?** [pandas — Wikipedia](https://en.wikipedia.org/wiki/Pandas_(software))
 

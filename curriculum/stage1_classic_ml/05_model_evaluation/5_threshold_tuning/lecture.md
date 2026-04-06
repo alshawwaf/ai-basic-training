@@ -37,21 +37,16 @@ In a large enterprise SOC with hundreds of analysts, a high false-positive rate 
 - Choose: Higher threshold (0.6–0.8)
 - Measure: Precision on attack class
 
-```
-  Sliding the threshold — the operational tradeoff
+**Sliding the threshold — the operational tradeoff**
 
-  ◄──── threshold ─────────────────────────────────────────────►
-  0.0        0.2       0.4        0.5       0.7        0.9   1.0
-  │          │                    │                     │      │
-  │  Scenario A                   │            Scenario B      │
-  │  "Catch all attacks"          │          "Trusted alerts"  │
-  │                               │                            │
-  │  Recall:  ██████████ HIGH     │  Recall:  ████ LOW         │
-  │  Precision:████ LOW           │  Precision:█████████ HIGH  │
-  │  Alerts:  ████████ MANY       │  Alerts:  ██ FEW           │
-  │  FN: few missed attacks       │  FN: more missed attacks   │
-  │  FP: many false alarms        │  FP: few false alarms      │
-```
+|  | Scenario A — "Catch all attacks" | Scenario B — "Trusted alerts" |
+|---|---|---|
+| Threshold        | low (0.2 – 0.4)                 | high (0.7 – 0.9)              |
+| Recall           | **HIGH**                        | LOW                           |
+| Precision        | LOW                             | **HIGH**                      |
+| Alerts produced  | MANY                            | FEW                           |
+| False negatives  | few attacks missed              | more attacks missed           |
+| False positives  | many false alarms               | few false alarms              |
 
 ---
 

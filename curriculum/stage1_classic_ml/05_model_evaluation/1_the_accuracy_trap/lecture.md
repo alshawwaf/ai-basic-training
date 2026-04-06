@@ -26,19 +26,21 @@ In most real-world security monitoring, attacks are rare:
 
 If 95% of events are benign and 5% are attacks, a model that simply predicts "benign" for every single event achieves **95% accuracy** — without ever detecting a single attack. This is the accuracy trap.
 
-```
-  The imbalanced dataset — 10,000 events
+**The imbalanced dataset — 10,000 events**
 
-  ┌─────────────────────────────────────────────────┬───┐
-  │          9,500 benign (95%)                     │500│ ← attacks (5%)
-  └─────────────────────────────────────────────────┴───┘
+| Class | Count | Share of dataset |
+|---|---:|---:|
+| benign | 9,500 | 95% |
+| attack |   500 |  5% |
 
-  DummyClassifier (always predicts "benign"):
-  ┌─────────────────────────────────────────────────┬───┐
-  │        9,500 correct (TN)                       │500│ ← all missed (FN)
-  └─────────────────────────────────────────────────┴───┘
-  Accuracy: 95%          Attacks caught: 0 out of 500
-```
+**DummyClassifier (always predicts "benign"):**
+
+| Predicted | benign | attack |
+|---|---:|---:|
+| Correct (TN) | 9,500 | — |
+| Missed (FN)  |     — |   500 |
+
+**Result:** accuracy = **95%** · attacks caught = **0 of 500**.
 
 ---
 
@@ -83,21 +85,16 @@ accuracy                            0.95     1000
 
 This tells you immediately: the model is useless for its security purpose. `accuracy = 0.95` is a lie.
 
-```
-  How to spot the trap — check attack-class recall
+**How to spot the trap — check attack-class recall**
 
-  accuracy = 0.95       ← looks good
-  ┌──────────────────────────────────────────────┐
-  │  But look at the attack class row:           │
-  │                                              │
-  │              precision  recall  f1   support  │
-  │  benign        0.95     1.00  0.97    950    │
-  │  attack        0.00     0.00  0.00     50    │ ← RED FLAG
-  │                          ^^^^                │
-  │                     recall = 0 means         │
-  │                     zero attacks caught       │
-  └──────────────────────────────────────────────┘
-```
+`accuracy = 0.95` looks good. But the attack-class row tells the real story:
+
+| Class | precision | recall | f1 | support |
+|---|---:|---:|---:|---:|
+| benign | 0.95 | **1.00** | 0.97 | 950 |
+| attack | 0.00 | **0.00** | 0.00 |  50 |
+
+`recall = 0.00` for the attack class means **zero attacks were caught** — the headline accuracy number is hiding a model that has completely failed at its job.
 
 ---
 

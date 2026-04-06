@@ -62,16 +62,14 @@ This is called the **naive baseline** — the score an unintelligent model achie
 
 The trap is easy to fall into:
 
-```
-  The Accuracy Trap — step by step
+**The Accuracy Trap — step by step**
 
-  Train model ──► See 95% accuracy ──► "Looks great!" ──► Deploy
-                                                            │
-                        ┌───────────────────────────────────┘
-                        ▼
-                  Every attack goes undetected
-                  Recall on attacks = 0%
-```
+| # | What you do | What you think | What's actually happening |
+|:---:|---|---|---|
+| 1 | Train the model | "Time to see the score" | model memorises *"always say normal"* |
+| 2 | See **95% accuracy** | "Looks great!" | accuracy is dominated by 95% normal traffic |
+| 3 | Deploy to production | "Ship it" | model has never correctly flagged an attack |
+| 4 | Attacks arrive | *(silence)* | **every attack goes undetected · recall = 0%** |
 
 - You train a model
 - You see 95% accuracy

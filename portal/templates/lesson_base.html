@@ -202,6 +202,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css">
     <script src="/static/app.js"></script>
@@ -345,6 +350,30 @@
                         if (!/\.(md|py)$/i.test(h)) a.classList.add('dead-link');
                     });
                     body.scrollTop = 0;
+                    // Syntax-highlight any fenced code blocks. The curriculum
+                    // markdown often uses bare ``` fences with no language
+                    // hint, so Python markdown emits a plain <code> with no
+                    // class. We detect the language from the snippet content
+                    // and tag it so Prism (loaded above) can colour it.
+                    body.querySelectorAll('pre > code').forEach(function(code) {
+                        var hasLang = false;
+                        code.classList.forEach(function(c) {
+                            if (c.indexOf('language-') === 0) hasLang = true;
+                        });
+                        if (!hasLang) {
+                            // Markdown sometimes emits bare class like "python"
+                            var bare = null;
+                            code.classList.forEach(function(c) {
+                                if (Prism.languages[c]) bare = c;
+                            });
+                            if (bare) {
+                                code.classList.add('language-' + bare);
+                            } else {
+                                code.classList.add('language-' + detectCodeLang(code.textContent));
+                            }
+                        }
+                    });
+                    if (window.Prism) Prism.highlightAllUnder(body);
                     // Add copy buttons to code blocks
                     body.querySelectorAll('pre').forEach(function(pre) {
                         var btn = document.createElement('button');
@@ -433,9 +462,20 @@
                 'h1, h2, h3, h4 { font-family: "Space Mono", monospace; break-after: avoid; page-break-after: avoid; }' +
                 'h1 + p, h2 + p, h3 + p { break-before: avoid; page-break-before: avoid; }' +
                 'p { orphans: 3; widows: 3; }' +
-                'pre, code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; }' +
-                'pre { padding: 12px 16px; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; }' +
+                'pre, code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: "Consolas","Fira Code",monospace; }' +
+                'pre { padding: 12px 16px; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; color: #1a1a2e; }' +
                 'pre code { background: none; padding: 0; }' +
+                /* Light-theme Prism token colours so printed code stays readable */
+                '.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #708090; font-style: italic; }' +
+                '.token.punctuation { color: #555; }' +
+                '.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #905; }' +
+                '.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #690; }' +
+                '.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #9a6e3a; }' +
+                '.token.atrule, .token.attr-value, .token.keyword { color: #07a; }' +
+                '.token.function, .token.class-name { color: #dd4a68; }' +
+                '.token.regex, .token.important, .token.variable { color: #e90; }' +
+                '.token.important, .token.bold { font-weight: bold; }' +
+                '.token.italic { font-style: italic; }' +
                 'table { border-collapse: collapse; width: 100%; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }' +
                 'thead { display: table-header-group; }' +
                 'tr, td, th { break-inside: avoid; page-break-inside: avoid; }' +
@@ -712,6 +752,41 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Heuristic language detection for unlabelled fenced code blocks.
+        // The curriculum is mostly Python, so we lean that way, but we also
+        // recognise JSON, bash, yaml, and html so security/CLI snippets and
+        // API examples colour correctly.
+        function detectCodeLang(text) {
+            if (!text) return 'none';
+            var t = text.trim();
+            if (!t) return 'none';
+            // JSON: balanced braces and quoted keys
+            if (/^[\[{]/.test(t) && /[\]}]\s*$/.test(t) && /"\s*[\w-]+\s*"\s*:/.test(t)) {
+                return 'json';
+            }
+            // YAML: leading 'key:' lines, no braces
+            if (/^[a-zA-Z_][\w-]*\s*:\s*\S/m.test(t) && !/[{};]/.test(t.split('\n')[0])) {
+                if (/^---/.test(t) || /^\s*-\s/m.test(t)) return 'yaml';
+            }
+            // Shell: $ or # prompt, or common commands
+            if (/^[$#]\s/m.test(t) ||
+                /^(sudo|curl|wget|git|pip|python|python3|cd|ls|cat|grep|chmod|mkdir|rm|export|echo|apt|brew|docker|kubectl)\b/m.test(t)) {
+                return 'bash';
+            }
+            // HTML / XML
+            if (/^\s*<[a-zA-Z!][^>]*>/.test(t) && /<\/[a-zA-Z]+>\s*$/.test(t)) {
+                return 'markup';
+            }
+            // Python: very common keywords / patterns
+            if (/\b(def|class|import|from|return|if|elif|else|for|while|with|try|except|lambda|yield|None|True|False|self)\b/.test(t) ||
+                /\bprint\s*\(/.test(t) ||
+                /^\s*#\s*\w/m.test(t) ||
+                /^\s*[a-zA-Z_][\w]*\s*=\s*/m.test(t)) {
+                return 'python';
+            }
+            return 'none';
         }
     </script>
     {% block scripts %}{% endblock %}

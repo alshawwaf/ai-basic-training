@@ -6,12 +6,13 @@ Open:  http://localhost:5000
 """
 
 import importlib
+import json
 import os
 import warnings
 import markdown
-from flask import Flask, render_template, jsonify, request, abort
+from flask import Flask, render_template, jsonify, request, abort, Response, stream_with_context
 from config import STAGES, get_all_lessons, get_lesson
-from runner import run_script
+from runner import run_script, run_script_stream
 
 warnings.filterwarnings("ignore")
 
@@ -59,6 +60,11 @@ for stage in STAGES:
 @app.route("/")
 def home():
     return render_template("home.html", stages=STAGES, registered=registered_lessons)
+
+
+@app.route("/choose-logo")
+def choose_logo():
+    return render_template("choose_logo.html")
 
 
 @app.route("/lesson/<lesson_id>/")
@@ -136,6 +142,31 @@ def api_run():
 
     result = run_script(rel_path, timeout=120)
     return jsonify(result)
+
+
+@app.route("/api/run-stream", methods=["POST"])
+def api_run_stream():
+    """Execute a Python script and stream output line-by-line as NDJSON."""
+    data = request.get_json(silent=True) or {}
+    rel_path = data.get("path", "")
+    if not rel_path:
+        return jsonify({"error": "Missing path"}), 400
+
+    filename = os.path.basename(rel_path)
+    if not filename.startswith("solution_") or not filename.endswith(".py"):
+        return jsonify({"error": "Only solution_*.py files can be executed"}), 403
+    if not rel_path.startswith("curriculum/"):
+        return jsonify({"error": "Scripts must be in curriculum/"}), 403
+
+    def generate():
+        for event in run_script_stream(rel_path, timeout=120):
+            yield json.dumps(event) + "\n"
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype="application/x-ndjson",
+        headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"},
+    )
 
 
 # ── Main ────────────────────────────────────────────────────────────────────

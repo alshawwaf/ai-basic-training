@@ -1508,13 +1508,13 @@ select:hover, .btn:hover {
     color: #fff;
 }
 .stage-icon-wrap {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border-radius: 14px;
+    border-radius: 12px;
     background: var(--surface);
     border: 1px solid var(--border);
     padding: 2px;
@@ -1849,8 +1849,8 @@ select:hover, .btn:hover {
     .portal-home h1 { font-size: 26px; }
     .stage-header { flex-wrap: wrap; }
     .stage-num { width: 36px; height: 36px; font-size: 16px; }
-    .stage-icon-wrap { width: 40px; height: 40px; }
-    .stage-icon-wrap svg { width: 36px; height: 36px; }
+    .stage-icon-wrap { width: 34px; height: 34px; }
+    .stage-icon-wrap svg { width: 28px; height: 28px; }
     .hero-brand svg { width: 44px; height: 44px; }
 }
 

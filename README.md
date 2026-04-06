@@ -330,7 +330,7 @@ AI Basic Training/
 │   ├── requirements.txt                        Python dependencies
 │   ├── static/                                 CSS + JS
 │   ├── templates/                              Jinja2 base templates
-│   └── lessons/                                Interactive lesson Blueprints (s1_01 — s5_01)
+│   └── lessons/                                Interactive lesson Blueprints (21 lessons, all stages)
 │
 ├── curriculum/                             Course content (5 stages, 21 lessons, 67 exercises)
 │   ├── stage1_classic_ml/                      5 lessons: ML basics → model evaluation

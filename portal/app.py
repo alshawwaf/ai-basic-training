@@ -62,11 +62,6 @@ def home():
     return render_template("home.html", stages=STAGES, registered=registered_lessons)
 
 
-@app.route("/choose-logo")
-def choose_logo():
-    return render_template("choose_logo.html")
-
-
 @app.route("/lesson/<lesson_id>/")
 def lesson_placeholder(lesson_id):
     """Placeholder page for lessons not yet built (demo mode)."""

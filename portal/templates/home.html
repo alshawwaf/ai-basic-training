@@ -110,5 +110,23 @@
         });
     } catch(e) {}
 
+    // Auto-scroll to current lesson on page load
+    try {
+        const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
+        if (last && last.lessonId) {
+            const card = document.getElementById('badge-' + last.lessonId);
+            if (card) {
+                const lessonCard = card.closest('.lesson-card');
+                if (lessonCard) {
+                    setTimeout(() => {
+                        lessonCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        lessonCard.classList.add('cmd-highlight');
+                        setTimeout(() => lessonCard.classList.remove('cmd-highlight'), 2000);
+                    }, 600);
+                }
+            }
+        }
+    } catch(e) {}
+
 </script>
 {% endblock %}

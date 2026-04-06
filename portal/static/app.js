@@ -20,6 +20,161 @@ function toggleTheme() {
     }
 }
 
+/* ── Command menu (logo click) ──────────────────────────────────────────── */
+
+function toggleCommandMenu(e) {
+    if (e) e.preventDefault();
+    const menu = document.getElementById('cmdMenu');
+    const overlay = document.getElementById('cmdOverlay');
+    if (!menu) return;
+    const opening = !menu.classList.contains('open');
+    if (opening) {
+        renderCommandMenu();
+        menu.classList.add('open');
+        overlay.classList.add('open');
+    } else {
+        closeCommandMenu();
+    }
+}
+
+function closeCommandMenu() {
+    const menu = document.getElementById('cmdMenu');
+    const overlay = document.getElementById('cmdOverlay');
+    if (menu) menu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    // Reset confirm state
+    const confirm = document.getElementById('cmdConfirm');
+    if (confirm) confirm.style.display = 'none';
+}
+
+function renderCommandMenu() {
+    const progress = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+    const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+    const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
+
+    // ── Continue section
+    const contEl = document.getElementById('cmdContinue');
+    if (last) {
+        contEl.innerHTML = `
+            <div class="cmd-label">Continue</div>
+            <a class="cmd-item cmd-continue" href="/lesson/${last.lessonId}/step/${last.step}">
+                <span class="cmd-icon">&#9654;</span>
+                <span class="cmd-item-info">
+                    <strong>${last.title}</strong>
+                    <span class="cmd-sub">Step ${last.step}</span>
+                </span>
+            </a>`;
+    } else {
+        contEl.innerHTML = `
+            <div class="cmd-label">Continue</div>
+            <div class="cmd-empty">No steps visited yet</div>`;
+    }
+
+    // ── Bookmarks section
+    const bmEl = document.getElementById('cmdBookmarks');
+    if (bookmarks.length > 0) {
+        const items = bookmarks.map((bm, i) => `
+            <div class="cmd-item cmd-bookmark-item">
+                <a href="/lesson/${bm.lessonId}/step/${bm.step}" class="cmd-bookmark-link">
+                    <span class="cmd-icon">&#9733;</span>
+                    <span class="cmd-item-info">
+                        <strong>${bm.title}</strong>
+                        <span class="cmd-sub">Step ${bm.step}</span>
+                    </span>
+                </a>
+                <button class="cmd-remove" onclick="removeBookmark(${i})" title="Remove">&times;</button>
+            </div>`).join('');
+        bmEl.innerHTML = `<div class="cmd-label">Bookmarks</div>${items}`;
+    } else {
+        bmEl.innerHTML = `<div class="cmd-label">Bookmarks</div><div class="cmd-empty">No bookmarks saved</div>`;
+    }
+
+    // ── Show "Bookmark this step" button only on lesson step pages
+    const addBmBtn = document.getElementById('cmdAddBookmark');
+    if (addBmBtn) {
+        const onStepPage = /\/lesson\/([^/]+)\/step\/(\d+)/.exec(window.location.pathname);
+        if (onStepPage) {
+            addBmBtn.style.display = '';
+            // Check if already bookmarked
+            const lid = onStepPage[1], sn = parseInt(onStepPage[2]);
+            const exists = bookmarks.some(b => b.lessonId === lid && b.step === sn);
+            if (exists) {
+                addBmBtn.innerHTML = '<span class="cmd-icon">&#9733;</span> Bookmarked';
+                addBmBtn.disabled = true;
+                addBmBtn.classList.add('cmd-btn-done');
+            } else {
+                addBmBtn.innerHTML = '<span class="cmd-icon">&#9734;</span> Bookmark this step';
+                addBmBtn.disabled = false;
+                addBmBtn.classList.remove('cmd-btn-done');
+            }
+        } else {
+            addBmBtn.style.display = 'none';
+        }
+    }
+
+    // ── Stats section
+    const statsEl = document.getElementById('cmdStats');
+    let totalSteps = 0, lessonsStarted = 0;
+    Object.keys(progress).forEach(lid => {
+        const steps = progress[lid] || [];
+        if (steps.length > 0) lessonsStarted++;
+        totalSteps += steps.length;
+    });
+    statsEl.innerHTML = `
+        <div class="cmd-label">Progress</div>
+        <div class="cmd-stats-grid">
+            <div class="cmd-stat">
+                <span class="cmd-stat-val">${totalSteps}</span>
+                <span class="cmd-stat-label">Steps visited</span>
+            </div>
+            <div class="cmd-stat">
+                <span class="cmd-stat-val">${lessonsStarted}</span>
+                <span class="cmd-stat-label">/ 21 lessons</span>
+            </div>
+            <div class="cmd-stat">
+                <span class="cmd-stat-val">${bookmarks.length}</span>
+                <span class="cmd-stat-label">Bookmarks</span>
+            </div>
+        </div>`;
+}
+
+function addBookmark() {
+    const match = /\/lesson\/([^/]+)\/step\/(\d+)/.exec(window.location.pathname);
+    if (!match) return;
+    const lessonId = match[1], step = parseInt(match[2]);
+    const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
+    const title = last && last.lessonId === lessonId ? last.title : lessonId;
+    const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+    if (bookmarks.some(b => b.lessonId === lessonId && b.step === step)) return;
+    bookmarks.push({ lessonId, step, title, ts: Date.now() });
+    localStorage.setItem('portalBookmarks', JSON.stringify(bookmarks));
+    renderCommandMenu();
+}
+
+function removeBookmark(index) {
+    const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+    bookmarks.splice(index, 1);
+    localStorage.setItem('portalBookmarks', JSON.stringify(bookmarks));
+    renderCommandMenu();
+}
+
+function confirmResetAll() {
+    document.getElementById('cmdConfirm').style.display = '';
+}
+
+function cancelReset() {
+    document.getElementById('cmdConfirm').style.display = 'none';
+}
+
+function resetAllProgress() {
+    localStorage.removeItem('portalProgress');
+    localStorage.removeItem('portalLastVisited');
+    localStorage.removeItem('portalBookmarks');
+    localStorage.removeItem('visitedSteps');
+    closeCommandMenu();
+    window.location.reload();
+}
+
 /* ── Color maps ──────────────────────────────────────────────────────────── */
 
 /* Default teal theme: dark → bright teal (matches dark UI) */

@@ -14,7 +14,7 @@
 <body style="justify-content: center;">
     {% from "icons.html" import brand_logo %}
     <nav class="top-nav">
-        <a href="/" class="nav-brand">{{ brand_logo(38) }}</a>
+        <div class="nav-brand" onclick="toggleCommandMenu(event)">{{ brand_logo(38) }}</div>
         <div class="top-controls">
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="icon-sun">&#9728;</span>
@@ -22,6 +22,31 @@
             </button>
         </div>
     </nav>
+
+    <!-- Command menu (opens on logo click) -->
+    <div class="cmd-overlay" id="cmdOverlay" onclick="closeCommandMenu()"></div>
+    <div class="cmd-menu" id="cmdMenu">
+        <div class="cmd-section" id="cmdContinue"></div>
+        <div class="cmd-section" id="cmdBookmarks"></div>
+        <div class="cmd-section" id="cmdStats"></div>
+        <div class="cmd-divider"></div>
+        <div class="cmd-section cmd-actions">
+            <button class="cmd-btn cmd-btn-bookmark" id="cmdAddBookmark" onclick="addBookmark()" style="display:none">
+                <span class="cmd-icon">&#9733;</span> Bookmark this step
+            </button>
+            <button class="cmd-btn cmd-btn-danger" onclick="confirmResetAll()">
+                <span class="cmd-icon">&#8635;</span> Reset all progress
+            </button>
+        </div>
+        <div class="cmd-confirm" id="cmdConfirm" style="display:none">
+            <p>Clear all progress and bookmarks?</p>
+            <div class="cmd-confirm-btns">
+                <button class="cmd-btn cmd-btn-danger" onclick="resetAllProgress()">Yes, reset</button>
+                <button class="cmd-btn" onclick="cancelReset()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     {% block body %}{% endblock %}
     <script src="/static/app.js"></script>
     {% block scripts %}{% endblock %}

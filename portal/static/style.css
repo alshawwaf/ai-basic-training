@@ -212,21 +212,24 @@ code, .flat-array, .guess-input {
 }
 .active .step-num {
     background: var(--accent);
-    color: #fff;
+    color: #04141a;
 }
 .sidebar li.visited .step-num {
-    background: rgba(16, 185, 129, 0.3);
-    color: var(--green);
+    background: rgba(16, 185, 129, 0.25);
+    color: #6ef0bf;
+    border-color: rgba(34, 211, 160, 0.45);
 }
 [data-theme="dark"] .sidebar li.visited .step-num {
     box-shadow: 0 0 8px rgba(34,211,160,0.3);
 }
 .sidebar li.active .step-num {
-    background: var(--accent);
-    color: #fff;
+    background: linear-gradient(135deg, #5cf2fb, #06d6e0);
+    color: #04141a;
+    border-color: var(--cyan);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
 }
 [data-theme="dark"] .sidebar li.active .step-num {
-    box-shadow: 0 0 12px rgba(6,214,224,0.5), 0 0 4px rgba(6,214,224,0.3);
+    box-shadow: 0 0 14px rgba(6,214,224,0.65), 0 0 4px rgba(6,214,224,0.4);
 }
 
 /* ── Mobile toggle ──────────────────────────────────────────────────────── */

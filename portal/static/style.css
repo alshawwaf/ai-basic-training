@@ -298,12 +298,14 @@ body.lesson-page .content-layout {
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
+    align-items: stretch;       /* override default flex-start so .content-main fills the column height */
 }
 body.lesson-page .content-main {
-    flex: 1;
+    flex: 1 1 0;
     overflow-y: auto;
     min-height: 0;
-    padding-right: 6px;
+    height: 100%;               /* belt-and-braces: ensure a bounded height so overflow-y can clip */
+    padding-right: 10px;
 }
 body.lesson-page .nav-buttons { flex-shrink: 0; }
 

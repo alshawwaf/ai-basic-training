@@ -1,0 +1,71 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What Dropout does</h3>
+    <p>During each training step, <code>Dropout(rate)</code> randomly sets a fraction of neuron outputs to zero. With <code>rate=0.3</code>, 30% of neurons are silenced each batch -- different neurons each time. This forces the network to build redundant representations instead of relying on any single neuron.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+        <tbody>
+            <tr><td>Training behaviour</td><td>Randomly zero out <code>rate</code> fraction of outputs per batch</td></tr>
+            <tr><td>Inference behaviour</td><td>All neurons active (no dropout)</td></tr>
+            <tr><td>Output scaling</td><td>Remaining outputs scaled by <code>1/(1 - rate)</code> to preserve expected magnitude</td></tr>
+            <tr><td>Typical values</td><td>0.2 -- 0.5 (higher = stronger regularisation)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Dropout as implicit ensemble</h3>
+    <p>Each training step with dropout uses a different random subset of neurons -- effectively training a <strong>different sub-network</strong> each time. Over thousands of steps, the model trains an exponential number of overlapping sub-networks. At inference time, using all neurons approximates the <strong>ensemble average</strong> of all these sub-networks.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Concept</th><th>Without Dropout</th><th>With Dropout(0.3)</th></tr></thead>
+        <tbody>
+            <tr><td>Active neurons</td><td>All neurons every step</td><td>~70% random subset each step</td></tr>
+            <tr><td>Co-adaptation</td><td>Neurons can become co-dependent</td><td>Each neuron must be independently useful</td></tr>
+            <tr><td>Effective models trained</td><td>1 model</td><td>Exponentially many sub-networks</td></tr>
+            <tr><td>Overfitting risk</td><td>High with excess capacity</td><td>Reduced significantly</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Adding Dropout to the overfit model</h3>
+    <p>Place a <code>Dropout</code> layer after each hidden Dense layer. The model architecture stays the same width, but dropout prevents it from memorising.</p>
+
+    <pre><code class="language-python">model = keras.Sequential([
+    keras.layers.Dense(256, activation='relu', input_shape=(10,)),
+    keras.layers.Dropout(0.3),       # drop 30% after first hidden layer
+    keras.layers.Dense(256, activation='relu'),
+    keras.layers.Dropout(0.3),       # drop 30% after second hidden layer
+    keras.layers.Dense(256, activation='relu'),
+    keras.layers.Dropout(0.3),       # drop 30% after third hidden layer
+    keras.layers.Dense(1, activation='sigmoid'),
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy',
+              metrics=['accuracy'])</code></pre>
+</div>
+
+<div class="card">
+    <h3>Comparing dropout rates</h3>
+    <p>Different rates trade off regularisation strength against model capacity:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Dropout rate</th><th>Effect</th><th>When to use</th></tr></thead>
+        <tbody>
+            <tr><td><code>0.1</code></td><td>Light regularisation</td><td>Small models, large datasets</td></tr>
+            <tr><td><code>0.3</code></td><td>Standard regularisation</td><td>Good default starting point</td></tr>
+            <tr><td><code>0.5</code></td><td>Strong regularisation</td><td>Very large models, limited data</td></tr>
+            <tr><td><code>0.8</code></td><td>Aggressive -- may underfit</td><td>Rarely used; only for extreme overfitting</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Dropout acts like training a security team where random analysts sit out each exercise -- everyone must learn every role. In ML terms, no single neuron becomes a "single point of failure" for detecting a specific attack type. If one neuron pathway is missing, others compensate. This makes the model more <strong>robust to adversarial evasion</strong> attempts that target specific features.
+</div>
+{% endblock %}

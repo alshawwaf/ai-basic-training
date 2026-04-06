@@ -1,0 +1,53 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Lab: Lakera-Demo</h3>
+    <p>A web-based testing platform with 24+ documented attack vectors across 9 categories.</p>
+    <pre><code class="language-python">git clone https://github.com/alshawwaf/Lakera-Demo.git
+cd Lakera-Demo
+python -m venv venv
+# Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env — add your LAKERA_API_KEY and LLM provider key
+python app.py</code></pre>
+    <p>Access at <code>http://127.0.0.1:9000</code></p>
+</div>
+
+<div class="card">
+    <h3>Exercise 1: Test the Attack Library (20 min)</h3>
+    <p>Open the Playground and test at least 5 attacks from different categories:</p>
+    <ul>
+        <li>Jailbreak (role-play bypass)</li>
+        <li>Prompt injection (instruction override)</li>
+        <li>Data extraction (system prompt leak)</li>
+        <li>PII extraction</li>
+        <li>Toxic content generation</li>
+    </ul>
+    <p>For each: note whether it was caught, the category assigned, and the confidence score.</p>
+</div>
+
+<div class="card">
+    <h3>Exercise 2: Craft a Novel Attack (15 min)</h3>
+    <p>Write your own attack prompt that is NOT in the built-in library. Try:</p>
+    <ul>
+        <li>Encoding the attack in a different language</li>
+        <li>Splitting the malicious instruction across multiple turns</li>
+        <li>Embedding the attack in a "summarise this document" request</li>
+    </ul>
+    <p>Did the guardrails catch your custom attack? Why or why not?</p>
+</div>
+
+<div class="card">
+    <h3>Exercise 3: Benchmark (10 min)</h3>
+    <p>Use the benchmarking feature to compare detection rates. Which attack categories have the highest detection rate? The lowest? If building multi-layered defense, which providers would you combine?</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> You just attacked an LLM application. Some attacks got through. This is normal &mdash;
+    no single defense layer is perfect. The goal is to make attacks <strong>significantly harder</strong>, not impossible.
+    Layer multiple detection methods, scan both input AND output, and log everything for audit.
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Semantic Search: The Two-Phase Architecture</h3>
+    <p>A semantic search engine has two phases. The first runs once (offline indexing); the second runs every time a user searches (real-time query):</p>
+    <table class="info-table">
+        <thead><tr><th>Phase</th><th>When</th><th>What happens</th><th>Cost</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Phase 1: Indexing</strong></td><td>Once, offline</td><td>Encode all documents into an embedding matrix (N x 384)</td><td>Slow (seconds to minutes)</td></tr>
+            <tr><td><strong>Phase 2: Query</strong></td><td>Every search</td><td>Encode query, compute cosine similarity, return top-k</td><td>Fast (milliseconds)</td></tr>
+        </tbody>
+    </table>
+    <p>Phase 2 is fast because all document embeddings are pre-computed. Only the single query needs encoding at search time.</p>
+</div>
+
+<div class="card">
+    <h3>Building the Index</h3>
+    <pre><code class="language-python">from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Your security knowledge base
+documents = [
+    "Mimikatz extracts credentials from LSASS process memory",
+    "SSH brute force: repeated failed login attempts on port 22",
+    "DNS tunnelling encodes data in DNS query subdomains",
+    "Ransomware encrypts files and demands cryptocurrency payment",
+    "Phishing emails impersonate trusted senders to steal credentials",
+]
+
+# Phase 1: encode all documents (done once)
+doc_embeddings = model.encode(documents)
+# shape: (5, 384)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Querying the Index</h3>
+    <pre><code class="language-python">from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+def search(query, doc_embeddings, documents, k=3):
+    """Return top-k most relevant documents for a query."""
+    query_vec = model.encode([query])             # (1, 384)
+    scores = cosine_similarity(query_vec, doc_embeddings)[0]
+    top_k = np.argsort(scores)[::-1][:k]
+
+    for rank, idx in enumerate(top_k, 1):
+        print(f"{rank}. [{scores[idx]:.3f}] {documents[idx]}")
+
+search("how to detect credential dumping")
+# 1. [0.71] Mimikatz extracts credentials from LSASS process memory
+# 2. [0.48] Phishing emails impersonate trusted senders to steal credentials
+# 3. [0.31] SSH brute force: repeated failed login attempts on port 22</code></pre>
+    <p>The search function found the Mimikatz document even though the query never mentioned "Mimikatz" or "LSASS". This is the power of semantic matching.</p>
+</div>
+
+<div class="card">
+    <h3>Why This Matters: The Retrieval Half of RAG</h3>
+    <p>What you just built is the retrieval component of a RAG (Retrieval-Augmented Generation) pipeline. In the next lesson on RAG, you will combine this retrieval mechanism with an LLM to generate grounded answers:</p>
+    <table class="info-table">
+        <thead><tr><th>Component</th><th>What it does</th><th>You built it in</th></tr></thead>
+        <tbody>
+            <tr><td>Sentence embeddings</td><td>Encode documents and queries as vectors</td><td>Step 2 (this lesson)</td></tr>
+            <tr><td>Semantic search</td><td>Find the most relevant documents for a query</td><td>Step 3 (this step)</td></tr>
+            <tr><td>Chunking</td><td>Split long documents into embeddable pieces</td><td>Lesson 4.4, Step 1</td></tr>
+            <tr><td>LLM generation</td><td>Answer the question using retrieved context</td><td>Lesson 4.4, Step 3</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A semantic search engine over your organisation's threat intelligence
+    lets analysts query "how do we respond to credential dumping?" and get relevant runbooks, past incident reports,
+    and CVE advisories -- even if those documents never use the exact phrase "credential dumping". This replaces
+    brittle keyword search with meaning-based retrieval.
+</div>
+{% endblock %}

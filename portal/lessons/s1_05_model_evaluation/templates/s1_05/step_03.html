@@ -1,0 +1,72 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The ROC Curve</h3>
+    <p>The ROC (Receiver Operating Characteristic) curve plots performance at <strong>every possible threshold</strong>:</p>
+    <table class="info-table">
+        <thead><tr><th>Axis</th><th>Metric</th><th>Formula</th></tr></thead>
+        <tbody>
+            <tr><td>x-axis</td><td>False Positive Rate (FPR)</td><td>FP / (FP + TN)</td></tr>
+            <tr><td>y-axis</td><td>True Positive Rate (TPR = Recall)</td><td>TP / (TP + FN)</td></tr>
+        </tbody>
+    </table>
+    <p>Key points on the curve:</p>
+    <table class="info-table">
+        <thead><tr><th>Point</th><th>Threshold</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td>(0, 0)</td><td>1.0</td><td>Predict nothing &mdash; no TP, no FP</td></tr>
+            <tr><td>(1, 1)</td><td>0.0</td><td>Predict everything &mdash; all TP, all FP</td></tr>
+            <tr><td>(0, 1)</td><td>&mdash;</td><td>Perfect classifier &mdash; all attacks, no false alarms</td></tr>
+            <tr><td>Diagonal</td><td>&mdash;</td><td>Random guessing (AUC = 0.5)</td></tr>
+        </tbody>
+    </table>
+    <p>A good classifier's curve bulges toward the <strong>upper-left corner</strong>.</p>
+</div>
+
+<div class="card">
+    <h3>AUC: Area Under the Curve</h3>
+    <p>AUC summarises the entire ROC curve in a single number:</p>
+    <table class="info-table">
+        <thead><tr><th>AUC</th><th>Interpretation</th></tr></thead>
+        <tbody>
+            <tr><td>1.0</td><td>Perfect separation</td></tr>
+            <tr><td>0.9&ndash;0.99</td><td>Excellent</td></tr>
+            <tr><td>0.8&ndash;0.9</td><td>Good</td></tr>
+            <tr><td>0.7&ndash;0.8</td><td>Fair</td></tr>
+            <tr><td>0.5</td><td>Random &mdash; model has no discriminative power</td></tr>
+        </tbody>
+    </table>
+    <p>AUC is <strong>threshold-independent</strong> &mdash; useful for comparing models before choosing a deployment threshold.</p>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.metrics import roc_curve, roc_auc_score
+import matplotlib.pyplot as plt
+
+# Get probabilities
+probs = model.predict_proba(X_test)[:, 1]
+
+# Compute ROC curve
+fpr, tpr, thresholds = roc_curve(y_test, probs)
+auc = roc_auc_score(y_test, probs)
+
+# Plot
+plt.plot(fpr, tpr, label=f'Model (AUC={auc:.3f})')
+plt.plot([0, 1], [0, 1], 'k--', label='Random (AUC=0.5)')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate (Recall)')
+plt.title('ROC Curve')
+plt.legend()
+plt.show()</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> ROC curves are perfect for comparing IDS/IPS models.
+    Plot both on the same axes: the curve closer to the upper-left corner wins.
+    But check the <strong>low-FPR region</strong> specifically &mdash; in production, you operate at FPR &lt; 1%,
+    not across the full range.
+</div>
+{% endblock %}

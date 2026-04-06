@@ -1,0 +1,60 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Why Linear Regression Fails for Classification</h3>
+    <p>Suppose you try to predict whether a URL is phishing (1) or legitimate (0) using linear regression. The model predicts numbers like 0.3, 0.7, <strong>1.2</strong>, <strong>-0.1</strong> &mdash; outside the valid 0&ndash;1 range.</p>
+    <table class="info-table">
+        <thead><tr><th>Problem</th><th>Explanation</th></tr></thead>
+        <tbody>
+            <tr><td>Unbounded output</td><td>Predictions can be &lt; 0 or &gt; 1 &mdash; not valid probabilities</td></tr>
+            <tr><td>Sensitive to outliers</td><td>One extreme value can pull the line and reverse predictions</td></tr>
+            <tr><td>Poor fit</td><td>The true relationship is an S-curve, not a line</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Sigmoid Function</h3>
+    <p>Logistic regression squashes any number into the range (0, 1) using the <strong>sigmoid</strong>:</p>
+    <pre><code class="language-python">import numpy as np
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# z = weighted sum of features (same as linear regression computes)</code></pre>
+    <table class="info-table">
+        <thead><tr><th>Input z</th><th>&sigma;(z)</th><th>Interpretation</th></tr></thead>
+        <tbody>
+            <tr><td>-5</td><td>0.007</td><td>Very likely legitimate</td></tr>
+            <tr><td>-2</td><td>0.119</td><td>Probably legitimate</td></tr>
+            <tr><td>0</td><td>0.500</td><td>Completely uncertain</td></tr>
+            <tr><td>+2</td><td>0.881</td><td>Probably phishing</td></tr>
+            <tr><td>+5</td><td>0.993</td><td>Almost certainly phishing</td></tr>
+        </tbody>
+    </table>
+    <p>The sigmoid produces an <strong>S-curve</strong>: near 0 for very negative z, near 1 for very positive z, passing through 0.5 at z=0.</p>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(X_train, y_train)      # learn weights from data
+
+# Hard prediction: 0 or 1
+y_pred = model.predict(X_test)
+
+# Soft prediction: probability between 0 and 1
+y_proba = model.predict_proba(X_test)[:, 1]  # P(phishing)</code></pre>
+    <p>The default decision boundary is at probability 0.5 &mdash; but in security, you may want to lower it to catch more threats.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Logistic regression is the workhorse of security classification &mdash;
+    phishing detection, malware triage, spam filtering. Its probabilistic output lets you set different thresholds
+    for different risk levels: auto-block at P &gt; 0.9, quarantine at P &gt; 0.6, allow below 0.3.
+</div>
+{% endblock %}

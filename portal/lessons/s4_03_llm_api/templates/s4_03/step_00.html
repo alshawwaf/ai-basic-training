@@ -1,0 +1,74 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Chat API Structure</h3>
+    <p>Every modern LLM API -- Claude, OpenAI, Gemini, Ollama -- uses the same three-parameter structure. Once you learn it, you can use any provider:</p>
+    <table class="info-table">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Purpose</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td><code>system</code></td><td>String</td><td>Defines the model's role and behaviour (invisible to end user)</td><td>"You are a SOC analyst. Be concise."</td></tr>
+            <tr><td><code>messages</code></td><td>List of dicts</td><td>The conversation history: alternating user/assistant turns</td><td>[{"role": "user", "content": "Analyse this log..."}]</td></tr>
+            <tr><td><code>max_tokens</code></td><td>Integer</td><td>Hard cap on response length (100 tokens ~ 75 words)</td><td>200</td></tr>
+        </tbody>
+    </table>
+    <p>The <code>system</code> prompt shapes <em>every</em> response. The <code>messages</code> list carries context. The <code>max_tokens</code> cap controls cost and latency.</p>
+</div>
+
+<div class="card">
+    <h3>Your First API Call</h3>
+    <pre><code class="language-python">from llm_client import get_client
+
+provider, client = get_client()   # auto-detects your API key
+print(f"Using provider: {provider}")
+
+response = client.chat(
+    system="You are a cybersecurity analyst. Be concise and technical.",
+    messages=[
+        {"role": "user", "content": "What is a reverse shell?"}
+    ],
+    max_tokens=200,
+)
+
+print(response)</code></pre>
+    <p>The <code>llm_client.py</code> helper wraps Claude, OpenAI, Gemini, and Ollama behind a common interface. Set whichever API key you have and the code works identically.</p>
+</div>
+
+<div class="card">
+    <h3>Understanding Tokens and Cost</h3>
+    <table class="info-table">
+        <thead><tr><th>Provider</th><th>Input cost (per 1M tokens)</th><th>Output cost (per 1M tokens)</th><th>Free tier?</th></tr></thead>
+        <tbody>
+            <tr><td>Claude (Sonnet)</td><td>$3</td><td>$15</td><td>No</td></tr>
+            <tr><td>OpenAI (GPT-4o)</td><td>$2.50</td><td>$10</td><td>No</td></tr>
+            <tr><td>Gemini (Flash)</td><td>Free tier</td><td>Free tier</td><td>Yes</td></tr>
+            <tr><td>Ollama (local)</td><td>Free</td><td>Free</td><td>N/A -- runs locally</td></tr>
+        </tbody>
+    </table>
+    <p>A 1,000-word security report analysis costs approximately $0.001. For development and learning, the cost is negligible. Ollama runs entirely on your machine with no internet required after the initial model download.</p>
+</div>
+
+<div class="card">
+    <h3>Request/Response Flow</h3>
+    <p>Understanding the data flow helps you debug issues and optimise performance:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What happens</th><th>Where</th></tr></thead>
+        <tbody>
+            <tr><td>1. Build request</td><td>Assemble system + messages + max_tokens</td><td>Your Python code</td></tr>
+            <tr><td>2. Send HTTPS</td><td>Request travels to provider API (or localhost for Ollama)</td><td>Network</td></tr>
+            <tr><td>3. Tokenise</td><td>Provider converts text to token IDs</td><td>Provider server</td></tr>
+            <tr><td>4. Generate</td><td>Model predicts tokens one at a time</td><td>Provider GPU</td></tr>
+            <tr><td>5. Return</td><td>Response string sent back</td><td>Network</td></tr>
+        </tbody>
+    </table>
+    <p>Typical latency: 1-5 seconds for moderate-length responses. Most of the time is spent in step 4 (generation).</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> API keys are credentials. Treat them like passwords: store in environment
+    variables, never commit to git, rotate periodically. A leaked LLM API key lets an attacker run up your bill
+    or, worse, read your prompts if the provider logs them. For sensitive security analysis (malware samples, IR reports),
+    consider Ollama -- data never leaves your machine.
+</div>
+{% endblock %}

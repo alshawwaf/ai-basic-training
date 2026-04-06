@@ -1,0 +1,95 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Parameters vs hyperparameters</h3>
+    <p>These two categories look similar but are fundamentally different in how they are determined:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Parameters (weights)</th><th>Hyperparameters</th></tr></thead>
+        <tbody>
+            <tr><td>Set by</td><td>Training (gradient descent)</td><td>You, before training starts</td></tr>
+            <tr><td>Stored in</td><td><code>layer.weights</code></td><td>Code / config file</td></tr>
+            <tr><td>Initial values</td><td>Small random numbers</td><td>Your deliberate choice</td></tr>
+            <tr><td>Updated during training</td><td>Yes -- every batch</td><td>No -- fixed for the entire run</td></tr>
+            <tr><td>Examples</td><td>Dense layer weights, biases</td><td>Learning rate, batch size, number of layers</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>A hyperparameter inventory</h3>
+    <p>Every Keras model has dozens of hyperparameters. Here are the most impactful ones, grouped by category:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Category</th><th>Hyperparameter</th><th>Typical values</th></tr></thead>
+        <tbody>
+            <tr><td>Architecture</td><td>Number of hidden layers</td><td>1-5</td></tr>
+            <tr><td>Architecture</td><td>Units per layer</td><td>16, 32, 64, 128, 256</td></tr>
+            <tr><td>Architecture</td><td>Activation function</td><td>relu, tanh, leaky_relu</td></tr>
+            <tr><td>Training</td><td>Learning rate</td><td>0.0001, 0.001, 0.01</td></tr>
+            <tr><td>Training</td><td>Batch size</td><td>32, 64, 128, 256</td></tr>
+            <tr><td>Training</td><td>Optimizer</td><td>adam, sgd, rmsprop</td></tr>
+            <tr><td>Regularisation</td><td>Dropout rate</td><td>0.1 - 0.5</td></tr>
+            <tr><td>Regularisation</td><td>Early stopping patience</td><td>5 - 20</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Inspecting weights before and after training</h3>
+    <p>To see the distinction concretely, examine the actual weight values:</p>
+
+    <pre><code class="language-python">from tensorflow import keras
+import numpy as np
+
+np.random.seed(42)
+
+model = keras.Sequential([
+    keras.layers.Dense(64, activation='relu', input_shape=(10,)),
+    keras.layers.Dense(1, activation='sigmoid'),
+])
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001),
+              loss='binary_crossentropy')
+
+# BEFORE training: weights are small random numbers
+w_before = model.layers[0].get_weights()[0]
+print(f"Before training - mean: {w_before.mean():.4f}, std: {w_before.std():.4f}")
+
+# Train...
+model.fit(X_train, y_train, epochs=20, batch_size=32, verbose=0)
+
+# AFTER training: weights have shifted to encode learned patterns
+w_after = model.layers[0].get_weights()[0]
+print(f"After training  - mean: {w_after.mean():.4f}, std: {w_after.std():.4f}")
+print(f"Weight change   - mean shift: {(w_after - w_before).mean():.4f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Why reproducibility matters</h3>
+    <p>Random seeds control the initial parameter values. Hyperparameters must be recorded for reproducibility:</p>
+
+    <pre><code class="language-python">import numpy as np
+import tensorflow as tf
+
+# Set seeds for reproducible results
+np.random.seed(42)
+tf.random.set_seed(42)
+
+# Document your hyperparameters
+config = {
+    'units': 64,
+    'learning_rate': 0.001,
+    'batch_size': 32,
+    'epochs': 50,
+    'dropout_rate': 0.3,
+    'random_seed': 42,
+}
+print("Experiment config:", config)</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In a regulated security environment, you must be able to <strong>reproduce model training exactly</strong>. If an IDS model flags a transaction as fraud and the decision is challenged, you need to show the exact hyperparameters, random seed, and training data that produced that model. Version-controlling hyperparameters is as important as version-controlling code.
+</div>
+{% endblock %}

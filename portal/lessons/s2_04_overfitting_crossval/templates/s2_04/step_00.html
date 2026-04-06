@@ -1,0 +1,85 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Train/Validation/Test Split</h3>
+    <p>When tuning hyperparameters (like tree depth), you cannot use the test set &mdash; that would leak test information into your model selection. Instead, use a three-way split:</p>
+    <table class="info-table">
+        <thead><tr><th>Set</th><th>Portion</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Training</td><td>60%</td><td>The model learns from this data</td></tr>
+            <tr><td>Validation</td><td>20%</td><td>Used to choose hyperparameters (e.g., best depth)</td></tr>
+            <tr><td>Test</td><td>20%</td><td>Final evaluation ONLY &mdash; never touched during tuning</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">from sklearn.model_selection import train_test_split
+
+# First split: separate test set
+X_temp, X_test, y_temp, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Second split: training and validation from remainder
+X_train, X_val, y_train, y_val = train_test_split(
+    X_temp, y_temp, test_size=0.25, random_state=42, stratify=y_temp)
+# 0.25 of 80% = 20% of total</code></pre>
+</div>
+
+<div class="card">
+    <h3>The Overfitting Diagnostic</h3>
+    <p>Sweep <code>max_depth</code> from 1 to 20 and record training and validation accuracy at each depth:</p>
+    <pre><code class="language-python">from sklearn.tree import DecisionTreeClassifier
+
+train_scores, val_scores = [], []
+depths = range(1, 21)
+
+for d in depths:
+    tree = DecisionTreeClassifier(max_depth=d, random_state=42)
+    tree.fit(X_train, y_train)
+    train_scores.append(tree.score(X_train, y_train))
+    val_scores.append(tree.score(X_val, y_val))
+
+# Plot both curves
+plt.plot(depths, train_scores, 'b-', label='Training')
+plt.plot(depths, val_scores, 'r--', label='Validation')
+plt.xlabel('max_depth')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Reading the Divergence</h3>
+    <table class="info-table">
+        <thead><tr><th>Depth</th><th>Train Acc</th><th>Val Acc</th><th>Gap</th><th>Diagnosis</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>~0.65</td><td>~0.65</td><td>~0%</td><td>Underfitting &mdash; too simple</td></tr>
+            <tr><td>3</td><td>~0.93</td><td>~0.92</td><td>~1%</td><td>Learning real patterns</td></tr>
+            <tr><td>5</td><td>~0.99</td><td>~0.97</td><td>~2%</td><td>Sweet spot &mdash; best validation</td></tr>
+            <tr><td>10</td><td>1.00</td><td>~0.95</td><td>~5%</td><td>Starting to overfit</td></tr>
+            <tr><td>20</td><td>1.00</td><td>~0.94</td><td>~6%</td><td>Overfitting &mdash; memorising noise</td></tr>
+        </tbody>
+    </table>
+    <p>The <strong>overfitting point</strong> is where the gap between training and validation grows while validation accuracy stops improving or drops. Pick the depth just before this happens.</p>
+</div>
+
+<div class="card">
+    <h3>Finding the Sweet Spot Programmatically</h3>
+    <pre><code class="language-python"># Find depth with highest validation accuracy
+best_depth = depths[np.argmax(val_scores)]
+best_val = max(val_scores)
+best_train = train_scores[np.argmax(val_scores)]
+
+print(f"Best depth:  {best_depth}")
+print(f"Train acc:   {best_train:.3f}")
+print(f"Val acc:     {best_val:.3f}")
+print(f"Gap:         {best_train - best_val:.3f}")</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> An overfit intrusion detector looks great in the lab (100% on training data)
+    but <strong>fails in production</strong> on new attack variants. The diagnostic plot is your evidence:
+    if the gap between training and validation is large, the model has memorised training attacks instead of learning
+    general attack patterns. Always check this before deploying a security model.
+</div>
+{% endblock %}

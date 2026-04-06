@@ -1,0 +1,37 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Competitive Landscape</h3>
+    <table class="info-table">
+        <thead><tr><th>Competitor</th><th>Strengths</th><th>Gaps</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Microsoft Purview</strong></td><td>Deep Microsoft ecosystem integration</td><td>Only covers Microsoft tools &mdash; no ChatGPT, Claude, open-source</td></tr>
+            <tr><td><strong>Zscaler AI Security</strong></td><td>Strong proxy-based architecture</td><td>Limited guardrails for custom LLM apps</td></tr>
+            <tr><td><strong>Palo Alto AI Access</strong></td><td>Prisma SASE integration</td><td>No agent security, limited guardrails</td></tr>
+            <tr><td><strong>Lakera</strong></td><td>Purpose-built LLM security</td><td>Point solution &mdash; only guardrails, no workforce or agent</td></tr>
+            <tr><td><strong>LLM Guard (OSS)</strong></td><td>Free, customisable</td><td>No console, no support, no integration</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Check Point's Differentiation</h3>
+    <table class="info-table">
+        <thead><tr><th>Dimension</th><th>Advantage</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Breadth</strong></td><td>Three products: workforce + applications + agents</td></tr>
+            <tr><td><strong>Platform</strong></td><td>Infinity Platform &mdash; same console as network and endpoint</td></tr>
+            <tr><td><strong>Any LLM</strong></td><td>Works with any provider &mdash; not locked to one vendor</td></tr>
+            <tr><td><strong>Agent security</strong></td><td>First to address MCP/agent security &mdash; competitors haven't caught up</td></tr>
+            <tr><td><strong>Technical depth</strong></td><td>Ninja-trained team explains how detection actually works</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Competitors can claim AI security. You can explain how classification,
+    embeddings, and retrieval actually work in the product. That's credibility no slide deck can manufacture.
+</div>
+{% endblock %}

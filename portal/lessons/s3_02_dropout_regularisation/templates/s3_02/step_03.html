@@ -1,0 +1,74 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Why early stopping?</h3>
+    <p>Setting <code>epochs=200</code> without early stopping means the model trains for the full 200 epochs -- even when <code>val_loss</code> stopped improving at epoch 25. The extra 175 epochs waste computation and allow the model to slowly overfit as it memorises noise in the training data.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Approach</th><th>Epochs trained</th><th>Risk</th></tr></thead>
+        <tbody>
+            <tr><td>Fixed epochs (too few)</td><td>10</td><td>Model has not converged -- underfitting</td></tr>
+            <tr><td>Fixed epochs (too many)</td><td>200</td><td>Model overfits past the optimum</td></tr>
+            <tr><td>Early stopping</td><td>25 (automatic)</td><td>Stops at the best point automatically</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>How EarlyStopping works</h3>
+    <p>Keras monitors a metric (typically <code>val_loss</code>) and counts consecutive epochs without improvement. When the count reaches <code>patience</code>, training stops.</p>
+
+    <pre><code class="language-python">early_stop = keras.callbacks.EarlyStopping(
+    monitor='val_loss',          # metric to watch
+    patience=5,                  # stop after 5 non-improving epochs
+    restore_best_weights=True,   # rewind to the best epoch's weights
+    min_delta=0.001,             # minimum change to count as improvement
+)
+
+history = model.fit(
+    X_train, y_train,
+    validation_data=(X_val, y_val),
+    epochs=200,                  # set high -- early stopping controls actual count
+    batch_size=32,
+    callbacks=[early_stop],
+    verbose=0,
+)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Key parameters</h3>
+    <table class="info-table">
+        <thead><tr><th>Parameter</th><th>Purpose</th><th>Recommended value</th></tr></thead>
+        <tbody>
+            <tr><td><code>monitor</code></td><td>Which metric to watch</td><td><code>'val_loss'</code> (most common)</td></tr>
+            <tr><td><code>patience</code></td><td>How many non-improving epochs to wait</td><td>5-20 (higher = more tolerant of plateaus)</td></tr>
+            <tr><td><code>restore_best_weights</code></td><td>Roll back to the best epoch when stopping</td><td><code>True</code> (always)</td></tr>
+            <tr><td><code>min_delta</code></td><td>Minimum improvement to reset the counter</td><td>0.001 (small improvements still count)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Reading the training report</h3>
+    <p>After training with early stopping, inspect the history to understand what happened:</p>
+
+    <pre><code class="language-python"># How many epochs actually ran?
+actual_epochs = len(history.history['loss'])
+print(f"Trained for {actual_epochs} epochs (max was 200)")
+
+# Find the best epoch
+val_losses = history.history['val_loss']
+best_epoch = val_losses.index(min(val_losses)) + 1
+print(f"Best val_loss at epoch {best_epoch}: {min(val_losses):.4f}")
+
+# With restore_best_weights=True, the model already uses best epoch's weights
+final_val_loss = model.evaluate(X_val, y_val, verbose=0)
+print(f"Current model val_loss: {final_val_loss[0]:.4f}")</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Early stopping is essential for security ML pipelines that retrain automatically. Without it, an automated nightly retrain of a phishing classifier could silently overfit -- performing perfectly on yesterday's phishing emails but <strong>missing tomorrow's new campaigns</strong>. Early stopping with <code>restore_best_weights=True</code> ensures every retrain produces the best-generalising model, not the most-memorised one.
+</div>
+{% endblock %}

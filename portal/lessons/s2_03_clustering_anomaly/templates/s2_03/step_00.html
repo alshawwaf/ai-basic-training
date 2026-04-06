@@ -1,0 +1,70 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Unsupervised Setting</h3>
+    <p>In supervised learning (Lessons 1.2&ndash;2.2), every training sample has a label. In the real world:</p>
+    <table class="info-table">
+        <thead><tr><th>Reality</th><th>Why labels are unavailable</th></tr></thead>
+        <tbody>
+            <tr><td>Volume</td><td>Security analysts cannot label every network connection</td></tr>
+            <tr><td>Novelty</td><td>New attack types have no historical labels</td></tr>
+            <tr><td>Zero-days</td><td>Never-before-seen exploits look nothing like past attacks</td></tr>
+        </tbody>
+    </table>
+    <p>Unsupervised learning finds structure <strong>without labels</strong>. You do not need to know what an attack looks like &mdash; you just need to know when something looks <strong>different from normal</strong>.</p>
+</div>
+
+<div class="card">
+    <h3>Why Normal Behaviour Clusters</h3>
+    <p>Corporate network traffic is repetitive and predictable. The same devices talk to the same servers using the same protocols day after day. This repetition creates <strong>dense clusters</strong>:</p>
+    <table class="info-table">
+        <thead><tr><th>Cluster</th><th>Behaviour</th><th>Characteristics</th></tr></thead>
+        <tbody>
+            <tr><td>A: Web browsing</td><td>Many connections, port 443</td><td>Moderate bytes, short duration</td></tr>
+            <tr><td>B: File server</td><td>Internal IPs, large transfers</td><td>High bytes, long duration</td></tr>
+            <tr><td>C: DNS</td><td>Small packets, UDP, port 53</td><td>Low bytes, very frequent</td></tr>
+            <tr><td>D: IoT heartbeats</td><td>Fixed schedule, tiny payloads</td><td>Predictable intervals</td></tr>
+        </tbody>
+    </table>
+    <p>Attacks break these patterns: unusual ports, abnormal volumes, unexpected timing. They appear <strong>far from any dense cluster</strong>.</p>
+</div>
+
+<div class="card">
+    <h3>Supervised vs Unsupervised</h3>
+    <table class="info-table">
+        <thead><tr><th>Aspect</th><th>Supervised</th><th>Unsupervised</th></tr></thead>
+        <tbody>
+            <tr><td>Labels required</td><td>Yes &mdash; benign/attack for every sample</td><td>No &mdash; learns from structure alone</td></tr>
+            <tr><td>Catches known attacks</td><td>Excellent (trained on examples)</td><td>Good (if they deviate from normal)</td></tr>
+            <tr><td>Catches novel attacks</td><td>Poor (never seen before)</td><td>Good (any deviation is flagged)</td></tr>
+            <tr><td>False positives</td><td>Lower</td><td>Higher (any anomaly is flagged)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Clustering Approach</h3>
+    <pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+# 1. Scale features (K-Means uses Euclidean distance)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# 2. Cluster into K groups
+km = KMeans(n_clusters=4, random_state=42, n_init=10)
+km.fit(X_scaled)
+
+# 3. Each sample now has a cluster label
+print(km.labels_)  # [0, 2, 1, 0, 3, ...]</code></pre>
+    <p>Note: you <strong>must scale</strong> before clustering. If <code>bytes_sent</code> ranges 0&ndash;1,000,000 and <code>duration</code> ranges 0&ndash;300, the bytes feature dominates the distance calculation.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Most SOC environments have millions of logs but almost no labels. Unsupervised
+    anomaly detection lets you build a <strong>baseline of normal</strong> from unlabelled data. When a zero-day exploit
+    generates traffic that doesn't fit any known pattern, clustering flags it &mdash; no prior knowledge of the attack required.
+</div>
+{% endblock %}

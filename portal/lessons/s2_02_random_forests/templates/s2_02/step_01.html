@@ -1,0 +1,67 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>RandomForestClassifier Parameters</h3>
+    <pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier
+
+rf = RandomForestClassifier(
+    n_estimators=200,      # number of trees in the forest
+    max_depth=None,        # let individual trees grow fully
+    max_features='sqrt',   # features considered at each split
+    oob_score=True,        # free validation using out-of-bag samples
+    n_jobs=-1,             # use all CPU cores
+    random_state=42
+)
+rf.fit(X_train, y_train)</code></pre>
+    <table class="info-table">
+        <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+        <tbody>
+            <tr><td><code>n_estimators</code></td><td>More trees = more stable predictions; diminishing returns after ~200</td></tr>
+            <tr><td><code>max_features</code></td><td>Fewer features per split = more diverse trees = less correlation</td></tr>
+            <tr><td><code>max_depth</code></td><td>Limits individual tree depth; forests are usually grown fully</td></tr>
+            <tr><td><code>oob_score</code></td><td>Computes OOB accuracy automatically &mdash; free, no extra data needed</td></tr>
+            <tr><td><code>n_jobs</code></td><td>-1 = use all CPU cores for parallel tree training</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Feature Subsampling</h3>
+    <p>At each split, the random forest considers only a <strong>random subset</strong> of features (not all). This is the key difference from plain bagging.</p>
+    <p>Default: <code>max_features='sqrt'</code> means &radic;(n_features) features per split. For 7 PE file features, that means each split considers ~3 features randomly.</p>
+    <p>This forces different trees to use different primary splits, producing <strong>diverse, uncorrelated trees</strong>. The ensemble benefit comes from this diversity &mdash; if all trees made the same mistakes, averaging would not help.</p>
+</div>
+
+<div class="card">
+    <h3>Out-of-Bag (OOB) Score</h3>
+    <p>Each tree is trained on a bootstrap sample (~63% of data). The remaining ~37% &mdash; the <strong>out-of-bag samples</strong> &mdash; were never seen by that tree.</p>
+    <pre><code class="language-python">rf = RandomForestClassifier(n_estimators=200, oob_score=True,
+                             random_state=42)
+rf.fit(X_train, y_train)
+
+print(f"OOB accuracy:  {rf.oob_score_:.3f}")
+print(f"Test accuracy: {rf.score(X_test, y_test):.3f}")
+# These should be close — both estimate generalisation</code></pre>
+    <p>OOB accuracy is a <strong>free cross-validation estimate</strong>. If it closely matches test accuracy, your model is generalising well.</p>
+</div>
+
+<div class="card">
+    <h3>Tree vs Forest Comparison</h3>
+    <table class="info-table">
+        <thead><tr><th>Model</th><th>Train Acc</th><th>Test Acc</th><th>Gap</th></tr></thead>
+        <tbody>
+            <tr><td>Single tree (no limit)</td><td>1.000</td><td>~0.891</td><td>0.109</td></tr>
+            <tr><td>Random Forest (200 trees)</td><td>~0.999</td><td>~0.950</td><td>0.049</td></tr>
+        </tbody>
+    </table>
+    <p>The forest's test accuracy is significantly higher and its overfitting gap is smaller. The ensemble diversity pays off.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The OOB score is especially useful in security because labelled malware data is
+    expensive. OOB gives you a generalisation estimate <strong>without sacrificing any training data</strong> for a separate
+    validation set &mdash; every sample contributes to both training (when in-bag) and validation (when out-of-bag).
+</div>
+{% endblock %}

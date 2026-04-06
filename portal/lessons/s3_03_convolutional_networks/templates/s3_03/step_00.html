@@ -1,0 +1,66 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What Dense "sees" in an image</h3>
+    <p>A 28x28 greyscale image has 784 pixels. A Dense layer receives these as a flat vector: <code>[0.0, 0.0, 0.12, 0.85, 0.95, ...]</code>. It has no concept that pixel 3 is adjacent to pixel 4 -- it only knows statistical correlations between positions.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Dense layer</th><th>Conv2D layer</th></tr></thead>
+        <tbody>
+            <tr><td>Input format</td><td>Flat 1D vector (784,)</td><td>2D grid (28, 28, 1)</td></tr>
+            <tr><td>Spatial awareness</td><td>None -- every pixel equally distant</td><td>Full -- uses local 3x3 neighbourhoods</td></tr>
+            <tr><td>Translation invariance</td><td>None -- must relearn for every position</td><td>Built-in -- same filter slides everywhere</td></tr>
+            <tr><td>Parameters for 128 outputs</td><td>784 x 128 + 128 = 100,480</td><td>Depends on filters, but far fewer</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The shuffled-pixels experiment</h3>
+    <p>The definitive proof that Dense ignores spatial structure: <strong>randomly shuffle every pixel in every image</strong>, then retrain. Dense accuracy barely changes because it never used spatial relationships in the first place.</p>
+
+    <pre><code class="language-python">import numpy as np
+from tensorflow import keras
+
+# Load MNIST
+(X_train, y_train), (X_test, y_test) = keras.datasets.mnist.load_data()
+X_train = X_train.reshape(-1, 784).astype('float32') / 255.0
+X_test  = X_test.reshape(-1, 784).astype('float32') / 255.0
+
+# Create a fixed random permutation
+perm = np.random.permutation(784)
+
+# Shuffle every image the same way
+X_train_shuffled = X_train[:, perm]
+X_test_shuffled  = X_test[:, perm]
+
+# Dense model gets ~97.8% on normal AND shuffled images
+# CNN would collapse from ~99.2% to ~random on shuffled images</code></pre>
+</div>
+
+<div class="card">
+    <h3>The parameter cost of spatial blindness</h3>
+    <p>Because Dense treats every pixel independently, it needs separate weights for every pixel-to-neuron connection:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Layer type</th><th>Input</th><th>Output units</th><th>Parameters</th></tr></thead>
+        <tbody>
+            <tr><td>Dense</td><td>784 pixels (flattened)</td><td>128</td><td>784 x 128 + 128 = <strong>100,480</strong></td></tr>
+            <tr><td>Conv2D (32 filters, 3x3)</td><td>28x28x1</td><td>32 feature maps</td><td>3 x 3 x 1 x 32 + 32 = <strong>320</strong></td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;">The Conv2D layer achieves comparable feature extraction with <strong>314x fewer parameters</strong> because it reuses the same 3x3 filter at every position (weight sharing).</p>
+</div>
+
+<div class="card">
+    <h3>When does Dense still work?</h3>
+    <p>Dense layers still get ~97-98% on MNIST because the dataset is simple: centred, normalised digits with little variation. The statistical correlations alone are sufficient. But on harder image tasks (CIFAR-10, medical imaging, malware visualisation), Dense performance degrades sharply while CNNs maintain accuracy.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Malware binaries converted to images have meaningful spatial structure -- code sections, data sections, and headers appear in consistent positions. A Dense layer would treat bytes from the PE header the same as bytes from a random data section. A <strong>CNN detects local patterns</strong> (repeating code structures, packed sections) regardless of where they appear in the binary.
+</div>
+{% endblock %}

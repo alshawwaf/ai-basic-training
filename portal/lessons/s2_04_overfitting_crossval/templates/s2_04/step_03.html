@@ -1,0 +1,94 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What is a Validation Curve?</h3>
+    <p>A validation curve answers: <strong>"How does model performance change as I vary one hyperparameter?"</strong></p>
+    <p>In Step 0 you wrote a manual loop over <code>max_depth</code> values. <code>validation_curve()</code> does the same thing but:</p>
+    <table class="info-table">
+        <thead><tr><th>Advantage</th><th>Why it matters</th></tr></thead>
+        <tbody>
+            <tr><td>Uses cross-validation</td><td>Each depth is evaluated with K-fold, not a single split</td></tr>
+            <tr><td>Returns both curves</td><td>Training and validation scores for every parameter value</td></tr>
+            <tr><td>Handles the loop</td><td>You specify parameter name and range &mdash; it does the rest</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">from sklearn.model_selection import validation_curve
+from sklearn.tree import DecisionTreeClassifier
+import numpy as np
+
+param_range = np.arange(1, 21)
+
+train_scores, val_scores = validation_curve(
+    DecisionTreeClassifier(random_state=42),
+    X_train, y_train,
+    param_name='max_depth',
+    param_range=param_range,
+    cv=5,
+    scoring='accuracy'
+)
+# Shapes: both (20, 5) — 20 depths x 5 folds</code></pre>
+</div>
+
+<div class="card">
+    <h3>Reading the Three Regions</h3>
+    <table class="info-table">
+        <thead><tr><th>max_depth</th><th>Train score</th><th>Val score</th><th>Diagnosis</th></tr></thead>
+        <tbody>
+            <tr><td>1&ndash;2 (shallow)</td><td>Low</td><td>Low</td><td><strong>High bias</strong> &mdash; model too simple (underfitting)</td></tr>
+            <tr><td>3&ndash;5 (moderate)</td><td>High</td><td>Peaks here</td><td><strong>Best complexity</strong> &mdash; choose this depth</td></tr>
+            <tr><td>10&ndash;20 (deep)</td><td>1.000</td><td>Drops</td><td><strong>High variance</strong> &mdash; memorising noise (overfitting)</td></tr>
+        </tbody>
+    </table>
+    <p>The validation curve is a <strong>complete diagnostic</strong>: it shows the underfit zone, the sweet spot, and the overfit zone in a single plot.</p>
+</div>
+
+<div class="card">
+    <h3>Plotting with Standard Deviation Bands</h3>
+    <pre><code class="language-python">import matplotlib.pyplot as plt
+
+train_mean = train_scores.mean(axis=1)
+train_std  = train_scores.std(axis=1)
+val_mean   = val_scores.mean(axis=1)
+val_std    = val_scores.std(axis=1)
+
+plt.figure(figsize=(10, 6))
+plt.plot(param_range, train_mean, 'b-', label='Training')
+plt.fill_between(param_range,
+                 train_mean - train_std,
+                 train_mean + train_std, alpha=0.15, color='blue')
+
+plt.plot(param_range, val_mean, 'r--', label='Validation')
+plt.fill_between(param_range,
+                 val_mean - val_std,
+                 val_mean + val_std, alpha=0.15, color='red')
+
+plt.xlabel('max_depth')
+plt.ylabel('Accuracy')
+plt.title('Validation Curve')
+plt.legend()
+plt.show()</code></pre>
+    <p>The shaded bands show the standard deviation across folds. Wide bands mean the model's performance is unstable &mdash; another sign of overfitting.</p>
+</div>
+
+<div class="card">
+    <h3>Picking the Optimal Parameter</h3>
+    <pre><code class="language-python"># Find the depth with highest mean validation score
+best_idx = np.argmax(val_mean)
+best_depth = param_range[best_idx]
+
+print(f"Optimal max_depth: {best_depth}")
+print(f"Val accuracy:      {val_mean[best_idx]:.4f} +/- {val_std[best_idx]:.4f}")
+print(f"Train accuracy:    {train_mean[best_idx]:.4f}")
+print(f"Gap:               {train_mean[best_idx] - val_mean[best_idx]:.4f}")</code></pre>
+    <p>This is the <strong>evidence-based</strong> way to select hyperparameters. No guessing, no "more is better" &mdash; the data tells you the optimal complexity.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The validation curve is your <strong>defence against both false confidence and
+    unnecessary complexity</strong>. Before deploying any security model, generate this plot. It proves to auditors and
+    management that you chose the model complexity based on evidence, not intuition &mdash; and it documents that the model
+    generalises to unseen data, which is the only thing that matters in production.
+</div>
+{% endblock %}

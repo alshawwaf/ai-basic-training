@@ -1,0 +1,77 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What Is Zero-Shot Classification?</h3>
+    <p>Traditional classifiers require labelled training data for every category. Zero-shot classification lets you define categories at inference time -- no training required. The model uses its general language understanding to match text to labels it has never been explicitly trained on.</p>
+    <table class="info-table">
+        <thead><tr><th>Approach</th><th>Training data needed?</th><th>New categories?</th><th>Security use case</th></tr></thead>
+        <tbody>
+            <tr><td>Traditional classifier</td><td>Yes -- hundreds of labelled examples per class</td><td>Retrain from scratch</td><td>Malware family classification</td></tr>
+            <tr><td>Zero-shot classifier</td><td>No -- define labels at call time</td><td>Just add a new label string</td><td>Map SIEM alerts to MITRE ATT&amp;CK tactics</td></tr>
+        </tbody>
+    </table>
+    <p>The trade-off: zero-shot is less accurate than a fine-tuned model, but infinitely more flexible. For security teams that need to classify novel threat types without waiting for labelled datasets, this is transformative.</p>
+</div>
+
+<div class="card">
+    <h3>How It Works: Natural Language Inference (NLI)</h3>
+    <p>Under the hood, zero-shot classification uses an NLI model. It frames the problem as: "Does the input text <strong>entail</strong> each candidate label?" The model scores each label independently:</p>
+    <table class="info-table">
+        <thead><tr><th>Input text</th><th>Candidate label</th><th>Entailment score</th></tr></thead>
+        <tbody>
+            <tr><td rowspan="3">Outbound connection to 185.234.219.47:443 after powershell execution</td><td>malicious activity</td><td>0.87</td></tr>
+            <tr><td>normal traffic</td><td>0.08</td></tr>
+            <tr><td>configuration change</td><td>0.05</td></tr>
+        </tbody>
+    </table>
+    <p>The model has never seen these specific labels before. It uses its understanding of language to assess how well each label describes the input.</p>
+</div>
+
+<div class="card">
+    <h3>The HuggingFace Pipeline API</h3>
+    <pre><code class="language-python">from transformers import pipeline
+
+# Load the zero-shot classification pipeline
+classifier = pipeline(
+    "zero-shot-classification",
+    model="facebook/bart-large-mnli"
+)
+
+# Classify a security log entry
+result = classifier(
+    "Lateral movement detected: SMB connections to 15 internal hosts",
+    candidate_labels=[
+        "lateral movement",
+        "data exfiltration",
+        "persistence",
+        "normal traffic"
+    ]
+)
+
+print(result["labels"][0])   # "lateral movement"
+print(result["scores"][0])   # 0.92</code></pre>
+    <p>Three lines of code. No training data. No model architecture decisions. HuggingFace handles tokenisation, model loading, and post-processing automatically.</p>
+</div>
+
+<div class="card">
+    <h3>Available Pipeline Tasks</h3>
+    <table class="info-table">
+        <thead><tr><th>Task</th><th>Pipeline name</th><th>Security use case</th></tr></thead>
+        <tbody>
+            <tr><td>Text classification</td><td><code>text-classification</code></td><td>Classify log severity, phishing detection</td></tr>
+            <tr><td>Named entity recognition</td><td><code>ner</code></td><td>Extract IPs, CVEs, malware names from reports</td></tr>
+            <tr><td>Summarisation</td><td><code>summarization</code></td><td>Summarise threat intel reports</td></tr>
+            <tr><td>Question answering</td><td><code>question-answering</code></td><td>Extract answers from policy documents</td></tr>
+            <tr><td>Zero-shot classification</td><td><code>zero-shot-classification</code></td><td>Map alerts to custom categories without training</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Zero-shot classification lets a SOC team map raw SIEM alerts to MITRE ATT&amp;CK tactics
+    without any labelled training data. Define your tactic labels (initial access, lateral movement, exfiltration, etc.) and the model
+    classifies each alert in real time. When a new tactic emerges, just add a label string -- no retraining needed.
+</div>
+{% endblock %}

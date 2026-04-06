@@ -1,0 +1,80 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Complete CNN architecture</h3>
+    <p>The standard pattern for image classification stacks Conv+Pool blocks (feature extraction) followed by Dense layers (classification):</p>
+
+    <table class="info-table">
+        <thead><tr><th>Layer</th><th>Output shape</th><th>Role</th></tr></thead>
+        <tbody>
+            <tr><td>Input</td><td>(28, 28, 1)</td><td>Greyscale image</td></tr>
+            <tr><td>Conv2D(32, (3,3), relu)</td><td>(26, 26, 32)</td><td>Detect low-level features: edges, corners</td></tr>
+            <tr><td>MaxPooling2D(2,2)</td><td>(13, 13, 32)</td><td>Downsample, retain strongest activations</td></tr>
+            <tr><td>Conv2D(64, (3,3), relu)</td><td>(11, 11, 64)</td><td>Combine features: curves, digit parts</td></tr>
+            <tr><td>MaxPooling2D(2,2)</td><td>(5, 5, 64)</td><td>Further downsample</td></tr>
+            <tr><td>Flatten()</td><td>(1600,)</td><td>Convert 2D maps to 1D for Dense layers</td></tr>
+            <tr><td>Dense(128, relu)</td><td>(128,)</td><td>Classification reasoning</td></tr>
+            <tr><td>Dense(10, softmax)</td><td>(10,)</td><td>One probability per digit class (0-9)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Building the CNN in Keras</h3>
+    <pre><code class="language-python">from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3, 3), activation='relu',
+                        input_shape=(28, 28, 1)),
+    keras.layers.MaxPooling2D((2, 2)),
+
+    keras.layers.Conv2D(64, (3, 3), activation='relu'),
+    keras.layers.MaxPooling2D((2, 2)),
+
+    keras.layers.Flatten(),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10, activation='softmax'),
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.summary()  # check the parameter counts per layer</code></pre>
+</div>
+
+<div class="card">
+    <h3>How Conv layers stack: the feature hierarchy</h3>
+    <p>Each successive Conv layer detects higher-level patterns by combining the features from the layer below:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Layer depth</th><th>Detects</th><th>Receptive field</th></tr></thead>
+        <tbody>
+            <tr><td>Conv layer 1</td><td>Edges, lines, simple textures</td><td>3x3 pixels (local)</td></tr>
+            <tr><td>Conv layer 2</td><td>Corners, curves, shapes</td><td>~7x7 pixels (combining layer 1 patterns)</td></tr>
+            <tr><td>Conv layer 3+</td><td>Object parts, complex structures</td><td>Increasingly larger regions</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>CNN vs Dense baseline on MNIST</h3>
+    <p>Training both on the same data with similar training time:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Model</th><th>Parameters</th><th>Test accuracy</th><th>Spatial awareness</th></tr></thead>
+        <tbody>
+            <tr><td>Dense (784 -> 128 -> 10)</td><td>~101,770</td><td>~97.8%</td><td>None</td></tr>
+            <tr><td>CNN (Conv32 -> Conv64 -> Dense128)</td><td>~34,826</td><td>~99.2%</td><td>Full</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;">The CNN achieves higher accuracy with <strong>fewer parameters</strong> because weight sharing and spatial awareness let it learn more efficiently from image data.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The same Conv-Pool-Dense architecture used for MNIST applies directly to <strong>malware image classification</strong>. Convert binary files to greyscale images, then train a CNN to distinguish malware families. The Conv layers learn structural patterns (packed sections, code caves, import tables) that are visually consistent within a family even when the binary is slightly modified.
+</div>
+{% endblock %}

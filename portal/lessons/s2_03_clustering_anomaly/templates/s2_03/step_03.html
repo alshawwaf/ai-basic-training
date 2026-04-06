@@ -1,0 +1,81 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Distance as Anomaly Score</h3>
+    <p>After K-Means assigns every sample to a cluster, the <strong>distance from its centroid</strong> becomes an anomaly score:</p>
+    <table class="info-table">
+        <thead><tr><th>Sample type</th><th>Centroid distance</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td>Normal traffic</td><td>Low (e.g., 0.8)</td><td>Close to its cluster centre &mdash; typical behaviour</td></tr>
+            <tr><td>Borderline</td><td>Medium (e.g., 3.2)</td><td>At the edge of a cluster &mdash; worth monitoring</td></tr>
+            <tr><td>Anomaly</td><td>High (e.g., 6.5)</td><td>Far from all centroids &mdash; investigate</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">import numpy as np
+
+# Distance from each sample to its nearest centroid
+distances = np.min(km.transform(X_scaled), axis=1)
+
+# km.transform() returns (n_samples, K) matrix of distances
+# np.min(..., axis=1) picks the nearest centroid's distance</code></pre>
+</div>
+
+<div class="card">
+    <h3>Setting a Threshold</h3>
+    <p>A threshold converts continuous anomaly scores into binary alerts. Common approaches:</p>
+    <table class="info-table">
+        <thead><tr><th>Method</th><th>Threshold</th><th>Tradeoff</th></tr></thead>
+        <tbody>
+            <tr><td>Percentile</td><td>95th percentile of distances</td><td>Flags top 5% &mdash; manageable alert volume</td></tr>
+            <tr><td>Standard deviations</td><td>mean + 2&sigma;</td><td>Statistically principled; assumes normality</td></tr>
+            <tr><td>Manual</td><td>Domain expert picks a value</td><td>Tuned to SOC capacity</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python"># Percentile-based threshold
+threshold = np.percentile(distances, 95)
+anomaly_mask = distances > threshold
+
+print(f"Threshold: {threshold:.2f}")
+print(f"Flagged:   {anomaly_mask.sum()} / {len(distances)}")
+
+# Show the flagged connections
+anomalies = X[anomaly_mask]</code></pre>
+</div>
+
+<div class="card">
+    <h3>Verifying Against True Labels</h3>
+    <p>If you have ground truth labels (even partial), check how well the anomaly flags overlap:</p>
+    <pre><code class="language-python"># How many flagged samples are actually attacks?
+flagged_attacks = y[anomaly_mask].sum()
+total_attacks = y.sum()
+
+precision = flagged_attacks / anomaly_mask.sum()
+recall = flagged_attacks / total_attacks
+
+print(f"Precision: {precision:.2f}")  # of flagged, how many are real attacks?
+print(f"Recall:    {recall:.2f}")     # of real attacks, how many did we flag?</code></pre>
+    <p>High recall means you are catching most attacks. High precision means you are not overwhelming analysts with false positives.</p>
+</div>
+
+<div class="card">
+    <h3>Limitations of K-Means Anomaly Detection</h3>
+    <table class="info-table">
+        <thead><tr><th>Limitation</th><th>Why it matters</th><th>Mitigation</th></tr></thead>
+        <tbody>
+            <tr><td>Assumes spherical clusters</td><td>Real traffic groups may be elongated or irregular</td><td>Use DBSCAN or Gaussian Mixture Models</td></tr>
+            <tr><td>Sensitive to K choice</td><td>Wrong K merges or splits real groups</td><td>Use elbow + silhouette together</td></tr>
+            <tr><td>Static baseline</td><td>Network behaviour changes over time</td><td>Retrain periodically on recent data</td></tr>
+            <tr><td>Feature scale dependent</td><td>Unscaled features produce meaningless distances</td><td>Always apply StandardScaler first</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Distance-based anomaly scoring is the foundation of <strong>UEBA (User and Entity
+    Behaviour Analytics)</strong>. Production SIEM platforms like Microsoft Sentinel use exactly this approach: learn a
+    baseline of normal entity behaviour, then flag deviations. The threshold is tuned to match the SOC's capacity to
+    investigate alerts.
+</div>
+{% endblock %}

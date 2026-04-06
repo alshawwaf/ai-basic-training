@@ -1,0 +1,50 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Lab: cp-agentic-mcp-playground</h3>
+    <p>A Docker-based sandbox with 13 Check Point MCP servers, n8n workflow automation, Ollama (local LLM), and Qdrant (vector database).</p>
+    <pre><code class="language-python">git clone https://github.com/alshawwaf/cp-agentic-mcp-playground.git
+cd cp-agentic-mcp-playground
+./setup.sh
+docker compose --profile cpu up -d</code></pre>
+    <p>Access n8n at <code>http://localhost:5678</code></p>
+</div>
+
+<div class="card">
+    <h3>Exercise 1: Explore the MCP Landscape (15 min)</h3>
+    <ul>
+        <li>Open n8n and browse the pre-loaded workflows</li>
+        <li>Identify which MCP servers are connected and what tools they expose</li>
+        <li>Question: <em>"If an agent had access to all 13 MCP servers, what's the maximum damage it could do?"</em></li>
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Exercise 2: Build a Threat Investigation Workflow (25 min)</h3>
+    <p>Using n8n, create a workflow that:</p>
+    <ol>
+        <li>Takes an IP address as input</li>
+        <li>Checks its reputation via the Reputation Service MCP</li>
+        <li>Queries Management Logs for connections to/from that IP</li>
+        <li>Generates a summary using the local Ollama LLM</li>
+    </ol>
+    <p>This simulates what an AI security agent does &mdash; orchestrating multiple tools to investigate a threat.</p>
+</div>
+
+<div class="card">
+    <h3>Exercise 3: Security Review (10 min)</h3>
+    <ul>
+        <li>Review your workflow: what data did the agent access? What tools did it use?</li>
+        <li>If this agent were compromised (prompt injection from a malicious log entry), what could it do?</li>
+        <li>How would AI Agent Security detect and prevent misuse?</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> The workflow you just built is a real-world agent pattern.
+    Every tool call is a potential risk. AI Agent Security monitors these invocations at scale &mdash;
+    tracking who called what, with what data, and whether it matches expected behaviour.
+</div>
+{% endblock %}

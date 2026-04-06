@@ -1,0 +1,87 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>From Chunks to a Vector Index</h3>
+    <p>After chunking, you encode each chunk into a vector using a sentence embedding model. All chunk vectors together form a <strong>vector index</strong> -- an embedding matrix you search against at query time:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>Input</th><th>Output</th><th>When</th></tr></thead>
+        <tbody>
+            <tr><td>1. Chunk</td><td>Raw documents</td><td>List of N text chunks</td><td>Once (offline)</td></tr>
+            <tr><td>2. Encode</td><td>N text chunks</td><td>Embedding matrix (N x 384)</td><td>Once (offline)</td></tr>
+            <tr><td>3. Query</td><td>User question</td><td>Query vector (1 x 384)</td><td>Every search</td></tr>
+            <tr><td>4. Rank</td><td>Query vector vs embedding matrix</td><td>Cosine similarity scores (N,)</td><td>Every search</td></tr>
+            <tr><td>5. Return</td><td>Top-k scores</td><td>k most relevant chunks</td><td>Every search</td></tr>
+        </tbody>
+    </table>
+    <p>Steps 1-2 are done once. Steps 3-5 run in milliseconds because the expensive encoding is already done.</p>
+</div>
+
+<div class="card">
+    <h3>Building the Vector Index</h3>
+    <pre><code class="language-python">from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Assume chunks is a list of strings from step 1
+chunks = [
+    "Mimikatz can extract plaintext passwords from LSASS process memory...",
+    "To detect LSASS dumping, monitor for process access events (Sysmon ID 10)...",
+    "SSH brute force attacks generate many failed authentication events...",
+    "DNS tunnelling encodes exfiltrated data in DNS query subdomains...",
+    "Ransomware typically encrypts files using AES-256 and stores the key...",
+]
+
+# Encode all chunks (done once, offline)
+chunk_embeddings = model.encode(chunks)
+print(f"Index shape: {chunk_embeddings.shape}")  # (5, 384)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Retrieving Relevant Chunks</h3>
+    <pre><code class="language-python">def retrieve(query, chunk_embeddings, chunks, k=3):
+    """Retrieve the top-k most relevant chunks for a query."""
+    query_vec = model.encode([query])
+    scores = cosine_similarity(query_vec, chunk_embeddings)[0]
+    top_k_indices = np.argsort(scores)[::-1][:k]
+
+    results = []
+    for idx in top_k_indices:
+        results.append({
+            "chunk": chunks[idx],
+            "score": float(scores[idx]),
+            "index": int(idx),
+        })
+    return results
+
+# Test it
+results = retrieve("how to detect credential dumping", chunk_embeddings, chunks)
+for r in results:
+    print(f"[{r['score']:.3f}] {r['chunk'][:80]}...")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Evaluating Retrieval Quality</h3>
+    <p>Before connecting retrieval to an LLM, verify that the right chunks come back for your expected queries:</p>
+    <table class="info-table">
+        <thead><tr><th>Test query</th><th>Expected top chunk</th><th>Pass?</th></tr></thead>
+        <tbody>
+            <tr><td>"how to detect credential dumping"</td><td>LSASS dumping detection (Sysmon ID 10)</td><td>Check top-1</td></tr>
+            <tr><td>"what is DNS tunnelling"</td><td>DNS tunnelling encodes data in subdomains</td><td>Check top-1</td></tr>
+            <tr><td>"ransomware encryption method"</td><td>Ransomware typically encrypts with AES-256</td><td>Check top-1</td></tr>
+        </tbody>
+    </table>
+    <p>If the correct chunk does not appear in the top-3 results, the problem is in your chunking strategy or embedding model -- not in the LLM. Fix retrieval <em>before</em> adding generation.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Retrieval is the most critical component of a RAG security assistant.
+    If the wrong chunk is retrieved, the LLM will confidently generate an answer based on irrelevant context --
+    potentially giving incorrect remediation advice during an active incident. Always evaluate retrieval quality
+    independently before trusting the full pipeline. A wrong answer from a trusted tool is more dangerous than
+    no answer at all.
+</div>
+{% endblock %}

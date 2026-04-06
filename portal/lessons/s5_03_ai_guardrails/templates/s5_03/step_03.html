@@ -1,0 +1,47 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Customer Conversation</h3>
+    <table class="info-table">
+        <thead><tr><th>Customer Stage</th><th>What They Say</th><th>What They Need</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Unaware</strong></td><td>"Our chatbot is internal, so it's fine"</td><td>Education: internal users can still inject prompts and extract data</td></tr>
+            <tr><td><strong>Concerned</strong></td><td>"Security team blocked our AI project"</td><td>Solution: guardrails enable safe deployment</td></tr>
+            <tr><td><strong>Building</strong></td><td>"We're building a customer-facing LLM app"</td><td>Technical: inline scanning, latency guarantees, compliance</td></tr>
+            <tr><td><strong>Post-incident</strong></td><td>"Someone jailbroke our chatbot"</td><td>Urgency: deploy now, show the attack would have been caught</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Competitive Differentiation</h3>
+    <table class="info-table">
+        <thead><tr><th>Competitor Approach</th><th>Limitation</th><th>CP Advantage</th></tr></thead>
+        <tbody>
+            <tr><td>Cloud LLM safety filters</td><td>Only protect their own models</td><td>Works with any LLM &mdash; cloud, on-prem, hybrid</td></tr>
+            <tr><td>Generic WAF rules</td><td>Can't parse semantic intent</td><td>Purpose-built NLP classifiers for LLM attacks</td></tr>
+            <tr><td>Manual prompt engineering</td><td>Easily bypassed</td><td>Automated inline scanning</td></tr>
+            <tr><td>Open-source (LLM Guard)</td><td>No console, no support</td><td>Managed product in Infinity Platform</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Demo Script (5 min)</h3>
+    <ol>
+        <li><strong>Explain the attack surface</strong> &mdash; "Every LLM app accepts natural language input. That input can contain hidden instructions."</li>
+        <li><strong>Run a prompt injection</strong> &mdash; show the AI following injected instructions without guardrails</li>
+        <li><strong>Show Lakera detection</strong> &mdash; the guardrails catch and classify the attack</li>
+        <li><strong>Run a data extraction attempt</strong> &mdash; trying to extract the system prompt</li>
+        <li><strong>Show the audit log</strong> &mdash; "Every scan is logged. This is your compliance evidence."</li>
+    </ol>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Demo over deck. Pull out a laptop and show something working.
+    The Lakera-Demo is more compelling than any PowerPoint. You can explain how the classification
+    and embedding-based detection actually works because you built those components yourself.
+</div>
+{% endblock %}

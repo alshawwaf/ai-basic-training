@@ -1,0 +1,72 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Regression vs Classification</h3>
+    <p>Machine learning problems split into two types depending on the output:</p>
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Regression</th><th>Classification</th></tr></thead>
+        <tbody>
+            <tr><td>Output</td><td>A continuous number</td><td>A category / label</td></tr>
+            <tr><td>Example</td><td>145 ms response time</td><td>"attack" or "benign"</td></tr>
+            <tr><td>Error metric</td><td>MSE, RMSE, R&sup2;</td><td>Accuracy, F1, AUC</td></tr>
+            <tr><td>sklearn class</td><td><code>LinearRegression</code></td><td><code>LogisticRegression</code></td></tr>
+        </tbody>
+    </table>
+    <p><strong>Rule of thumb:</strong> if you can put your output on a number line and care about <em>how far off</em> you are, use regression. If you only care about <em>which bucket</em>, use classification.</p>
+</div>
+
+<div class="card">
+    <h3>The Dataset: Server Response Time</h3>
+    <p>You're monitoring a web server. As traffic increases, response time goes up. Can you predict response time from requests-per-second?</p>
+    <table class="info-table">
+        <thead><tr><th>Column</th><th>Type</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td><code>requests_per_second</code></td><td>Float</td><td>HTTP requests arriving each second (input feature)</td></tr>
+            <tr><td><code>response_time_ms</code></td><td>Float</td><td>Average response time in milliseconds (target)</td></tr>
+        </tbody>
+    </table>
+    <p>500 synthetic measurements, approximately linear relationship, with Gaussian noise.</p>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">import numpy as np
+import pandas as pd
+
+# Generate synthetic data with a known relationship
+np.random.seed(42)
+n_samples = 500
+requests_per_second = np.random.uniform(10, 200, n_samples)
+response_time_ms = 1.8 * requests_per_second + 30 + np.random.normal(0, 15, n_samples)
+
+df = pd.DataFrame({
+    'requests_per_second': requests_per_second,
+    'response_time_ms': response_time_ms
+})
+
+print(df.shape)          # (500, 2)
+print(df.describe())     # summary statistics
+</code></pre>
+</div>
+
+<div class="card">
+    <h3>Exploratory Data Analysis (EDA)</h3>
+    <p>Before fitting any model, always inspect your data:</p>
+    <ol>
+        <li><strong>Shape</strong> &mdash; how many rows and columns?</li>
+        <li><strong>Types</strong> &mdash; are columns numeric or categorical?</li>
+        <li><strong>Summary stats</strong> &mdash; mean, min, max, standard deviation</li>
+        <li><strong>Missing values</strong> &mdash; any NaN entries?</li>
+        <li><strong>Scatter plot</strong> &mdash; does it suggest linearity?</li>
+    </ol>
+    <p>These steps catch problems early and tell you whether a linear model is appropriate.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> A trained baseline says "at X rps, the server should respond in Y ms &plusmn; Z ms".
+    Any observation that deviates far beyond that band is suspicious &mdash; it could indicate a DoS flood, resource exhaustion,
+    or a background process consuming CPU. This is the foundation of anomaly detection.
+</div>
+{% endblock %}

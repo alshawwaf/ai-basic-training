@@ -1,0 +1,69 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Bias and Variance</h3>
+    <p><strong>Bias</strong> is the error from wrong assumptions. A high-bias model is too simple to capture the true pattern &mdash; it underfits. Every time you train it on different data, you get the same wrong answer.</p>
+    <p><strong>Variance</strong> is the error from sensitivity to training data fluctuations. A high-variance model is too complex &mdash; it overfits. Train it on different data subsets and you get wildly different models.</p>
+    <table class="info-table">
+        <thead><tr><th></th><th>High Bias (underfit)</th><th>High Variance (overfit)</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Training error</strong></td><td>High</td><td>Low</td></tr>
+            <tr><td><strong>Test error</strong></td><td>High</td><td>High</td></tr>
+            <tr><td><strong>Gap</strong></td><td>Small</td><td>Large</td></tr>
+            <tr><td><strong>Fix</strong></td><td>More complex model</td><td>Regularisation, more data</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Three Regimes Visualised</h3>
+    <table class="info-table">
+        <thead><tr><th>Regime</th><th>Depth</th><th>Train Acc</th><th>Val Acc</th><th>Gap</th><th>Decision boundary</th></tr></thead>
+        <tbody>
+            <tr><td><strong>UNDERFIT</strong></td><td>1</td><td>~65%</td><td>~65%</td><td>~0%</td><td>A single split &mdash; too simple to learn the pattern</td></tr>
+            <tr><td><strong>GOOD FIT</strong></td><td>5</td><td>~99%</td><td>~97%</td><td>~2%</td><td>Clean boundary &mdash; captures the real decision surface</td></tr>
+            <tr><td><strong>OVERFIT</strong></td><td>50</td><td>100%</td><td>~92%</td><td>~8%</td><td>Wiggly boundary around noise &mdash; memorises every point</td></tr>
+        </tbody>
+    </table>
+    <p>The sweet spot is the depth where both bias and variance are low enough &mdash; validation accuracy is highest and the gap is small.</p>
+</div>
+
+<div class="card">
+    <h3>Comparing Three Models</h3>
+    <pre><code class="language-python">from sklearn.tree import DecisionTreeClassifier
+
+models = {
+    "Underfit (depth=1)": DecisionTreeClassifier(max_depth=1, random_state=42),
+    "Good fit (depth=5)": DecisionTreeClassifier(max_depth=5, random_state=42),
+    "Overfit (depth=50)": DecisionTreeClassifier(max_depth=50, random_state=42),
+}
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    tr = model.score(X_train, y_train)
+    va = model.score(X_val, y_val)
+    print(f"{name:25s}  train={tr:.3f}  val={va:.3f}  gap={tr-va:.3f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Security Implications</h3>
+    <table class="info-table">
+        <thead><tr><th>Regime</th><th>Security impact</th></tr></thead>
+        <tbody>
+            <tr><td>Underfit (high bias)</td><td>Misses most attacks &mdash; model is too simple to learn attack patterns</td></tr>
+            <tr><td>Good fit</td><td>Balanced detection rate and false-positive rate</td></tr>
+            <tr><td>Overfit (high variance)</td><td>Catches training attacks but fails on new variants in production</td></tr>
+        </tbody>
+    </table>
+    <p>An overfit intrusion detector may pass all tests in the lab but miss novel attack variants the moment it goes live. The bias-variance tradeoff is not just theory &mdash; it directly determines whether your model protects the network or gives a false sense of security.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Attackers constantly evolve their techniques. A model with high variance has memorised
+    <strong>specific past attack signatures</strong>, not general attack behaviour. When the attacker changes one byte, the
+    overfit model fails. A properly-tuned model with low variance learns the <strong>underlying pattern</strong> (e.g., "high
+    connection rate + many destination ports") that persists across attack variations.
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Attack Categories</h3>
+    <table class="info-table">
+        <thead><tr><th>Category</th><th>What the Attacker Does</th><th>Risk</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Prompt injection</strong></td><td>Embeds hidden instructions to override system prompt</td><td>Bypasses application controls</td></tr>
+            <tr><td><strong>Jailbreak</strong></td><td>Social engineering to bypass safety training</td><td>LLM generates harmful content</td></tr>
+            <tr><td><strong>Data extraction</strong></td><td>Tricks LLM into revealing system prompts or RAG context</td><td>Leaks proprietary data</td></tr>
+            <tr><td><strong>Indirect injection</strong></td><td>Hides instructions in documents/emails the LLM processes</td><td>Manipulates output without direct interaction</td></tr>
+            <tr><td><strong>Toxic content</strong></td><td>Gets LLM to produce harmful content</td><td>Reputational and legal liability</td></tr>
+            <tr><td><strong>PII extraction</strong></td><td>Extracts personal data from context</td><td>Privacy violations, regulatory penalties</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Why Traditional Security Doesn't Work</h3>
+    <table class="info-table">
+        <thead><tr><th>Traditional Control</th><th>Why It Fails</th></tr></thead>
+        <tbody>
+            <tr><td>WAF rules</td><td>Prompt injections are natural language &mdash; no SQL syntax to match</td></tr>
+            <tr><td>Input validation</td><td>Attacks are semantically valid text, not malformed input</td></tr>
+            <tr><td>Output filtering</td><td>Regex can't catch creative encoding or rephrased content</td></tr>
+            <tr><td>Rate limiting</td><td>A single well-crafted prompt is enough</td></tr>
+            <tr><td>Authentication</td><td>The attacker is often a legitimate, authenticated user</td></tr>
+        </tbody>
+    </table>
+    <p>LLM applications need a <strong>purpose-built security layer</strong> that understands natural language semantics.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> "Ignore previous instructions" is valid English, not a SQL injection
+    or script tag. No existing security tool was designed to detect semantic attacks on AI systems.
+    This is why AI Guardrails is a new product category, not an extension of WAF.
+</div>
+{% endblock %}

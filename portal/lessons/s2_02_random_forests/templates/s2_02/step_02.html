@@ -1,0 +1,77 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Why Forest Importances Are More Stable</h3>
+    <p>A single tree's feature importance depends heavily on which training sample it saw. Train two trees with different random seeds and you can get very different importance rankings.</p>
+    <p>A Random Forest averages importances over hundreds of trees, each trained on a different bootstrap sample. The result is a <strong>stable ranking</strong> &mdash; retrain with a different seed and the top features remain the same.</p>
+    <pre><code class="language-python">import numpy as np
+
+# Measure stability: train 20 times with different seeds
+importances_runs = []
+for seed in range(20):
+    rf = RandomForestClassifier(n_estimators=100, random_state=seed)
+    rf.fit(X_train, y_train)
+    importances_runs.append(rf.feature_importances_)
+
+# Low std = stable, trustworthy importance
+stds = np.std(importances_runs, axis=0)
+for name, std in zip(feature_names, stds):
+    print(f"{name}: std = {std:.4f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>PE File Feature Interpretation</h3>
+    <p>In a malware-vs-benign classifier, the forest reveals which static analysis features matter most:</p>
+    <table class="info-table">
+        <thead><tr><th>Feature</th><th>High value in malware</th><th>Security reason</th></tr></thead>
+        <tbody>
+            <tr><td><code>file_entropy</code></td><td>~7.2 (near maximum)</td><td>Packed/encrypted malware has high entropy</td></tr>
+            <tr><td><code>has_packer_sig</code></td><td>68% vs 5% benign</td><td>Packers evade antivirus static analysis</td></tr>
+            <tr><td><code>virtual_size_ratio</code></td><td>~2.8 (inflated)</td><td>Malware unpacks itself in memory</td></tr>
+            <tr><td><code>import_entropy</code></td><td>Lower &mdash; fewer imports</td><td>Targeted API calls (e.g., CreateRemoteThread)</td></tr>
+            <tr><td><code>num_imports</code></td><td>Lower</td><td>Minimal import table to evade static analysis</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Extracting and Plotting Importances</h3>
+    <pre><code class="language-python">import matplotlib.pyplot as plt
+
+rf = RandomForestClassifier(n_estimators=200, random_state=42)
+rf.fit(X_train, y_train)
+
+# Sort features by importance
+indices = np.argsort(rf.feature_importances_)[::-1]
+sorted_names = [feature_names[i] for i in indices]
+sorted_imps = rf.feature_importances_[indices]
+
+plt.figure(figsize=(10, 5))
+plt.barh(sorted_names[::-1], sorted_imps[::-1])
+plt.xlabel("Importance")
+plt.title("Random Forest Feature Importances")
+plt.tight_layout()
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Single Tree vs Forest Stability</h3>
+    <table class="info-table">
+        <thead><tr><th>Aspect</th><th>Single tree</th><th>Random Forest</th></tr></thead>
+        <tbody>
+            <tr><td>Top feature rank</td><td>Changes with random seed</td><td>Consistent across seeds</td></tr>
+            <tr><td>Importance std</td><td>High (0.03&ndash;0.08)</td><td>Low (0.005&ndash;0.015)</td></tr>
+            <tr><td>Trustworthiness</td><td>Questionable</td><td>Reliable for feature selection</td></tr>
+        </tbody>
+    </table>
+    <p>Stable importances mean you can confidently drop low-importance features to speed up your pipeline without risking accuracy.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Feature importances tell defenders which file properties are most indicative of malware.
+    But beware: if attackers learn your top features, they can craft evasion samples. Treat your model's feature importances
+    as <strong>sensitive intelligence</strong> &mdash; share them within the team, not publicly.
+</div>
+{% endblock %}

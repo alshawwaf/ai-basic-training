@@ -1,0 +1,79 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Why Single Splits Are Unreliable</h3>
+    <p>With a single 80/20 train/test split, your test set is one random 20% sample. If that 20% happened to be "easy" examples, your score is optimistically high. If it was "hard" examples, it's pessimistically low. You cannot tell which.</p>
+    <p><strong>K-fold cross-validation</strong> solves this by using every sample as both training and test:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Divide data into K equal folds</td></tr>
+            <tr><td>2</td><td>For k = 1 to K: train on K-1 folds, evaluate on fold k</td></tr>
+            <tr><td>3</td><td>Average the K evaluation scores</td></tr>
+        </tbody>
+    </table>
+    <p>Every sample is used for evaluation exactly once. The K scores give you a mean and standard deviation &mdash; far more reliable than a single number.</p>
+</div>
+
+<div class="card">
+    <h3>Using cross_val_score</h3>
+    <pre><code class="language-python">from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier(max_depth=5, random_state=42)
+
+# 5-fold cross-validation
+scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+
+print(f"Fold scores: {scores}")
+print(f"Mean:  {scores.mean():.4f}")
+print(f"Std:   {scores.std():.4f}")
+# Example output: 0.9680 +/- 0.0080</code></pre>
+    <p>A low standard deviation means the model performs consistently across different data splits &mdash; it is <strong>stable and trustworthy</strong>.</p>
+</div>
+
+<div class="card">
+    <h3>5-Fold vs 10-Fold</h3>
+    <table class="info-table">
+        <thead><tr><th>Setting</th><th>Training size</th><th>Bias</th><th>Variance</th><th>Compute cost</th></tr></thead>
+        <tbody>
+            <tr><td>5-fold</td><td>80% per fold</td><td>Slightly higher</td><td>Lower</td><td>Fast</td></tr>
+            <tr><td>10-fold</td><td>90% per fold</td><td>Lower</td><td>Higher</td><td>2x slower</td></tr>
+        </tbody>
+    </table>
+    <p>For datasets with 2000+ samples, 5-fold is usually sufficient. Use 10-fold when data is scarce.</p>
+    <pre><code class="language-python"># Compare 5-fold and 10-fold
+scores_5 = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+scores_10 = cross_val_score(model, X, y, cv=10, scoring='accuracy')
+
+print(f"5-fold:  {scores_5.mean():.4f} +/- {scores_5.std():.4f}")
+print(f"10-fold: {scores_10.mean():.4f} +/- {scores_10.std():.4f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Cross-Validation vs Single Split</h3>
+    <table class="info-table">
+        <thead><tr><th>Approach</th><th>Estimate quality</th><th>Detects data-dependent issues?</th></tr></thead>
+        <tbody>
+            <tr><td>Single 80/20 split</td><td>One number &mdash; could be lucky or unlucky</td><td>No &mdash; hidden by one random split</td></tr>
+            <tr><td>5-fold CV</td><td>Mean &plusmn; std &mdash; reveals stability</td><td>Yes &mdash; one bad fold exposes weak spots</td></tr>
+            <tr><td>Stratified CV</td><td>Same, but preserves class ratios in each fold</td><td>Yes &mdash; essential for imbalanced security data</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">from sklearn.model_selection import StratifiedKFold
+
+# Stratified ensures each fold has the same attack/benign ratio
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(model, X, y, cv=skf, scoring='roc_auc')
+print(f"Stratified 5-fold AUC: {scores.mean():.4f} +/- {scores.std():.4f}")</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99%
+    benign). A single train/test split might accidentally put most attacks in the training set, giving misleadingly high test
+    scores. <strong>Stratified K-fold</strong> guarantees every fold has the same attack ratio, producing honest performance
+    estimates that reflect real-world detection capability.
+</div>
+{% endblock %}

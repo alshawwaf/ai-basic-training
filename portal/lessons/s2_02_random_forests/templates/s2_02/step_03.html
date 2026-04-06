@@ -1,0 +1,71 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>n_estimators: More Trees, Diminishing Returns</h3>
+    <p>Adding trees always reduces variance, but the improvement shrinks quickly. The "elbow" where accuracy plateaus is typically around 100&ndash;200 trees.</p>
+    <table class="info-table">
+        <thead><tr><th>n_estimators</th><th>Typical accuracy gain</th><th>Training time</th></tr></thead>
+        <tbody>
+            <tr><td>1 &rarr; 10</td><td>+3&ndash;5%</td><td>Low</td></tr>
+            <tr><td>10 &rarr; 50</td><td>+1&ndash;2%</td><td>Moderate</td></tr>
+            <tr><td>50 &rarr; 100</td><td>+0.3&ndash;0.5%</td><td>Moderate</td></tr>
+            <tr><td>100 &rarr; 500</td><td>+0.1%</td><td>High</td></tr>
+            <tr><td>500 &rarr; 1000</td><td>&lt; 0.05%</td><td>Very high</td></tr>
+        </tbody>
+    </table>
+    <p>Beyond the elbow, you are paying CPU time for negligible accuracy gains.</p>
+</div>
+
+<div class="card">
+    <h3>Sweep n_estimators</h3>
+    <pre><code class="language-python">import time
+
+n_trees = [1, 5, 10, 25, 50, 100, 200, 500]
+results = []
+
+for n in n_trees:
+    start = time.time()
+    rf = RandomForestClassifier(n_estimators=n, random_state=42)
+    rf.fit(X_train, y_train)
+    elapsed = time.time() - start
+    acc = rf.score(X_test, y_test)
+    results.append((n, acc, elapsed))
+    print(f"n={n:>4d}  acc={acc:.4f}  time={elapsed:.2f}s")</code></pre>
+</div>
+
+<div class="card">
+    <h3>max_features: Diversity vs Quality</h3>
+    <p><code>max_features</code> controls how many features each split considers. Fewer features = more tree diversity = better ensemble effect, but weaker individual trees.</p>
+    <table class="info-table">
+        <thead><tr><th>max_features</th><th>Trees use</th><th>Effect</th></tr></thead>
+        <tbody>
+            <tr><td><code>None</code> (all)</td><td>All features at every split</td><td>Trees are similar &rarr; worse ensemble</td></tr>
+            <tr><td><code>'sqrt'</code> (default)</td><td>&radic;n_features &asymp; 2&ndash;3</td><td>Good diversity; most common choice</td></tr>
+            <tr><td><code>'log2'</code></td><td>log&#8322;(n_features)</td><td>More aggressive diversity</td></tr>
+            <tr><td><code>0.5</code></td><td>50% of features</td><td>Good for high-dimensional data</td></tr>
+        </tbody>
+    </table>
+    <p>For PE file features (7 features), <code>max_features='sqrt'</code> means 2&ndash;3 features per split.</p>
+</div>
+
+<div class="card">
+    <h3>Finding the Sweet Spot</h3>
+    <pre><code class="language-python"># Identify the elbow: where adding more trees gives < 0.1% improvement
+prev_acc = 0
+for n, acc, t in results:
+    gain = acc - prev_acc
+    marker = " <-- elbow" if 0 < gain < 0.001 else ""
+    print(f"n={n:>4d}  acc={acc:.4f}  gain={gain:+.4f}{marker}")
+    prev_acc = acc</code></pre>
+    <p>Pick the n_estimators value at the elbow. In a real-time malware scanning pipeline, inference speed matters as much as accuracy. A 500-tree forest takes 5x longer to predict than a 100-tree forest for a tiny accuracy gain.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In a production malware scanner processing thousands of files per hour,
+    <strong>inference latency</strong> directly impacts coverage. If your 500-tree model takes 50ms per file but the
+    100-tree model takes 10ms with nearly identical accuracy, the faster model can scan 5x more files in the same window.
+    Tune for the sweet spot: maximum detection at minimum cost.
+</div>
+{% endblock %}

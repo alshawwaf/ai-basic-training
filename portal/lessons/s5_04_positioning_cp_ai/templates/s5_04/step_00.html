@@ -1,0 +1,32 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Identify the Concern, Lead with the Product</h3>
+    <table class="info-table">
+        <thead><tr><th>Customer Concern</th><th>CP Product</th><th>Your Opening</th></tr></thead>
+        <tbody>
+            <tr><td>"Employees using AI with no visibility"</td><td><strong>Workforce AI Security</strong></td><td>"Let me show you what we see when we turn on visibility &mdash; most orgs are surprised."</td></tr>
+            <tr><td>"Building AI apps, need to secure them"</td><td><strong>AI Guardrails</strong></td><td>"The biggest risk isn't the model &mdash; it's the input. Let me show you the attack surface."</td></tr>
+            <tr><td>"Deploying AI agents for SOC automation"</td><td><strong>AI Agent Security</strong></td><td>"Every tool an agent accesses is a potential blast radius. Let me show you least-privilege for AI."</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Unified Pitch (2 Minutes)</h3>
+    <ol>
+        <li><strong>The Landscape (20s)</strong> &mdash; "AI adoption is accelerating in three areas: employees using AI tools, orgs building AI apps, and agents automating operations."</li>
+        <li><strong>The Risk (30s)</strong> &mdash; "Employees leak data to ChatGPT. LLM apps are vulnerable to prompt injection. Agents have permissions without human approval."</li>
+        <li><strong>The Solution (30s)</strong> &mdash; "Check Point AI Security covers all three. Workforce gives visibility. Guardrails protect apps. Agent Security monitors autonomous workflows."</li>
+        <li><strong>The Differentiator (20s)</strong> &mdash; "Other vendors cover one &mdash; we cover all three, integrated into the Infinity Platform."</li>
+        <li><strong>The Proof (20s)</strong> &mdash; "Let me show you. I have a working demo."</li>
+    </ol>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Lead with the customer's concern, not the product name.
+    Identify which of the three AI security challenges they face, then map to the right product.
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Agent Security Threats</h3>
+    <table class="info-table">
+        <thead><tr><th>Threat</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Excessive permissions</strong></td><td>Agent has more tools than needed</td><td>Investigation agent that can also delete firewall rules</td></tr>
+            <tr><td><strong>Data exfiltration via tools</strong></td><td>Agent reads secrets, sends elsewhere</td><td>Reads vault credentials, posts to Slack</td></tr>
+            <tr><td><strong>Prompt injection via tools</strong></td><td>Malicious data from a tool manipulates reasoning</td><td>Ticket contains hidden redirect instructions</td></tr>
+            <tr><td><strong>Agent confusion</strong></td><td>Agent misinterprets a tool response</td><td>Quarantines production instead of test instance</td></tr>
+            <tr><td><strong>Shadow agents</strong></td><td>Unauthorised agents on corporate MCP</td><td>Developer's personal agent accessing production APIs</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>What AI Agent Security Monitors</h3>
+    <table class="info-table">
+        <thead><tr><th>Dimension</th><th>What It Tracks</th><th>Why It Matters</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Agent inventory</strong></td><td>All active agents, MCP connections, tools</td><td>You can't secure what you can't see</td></tr>
+            <tr><td><strong>Invocations</strong></td><td>Every tool call &mdash; what, with what params, what returned</td><td>Audit trail for autonomous actions</td></tr>
+            <tr><td><strong>Data flows</strong></td><td>Data moving between agents and tools</td><td>Detect exfiltration or sensitive exposure</td></tr>
+            <tr><td><strong>Behavioural patterns</strong></td><td>Normal vs anomalous activity</td><td>Research agent calling admin tools = red flag</td></tr>
+            <tr><td><strong>Policy compliance</strong></td><td>Actions vs organisational policies</td><td>Enforce least-privilege for tool access</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Connection to What You Know</h3>
+    <p>Agent behaviour monitoring is <strong>anomaly detection</strong> (Stage 2) applied to tool invocation patterns. Normal: 10 reputation lookups/hour, 2 log queries/hour. Anomalous: 500 management API calls in 5 minutes. Same statistical approach, new data source.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> For every agent, ask the blast radius question:
+    "If this agent were compromised, what's the worst it could do?" The answer should be small.
+    If it's not, you have a permissions problem.
+</div>
+{% endblock %}

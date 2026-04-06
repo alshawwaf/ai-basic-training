@@ -1,0 +1,64 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Why You Must Split Your Data</h3>
+    <p>Imagine studying for an exam using a practice test, then taking the <em>exact same</em> test as the real exam. Your score looks great &mdash; but it doesn't prove you learned anything.</p>
+    <p>The same applies to ML models. If you train and evaluate on the same data:</p>
+    <ul>
+        <li>The model has already "seen" those examples</li>
+        <li>It can <strong>memorise</strong> specific points rather than learn patterns</li>
+        <li>Your error metric is falsely optimistic</li>
+        <li>The model may fail completely in production</li>
+    </ul>
+    <p>This is called <strong>overfitting to the training set</strong>.</p>
+</div>
+
+<div class="card">
+    <h3>The Fix: Train/Test Split</h3>
+    <p>Hold out a portion of your data <em>before</em> training and never touch it until final evaluation.</p>
+    <table class="info-table">
+        <thead><tr><th>Set</th><th>Size</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Training set</td><td>80% (400 rows)</td><td>Model learns from this</td></tr>
+            <tr><td>Test set</td><td>20% (100 rows)</td><td>Final evaluation only &mdash; locked until the end</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,                  # features array
+    y,                  # target array
+    test_size=0.2,      # 20% goes to test set
+    random_state=42     # reproducible shuffle
+)
+
+print(f"Train: {X_train.shape}  Test: {X_test.shape}")
+# Train: (400, 1)  Test: (100, 1)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Data Leakage</h3>
+    <p>Data leakage means information from the test set "leaks" into training, making results unrealistically good:</p>
+    <table class="info-table">
+        <thead><tr><th>Leakage type</th><th>Example</th><th>Fix</th></tr></thead>
+        <tbody>
+            <tr><td>Direct</td><td>Evaluating on training data</td><td>Always split first</td></tr>
+            <tr><td>Feature</td><td>Computing mean/std on full dataset before splitting</td><td>Fit scalers on train only</td></tr>
+            <tr><td>Temporal</td><td>Using future data to predict the past</td><td>Chronological splits</td></tr>
+            <tr><td>Label</td><td>Features derived from the target</td><td>Audit feature construction</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Data leakage is the #1 reason security ML models fail in production.
+    A malware classifier trained with leakage can look 99% accurate in the lab but miss 90% of real threats.
+    Always split your data <em>before</em> any preprocessing.
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Feature Importance</h3>
+    <p>After training, <code>model.feature_importances_</code> tells you how much each feature contributed to the tree's decisions.</p>
+    <p>Each value is the total <strong>information gain</strong> that feature contributed across all splits, normalised so they sum to 1.0:</p>
+    <pre><code class="language-python">importances = model.feature_importances_
+for name, imp in sorted(zip(FEATURES, importances),
+                        key=lambda x: x[1], reverse=True):
+    bar = '█' * int(imp * 40)
+    print(f"  {name:25s} {bar} {imp:.3f}")</code></pre>
+    <p>A feature near the root (where it improves the split most) accumulates more importance.</p>
+</div>
+
+<div class="card">
+    <h3>Why These Features Matter for Network Security</h3>
+    <table class="info-table">
+        <thead><tr><th>Feature</th><th>High value suggests</th></tr></thead>
+        <tbody>
+            <tr><td><code>connection_rate</code></td><td>Port scanning or brute-force attack</td></tr>
+            <tr><td><code>bytes_sent</code></td><td>Data exfiltration (large outbound transfer)</td></tr>
+            <tr><td><code>unique_dest_ports</code></td><td>Port scanning (probing many services)</td></tr>
+            <tr><td><code>duration_seconds</code></td><td>Low-and-slow attacks vs quick scans</td></tr>
+            <tr><td><code>failed_conns</code></td><td>Brute-force or malformed exploit attempts</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Visualising Feature Importance</h3>
+    <pre><code class="language-python">import matplotlib.pyplot as plt
+
+# Sort features by importance
+sorted_idx = importances.argsort()[::-1]
+plt.figure(figsize=(10, 5))
+plt.barh(range(len(FEATURES)),
+         importances[sorted_idx],
+         align='center')
+plt.yticks(range(len(FEATURES)),
+           [FEATURES[i] for i in sorted_idx])
+plt.xlabel('Feature Importance (MDI)')
+plt.title('Which features drive predictions?')
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>What Importance Does NOT Tell You</h3>
+    <ul>
+        <li>Whether the relationship is positive or negative</li>
+        <li>Whether the effect is linear or non-linear</li>
+        <li>Whether the feature would be important in a different model type</li>
+        <li>Correlated features split importance between them &mdash; each looks less important individually</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Feature importance guides <strong>feature selection</strong>.
+    If <code>bytes_received</code> has near-zero importance, you might drop it to simplify the model
+    and reduce the data you need to collect. In production, less data collection = lower storage and processing cost.
+</div>
+{% endblock %}

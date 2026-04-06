@@ -1,0 +1,79 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Internal covariate shift</h3>
+    <p>As training progresses, early layer weights change, shifting the distribution of inputs to later layers. Layer 2 might receive inputs with <code>mean=0.5</code> at epoch 1 but <code>mean=2.1</code> at epoch 10. Each layer must constantly re-adapt to a moving target -- slowing convergence and causing instability.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Epoch</th><th>Layer 2 input mean</th><th>Layer 2 input std</th><th>Effect</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>0.5</td><td>1.2</td><td>Layer 2 calibrated for this range</td></tr>
+            <tr><td>10</td><td>2.1</td><td>3.8</td><td>Distribution shifted -- layer must re-adapt</td></tr>
+            <tr><td>20</td><td>-0.3</td><td>0.4</td><td>Shifted again -- training is unstable</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>What BatchNormalization does</h3>
+    <p>For each mini-batch, <code>BatchNormalization()</code> normalises each feature to mean=0, std=1, then applies learned scale and shift parameters:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>Operation</th><th>Formula</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Compute batch statistics</td><td>mean and variance of each feature across the batch</td></tr>
+            <tr><td>2</td><td>Normalise</td><td><code>z = (x - mean) / sqrt(var + epsilon)</code></td></tr>
+            <tr><td>3</td><td>Scale and shift</td><td><code>output = gamma * z + beta</code> (gamma and beta are learned)</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;">The result: each layer always receives inputs with approximately mean=0 and std=1, regardless of what happened in earlier layers.</p>
+</div>
+
+<div class="card">
+    <h3>Placement: Dense then BatchNorm then activation</h3>
+    <p>The recommended placement is between the Dense layer and its activation function. This normalises the values before the non-linearity is applied.</p>
+
+    <pre><code class="language-python">model = keras.Sequential([
+    # Block 1
+    keras.layers.Dense(256, input_shape=(10,)),   # no activation here
+    keras.layers.BatchNormalization(),
+    keras.layers.Activation('relu'),
+    keras.layers.Dropout(0.3),
+
+    # Block 2
+    keras.layers.Dense(256),
+    keras.layers.BatchNormalization(),
+    keras.layers.Activation('relu'),
+    keras.layers.Dropout(0.3),
+
+    # Block 3
+    keras.layers.Dense(256),
+    keras.layers.BatchNormalization(),
+    keras.layers.Activation('relu'),
+    keras.layers.Dropout(0.3),
+
+    # Output
+    keras.layers.Dense(1, activation='sigmoid'),
+])</code></pre>
+</div>
+
+<div class="card">
+    <h3>BatchNorm benefits</h3>
+    <table class="info-table">
+        <thead><tr><th>Benefit</th><th>How</th><th>Practical impact</th></tr></thead>
+        <tbody>
+            <tr><td>Faster training</td><td>Stable input distributions allow higher learning rates</td><td>Reach convergence in fewer epochs</td></tr>
+            <tr><td>Reduced sensitivity to initialisation</td><td>BatchNorm re-centres values regardless of starting weights</td><td>Less time tuning initialisation</td></tr>
+            <tr><td>Mild regularisation</td><td>Batch statistics add noise (each batch has slightly different mean/var)</td><td>Works alongside dropout</td></tr>
+            <tr><td>Smoother loss curves</td><td>Gradients flow more evenly through normalised layers</td><td>Easier to diagnose training issues</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In security ML, models are often retrained on fresh data as the threat landscape evolves. BatchNorm makes retraining more <strong>stable and predictable</strong> -- you can confidently update a malware classifier weekly without worrying that shifting feature distributions will cause the model to diverge during fine-tuning.
+</div>
+{% endblock %}

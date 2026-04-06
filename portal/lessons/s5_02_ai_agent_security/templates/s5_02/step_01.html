@@ -1,0 +1,52 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What Is MCP?</h3>
+    <p><strong>Model Context Protocol</strong> (MCP) is an open standard that gives AI agents a structured way to access external tools and data. Think of it as a universal adapter between LLMs and the systems they need to interact with.</p>
+    <table class="info-table">
+        <thead><tr><th>Component</th><th>Role</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td><strong>MCP Client</strong></td><td>The AI application</td><td>Claude Desktop, a custom agent</td></tr>
+            <tr><td><strong>MCP Server</strong></td><td>Exposes tools via standard protocol</td><td>Check Point Management MCP, Jira MCP</td></tr>
+            <tr><td><strong>Tools</strong></td><td>Specific capabilities</td><td><code>list_firewalls</code>, <code>get_policy</code></td></tr>
+            <tr><td><strong>Resources</strong></td><td>Data the server provides</td><td>Firewall logs, threat intelligence</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Why MCP Matters for Security</h3>
+    <table class="info-table">
+        <thead><tr><th>Benefit</th><th>Risk</th></tr></thead>
+        <tbody>
+            <tr><td>Standardised tool access</td><td>Every MCP connection is a potential data channel</td></tr>
+            <tr><td>Agents can orchestrate multi-tool workflows</td><td>Too many tools = too much blast radius</td></tr>
+            <tr><td>Tools are discoverable and documented</td><td>Tool descriptions can be manipulated (poisoning)</td></tr>
+            <tr><td>Enables security operations automation</td><td>Autonomous actions without human approval</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Available Check Point MCP Servers</h3>
+    <p>The cp-agentic-mcp-playground includes 13 MCP servers covering:</p>
+    <table class="info-table">
+        <thead><tr><th>MCP Server</th><th>Product</th><th>Risk Level</th></tr></thead>
+        <tbody>
+            <tr><td>Reputation Service</td><td>ThreatCloud</td><td style="color:var(--green);">Low (read-only)</td></tr>
+            <tr><td>Management Logs</td><td>SmartLog</td><td style="color:var(--green);">Low (read-only)</td></tr>
+            <tr><td>Threat Emulation</td><td>SandBlast</td><td>Medium (file submission)</td></tr>
+            <tr><td>Quantum Management</td><td>Security Mgmt</td><td style="color:var(--red);">High (rule changes)</td></tr>
+            <tr><td>Gateway CLI</td><td>Quantum GWs</td><td style="color:var(--red);">High (CLI commands)</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> MCP is the new attack surface. Every MCP connection is a capability grant.
+    Least-privilege applies to agents just like it applies to human users &mdash; an investigation agent
+    should NOT have gateway management access.
+</div>
+{% endblock %}

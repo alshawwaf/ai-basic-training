@@ -1,0 +1,68 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>From URLs to Numbers</h3>
+    <p>A model can't read a URL. You need to <strong>extract features</strong> &mdash; turn structural properties into numbers:</p>
+    <table class="info-table">
+        <thead><tr><th>Feature</th><th>Why phishing URLs score higher</th></tr></thead>
+        <tbody>
+            <tr><td><code>url_length</code></td><td>Phishing URLs pad with random characters to obscure the real domain</td></tr>
+            <tr><td><code>num_dots</code></td><td>Deep subdomains: <code>login.bank.com.phish.evil.com</code></td></tr>
+            <tr><td><code>has_at_symbol</code></td><td><code>user@evil.com/redirect</code> &mdash; browser ignores text before @</td></tr>
+            <tr><td><code>uses_https</code></td><td>Counter-intuitive: many phishing sites now use HTTPS</td></tr>
+            <tr><td><code>num_subdomains</code></td><td>Deep nesting: <code>a.b.c.d.evil.com</code></td></tr>
+            <tr><td><code>has_ip_address</code></td><td><code>http://192.168.1.1/login</code> instead of a domain name</td></tr>
+            <tr><td><code>num_hyphens</code></td><td><code>secure-login-paypal.com</code> mimics legitimate domains</td></tr>
+            <tr><td><code>path_length</code></td><td>Long paths with encoded redirect parameters</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">import numpy as np
+import pandas as pd
+
+# Synthetic phishing dataset with realistic distributions
+np.random.seed(42)
+n = 1000
+
+# Legitimate URLs (label=0): shorter, fewer dots, rarely have @
+legit = pd.DataFrame({
+    'url_length':     np.random.normal(45, 15, n//2).clip(10),
+    'num_dots':       np.random.poisson(2, n//2),
+    'has_at_symbol':  np.random.binomial(1, 0.01, n//2),
+    'has_ip_address': np.random.binomial(1, 0.02, n//2),
+    'num_hyphens':    np.random.poisson(0.5, n//2),
+    'label':          0
+})
+
+# Phishing URLs (label=1): longer, more dots, more suspicious features
+phish = pd.DataFrame({
+    'url_length':     np.random.normal(85, 25, n//2).clip(10),
+    'num_dots':       np.random.poisson(5, n//2),
+    'has_at_symbol':  np.random.binomial(1, 0.15, n//2),
+    'has_ip_address': np.random.binomial(1, 0.20, n//2),
+    'num_hyphens':    np.random.poisson(3, n//2),
+    'label':          1
+})
+
+df = pd.concat([legit, phish]).reset_index(drop=True)
+print(df.groupby('label').mean())</code></pre>
+</div>
+
+<div class="card">
+    <h3>Exploring Feature Distributions</h3>
+    <p>Before modelling, compare each feature's distribution across classes. Features with <strong>clear separation</strong> between phishing and legitimate will be the most useful to the model.</p>
+    <p>Check for <strong>class imbalance</strong> too: if 95% of your data is legitimate, the model can get 95% accuracy by always predicting "legitimate" &mdash; while missing every single phishing attempt.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Feature engineering is where domain expertise matters most.
+    A generic data scientist might not know that browsers ignore text before <code>@</code> in URLs,
+    or that IP-based URLs are a red flag. <strong>Your security knowledge is the competitive advantage</strong>
+    &mdash; it tells you which features to extract from raw data.
+</div>
+{% endblock %}

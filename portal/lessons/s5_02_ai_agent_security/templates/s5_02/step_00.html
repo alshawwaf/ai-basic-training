@@ -1,0 +1,37 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>From Chat to Agents</h3>
+    <p>AI is evolving from chat interfaces to autonomous agents that decide what tools to call, what data to access, and what actions to take &mdash; often without human approval for each step.</p>
+    <table class="info-table">
+        <thead><tr><th>Generation</th><th>How It Works</th><th>Human Involvement</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Chat</strong></td><td>Human types, AI responds</td><td>Every interaction</td></tr>
+            <tr><td><strong>Copilot</strong></td><td>AI suggests, human approves</td><td>Every action</td></tr>
+            <tr><td><strong>Agent</strong></td><td>AI decides, calls tools, acts</td><td>Minimal &mdash; oversight, not approval</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Agent Loop</h3>
+    <p>An AI agent follows a continuous reasoning loop:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What Happens</th><th>Security Implication</th></tr></thead>
+        <tbody>
+            <tr><td><strong>1. Observe</strong></td><td>Receives a task or trigger</td><td>What data does the agent receive? Is it sensitive?</td></tr>
+            <tr><td><strong>2. Reason</strong></td><td>Decides what action to take</td><td>Can the reasoning be manipulated?</td></tr>
+            <tr><td><strong>3. Act</strong></td><td>Calls a tool (API, database)</td><td>What permissions does this tool have?</td></tr>
+            <tr><td><strong>4. Evaluate</strong></td><td>Checks result, decides next step</td><td>Does it know when to stop?</td></tr>
+        </tbody>
+    </table>
+    <p>Each cycle is an <strong>invocation</strong>. AI Agent Security tracks these across your organisation.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Agents are not chatbots. They act autonomously, which means security must be
+    automated too. You can't review every agent decision manually &mdash; you need visibility, policy, and anomaly detection.
+</div>
+{% endblock %}

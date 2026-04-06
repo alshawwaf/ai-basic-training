@@ -1,0 +1,97 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Stateless API, Stateful Conversation</h3>
+    <p>The LLM API is <strong>stateless</strong> -- every call is independent. The model has zero memory of previous calls. To create a conversation, you must send the full history every time:</p>
+    <table class="info-table">
+        <thead><tr><th>Turn</th><th>Messages you send</th><th>What the model sees</th></tr></thead>
+        <tbody>
+            <tr><td>Turn 1</td><td>[user: "What is lateral movement?"]</td><td>Just the question</td></tr>
+            <tr><td>Turn 2</td><td>[user: "What is lateral movement?", assistant: "Lateral movement is...", user: "How do I detect it?"]</td><td>The entire conversation so far</td></tr>
+            <tr><td>Turn 3</td><td>[user, assistant, user, assistant, user: "What tools?"]</td><td>All 5 messages -- growing every turn</td></tr>
+        </tbody>
+    </table>
+    <p>The conversation list grows with every exchange. You are responsible for maintaining this state.</p>
+</div>
+
+<div class="card">
+    <h3>Building a Multi-Turn Conversation</h3>
+    <pre><code class="language-python">system = "You are a threat intelligence analyst. Be concise and technical."
+messages = []
+
+def chat(user_input):
+    """Send a message and get a response, maintaining history."""
+    messages.append({"role": "user", "content": user_input})
+
+    response = client.chat(
+        system=system,
+        messages=messages,
+        max_tokens=300,
+    )
+
+    messages.append({"role": "assistant", "content": response})
+    return response
+
+# Turn 1
+print(chat("What is lateral movement?"))
+
+# Turn 2 -- model remembers the context from turn 1
+print(chat("How do I detect it in a Windows environment?"))
+
+# Turn 3 -- model has full conversation history
+print(chat("What Sigma rules should I deploy?"))</code></pre>
+</div>
+
+<div class="card">
+    <h3>Context Window and Token Limits</h3>
+    <p>As conversations grow, so does the token count. Every model has a maximum context window:</p>
+    <table class="info-table">
+        <thead><tr><th>Model</th><th>Context window</th><th>Approximate word limit</th></tr></thead>
+        <tbody>
+            <tr><td>Claude Sonnet</td><td>200K tokens</td><td>~150,000 words</td></tr>
+            <tr><td>GPT-4o</td><td>128K tokens</td><td>~96,000 words</td></tr>
+            <tr><td>Gemini Flash</td><td>1M tokens</td><td>~750,000 words</td></tr>
+            <tr><td>Ollama (small models)</td><td>4K-32K tokens</td><td>~3,000-24,000 words</td></tr>
+        </tbody>
+    </table>
+    <p>When the conversation exceeds the context window, you must truncate older messages. Common strategies: drop the oldest turns, summarise the conversation so far, or keep only the system prompt and last N turns.</p>
+</div>
+
+<div class="card">
+    <h3>Building an Interactive Security Assistant</h3>
+    <pre><code class="language-python">system = """You are a security incident response assistant.
+When given an incident description, help the analyst through triage:
+1. Classify the incident type
+2. Suggest containment actions
+3. Identify evidence to preserve
+4. Recommend escalation criteria
+Maintain context across the conversation."""
+
+messages = []
+
+print("Security Assistant (type 'quit' to exit)")
+print("-" * 45)
+
+while True:
+    user_input = input("\nYou: ").strip()
+    if user_input.lower() == "quit":
+        break
+
+    messages.append({"role": "user", "content": user_input})
+    response = client.chat(system=system, messages=messages, max_tokens=400)
+    messages.append({"role": "assistant", "content": response})
+
+    print(f"\nAssistant: {response}")</code></pre>
+    <p>This is the skeleton of every AI-powered security tool: a system prompt that defines the role, a message loop that maintains context, and an LLM that generates responses.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Conversation history is an attack surface. In a multi-turn security assistant,
+    an attacker who can inject content into earlier messages (e.g., via a malicious log entry that becomes part of the
+    conversation) can influence all subsequent responses. This is <strong>indirect prompt injection</strong>. Defence:
+    sanitise all external data before inserting it into the message history, and never let untrusted content appear
+    in the assistant role.
+</div>
+{% endblock %}

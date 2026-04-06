@@ -1,0 +1,53 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Class Imbalance in Security</h3>
+    <p>In real-world security monitoring, attacks are rare:</p>
+    <table class="info-table">
+        <thead><tr><th>Dataset</th><th>Typical attack rate</th></tr></thead>
+        <tbody>
+            <tr><td>Intrusion detection (CICIDS)</td><td>1&ndash;20%</td></tr>
+            <tr><td>Fraud detection</td><td>0.1&ndash;1%</td></tr>
+            <tr><td>Phishing detection</td><td>5&ndash;30%</td></tr>
+            <tr><td>Malware in enterprise telemetry</td><td>0.01&ndash;5%</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Accuracy Trap</h3>
+    <p>If 95% of events are benign, a model that simply predicts <strong>"benign" for everything</strong> achieves 95% accuracy &mdash; without ever detecting a single attack.</p>
+    <pre><code class="language-python">from sklearn.dummy import DummyClassifier
+
+# A "model" that always predicts the majority class
+dummy = DummyClassifier(strategy='most_frequent')
+dummy.fit(X_train, y_train)
+
+accuracy = dummy.score(X_test, y_test)
+print(f"Accuracy: {accuracy:.1%}")  # 95%+ but catches ZERO attacks</code></pre>
+    <p>This is the accuracy trap: high accuracy hiding zero detection.</p>
+</div>
+
+<div class="card">
+    <h3>How to Spot It</h3>
+    <p>Always check <strong>recall for the minority class</strong> (the class you actually care about detecting):</p>
+    <pre><code class="language-python">from sklearn.metrics import classification_report
+
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred,
+                            target_names=['benign', 'attack']))
+
+# Look at the "attack" row:
+#              precision  recall  f1-score  support
+# attack          0.00    0.00      0.00      500  ← ZERO recall!</code></pre>
+    <p>If recall on the attack class is 0.00, the model is useless regardless of overall accuracy.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> When a vendor claims "99.9% accuracy" for their threat detection,
+    your first question should be: <em>"What's the class distribution, and what's the recall on threats?"</em>
+    A model with 99.9% accuracy and 0% recall is an expensive way to write <code>return "benign"</code>.
+</div>
+{% endblock %}

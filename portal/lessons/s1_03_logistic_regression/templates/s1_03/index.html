@@ -7,7 +7,7 @@
         <a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 14px;">&larr; Back to portal</a>
     </p>
     <h1>{{ lesson_title }}</h1>
-    <p class="tagline">What is Machine Learning?</p>
+    <p class="tagline">Binary classification and decision boundaries</p>
 
     <div class="welcome-progress">
         <div class="progress-ring-wrap">
@@ -21,15 +21,15 @@
             <span class="progress-ring-text" id="progPct">0%</span>
         </div>
         <div class="progress-detail">
-            <div class="prog-label" id="progLabel">0 of 10 steps completed</div>
-            <div class="prog-sub">~100 min &middot; Learn by doing, not reading</div>
+            <div class="prog-label" id="progLabel">0 of {{ steps | length }} steps completed</div>
+            <div class="prog-sub">~90 min &middot; Build a phishing URL classifier</div>
         </div>
     </div>
 
     <div class="step-cards">
         {% for s in steps %}
         <a href="{{ url_prefix }}/step/{{ s.id }}" class="step-card" id="card-{{ s.id }}">
-            <div class="num">{{ s.id }}</div>
+            <div class="num">{{ s.id + 1 }}</div>
             <div class="info">
                 <div class="title">{{ s.title }}</div>
                 <div class="desc">{{ s.sub }}</div>
@@ -47,7 +47,6 @@
     const total = {{ steps | length }};
     const count = visited.length;
 
-    // Mark visited cards
     visited.forEach(step => {
         const card = document.getElementById('card-' + step);
         if (card) {
@@ -57,7 +56,6 @@
         }
     });
 
-    // Update progress ring
     const circumference = 163.36;
     const pct = total > 0 ? count / total : 0;
     const ring = document.getElementById('progRing');

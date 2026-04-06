@@ -1,0 +1,61 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>predict_proba() vs predict()</h3>
+    <p><code>model.predict(X)</code> returns hard labels (0 or 1) using the default 0.5 threshold.</p>
+    <p><code>model.predict_proba(X)</code> returns probabilities &mdash; you can then apply <strong>any</strong> threshold yourself:</p>
+    <pre><code class="language-python">probs = model.predict_proba(X_test_scaled)[:, 1]   # P(phishing)
+
+# Custom threshold
+threshold = 0.3
+y_pred_custom = (probs >= threshold).astype(int)
+
+print(f"Default (0.5): {(probs >= 0.5).sum()} flagged")
+print(f"Lower   (0.3): {(probs >= 0.3).sum()} flagged")</code></pre>
+</div>
+
+<div class="card">
+    <h3>The Precision-Recall Tradeoff</h3>
+    <table class="info-table">
+        <thead><tr><th></th><th>Lower threshold (e.g. 0.3)</th><th>Higher threshold (e.g. 0.7)</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Recall</strong></td><td style="color:var(--green);">HIGH &mdash; catch almost all phishing</td><td style="color:var(--red);">LOW &mdash; miss some threats</td></tr>
+            <tr><td><strong>Precision</strong></td><td style="color:var(--red);">LOW &mdash; many false alarms</td><td style="color:var(--green);">HIGH &mdash; few false alarms</td></tr>
+            <tr><td><strong>Use when</strong></td><td>Missing a threat is very costly</td><td>False alarms are very costly</td></tr>
+        </tbody>
+    </table>
+    <p>This is a <strong>fundamental tradeoff</strong> &mdash; you cannot have both perfect precision and perfect recall unless your model is perfect.</p>
+</div>
+
+<div class="card">
+    <h3>Choosing the Right Threshold</h3>
+    <p>The optimal threshold depends on your <strong>operational priorities</strong>:</p>
+    <table class="info-table">
+        <thead><tr><th>Scenario</th><th>Priority</th><th>Threshold</th></tr></thead>
+        <tbody>
+            <tr><td>Email phishing gateway</td><td>Don't miss threats (high recall)</td><td>Low (0.2&ndash;0.4)</td></tr>
+            <tr><td>Auto-blocking firewall rule</td><td>Minimal false positives (high precision)</td><td>High (0.7&ndash;0.9)</td></tr>
+            <tr><td>Balanced triage queue</td><td>Equal weight to both</td><td>F1-optimal (~0.5)</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">from sklearn.metrics import precision_recall_curve
+
+precisions, recalls, thresholds = precision_recall_curve(y_test, probs)
+
+# Find threshold that maximises F1
+f1_scores = 2 * (precisions * recalls) / (precisions + recalls + 1e-8)
+best_idx = f1_scores.argmax()
+print(f"Best threshold: {thresholds[best_idx]:.2f}")
+print(f"Precision: {precisions[best_idx]:.3f}")
+print(f"Recall:    {recalls[best_idx]:.3f}")</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Threshold tuning is the difference between a useful security tool
+    and a noisy one. A phishing detector with 99% recall but 50% precision generates twice as many false alarms
+    as real detections &mdash; analysts stop trusting it. The <strong>right threshold depends on your SOC's capacity</strong>,
+    not just the model's metrics.
+</div>
+{% endblock %}

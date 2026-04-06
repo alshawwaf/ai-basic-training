@@ -1,0 +1,61 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Operational Decision</h3>
+    <p>Once you've selected a model, you still have one more decision: <strong>what threshold to deploy at</strong>. This is not a technical question &mdash; it's a business question:</p>
+    <p style="font-style:italic; color:var(--text-dim);">"What is the cost of a missed attack vs the cost of a false alarm in your environment?"</p>
+</div>
+
+<div class="card">
+    <h3>Two Scenarios</h3>
+    <table class="info-table">
+        <thead><tr><th></th><th>Scenario A: "Catch All Attacks"</th><th>Scenario B: "Trusted Alerts Only"</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Goal</strong></td><td>Miss as few attacks as possible</td><td>When we alert, we want to be right</td></tr>
+            <tr><td><strong>Accept</strong></td><td>Higher false alarm rate</td><td>Some attacks may slip through</td></tr>
+            <tr><td><strong>Threshold</strong></td><td>Low (0.2&ndash;0.3)</td><td>High (0.6&ndash;0.8)</td></tr>
+            <tr><td><strong>Key metric</strong></td><td>Recall on attack class</td><td>Precision on attack class</td></tr>
+            <tr><td><strong>Use case</strong></td><td>Email security, malware sandbox</td><td>Auto-blocking firewall rules</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Building a Threshold Summary Table</h3>
+    <pre><code class="language-python">from sklearn.metrics import precision_score, recall_score, f1_score
+
+probs = model.predict_proba(X_test_scaled)[:, 1]
+
+print(f"{'Threshold':>10} {'Precision':>10} {'Recall':>10} {'F1':>10} {'Flagged':>10}")
+print("-" * 55)
+
+for t in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]:
+    y_pred_t = (probs >= t).astype(int)
+    p = precision_score(y_test, y_pred_t, zero_division=0)
+    r = recall_score(y_test, y_pred_t, zero_division=0)
+    f = f1_score(y_test, y_pred_t, zero_division=0)
+    n = y_pred_t.sum()
+    print(f"{t:>10.1f} {p:>10.3f} {r:>10.3f} {f:>10.3f} {n:>10}")</code></pre>
+    <p>This table is what you present to stakeholders. <strong>They</strong> decide the acceptable tradeoff &mdash; you provide the data.</p>
+</div>
+
+<div class="card">
+    <h3>Communicating to Stakeholders</h3>
+    <p>Avoid jargon. Instead of "precision = 0.85 at threshold 0.3", say:</p>
+    <ul>
+        <li>"At this setting, we catch 95% of attacks but 1 in 6 alerts is a false alarm"</li>
+        <li>"If we tighten the filter, false alarms drop to 1 in 20 but we miss 30% of attacks"</li>
+        <li>"Your team handles 50 alerts/day &mdash; at threshold X, we generate 45"</li>
+    </ul>
+    <p>The threshold is a dial, not a fixed value. Different deployments may use different thresholds.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> This is the most operationally important step in the entire module.
+    A model is only as useful as its deployment threshold. The right threshold depends on your SOC's size,
+    alert triage automation, and the consequences of both missed threats and false alarms.
+    <strong>Models don't make decisions &mdash; operators do.</strong>
+</div>
+{% endblock %}

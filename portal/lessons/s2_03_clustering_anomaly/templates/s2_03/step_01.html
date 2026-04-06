@@ -1,0 +1,79 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>K-Means Algorithm</h3>
+    <p>K-Means iteratively assigns samples to clusters and updates cluster centres:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>Action</th><th>Result</th></tr></thead>
+        <tbody>
+            <tr><td>1. Initialise</td><td>Place K centroids randomly</td><td>K starting positions</td></tr>
+            <tr><td>2. Assign</td><td>Each sample goes to the nearest centroid</td><td>K groups of samples</td></tr>
+            <tr><td>3. Update</td><td>Move each centroid to the mean of its group</td><td>Centroids shift</td></tr>
+            <tr><td>4. Repeat</td><td>Go to step 2 until assignments stop changing</td><td>Stable clusters</td></tr>
+        </tbody>
+    </table>
+    <p>The result: K clusters, each with a centroid. A sample's distance from its centroid indicates how "typical" it is for that cluster. High distance = anomalous.</p>
+</div>
+
+<div class="card">
+    <h3>Training K-Means</h3>
+    <pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+km = KMeans(n_clusters=4, random_state=42, n_init=10)
+km.fit(X_scaled)
+
+labels  = km.labels_            # cluster assignment per point
+centers = km.cluster_centers_   # centroid coordinates (K x n_features)
+inertia = km.inertia_           # sum of squared distances to centroids</code></pre>
+    <table class="info-table">
+        <thead><tr><th>Attribute</th><th>What it gives you</th></tr></thead>
+        <tbody>
+            <tr><td><code>labels_</code></td><td>Array of cluster IDs (0 to K-1) for each sample</td></tr>
+            <tr><td><code>cluster_centers_</code></td><td>Centroid coordinates &mdash; the "average" of each cluster</td></tr>
+            <tr><td><code>inertia_</code></td><td>Total within-cluster sum of squares &mdash; lower = tighter clusters</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>PCA for Visualisation</h3>
+    <p>Network features are 6D &mdash; impossible to plot directly. PCA (Principal Component Analysis) projects to 2D by finding the two directions of maximum variance. This is only for <strong>visualisation</strong> &mdash; K-Means runs on all 6 features.</p>
+    <pre><code class="language-python">from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+pca = PCA(n_components=2)
+X_2d = pca.fit_transform(X_scaled)
+
+plt.figure(figsize=(10, 7))
+scatter = plt.scatter(X_2d[:, 0], X_2d[:, 1],
+                      c=km.labels_, cmap='viridis',
+                      alpha=0.6, s=15)
+plt.colorbar(scatter, label="Cluster")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("K-Means Clusters (PCA projection)")
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Revealing True Labels</h3>
+    <p>After clustering, overlay the actual traffic labels (if available) to check alignment:</p>
+    <pre><code class="language-python"># Colour by true label instead of cluster
+plt.scatter(X_2d[:, 0], X_2d[:, 1],
+            c=y_true, cmap='Set1', alpha=0.6, s=15)
+plt.title("True labels overlaid on PCA projection")</code></pre>
+    <p>If clusters align well with true labels, K-Means has discovered the same groups that human analysts would identify. If they don't, the features may need engineering or K may be wrong.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The 2D PCA plot is a powerful tool for <strong>SOC briefings</strong>. You can
+    show analysts a visual map of network behaviour: "These four clusters are your normal traffic patterns. Anything
+    that appears far from all clusters is worth investigating." It turns abstract ML output into an actionable picture.
+</div>
+{% endblock %}

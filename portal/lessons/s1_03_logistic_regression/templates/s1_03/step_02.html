@@ -1,0 +1,61 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Feature Scaling</h3>
+    <p>Logistic regression uses gradient descent to find the best weights. If features are on very different scales (e.g., <code>url_length</code> ranges 10&ndash;250 while <code>has_at_symbol</code> is 0/1), the optimiser converges slowly.</p>
+    <p><code>StandardScaler</code> transforms each feature to have <strong>mean=0 and std=1</strong>:</p>
+    <pre><code class="language-python">from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)   # fit AND transform
+X_test_scaled  = scaler.transform(X_test)         # transform only!</code></pre>
+    <p><strong>Critical rule:</strong> fit the scaler on training data only. If you fit on the full dataset, you leak test distribution information into the model.</p>
+</div>
+
+<div class="card">
+    <h3>Training the Classifier</h3>
+    <pre><code class="language-python">from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+
+model = LogisticRegression(random_state=42)
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+print(classification_report(y_test, y_pred,
+                            target_names=['Legitimate', 'Phishing']))</code></pre>
+</div>
+
+<div class="card">
+    <h3>Reading the Classification Report</h3>
+    <table class="info-table">
+        <thead><tr><th>Metric</th><th>What it measures</th><th>Security meaning</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Precision</strong></td><td>Of those flagged as phishing, how many really are?</td><td>Low precision = too many false alarms</td></tr>
+            <tr><td><strong>Recall</strong></td><td>Of all actual phishing, how many did we catch?</td><td>Low recall = threats getting through</td></tr>
+            <tr><td><strong>F1</strong></td><td>Harmonic mean of precision and recall</td><td>Balanced overall score</td></tr>
+            <tr><td><strong>Accuracy</strong></td><td>Total correct / total predictions</td><td>Misleading when classes are imbalanced</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Confusion Matrix</h3>
+    <p>A 2&times;2 table showing every possible outcome:</p>
+    <table class="info-table">
+        <thead><tr><th></th><th>Predicted: Legit</th><th>Predicted: Phishing</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Actually Legit</strong></td><td style="color:var(--green);">True Negative (TN)</td><td style="color:var(--red);">False Positive (FP) &mdash; false alarm</td></tr>
+            <tr><td><strong>Actually Phishing</strong></td><td style="color:var(--red);">False Negative (FN) &mdash; missed threat</td><td style="color:var(--green);">True Positive (TP) &mdash; caught it</td></tr>
+        </tbody>
+    </table>
+    <p>In security, <strong>False Negatives are usually worse than False Positives</strong>. A missed phishing email can lead to a breach; a false alarm just wastes an analyst's time.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The confusion matrix is the language of security ML.
+    When a vendor claims "99% detection rate", ask: <em>what's the false positive rate?</em>
+    And at what threshold? Without these numbers, the claim is meaningless.
+</div>
+{% endblock %}

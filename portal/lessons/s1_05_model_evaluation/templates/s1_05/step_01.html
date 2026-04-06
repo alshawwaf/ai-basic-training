@@ -1,0 +1,65 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Four Outcomes</h3>
+    <p>Every prediction for a binary classifier falls into one of four cells:</p>
+    <table class="info-table">
+        <thead><tr><th></th><th>Predicted: Benign</th><th>Predicted: Attack</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Actual: Benign</strong></td><td style="color:var(--green);">TN &mdash; correct pass</td><td style="color:var(--red);">FP &mdash; false alarm</td></tr>
+            <tr><td><strong>Actual: Attack</strong></td><td style="color:var(--red);">FN &mdash; missed threat</td><td style="color:var(--green);">TP &mdash; caught it</td></tr>
+        </tbody>
+    </table>
+    <table class="info-table" style="margin-top:12px;">
+        <thead><tr><th>Outcome</th><th>Security cost</th></tr></thead>
+        <tbody>
+            <tr><td><strong>TP</strong> &mdash; True Positive</td><td>Low &mdash; this is what we want</td></tr>
+            <tr><td><strong>TN</strong> &mdash; True Negative</td><td>Low &mdash; no action needed</td></tr>
+            <tr><td><strong>FP</strong> &mdash; False Positive</td><td>Medium &mdash; analyst time wasted</td></tr>
+            <tr><td><strong>FN</strong> &mdash; False Negative</td><td>High &mdash; system compromised</td></tr>
+        </tbody>
+    </table>
+    <p>In security, <strong>FN cost >> FP cost</strong>. A missed attack is almost always more damaging than a false alarm.</p>
+</div>
+
+<div class="card">
+    <h3>Computing the Confusion Matrix</h3>
+    <pre><code class="language-python">from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
+# [[TN, FP],
+#  [FN, TP]]
+
+# Visualise as a heatmap
+disp = ConfusionMatrixDisplay(cm, display_labels=['Benign', 'Attack'])
+disp.plot(cmap='Blues')
+plt.title('Confusion Matrix')
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Deriving All Metrics from the Matrix</h3>
+    <pre><code class="language-python">TN, FP, FN, TP = cm.ravel()
+
+accuracy  = (TP + TN) / (TP + TN + FP + FN)
+precision = TP / (TP + FP)    # of those flagged, how many real?
+recall    = TP / (TP + FN)    # of all attacks, how many caught?
+f1        = 2 * precision * recall / (precision + recall)
+
+print(f"Accuracy:  {accuracy:.3f}")
+print(f"Precision: {precision:.3f}")
+print(f"Recall:    {recall:.3f}")
+print(f"F1:        {f1:.3f}")</code></pre>
+    <p>Every evaluation metric is just a different combination of these four numbers.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> The confusion matrix is the universal language of security ML evaluation.
+    When comparing two IDS vendors, don't compare accuracy &mdash; compare confusion matrices at the same threshold
+    and ask which one produces fewer FN (missed attacks) at an acceptable FP rate.
+</div>
+{% endblock %}

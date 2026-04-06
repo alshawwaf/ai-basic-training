@@ -1,0 +1,71 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Depth Controls Complexity</h3>
+    <p>Every additional level lets the tree create finer distinctions:</p>
+    <table class="info-table">
+        <thead><tr><th>Depth</th><th>Behaviour</th><th>Risk</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Single yes/no question</td><td>Underfit &mdash; too simple</td></tr>
+            <tr><td>3&ndash;5</td><td>Captures major patterns</td><td>Good generalisation</td></tr>
+            <tr><td>10+</td><td>Tiny leaves for individual samples</td><td>Overfit &mdash; memorises data</td></tr>
+            <tr><td>None</td><td>Grows until all leaves are pure</td><td>Severe overfitting</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Overfitting Signal</h3>
+    <p>An unlimited tree achieves ~100% training accuracy but fails on new data. The <strong>gap</strong> between training and test accuracy is the overfitting indicator:</p>
+    <table class="info-table">
+        <thead><tr><th></th><th>Underfit (depth=1)</th><th>Good (depth=5)</th><th>Overfit (depth=15)</th></tr></thead>
+        <tbody>
+            <tr><td>Train accuracy</td><td>65%</td><td>99%</td><td>100%</td></tr>
+            <tr><td>Test accuracy</td><td>65%</td><td>97%</td><td>94%</td></tr>
+            <tr><td>Gap</td><td>0%</td><td>2%</td><td style="color:var(--red);">6%</td></tr>
+        </tbody>
+    </table>
+    <p>Pick the depth just before the gap starts widening &mdash; that's where generalisation is best.</p>
+</div>
+
+<div class="card">
+    <h3>Finding the Sweet Spot</h3>
+    <pre><code class="language-python">train_scores, test_scores = [], []
+
+for depth in range(1, 21):
+    model = DecisionTreeClassifier(max_depth=depth, random_state=42)
+    model.fit(X_train, y_train)
+    train_scores.append(model.score(X_train, y_train))
+    test_scores.append(model.score(X_test, y_test))
+
+plt.plot(range(1, 21), train_scores, label='Train', marker='o')
+plt.plot(range(1, 21), test_scores, label='Test', marker='s')
+plt.xlabel('max_depth')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.title('Depth vs Accuracy — find the sweet spot')
+plt.show()</code></pre>
+    <p>The test curve typically rises, plateaus, then gently declines. The plateau is your target depth.</p>
+</div>
+
+<div class="card">
+    <h3>Other Ways to Control Overfitting</h3>
+    <table class="info-table">
+        <thead><tr><th>Parameter</th><th>Effect</th></tr></thead>
+        <tbody>
+            <tr><td><code>min_samples_split=10</code></td><td>Nodes with fewer than 10 samples won't split further</td></tr>
+            <tr><td><code>min_samples_leaf=5</code></td><td>Every leaf must have at least 5 samples</td></tr>
+            <tr><td><code>max_features='sqrt'</code></td><td>Only consider &radic;n features at each split (adds randomness)</td></tr>
+        </tbody>
+    </table>
+    <p>These are <strong>regularisation</strong> techniques &mdash; they constrain the model to prevent memorisation.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> An overfit model memorises your training traffic patterns.
+    When an attacker uses a slightly different technique, the model fails because it learned noise, not signal.
+    <strong>Generalisation is the goal</strong> &mdash; a model that works on traffic it has never seen before.
+</div>
+{% endblock %}

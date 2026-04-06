@@ -1,0 +1,80 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>What a batch is</h3>
+    <p>Instead of computing the gradient over the entire dataset (too slow) or one sample at a time (too noisy), we use a <strong>mini-batch</strong> -- a random subset of samples. Batch size controls the trade-off between gradient quality and computation speed.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Batch size</th><th>Batches per epoch (1,600 samples)</th><th>Gradient updates per epoch</th></tr></thead>
+        <tbody>
+            <tr><td>32</td><td>50</td><td>50 (noisy but frequent)</td></tr>
+            <tr><td>256</td><td>~6</td><td>~6 (stable but few)</td></tr>
+            <tr><td>1,600 (full batch)</td><td>1</td><td>1 (exact but expensive)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Small vs large batches</h3>
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Small batch (32)</th><th>Large batch (1024)</th></tr></thead>
+        <tbody>
+            <tr><td>Gradient noise</td><td>High -- each batch is a different random subset</td><td>Low -- averages over many samples</td></tr>
+            <tr><td>Updates per epoch</td><td>Many (50 for 1,600 samples)</td><td>Few (~2 for 1,600 samples)</td></tr>
+            <tr><td>Wall-clock time per epoch</td><td>Slower (more overhead per update)</td><td>Faster (fewer but larger operations)</td></tr>
+            <tr><td>Generalisation</td><td>Often better -- noise helps escape sharp minima</td><td>May converge to sharp minima that generalise poorly</td></tr>
+            <tr><td>Memory usage</td><td>Lower</td><td>Higher</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The experiment: three batch sizes</h3>
+    <pre><code class="language-python">import time
+from tensorflow import keras
+
+batch_sizes = [32, 256, 1024]
+results = {}
+
+for bs in batch_sizes:
+    model = keras.Sequential([
+        keras.layers.Dense(64, activation='relu', input_shape=(10,)),
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dense(1, activation='sigmoid'),
+    ])
+    model.compile(optimizer='adam', loss='binary_crossentropy',
+                  metrics=['accuracy'])
+
+    start = time.time()
+    history = model.fit(
+        X_train, y_train,
+        validation_data=(X_val, y_val),
+        epochs=50, batch_size=bs, verbose=0,
+    )
+    elapsed = time.time() - start
+
+    val_loss = min(history.history['val_loss'])
+    results[bs] = {'time': elapsed, 'best_val_loss': val_loss}
+    print(f"batch_size={bs:4d}  time={elapsed:.1f}s  best_val_loss={val_loss:.4f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Practical batch size guidelines</h3>
+    <table class="info-table">
+        <thead><tr><th>Dataset size</th><th>Recommended batch size</th><th>Reason</th></tr></thead>
+        <tbody>
+            <tr><td>Small (&lt; 5,000)</td><td>32</td><td>Need many updates per epoch to learn effectively</td></tr>
+            <tr><td>Medium (5,000 - 100,000)</td><td>32 - 128</td><td>Balance noise with speed</td></tr>
+            <tr><td>Large (&gt; 100,000)</td><td>128 - 512</td><td>Can afford larger batches without losing update frequency</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;"><strong>Rule of thumb:</strong> Start with batch_size=32. Only increase if training is too slow. If you increase batch size by N, consider increasing learning rate by sqrt(N) to compensate for the smoother gradients (linear scaling rule).</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99% benign). With a large batch size, some batches may contain <strong>zero attack samples</strong>, producing gradients that only learn "everything is benign." Smaller batch sizes increase the chance that each batch contains at least some attack samples, leading to more balanced learning -- critical for recall on rare attack classes.
+</div>
+{% endblock %}

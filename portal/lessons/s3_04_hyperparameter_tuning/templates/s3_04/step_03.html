@@ -1,0 +1,92 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Architecture as a hyperparameter</h3>
+    <p>When people say "hyperparameter tuning," they often mean learning rate and batch size. But the <strong>network architecture itself</strong> is also a hyperparameter -- and often has a bigger impact on performance.</p>
+
+    <table class="info-table">
+        <thead><tr><th>Architecture hyperparameter</th><th>Options</th><th>Impact</th></tr></thead>
+        <tbody>
+            <tr><td>Number of hidden layers (depth)</td><td>1, 2, 3, ...</td><td>More depth = more complex function approximation</td></tr>
+            <tr><td>Units per layer (width)</td><td>16, 32, 64, 128, 256</td><td>More width = more capacity per layer</td></tr>
+            <tr><td>Activation function</td><td>relu, tanh, leaky_relu</td><td>Affects gradient flow and expressiveness</td></tr>
+            <tr><td>Dropout rate</td><td>0.0 - 0.5</td><td>Regularisation strength</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The grid search strategy</h3>
+    <p>A <strong>grid search</strong> tries every combination in a defined search space. Systematic and thorough, but the number of combinations grows quickly.</p>
+
+    <pre><code class="language-python">import itertools
+import pandas as pd
+from tensorflow import keras
+
+# Define the search space
+units_options = [32, 64, 128]
+depth_options = [1, 2, 3]
+
+# Total combinations: 3 x 3 = 9 models
+results = []
+
+for units, depth in itertools.product(units_options, depth_options):
+    # Build model with this configuration
+    layers = [keras.layers.Dense(units, activation='relu', input_shape=(10,))]
+    for _ in range(depth - 1):
+        layers.append(keras.layers.Dense(units, activation='relu'))
+    layers.append(keras.layers.Dense(1, activation='sigmoid'))
+
+    model = keras.Sequential(layers)
+    model.compile(optimizer='adam', loss='binary_crossentropy',
+                  metrics=['accuracy'])
+
+    history = model.fit(X_train, y_train,
+                        validation_data=(X_val, y_val),
+                        epochs=50, batch_size=32, verbose=0)
+
+    best_val_loss = min(history.history['val_loss'])
+    n_params = model.count_params()
+
+    results.append({
+        'units': units, 'depth': depth,
+        'params': n_params, 'best_val_loss': round(best_val_loss, 4),
+    })
+
+df = pd.DataFrame(results).sort_values('best_val_loss')
+print(df.to_string(index=False))</code></pre>
+</div>
+
+<div class="card">
+    <h3>Grid search vs random search</h3>
+    <table class="info-table">
+        <thead><tr><th>Strategy</th><th>How it works</th><th>Pros</th><th>Cons</th></tr></thead>
+        <tbody>
+            <tr><td>Grid search</td><td>Try every combination in a predefined grid</td><td>Thorough; covers entire space</td><td>Expensive; wastes time on unimportant dimensions</td></tr>
+            <tr><td>Random search</td><td>Sample randomly from the hyperparameter space</td><td>Explores more unique values per dimension; often finds good configs faster</td><td>No guarantee of finding the absolute best</td></tr>
+            <tr><td>Bayesian (Keras Tuner)</td><td>Use past results to guide where to search next</td><td>Most efficient; focuses on promising regions</td><td>More complex to set up; overhead for small searches</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Reading the results table</h3>
+    <p>When comparing architecture search results, look for these patterns:</p>
+
+    <table class="info-table">
+        <thead><tr><th>Pattern</th><th>Meaning</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Wider models consistently beat narrow ones</td><td>The task needs more capacity per layer</td><td>Try even wider models, but watch for overfitting</td></tr>
+            <tr><td>Deeper models do not improve over shallow</td><td>The data is not complex enough for depth</td><td>Stick with 1-2 layers; add regularisation instead</td></tr>
+            <tr><td>Best model has far more params than training samples</td><td>Likely overfitting; val_loss may be misleading</td><td>Add dropout, reduce capacity, or get more data</td></tr>
+            <tr><td>All models perform similarly</td><td>Architecture is not the bottleneck</td><td>Focus on feature engineering or data quality instead</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Security teams often have limited compute budgets and tight deployment timelines. <strong>Random search with a budget of 20 trials</strong> is usually the best practical strategy -- it finds a good-enough model quickly. Save exhaustive grid search for final production models where the difference between 95.0% and 95.5% detection rate translates to catching hundreds more real threats per day at scale.
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Elbow Method (Inertia)</h3>
+    <p>Inertia is the sum of squared distances from each sample to its nearest centroid. Lower inertia = tighter clusters, but K=N (every point is its own cluster) trivially gives inertia=0.</p>
+    <p>Plot inertia vs K. The "elbow" &mdash; where the curve bends from steep to flat &mdash; suggests the right K.</p>
+    <pre><code class="language-python">inertias = []
+K_range = range(2, 11)
+
+for k in K_range:
+    km = KMeans(n_clusters=k, random_state=42, n_init=10)
+    km.fit(X_scaled)
+    inertias.append(km.inertia_)
+
+plt.plot(K_range, inertias, 'bo-')
+plt.xlabel('K')
+plt.ylabel('Inertia')
+plt.title('Elbow Method')
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Silhouette Score</h3>
+    <p>For each sample, the silhouette score measures how well it fits its own cluster vs the nearest other cluster:</p>
+    <table class="info-table">
+        <thead><tr><th>Component</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td><strong>a</strong></td><td>Mean distance to other samples in the <em>same</em> cluster</td></tr>
+            <tr><td><strong>b</strong></td><td>Mean distance to samples in the <em>nearest other</em> cluster</td></tr>
+            <tr><td><strong>s</strong></td><td>(b - a) / max(a, b)</td></tr>
+        </tbody>
+    </table>
+    <table class="info-table">
+        <thead><tr><th>Score range</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td>+1</td><td>Perfect &mdash; sample is far from other clusters, close to its own</td></tr>
+            <tr><td>0</td><td>On the boundary between two clusters</td></tr>
+            <tr><td>-1</td><td>Wrong cluster &mdash; closer to another cluster than its own</td></tr>
+        </tbody>
+    </table>
+    <pre><code class="language-python">from sklearn.metrics import silhouette_score
+
+scores = []
+for k in K_range:
+    km = KMeans(n_clusters=k, random_state=42, n_init=10)
+    labels = km.fit_predict(X_scaled)
+    scores.append(silhouette_score(X_scaled, labels))
+
+# Pick K with the highest silhouette score
+best_k = K_range[np.argmax(scores)]
+print(f"Best K = {best_k}, silhouette = {max(scores):.3f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Combining Both Methods</h3>
+    <table class="info-table">
+        <thead><tr><th>Method</th><th>Measures</th><th>Pick K where...</th></tr></thead>
+        <tbody>
+            <tr><td>Elbow (inertia)</td><td>Total cluster compactness</td><td>Curve bends from steep to flat</td></tr>
+            <tr><td>Silhouette</td><td>Cluster separation quality</td><td>Score is highest</td></tr>
+        </tbody>
+    </table>
+    <p>When both methods agree, you have strong evidence for that K. When they disagree, prefer the silhouette score &mdash; it measures <strong>both</strong> compactness and separation, while inertia only measures compactness.</p>
+</div>
+
+<div class="card">
+    <h3>Why K Depends on Your Security Goals</h3>
+    <p>The "right" K is not purely a statistical question:</p>
+    <table class="info-table">
+        <thead><tr><th>Scenario</th><th>K choice</th><th>Rationale</th></tr></thead>
+        <tbody>
+            <tr><td>Broad anomaly detection</td><td>Fewer clusters (3&ndash;4)</td><td>Coarse baseline; anything unusual is flagged</td></tr>
+            <tr><td>Fine-grained profiling</td><td>More clusters (6&ndash;8)</td><td>Separate DNS, HTTP, SSH, IoT, etc.</td></tr>
+            <tr><td>Specific threat hunting</td><td>Domain-informed K</td><td>K matches known traffic categories</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Choosing K is a <strong>security architecture decision</strong>. Too few clusters
+    merge distinct traffic types (DNS + web) into one, making anomalies harder to detect within each type. Too many clusters
+    create noise and false positives. The right K reflects the actual behavioural diversity of your network.
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>From Words to Vectors: Sentence Embeddings</h3>
+    <p>In Lesson 4.1 you saw word embeddings -- one vector per token. Sentence embeddings go further: they encode an <strong>entire sentence</strong> into a single dense vector that captures its overall meaning.</p>
+    <table class="info-table">
+        <thead><tr><th>Sentence</th><th>Vector (384 dims)</th><th>Note</th></tr></thead>
+        <tbody>
+            <tr><td>"The system was compromised via phishing"</td><td>[0.23, -0.45, 0.87, ...]</td><td></td></tr>
+            <tr><td>"A spear-phishing email led to the breach"</td><td>[0.21, -0.42, 0.89, ...]</td><td>Similar meaning, similar vector</td></tr>
+            <tr><td>"Pizza delivery takes 30 minutes"</td><td>[-0.55, 0.31, -0.12, ...]</td><td>Different meaning, distant vector</td></tr>
+        </tbody>
+    </table>
+    <p>Sentences with similar meanings produce similar vectors, regardless of the specific words used. This is why sentence embeddings are the foundation of every modern RAG system.</p>
+</div>
+
+<div class="card">
+    <h3>Why Sentence Embeddings Beat Keywords</h3>
+    <p>Keyword search matches exact strings. Sentence embeddings match <strong>meaning</strong>:</p>
+    <table class="info-table">
+        <thead><tr><th>Query</th><th>Keyword match?</th><th>Embedding match?</th></tr></thead>
+        <tbody>
+            <tr><td>"How to detect credential theft"</td><td>Misses documents about "password dumping"</td><td>Finds documents about password dumping, Mimikatz, LSASS</td></tr>
+            <tr><td>"Lateral movement techniques"</td><td>Misses documents about "pivoting between hosts"</td><td>Finds documents about pivoting, pass-the-hash, RDP hopping</td></tr>
+            <tr><td>"Data exfiltration via DNS"</td><td>Requires exact phrase</td><td>Finds documents about DNS tunnelling, covert channels</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The SentenceTransformer Model</h3>
+    <pre><code class="language-python">from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Load model (80MB, excellent quality/speed trade-off)
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Encode sentences into vectors
+sentences = [
+    "Brute force attack detected on SSH port",
+    "Multiple failed login attempts on SSH service",
+    "Quarterly budget report submitted"
+]
+embeddings = model.encode(sentences)
+# shape: (3, 384)
+
+# Compare them
+sims = cosine_similarity(embeddings)
+print(f"SSH sentences: {sims[0][1]:.3f}")   # ~0.85 (similar)
+print(f"SSH vs budget: {sims[0][2]:.3f}")   # ~0.05 (unrelated)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Cosine Similarity Refresher</h3>
+    <p>Cosine similarity measures the angle between two vectors, ignoring magnitude:</p>
+    <table class="info-table">
+        <thead><tr><th>Score</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td>1.0</td><td>Identical meaning</td><td>Same sentence, rephrased</td></tr>
+            <tr><td>0.7 - 0.9</td><td>Closely related</td><td>"SSH brute force" vs "failed SSH logins"</td></tr>
+            <tr><td>0.3 - 0.6</td><td>Loosely related</td><td>"SSH brute force" vs "network attack"</td></tr>
+            <tr><td>0.0 - 0.2</td><td>Unrelated</td><td>"SSH brute force" vs "pizza delivery"</td></tr>
+        </tbody>
+    </table>
+    <p>In the next step, you will use cosine similarity to build a full semantic search engine.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Sentence embeddings enable semantic search over threat intelligence.
+    When an analyst searches for "credential theft", a keyword-based system misses documents about "password dumping"
+    or "LSASS memory access". Embedding-based search captures meaning, not just words -- surfacing relevant advisories
+    that would otherwise be invisible.
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The most important hyperparameter</h3>
+    <p>Learning rate controls how far the optimizer moves the weights each update step. It is universally considered the <strong>single most impactful hyperparameter</strong>. Getting it wrong makes everything else irrelevant.</p>
+
+    <pre><code class="language-python"># The weight update rule
+new_weight = old_weight - learning_rate * gradient</code></pre>
+
+    <table class="info-table">
+        <thead><tr><th>Learning rate</th><th>Step size</th><th>Behaviour</th><th>Loss curve pattern</th></tr></thead>
+        <tbody>
+            <tr><td><code>0.0001</code></td><td>Tiny</td><td>Very slow convergence</td><td>Loss crawls down gradually, may never reach minimum in budget</td></tr>
+            <tr><td><code>0.001</code></td><td>Normal</td><td>Usually converges well</td><td>Smooth, steady decrease -- reaches minimum efficiently</td></tr>
+            <tr><td><code>0.01</code></td><td>Bigger</td><td>Faster start, may oscillate</td><td>Quick initial drop then bouncing near minimum</td></tr>
+            <tr><td><code>0.1</code></td><td>Huge</td><td>Often diverges</td><td>Loss explodes or oscillates wildly -- never converges</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The experiment: three learning rates</h3>
+    <p>Train the same model architecture three times, changing only the learning rate, and plot the loss curves:</p>
+
+    <pre><code class="language-python">from tensorflow import keras
+import matplotlib.pyplot as plt
+
+learning_rates = [0.001, 0.01, 0.1]
+histories = {}
+
+for lr in learning_rates:
+    model = keras.Sequential([
+        keras.layers.Dense(64, activation='relu', input_shape=(10,)),
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dense(1, activation='sigmoid'),
+    ])
+    model.compile(
+        optimizer=keras.optimizers.Adam(learning_rate=lr),
+        loss='binary_crossentropy',
+        metrics=['accuracy'],
+    )
+    histories[lr] = model.fit(
+        X_train, y_train,
+        validation_data=(X_val, y_val),
+        epochs=50, batch_size=32, verbose=0,
+    )
+
+# Plot all three loss curves
+for lr, h in histories.items():
+    plt.plot(h.history['val_loss'], label=f'lr={lr}')
+plt.xlabel('Epoch')
+plt.ylabel('Validation Loss')
+plt.legend()
+plt.title('Learning Rate Comparison')
+plt.show()</code></pre>
+</div>
+
+<div class="card">
+    <h3>Diagnosing learning rate from the loss curve</h3>
+    <table class="info-table">
+        <thead><tr><th>Symptom</th><th>Diagnosis</th><th>Fix</th></tr></thead>
+        <tbody>
+            <tr><td>Loss barely moves after many epochs</td><td>Learning rate too low</td><td>Increase by 3-10x</td></tr>
+            <tr><td>Loss decreases smoothly, then plateaus</td><td>Learning rate about right</td><td>Keep it; consider lr scheduling</td></tr>
+            <tr><td>Loss oscillates but trends downward</td><td>Learning rate slightly high</td><td>Reduce by 2-3x</td></tr>
+            <tr><td>Loss spikes up or diverges to NaN</td><td>Learning rate much too high</td><td>Reduce by 10x or more</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Practical starting points</h3>
+    <table class="info-table">
+        <thead><tr><th>Optimizer</th><th>Default learning rate</th><th>Search range</th></tr></thead>
+        <tbody>
+            <tr><td>Adam</td><td>0.001</td><td>[0.0001, 0.001, 0.01]</td></tr>
+            <tr><td>SGD</td><td>0.01</td><td>[0.001, 0.01, 0.1]</td></tr>
+            <tr><td>RMSprop</td><td>0.001</td><td>[0.0001, 0.001, 0.01]</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;"><strong>Rule of thumb:</strong> Start with the optimizer's default. If loss is unstable, reduce by 3x. If loss is too slow, increase by 3x. Three tries usually finds a working range.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In security ML, you often need to retrain models on <strong>shifting distributions</strong> (new attack types appear, old ones fade). A learning rate that worked last month may not work on this month's data. Building the habit of checking loss curves after every retrain ensures your threat detection model actually converged rather than silently failing.
+</div>
+{% endblock %}

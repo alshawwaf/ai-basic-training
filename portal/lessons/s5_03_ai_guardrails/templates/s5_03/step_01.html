@@ -1,0 +1,45 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Two Checkpoints</h3>
+    <p>AI Guardrails operates as an inline scanning layer with two checkpoints:</p>
+    <table class="info-table">
+        <thead><tr><th>Checkpoint</th><th>What It Scans</th><th>What It Catches</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Inbound</strong> (user &rarr; LLM)</td><td>User's prompt before it reaches the LLM</td><td>Prompt injection, jailbreak attempts, prohibited topics</td></tr>
+            <tr><td><strong>Outbound</strong> (LLM &rarr; user)</td><td>LLM's response before the user sees it</td><td>Hallucinated content, data leakage, toxic output</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Detection Methods</h3>
+    <table class="info-table">
+        <thead><tr><th>Method</th><th>How It Works</th><th>Latency</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Pattern matching</strong></td><td>Known attack signatures and templates</td><td>1&ndash;5 ms</td></tr>
+            <tr><td><strong>NLP classification</strong></td><td>ML models trained on attack datasets</td><td>5&ndash;20 ms</td></tr>
+            <tr><td><strong>Semantic analysis</strong></td><td>Embedding-based comparison to known attacks</td><td>10&ndash;30 ms</td></tr>
+            <tr><td><strong>Contextual analysis</strong></td><td>Full conversation context, catches multi-turn attacks</td><td>15&ndash;40 ms</td></tr>
+        </tbody>
+    </table>
+    <p>Total end-to-end: <strong>~20&ndash;50 ms</strong> &mdash; invisible compared to LLM generation time (500ms&ndash;3s).</p>
+</div>
+
+<div class="card">
+    <h3>Connection to What You Know</h3>
+    <ul>
+        <li><strong>Stage 1 (Classification)</strong> &mdash; attack detection is a classification problem: safe, injection, jailbreak, toxic</li>
+        <li><strong>Stage 4 (Embeddings)</strong> &mdash; semantic analysis uses the same embedding + cosine similarity approach from RAG</li>
+        <li><strong>Stage 1 (Evaluation)</strong> &mdash; the same precision/recall tradeoff applies: too aggressive = blocks legitimate prompts, too permissive = misses attacks</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Guardrails use the same ML techniques you've learned throughout this program.
+    Classification, embeddings, semantic similarity &mdash; you can explain <em>how</em> they work, not just <em>that</em> they work.
+    That technical depth is your competitive advantage.
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Demo A: Workforce AI Security Dashboard (5 min)</h3>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What to Show</th><th>What to Say</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Overview dashboard</td><td>"In 30 days, we see X sessions across Y AI apps. Z% are unmanaged."</td></tr>
+            <tr><td>2</td><td>Top-risk users</td><td>"These users aren't malicious &mdash; they're just unaware of the data risk."</td></tr>
+            <tr><td>3</td><td>Sensitive data count</td><td>"We detected X instances of sensitive data sent to AI tools."</td></tr>
+            <tr><td>4</td><td>Policy enforcement</td><td>"Allow for low-risk, Redact for PII, Block for unapproved tools."</td></tr>
+            <tr><td>5</td><td>Application risk matrix</td><td>"High risk + high usage = your first priority."</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Demo B: AI Guardrails + Lakera-Demo (5 min)</h3>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What to Show</th><th>What to Say</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Explain the attack surface</td><td>"Every LLM app accepts natural language. That input can contain hidden instructions."</td></tr>
+            <tr><td>2</td><td>Run a prompt injection</td><td>"Watch &mdash; without guardrails, the AI follows injected instructions."</td></tr>
+            <tr><td>3</td><td>Show detection</td><td>"The guardrails caught it: prompt injection, high confidence."</td></tr>
+            <tr><td>4</td><td>Run data extraction</td><td>"Now I'm trying to extract the system prompt. Blocked."</td></tr>
+            <tr><td>5</td><td>Show audit log</td><td>"Every scan is logged. This is your compliance evidence."</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Demo C: MCP Playground Agent Workflow (5 min)</h3>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What to Show</th><th>What to Say</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td>Open n8n, show MCP servers</td><td>"This agent has access to 13 Check Point tools."</td></tr>
+            <tr><td>2</td><td>Run investigation workflow</td><td>"IP address in, reputation check + log query + summary out."</td></tr>
+            <tr><td>3</td><td>Show tool invocations</td><td>"Every tool call is logged. Agent Security monitors this."</td></tr>
+            <tr><td>4</td><td>Highlight the risk</td><td>"This agent has gateway CLI access. If compromised..."</td></tr>
+            <tr><td>5</td><td>Connect to product</td><td>"AI Agent Security does this at scale &mdash; visibility, policy, anomaly detection."</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> Demo over deck. Every time. The Lakera-Demo, MCP playground,
+    or Workforce dashboard are all more compelling than any presentation. Customers remember
+    what they saw working, not what they heard about.
+</div>
+{% endblock %}

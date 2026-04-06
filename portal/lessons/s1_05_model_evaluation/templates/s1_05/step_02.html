@@ -1,0 +1,61 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Precision vs Recall</h3>
+    <p><strong>Precision</strong> answers: "Of all the alerts my system raised, what fraction were real attacks?"</p>
+    <p><strong>Recall</strong> answers: "Of all the real attacks that occurred, what fraction did my system catch?"</p>
+    <table class="info-table">
+        <thead><tr><th>Metric</th><th>Formula</th><th>High means</th><th>Low means</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Precision</strong></td><td>TP / (TP + FP)</td><td>Few false alarms</td><td>Alert fatigue</td></tr>
+            <tr><td><strong>Recall</strong></td><td>TP / (TP + FN)</td><td>Few missed attacks</td><td>Threats slip through</td></tr>
+            <tr><td><strong>F1</strong></td><td>2 &times; P &times; R / (P + R)</td><td>Balanced performance</td><td>One metric is collapsing</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>The Fundamental Tradeoff</h3>
+    <p>These two metrics pull in opposite directions:</p>
+    <ul>
+        <li><strong>Lower threshold</strong> &rarr; more alerts &rarr; higher recall &rarr; but lower precision</li>
+        <li><strong>Higher threshold</strong> &rarr; fewer, confident alerts &rarr; higher precision &rarr; but lower recall</li>
+    </ul>
+    <p>You cannot have both perfect precision and perfect recall simultaneously (unless the model is perfect).</p>
+</div>
+
+<div class="card">
+    <h3>When to Prioritise Which</h3>
+    <table class="info-table">
+        <thead><tr><th>Security tool</th><th>Priority</th><th>Why</th></tr></thead>
+        <tbody>
+            <tr><td>Email phishing scanner</td><td style="color:var(--green);">Recall</td><td>Missing a phish leads to credential theft</td></tr>
+            <tr><td>Auto-blocking firewall</td><td style="color:var(--green);">Precision</td><td>Blocking legitimate traffic has business impact</td></tr>
+            <tr><td>SOC triage queue</td><td style="color:var(--green);">F1 (balanced)</td><td>Analysts need both trust and coverage</td></tr>
+            <tr><td>Malware sandbox</td><td style="color:var(--green);">Recall</td><td>Missing malware = network compromise</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.metrics import classification_report, precision_score, recall_score, f1_score
+
+print(classification_report(y_test, y_pred,
+                            target_names=['benign', 'attack']))
+
+# Individual metrics
+p = precision_score(y_test, y_pred)
+r = recall_score(y_test, y_pred)
+f = f1_score(y_test, y_pred)
+print(f"Precision: {p:.3f}  Recall: {r:.3f}  F1: {f:.3f}")</code></pre>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> Alert fatigue is real. A model with 10% precision means
+    9 out of 10 alerts are false. Analysts learn to ignore it, and the 1 real alert gets missed too.
+    <strong>High recall without acceptable precision is operationally useless.</strong>
+</div>
+{% endblock %}

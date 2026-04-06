@@ -1,0 +1,66 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Single-Tree Problem</h3>
+    <p>A single <code>DecisionTreeClassifier</code> with no depth limit grows until every training sample is perfectly classified. It memorises noise, outliers, and quirks of the training set.</p>
+    <table class="info-table">
+        <thead><tr><th>Metric</th><th>Single Tree (no limit)</th><th>What it means</th></tr></thead>
+        <tbody>
+            <tr><td>Training accuracy</td><td>1.000</td><td>Perfect &mdash; but suspicious</td></tr>
+            <tr><td>Test accuracy</td><td>~0.891</td><td>10-point drop = overfitting</td></tr>
+            <tr><td>Stability</td><td>Low</td><td>Small data changes produce very different trees</td></tr>
+        </tbody>
+    </table>
+    <p>The model has <strong>memorised</strong> the training data rather than learning general patterns. On new malware samples, those memorised details do not apply.</p>
+</div>
+
+<div class="card">
+    <h3>Bootstrap Aggregation (Bagging)</h3>
+    <p>Bagging fixes overfitting by creating diversity:</p>
+    <table class="info-table">
+        <thead><tr><th>Step</th><th>What happens</th></tr></thead>
+        <tbody>
+            <tr><td>1. Bootstrap sample</td><td>Randomly draw N rows <strong>with replacement</strong> from training data</td></tr>
+            <tr><td>2. Train one tree</td><td>Fit a full decision tree on that bootstrap sample</td></tr>
+            <tr><td>3. Repeat K times</td><td>Create K trees, each seeing slightly different data</td></tr>
+            <tr><td>4. Aggregate</td><td>Majority vote (classification) or average (regression)</td></tr>
+        </tbody>
+    </table>
+    <p>Each tree overfits differently. When you average their predictions, the individual errors cancel out &mdash; the ensemble generalises better than any single tree.</p>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+
+# Train a single tree with no depth limit
+tree = DecisionTreeClassifier(max_depth=None, random_state=42)
+tree.fit(X_train, y_train)
+
+print(f"Train accuracy: {tree.score(X_train, y_train):.3f}")
+print(f"Test accuracy:  {tree.score(X_test, y_test):.3f}")
+# Expect: Train ~1.000, Test ~0.891 (overfitting gap)</code></pre>
+</div>
+
+<div class="card">
+    <h3>Why Random Forests Work</h3>
+    <table class="info-table">
+        <thead><tr><th>Single tree problem</th><th>How Random Forest fixes it</th></tr></thead>
+        <tbody>
+            <tr><td>Overfits training data</td><td>Each tree sees different data; ensemble averages out errors</td></tr>
+            <tr><td>Sensitive to small data changes</td><td>Random sampling creates diversity among trees</td></tr>
+            <tr><td>One bad split ruins everything</td><td>Bad splits in one tree are diluted by the other trees</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Security connection:</strong> In malware classification, new variants appear daily. A single tree trained on
+    last week's samples memorises specific byte patterns that tomorrow's malware won't share. A Random Forest is more
+    <strong>robust to distribution shift</strong> &mdash; its diversity means some trees will still catch the new variant
+    even if others miss it.
+</div>
+{% endblock %}

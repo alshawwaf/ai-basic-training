@@ -1,0 +1,49 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Scenario 1: The CISO Who Banned AI (15 min)</h3>
+    <p><strong>Setup:</strong> A CISO has blocked all AI tools after reading about data leakage. Employees are frustrated.</p>
+    <p><strong>Your objective:</strong> Position Workforce AI Security as the path from "block everything" to "govern and enable."</p>
+    <p><strong>Key points:</strong></p>
+    <ul>
+        <li>Blocking creates shadow AI &mdash; employees use personal devices</li>
+        <li>Governance with visibility is more effective than prohibition</li>
+        <li>Start with Detect mode to understand current state</li>
+        <li>Redact mode allows AI usage while stripping sensitive data</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Scenario 2: The AI Application Builder (15 min)</h3>
+    <p><strong>Setup:</strong> A dev team is building an internal AI assistant for their SOC. The security team is concerned about prompt injection but doesn't understand it.</p>
+    <p><strong>Your objective:</strong> Explain prompt injection in plain language, demonstrate it, and position AI Guardrails.</p>
+    <p><strong>Key points:</strong></p>
+    <ul>
+        <li>Prompt injection is a new attack class &mdash; WAFs don't catch it</li>
+        <li>Live demo: show an injection being blocked</li>
+        <li>Inbound + outbound scanning protects both input and output</li>
+        <li>Latency: ~30ms is invisible compared to LLM generation</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Scenario 3: The AI-First SOC (10 min)</h3>
+    <p><strong>Setup:</strong> A large enterprise is deploying AI agents for tier-1 SOC tasks: alert triage, enrichment, response. They want agents to access SIEM, EDR, and firewall APIs.</p>
+    <p><strong>Your objective:</strong> Position AI Agent Security and explain least-privilege for agents.</p>
+    <p><strong>Key points:</strong></p>
+    <ul>
+        <li>Agent &ne; chatbot &mdash; autonomous action changes the security model</li>
+        <li>MCP is the emerging standard &mdash; every connection is a capability grant</li>
+        <li>Monitor first (Detect mode), then enforce</li>
+        <li>The blast radius question: "If compromised, what's the worst it could do?"</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Key insight:</strong> This is the sales enablement payoff of the entire Ninja Program.
+    You can walk into any customer meeting where AI comes up and <strong>own the conversation</strong> &mdash;
+    because you understand how the technology works, not just the product pitch.
+</div>
+{% endblock %}

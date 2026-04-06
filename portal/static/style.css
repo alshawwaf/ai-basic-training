@@ -356,6 +356,20 @@ body.lesson-page .metric-card .name { margin-bottom: 2px; font-size: 11px; }
 body.lesson-page .stat { margin: 4px 14px; }
 body.lesson-page .stat .value { font-size: 24px; }
 
+/* Compact prototype overview grid (Step 7). Cap the grid width so the
+   2x5 layout of digit grids fits inside the viewport-locked content
+   area regardless of monitor width. */
+body.lesson-page .proto-grid {
+    max-width: 760px;
+    margin: 8px auto;
+    gap: 8px;
+}
+body.lesson-page .proto-item { padding: 6px; }
+body.lesson-page .proto-item .proto-label {
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
 /* Compact step header + learning path so more vertical room is left for
    the actual interactive content */
 body.lesson-page .step-header { margin-bottom: 8px; }

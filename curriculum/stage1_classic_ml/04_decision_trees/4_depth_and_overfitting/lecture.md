@@ -30,23 +30,15 @@ Every additional level in a decision tree allows the model to create finer and f
 
 An unlimited decision tree will achieve ~100% training accuracy by creating a separate leaf for every unique combination of feature values in the training set. But when tested on new data, those hyper-specific rules generalise poorly.
 
-```
-  Underfit vs Good fit vs Overfit
+**Underfit vs good fit vs overfit**
 
-  Depth=1 (underfit)     Depth=5 (good)        Depth=15 (overfit)
-  ┌───────────┐         ┌───────────┐          ┌───────────┐
-  │ One split │         │ Captures  │          │ Memorises │
-  │ only      │         │ real      │          │ every     │
-  │           │         │ patterns  │          │ training  │
-  │ Too       │         │           │          │ sample    │
-  │ simple    │         │ Ignores   │          │           │
-  │           │         │ noise     │          │ Fails on  │
-  │           │         │           │          │ new data  │
-  └───────────┘         └───────────┘          └───────────┘
-  Train: 65%             Train: 99%             Train: 100%
-  Test:  65%             Test:  97%             Test:  94%
-  Gap:   0%              Gap:   2%              Gap:   6%
-```
+| Depth | Behaviour | Train accuracy | Test accuracy | Gap | Verdict |
+|---:|---|---:|---:|---:|---|
+|  1 | one split only — too simple to capture the patterns | 65% | 65% | 0 pp | **underfit** |
+|  5 | captures the real patterns, ignores most noise | 99% | 97% | 2 pp | **good fit** |
+| 15 | memorises individual training samples | 100% | 94% | 6 pp | **overfit** |
+
+The diagnostic is the **gap** between train and test accuracy. A small gap with low scores means underfitting; a small gap with high scores means a good model; a large gap means the model has memorised the training set instead of learning generalisable rules.
 
 **Signs of overfitting:**
 - Training accuracy >> Test accuracy
@@ -62,22 +54,15 @@ An unlimited decision tree will achieve ~100% training accuracy by creating a se
 
 ## Concept: The Depth Sweep Plot
 
-By training models at every depth from 1 to 15 and plotting both accuracies, you get a diagnostic chart:
+By training models at every depth from 1 to 15 and plotting both accuracies, you get a diagnostic chart with two curves — training accuracy on top and test accuracy underneath:
 
-```
-Accuracy
-1.00 |                      ________ Training
-0.95 |              ____----
-0.90 |         ____/        ________ Test
-0.85 |    ____/         ----
-0.80 |___/
-      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-                              Tree Depth
-```
+| Depth range | Training curve | Test curve | What's happening |
+|---|---|---|---|
+| 1 – 3 | climbing | climbing alongside it | both **underfit** — model still gaining real signal |
+| 4 – 6 | nearly flat near the top | reaches its peak, then plateaus | **sweet spot** — pick the depth where the test curve first plateaus |
+| 7 + | pinned at ~1.0 | flat or declining | **overfitting** — train keeps gaining, test does not |
 
-- At depth 1–3: both curves rise together (underfitting region)
-- At depth 4–6: the gap begins to open (sweet spot is usually just before the gap widens)
-- At depth 7+: training accuracy ≈ 1.0, test accuracy plateaus or drops (overfitting)
+The "elbow" of the test curve — the point where adding depth stops helping — is the recommended depth. Any deeper and you are paying complexity for memorisation, not generalisation.
 
 ---
 

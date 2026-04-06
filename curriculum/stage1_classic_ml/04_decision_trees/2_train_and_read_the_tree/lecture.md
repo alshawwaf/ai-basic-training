@@ -76,27 +76,26 @@ class = benign              ← majority class at this node
 
 The **root node** is the first split — the single most informative feature/threshold. Nodes near the root are always more important than nodes near the leaves.
 
-```
-  Reading the tree — node anatomy
+**Reading the tree — node anatomy**
 
-            ┌─────────────────────────────┐
-            │ connection_rate <= 55.3      │ ← split question
-            │ gini = 0.423                │ ← impurity
-            │ samples = 800               │ ← how many reached here
-            │ value = [310, 290, 90, 110] │ ← class counts
-            │ class = benign              │ ← majority class
-            └──────────┬──────────────────┘
-                       │
-            ┌──── YES ─┴─ NO ────┐
-            ▼                    ▼
-      ┌───────────┐        ┌───────────┐
-      │ Left child│        │Right child│
-      │ (rate<=55)│        │ (rate>55) │
-      └───────────┘        └───────────┘
+A single internal node displayed by `plot_tree()` carries five pieces of information:
 
-  YES branch = feature <= threshold
-  NO  branch = feature >  threshold
-```
+| Line in the node | Example | Meaning |
+|---|---|---|
+| Split question | `connection_rate <= 55.3` | the test the node applies to incoming samples |
+| `gini` | `0.423` | impurity at this node *before* the split |
+| `samples` | `800` | how many training samples landed here |
+| `value` | `[310, 290, 90, 110]` | class counts in the order `[benign, port_scan, exfil, DoS]` |
+| `class` | `benign` | majority class — what this node would predict if it were a leaf |
+
+The split question routes samples to one of two children:
+
+| Branch | Condition | Where the sample goes |
+|---|---|---|
+| **Yes** | `feature ≤ threshold` | left child |
+| **No**  | `feature > threshold`  | right child |
+
+The **root node** is the first split — the single most informative feature/threshold the tree could find. Nodes near the root are always more important than nodes near the leaves.
 
 ---
 

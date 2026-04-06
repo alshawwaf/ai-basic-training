@@ -13,27 +13,20 @@
 
 ## Concept: Complete CNN Architecture
 
-The standard pattern for image classification:
+The standard pattern for image classification, layer by layer:
 
-```
-Input (28, 28, 1)
-      |
-  Conv2D(32,(3,3),relu)   ← detects low-level features: edges, corners
-      |       [26,26,32]
-  MaxPool(2,2)
-      |       [13,13,32]
-  Conv2D(64,(3,3),relu)   ← combines features: curves, digit parts
-      |       [11,11,64]
-  MaxPool(2,2)
-      |       [5,5,64]
-  Flatten()
-      |       [1600]
-  Dense(128, relu)         ← classification reasoning
-      |       [128]
-  Dense(10, softmax)       ← one score per digit class (0-9)
-      |       [10]
-Output: probabilities for 10 classes
-```
+| Layer | Output shape | What it does |
+|---|---|---|
+| Input | `(28, 28, 1)` | one greyscale image |
+| `Conv2D(32, (3,3), relu)` | `(26, 26, 32)` | detects low-level features: edges, corners |
+| `MaxPool2D((2,2))`        | `(13, 13, 32)` | halves the spatial size, keeps the strongest signal |
+| `Conv2D(64, (3,3), relu)` | `(11, 11, 64)` | combines edges into curves and digit parts |
+| `MaxPool2D((2,2))`        | `(5, 5, 64)`   | halves spatial size again |
+| `Flatten()`               | `(1600,)`      | unrolls the 2D feature maps into one long vector |
+| `Dense(128, relu)`        | `(128,)`       | classification reasoning over the detected features |
+| `Dense(10, softmax)`      | `(10,)`        | one probability per digit class (0–9) |
+
+Convolutions shrink each spatial dimension by `kernel - 1` (here `3 - 1 = 2`), and pooling halves it. Trace those rules once and the shape column above is fully predictable.
 
 ---
 
@@ -64,21 +57,14 @@ Feature maps: (5, 5, 64)  →  Flatten  →  (1600,)
 
 `Flatten()` just reshapes the tensor. It has no learnable parameters.
 
-```
-Flatten: 3D feature maps → 1D vector
+**Flatten — 3D feature maps to a 1D vector**
 
- 64 feature maps, each 5×5:
- ┌─────┐ ┌─────┐       ┌─────┐
- │5 × 5│ │5 × 5│  ...  │5 × 5│    64 maps
- └─────┘ └─────┘       └─────┘
-    map 1    map 2        map 64
-          \     |        /
-           ▼    ▼       ▼
- ┌──────────────────────────────────┐
- │  25 + 25 + ... + 25 = 1600 vals │   1D vector
- └──────────────────────────────────┘
-   → feeds into Dense(128, relu)
-```
+| Stage | Tensor shape | Total values |
+|---|---|---:|
+| After last conv block | `(5, 5, 64)` — 64 maps, each 5 × 5 | `5 × 5 × 64 = 1600` |
+| After `Flatten()` | `(1600,)` — single long vector | `1600` |
+
+`Flatten` doesn't *change* any values — it just unrolls the cube into a row, so the next `Dense(128)` layer can see the 1600 numbers as a flat feature vector.
 
 ---
 

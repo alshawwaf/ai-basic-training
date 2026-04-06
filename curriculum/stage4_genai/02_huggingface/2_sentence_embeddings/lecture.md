@@ -27,16 +27,13 @@ Sentence embeddings encode the **entire sentence** into one vector that captures
 
 Semantic similarity → close vectors. Semantic difference → distant vectors.
 
-```
-Sentence Embedding: entire sentence ───► one vector
-─────────────────────────────────────────────────────
+**Sentence embedding — one vector for the whole sentence**
 
-| Sentence                                | 384-dim vector              | Note             |
-|-----------------------------------------|-----------------------------|------------------|
-| "System was compromised via phishing"   | [0.23, -0.45, 0.87, ...]   |                  |
-| "Spear-phishing email led to the breach"| [0.21, -0.42, 0.89, ...]   | ← similar!       |
-| "Pizza delivery takes 30 min"           | [-0.55, 0.31, -0.12, ...]  | ← very different |
-```
+| Sentence | 384-dim vector | Note |
+|---|---|---|
+| `"System was compromised via phishing"` | `[0.23, -0.45, 0.87, ...]` |  |
+| `"Spear-phishing email led to the breach"` | `[0.21, -0.42, 0.89, ...]` | ← similar to row 1 |
+| `"Pizza delivery takes 30 min"` | `[-0.55, 0.31, -0.12, ...]` | ← very different |
 
 ---
 
@@ -68,16 +65,15 @@ Practical thresholds for security text:
 - `0.60–0.85` → related topic, different specifics
 - `< 0.40` → likely unrelated
 
-```
-Cosine Similarity Matrix (N × N)
-──────────────────────────────────────────────────────
+**Cosine similarity matrix (N × N)**
 
-|        | Sent A | Sent B | Sent C | Note                    |
-|--------|--------|--------|--------|-------------------------|
-| Sent A |  1.00  |  0.91  |  0.12  |                         |
-| Sent B |  0.91  |  1.00  |  0.15  | ← A and B are similar   |
-| Sent C |  0.12  |  0.15  |  1.00  | ← C is unrelated        |
-```
+|  | Sent A | Sent B | Sent C |
+|---|---:|---:|---:|
+| **Sent A** | 1.00 | 0.91 | 0.12 |
+| **Sent B** | 0.91 | 1.00 | 0.15 |
+| **Sent C** | 0.12 | 0.15 | 1.00 |
+
+The diagonal is always 1.00 (every sentence is identical to itself). Sentences A and B score 0.91 — nearly identical meaning. Sentence C scores ~0.13 with both — clearly unrelated.
 
 ---
 

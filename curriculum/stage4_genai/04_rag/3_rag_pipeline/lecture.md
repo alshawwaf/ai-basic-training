@@ -32,27 +32,15 @@ The key insight: the LLM is not memorising your security knowledge — it is rea
 - The model cites specific information from the retrieved chunks
 - Answers are more accurate and auditable
 
-```
-Full RAG Pipeline
-──────────────────────────────────────────────────────────────
- User question: "How do I detect Mimikatz?"
-        │
-        ▼
-   RETRIEVE       encode query ───► Vector Index (N chunks)
-                  ◄──── top-k ─────
-        │
-        │ top 3 chunks
-        ▼
-   AUGMENT        stuff chunks into system prompt
-                  → "CONTEXT:\n[chunk1]\n[chunk2]\n[chunk3]"
-        │
-        │ augmented prompt + user question
-        ▼
-   GENERATE       LLM reads context + answers
-        │
-        ▼
- Grounded answer (based on your KB, not hallucination)
-```
+**Full RAG pipeline — three stages**
+
+| # | Stage | Input | Operation | Output |
+|---:|---|---|---|---|
+| 1 | **Retrieve** | user question (`"How do I detect Mimikatz?"`) | `model.encode(query)` → cosine similarity against the vector index | top-k chunk texts |
+| 2 | **Augment** | retrieved chunks | inject them into the system prompt under a `CONTEXT:` heading | augmented system prompt |
+| 3 | **Generate** | augmented prompt + user question | LLM reads the context and answers | grounded answer |
+
+The LLM never *learned* the knowledge base — it reads it at inference time. Update the KB and the next call automatically uses the new content; no retraining required.
 
 ---
 
@@ -72,25 +60,15 @@ CONTEXT:
 
 The context section is the retrieved chunks. The LLM sees both the original question and the retrieved knowledge.
 
-```
-The Augmented Prompt — what the LLM actually sees
-──────────────────────────────────────────────────────
+**The augmented prompt — what the LLM actually sees**
 
-| Role      | Content                                             |
-|-----------|-----------------------------------------------------|
-| SYSTEM    | "You are a security analyst assistant.               |
-|           |  Answer using ONLY the context below.                |
-|           |                                                     |
-|           |  CONTEXT:                                           |
-|           |  [mimikatz]                                         |
-|           |  Mimikatz uses sekurlsa::logonpasswords to...       |
-|           |                                                     |
-|           |  [lsass-detection]                                  |
-|           |  Detection relies on monitoring LSASS memory        |
-|           |  access via Sysmon Event ID 10..."                  |
-| USER      | "How do I detect Mimikatz?"                         |
-| ASSISTANT | (LLM generates answer from the context above)       |
-```
+| Role | Content |
+|---|---|
+| **SYSTEM** | `"You are a security analyst assistant. Answer using ONLY the context below.`<br><br>`CONTEXT:`<br>`[mimikatz] Mimikatz uses sekurlsa::logonpasswords to extract plaintext credentials from LSASS memory...`<br><br>`[lsass-detection] Detection relies on monitoring LSASS memory access via Sysmon Event ID 10..."` |
+| **USER** | `"How do I detect Mimikatz?"` |
+| **ASSISTANT** | the model's answer, drawn from the chunks above |
+
+The retrieved chunks live inside the system prompt — the user question is unchanged. Because the model is told to use *only* the context, it can answer questions about your private data accurately even though it was never trained on any of it.
 
 ---
 

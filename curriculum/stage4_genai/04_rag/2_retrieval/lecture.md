@@ -31,33 +31,19 @@ Retrieve: cosine_similarity(query_vector, index) → scores (N,)
 
 This is **Phase 1 + Phase 2** of the RAG pipeline — everything except the final LLM generation step.
 
-```
-Vector Retrieval — query embedding vs chunk embeddings
-──────────────────────────────────────────────────────────
- Query: "how to detect LSASS dumping"
-              │
-        model.encode()
-              │
-              ▼
- Query vector: [0.45, 0.12, -0.33, ...]   (1 × 384)
-              │
-              │  cosine_similarity against index
-              ▼
+**Vector retrieval — query embedding vs chunk embeddings**
 
- | Chunk   | Embedding                    | Score |              |
- |---------|------------------------------|-------|--------------|
- | Chunk 1 | [0.10, -0.55, 0.22, ...]    | 0.31  |              |
- | Chunk 2 | [0.43, 0.15, -0.30, ...]    | 0.92  | ← top match! |
- | Chunk 3 | [0.38, 0.08, -0.28, ...]    | 0.78  |              |
- | ...     | ...                          | ...   |              |
- | Chunk N | [-0.12, 0.60, 0.05, ...]    | 0.15  |              |
+> Query: `"how to detect LSASS dumping"` → `model.encode()` → `[0.45, 0.12, -0.33, ...]` (1 × 384)
 
-              │
-         argsort + top-k
-              │
-              ▼
-     Return: Chunk 2, Chunk 3, Chunk 5 ...
-```
+| Chunk | Embedding (truncated) | Cosine score | |
+|---|---|---:|---|
+| Chunk 1 | `[0.10, -0.55, 0.22, ...]` | 0.31 | |
+| **Chunk 2** | `[0.43, 0.15, -0.30, ...]` | **0.92** | ← top match |
+| Chunk 3 | `[0.38, 0.08, -0.28, ...]` | 0.78 | |
+| … | … | … | |
+| Chunk N | `[-0.12, 0.60, 0.05, ...]` | 0.15 | |
+
+The retriever computes cosine similarity between the query vector and every chunk vector in one matrix-vector operation, runs `argsort`, and returns the top-k chunks (e.g. Chunk 2, Chunk 3, Chunk 5). The chunk *text* is then handed to the LLM in the next stage.
 
 ---
 
@@ -73,21 +59,15 @@ Vector Retrieval — query embedding vs chunk embeddings
 
 For RAG, top-k=3 with threshold filtering is a good default.
 
-```
-Top-k vs Threshold Retrieval
-──────────────────────────────────────────────────────
- All scores: [0.92, 0.78, 0.45, 0.31, 0.15, 0.08]
+**Top-k vs threshold retrieval — same scores, two policies**
 
- Top-k (k=3):                  Threshold (min=0.60):
+> Sorted scores from the index: `[0.92, 0.78, 0.45, 0.31, 0.15, 0.08]`
 
- | Score | Chunk   |            | Score | Chunk   |
- |-------|---------|            |-------|---------|
- | 0.92  | Chunk 2 |            | 0.92  | Chunk 2 |
- | 0.78  | Chunk 3 |            | 0.78  | Chunk 3 |
- | 0.45  | Chunk 5 | ← may be   (only 2 results,
-                      irrelevant  both relevant)
- Always 3 results
-```
+| Policy | Returned chunks | Note |
+|---|---|---|
+| **Top-k (k=3)** | Chunk 2 (0.92), Chunk 3 (0.78), Chunk 5 (0.45) | always returns exactly 3, but 0.45 may not actually be relevant |
+| **Threshold (min=0.60)** | Chunk 2 (0.92), Chunk 3 (0.78) | only genuinely relevant chunks; may return 0 if the query is out of scope |
+| **Top-k + threshold** (recommended) | up to k chunks above the threshold | reliable upper bound on size *and* a quality floor |
 
 ---
 

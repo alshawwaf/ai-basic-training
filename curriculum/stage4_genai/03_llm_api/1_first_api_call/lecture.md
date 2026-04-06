@@ -33,20 +33,17 @@ Three parameters control every call:
 - **`messages`**: The conversation history — list of `{"role": ..., "content": ...}` dicts.
 - **`max_tokens`**: Hard upper limit on output tokens. 100 tokens ≈ 75 words.
 
-```
-API Call Flow
-──────────────────────────────────────────────────────
+**Anatomy of a chat API call**
 
- Your Python code              LLM Provider
- ─────────────────             ─────────────
- system: "You are..."
- messages: [                    LLM Model
-   {user: "Hello!"}    HTTPS
- ]                   ────────►  processes
- max_tokens: 200                  │
-                       ◄──────────
-                    response (string)
-```
+| Side | What it sends/receives | Example |
+|---|---|---|
+| **Your Python code** | request payload | `system="You are..."`, `messages=[{"role": "user", "content": "Hello!"}]`, `max_tokens=200` |
+| → HTTPS → | | |
+| **LLM provider** | runs the model on your payload | (server-side inference) |
+| ← HTTPS ← | | |
+| **Your Python code** | response | a string with the model's reply |
+
+The whole interaction is one HTTP request and one HTTP response — there is no persistent connection.
 
 ---
 
@@ -66,18 +63,18 @@ LLMs don't process characters or words — they process **tokens**. A token is r
 
 Pricing and context limits are measured in tokens. GPT-4 context window = 128,000 tokens ≈ 100,000 words.
 
-```
-Tokenisation of a sentence
-──────────────────────────────────────────────────────
- "Analyse this log entry for threats"
-      │       │     │     │      │     │
-      ▼       ▼     ▼     ▼      ▼     ▼
-  ["Analyse"," this"," log"," entry"," for"," threats"]
-      │       │     │     │      │     │
-      ▼       ▼     ▼     ▼      ▼     ▼
-     token   token token token  token  token
-                   = 6 tokens total
-```
+**Tokenisation of one sentence**
+
+| Position | Source word | Token (with leading space when relevant) |
+|---:|---|---|
+| 1 | Analyse | `"Analyse"` |
+| 2 | this | `" this"` |
+| 3 | log | `" log"` |
+| 4 | entry | `" entry"` |
+| 5 | for | `" for"` |
+| 6 | threats | `" threats"` |
+
+Total: **6 tokens** for `"Analyse this log entry for threats"`. Each token is what the model actually sees and what counts toward your context window and bill.
 
 ---
 

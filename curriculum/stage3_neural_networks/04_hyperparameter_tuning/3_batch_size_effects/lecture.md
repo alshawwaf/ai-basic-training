@@ -27,30 +27,14 @@ batch_size=1600 → 1 batch per epoch    →  1 gradient update per epoch (= "fu
 
 Each gradient update uses only the samples in that batch to compute the gradient. Smaller batches = noisier gradient estimates.
 
-```
-One epoch with batch_size=32 (1600 samples):
+**One epoch, two extremes (1600 samples)**
 
-┌────────┬────────┬────────┬─── ... ───┬────────┐
-│batch 1 │batch 2 │batch 3 │           │batch 50│
-│ 32     │ 32     │ 32     │   ...     │ 32     │
-│samples │samples │samples │           │samples │
-└───┬────┴───┬────┴───┬────┘           └───┬────┘
-    ▼        ▼        ▼                    ▼
- update   update   update    ...        update
-   #1       #2       #3                   #50
+| `batch_size` | Batches per epoch | Samples per batch | Weight updates per epoch | Character |
+|---|---:|---:|---:|---|
+| 32 | 50 | 32 | 50 | many small noisy steps |
+| 1600 (full batch) | 1 | 1600 | 1 | one big stable step |
 
- = 50 weight updates per epoch (noisy but frequent)
-
-One epoch with batch_size=1600 (full batch):
-
-┌────────────────────────────────────────────────┐
-│              all 1600 samples                  │
-└────────────────────────┬───────────────────────┘
-                         ▼
-                      update #1
-
- = 1 weight update per epoch (stable but infrequent)
-```
+With `batch_size=32` the model takes 50 small, slightly-wrong steps per epoch — the noise averages out across batches. With full-batch the model takes a single very accurate step that uses every sample at once.
 
 ---
 
@@ -75,13 +59,14 @@ Research (Keskar et al., 2017) found that large-batch training tends to converge
 
 Small-batch training converges to **flat minima** — the model stays near a low-loss region even under perturbation, which is exactly what generalisation requires.
 
-```
-Sharp minimum (large batch):      Flat minimum (small batch):
-      |    |                              ___________
-      |  * |     ← deep but narrow       |         |
-______|    |______                  _____|    *    |_____
-                                              ↑ stays low even with perturbation
-```
+**Sharp vs flat minima — what each batch regime converges to**
+
+| Minimum type | Trained by | Loss landscape near the minimum | Behaviour on unseen data |
+|---|---|---|---|
+| **Sharp** | large batches | deep but very narrow — loss climbs steeply on either side | a small input shift pushes the model off the cliff → poor generalisation |
+| **Flat** | small batches | low and wide — loss stays low across a broad region | small perturbations keep loss low → much better generalisation |
+
+The noise injected by small batches makes it hard for SGD to *settle* into a sharp valley — it keeps getting bumped out, and only the wide flat regions are stable enough for it to stick.
 
 ---
 

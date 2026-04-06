@@ -79,27 +79,15 @@ The length of each list equals the number of epochs trained.
 
 ## Concept: Reading Training Curves
 
-```
-Accuracy
-  1.0 |                    train ________
-      |                  ./
-  0.9 |            ______/  <- val plateaus
-      |          ./
-  0.8 |        ./
-      |      ./
-  0.7 |    ./
-      |  ./
-  0.6 |./
-      +--+--+--+--+--+--+--+--+--+---> Epoch
-         5  10  15  20
+A healthy run shows two curves climbing together — `accuracy` (on training data) and `val_accuracy` (on the validation portion) — both rising sharply at first and then flattening as the model runs out of new things to learn:
 
-Three phases:
-  1-5:   Rapid improvement — model learns obvious patterns
-  5-15:  Slowing improvement — learning fine details
-  15+:   Plateau or divergence — risk of overfitting
-```
+| Epoch range | What `accuracy` does | What `val_accuracy` does | What it means |
+|---|---|---|---|
+| 1 – 5   | jumps from ~0.6 to ~0.85 | tracks training closely | **rapid learning** — picking up obvious patterns |
+| 5 – 15  | rises slowly to ~0.95   | rises slowly, then plateaus | **fine-tuning** — learning subtler patterns |
+| 15 +    | keeps creeping up to ~1.0 | flat or starts dropping | **overfitting risk** — training on noise specific to the train set |
 
-When `val_loss` starts rising while `loss` keeps falling — stop training. This is the overfitting signal.
+The single most important signal: when `val_loss` starts **rising** while `loss` keeps **falling**, stop. The model has begun memorising the training data.
 
 ---
 
@@ -116,21 +104,13 @@ X_test (400 samples — never seen during training or validation)
   |__ Used ONLY for final evaluation in Exercise 4
 ```
 
-```
-Data split with validation_split=0.2:
+**Data layout when you call `fit(..., validation_split=0.2)`**
 
-┌──────────────────────────────────────────────────────┐
-│                   X_train (1600 samples)             │
-│  ┌──────────────────────────────┬───────────────┐    │
-│  │  Training (1280 = 80%)       │ Val (320=20%) │    │
-│  │  gradient updates happen     │ monitor only  │    │
-│  └──────────────────────────────┴───────────────┘    │
-└──────────────────────────────────────────────────────┘
-
-┌──────────────────┐
-│ X_test (400)     │  ← never seen during fit(), used ONLY for final eval
-└──────────────────┘
-```
+| Subset | Size | Source | What it is used for |
+|---|---:|---|---|
+| Training portion | 1280 (80% of `X_train`) | `X_train`, first 80% | gradient updates — weights actually change here |
+| Validation portion | 320 (20% of `X_train`) | `X_train`, last 20% | per-epoch monitoring — no weight updates |
+| Test set | 400 | `X_test`, never touched by `fit()` | held back until **after** all training, used for the final report |
 
 Never use `X_test` inside the training loop. The test set evaluates how well the trained model generalises to truly unseen data.
 

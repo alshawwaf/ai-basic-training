@@ -20,18 +20,17 @@ With a single 80/20 split, your test set is one random 20% sample. If that 20% h
 2. For k=1 to K: train on K-1 folds, evaluate on fold k
 3. Average the K evaluation scores
 
-```
-5-Fold Cross-Validation — each fold takes a turn as the test set
+**5-fold cross-validation — each chunk takes a turn as the test set**
 
-Fold 1:  [ TEST  ][ train ][ train ][ train ][ train ]  ───► score 1
-Fold 2:  [ train ][ TEST  ][ train ][ train ][ train ]  ───► score 2
-Fold 3:  [ train ][ train ][ TEST  ][ train ][ train ]  ───► score 3
-Fold 4:  [ train ][ train ][ train ][ TEST  ][ train ]  ───► score 4
-Fold 5:  [ train ][ train ][ train ][ train ][ TEST  ]  ───► score 5
-                                                               │
-                                              mean ± std  ◄────┘
-                                              0.968 ± 0.008
-```
+| Iteration | Chunk 1 | Chunk 2 | Chunk 3 | Chunk 4 | Chunk 5 | Score |
+|---|:---:|:---:|:---:|:---:|:---:|---:|
+| 1 | **TEST** | train | train | train | train | score₁ |
+| 2 | train | **TEST** | train | train | train | score₂ |
+| 3 | train | train | **TEST** | train | train | score₃ |
+| 4 | train | train | train | **TEST** | train | score₄ |
+| 5 | train | train | train | train | **TEST** | score₅ |
+
+Final estimate: **mean ± std** of the five scores (e.g. `0.968 ± 0.008`). Every sample serves as test exactly once and as training in K−1 iterations, so the score is averaged over the entire dataset and the spread (`std`) tells you how reliable that average is.
 
 Every sample is used as both training and test exactly once. The K scores give you a distribution — mean and std — that is far more reliable than a single split.
 

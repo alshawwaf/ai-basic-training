@@ -23,24 +23,15 @@ After K-Means, every sample belongs to a cluster. Its **anomaly score** = its di
 distances = np.min(kmeans.transform(X_scaled), axis=1)
 ```
 
-```
-                          ★ Centroid 0
-                        · · ·
-                      · · · · ·    normal samples (close)
-                        · · ·
+**Anomaly score = distance from each sample to its nearest centroid**
 
-                                              ✖  anomaly (far from
-                                                  ALL centroids)
+| Sample | Sits inside cluster? | Distance to nearest centroid | Verdict |
+|---|---|---:|---|
+| Normal sample near Centroid 0 | yes | **0.8** | low score → benign |
+| Normal sample near Centroid 1 | yes | **0.6** | low score → benign |
+| Outlier far from every centroid | no | **6.2** | high score → **anomaly** |
 
-          ★ Centroid 1
-        · · ·
-      · · · · ·
-        · · ·
-
-  anomaly score = distance to nearest centroid
-  ● normal:  score = 0.8   (close to its centroid)
-  ✖ anomaly: score = 6.2   (far from every centroid)
-```
+The reasoning is purely geometric: K-Means already pulled the dense, repetitive behaviours into tight balls around their centroids, so anything that lives in the empty space *between* the balls is by definition far from any known pattern — a candidate to investigate.
 
 `kmeans.transform(X_scaled)` returns an (n, K) matrix of distances from each sample to each centroid. `np.min(..., axis=1)` gives the distance to the nearest centroid.
 
@@ -54,24 +45,15 @@ Choose a percentile threshold:
 - Top 5% of distances are flagged as anomalous
 - This is calibrated to your false-positive budget
 
-```
-Anomaly score distribution
+**Anomaly score distribution at a glance**
 
-  Count
-    │
-    │ ████
-    │ █████
-    │ ██████
-    │ ████████
-    │ ██████████
-    │ ████████████
-    │ █████████████                             ░░   ← flagged (top 5%)
-    │ ██████████████                          ░░░░░
-    └──────────────────────────┬─────────────────────►
-   0.0                       3.87            8.0   score
-                          threshold
-                        (95th pctl)
-```
+| Score range | Share of samples | Status |
+|---|---:|---|
+| 0.0 – 1.5 | majority of the dataset | obvious normals — sit right on top of a centroid |
+| 1.5 – 3.87 | the long right tail of the bell | grey zone — far-ish but inside the threshold |
+| **> 3.87 (95th percentile)** | **top 5%** | **flagged as anomalies** |
+
+The threshold (`3.87` here) is the 95th-percentile of the score distribution. Sliding it left raises the alert volume; sliding it right is more conservative. A purely statistical alternative is `mean + 2σ`, which assumes a roughly Gaussian tail.
 
 Or use a statistical approach: mean + 2σ of distances.
 

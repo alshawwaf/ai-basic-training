@@ -31,27 +31,16 @@ Imagine monitoring a corporate network:
 - File server access: internal IPs, large bytes, long duration → cluster B
 - DNS: small packets, UDP, frequent, port 53 → cluster C
 
-```
-         bytes_sent
-            ▲
-            │
-   250000   │                    ○   ○
-            │                  ○  ○ ○    Cluster C: exfil
-            │                   ○ ○       (high bytes, low rate)
-            │
-    50000   │  ■ ■ ■ ■ ■
-            │ ■ ■ ■ ■ ■ ■       Cluster A: web browsing
-            │  ■ ■ ■ ■ ■         (moderate bytes, low rate)
-            │
-     1000   │                ▲ ▲ ▲ ▲ ▲ ▲ ▲
-            │               ▲ ▲ ▲ ▲ ▲ ▲ ▲   Cluster B: DoS
-            │                ▲ ▲ ▲ ▲ ▲ ▲      (low bytes, HIGH rate)
-            │
-            │    ◆ ◆ ◆         Cluster D: DNS
-            │   ◆ ◆ ◆ ◆         (tiny bytes, moderate rate)
-            └────────────────────────────────► connection_rate
-           0                                 1000
-```
+**Where each behaviour lives in the (`connection_rate`, `bytes_sent`) plane**
+
+| Cluster | What it represents | Typical `connection_rate` | Typical `bytes_sent` |
+|---|---|---|---|
+| **A — web browsing** | many small interactive HTTP/HTTPS sessions | **low** (a few per second) | **moderate** (~50 KB) |
+| **B — DoS** | floods of tiny packets aimed at a single target | **very high** (~1000/s) | **very low** (~1 KB) |
+| **C — exfiltration** | a long upload of one large file | **low** | **very high** (~250 KB+) |
+| **D — DNS** | a steady stream of tiny lookups | moderate | **tiny** (a few hundred bytes) |
+
+Each behaviour occupies a **different corner** of the feature plane, so K-Means can pull them into separate clusters without ever being told what "DoS" or "exfil" means. Anything that lands far from all four corners is the interesting part — the candidate anomaly.
 
 These patterns are stable and reproducible. Any connection that doesn't fit any of these known patterns is suspicious.
 

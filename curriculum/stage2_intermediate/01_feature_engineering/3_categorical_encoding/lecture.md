@@ -20,20 +20,16 @@ TCP → 0, UDP → 1, ICMP → 2
 
 **Problem:** This implies an ordering (ICMP > UDP > TCP) and a distance (TCP to ICMP is "2 apart") that doesn't exist. A linear model will try to learn coefficients that treat 0, 1, 2 as a scale — leading to incorrect behaviour.
 
-**OneHotEncoder** creates one binary column per category:
+**OneHotEncoder** creates one binary column per category. The single `protocol` column expands into one column per category:
 
-```
-Original column              One-hot encoded columns
-┌──────────┐        ┌──────────┬──────────┬──────────┐
-│ protocol │        │ proto_TCP│ proto_UDP│proto_ICMP│
-├──────────┤        ├──────────┼──────────┼──────────┤
-│   TCP    │  ───►  │    1     │    0     │    0     │
-│   UDP    │  ───►  │    0     │    1     │    0     │
-│   ICMP   │  ───►  │    0     │    0     │    1     │
-│   TCP    │  ───►  │    1     │    0     │    0     │
-└──────────┘        └──────────┴──────────┴──────────┘
-  1 column             3 columns (one per category)
-```
+| Original `protocol` | `proto_TCP` | `proto_UDP` | `proto_ICMP` |
+|---|:---:|:---:|:---:|
+| TCP  | **1** | 0 | 0 |
+| UDP  | 0 | **1** | 0 |
+| ICMP | 0 | 0 | **1** |
+| TCP  | **1** | 0 | 0 |
+
+One column becomes three. Each protocol now lives in its own dimension, with no implied ordering or distance between them.
 
 Now there is no implied ordering. Each protocol is independent.
 
@@ -53,16 +49,13 @@ With one-hot encoding, the three protocol columns sum to exactly 1 for every row
 
 The fix: drop one column (`drop='first'`). With two columns (UDP, ICMP), the third (TCP) is implied when both are 0.
 
-```
-With drop='first' (ICMP dropped as reference)
-┌──────────┐        ┌──────────┬──────────┐
-│ protocol │        │ proto_TCP│ proto_UDP│
-├──────────┤        ├──────────┼──────────┤
-│   TCP    │  ───►  │    1     │    0     │
-│   UDP    │  ───►  │    0     │    1     │
-│   ICMP   │  ───►  │    0     │    0     │  ← both 0 = ICMP (implied)
-└──────────┘        └──────────┴──────────┘
-```
+**With `drop='first'` (ICMP dropped as the reference category)**
+
+| Original `protocol` | `proto_TCP` | `proto_UDP` | What both 0s mean |
+|---|:---:|:---:|---|
+| TCP  | **1** | 0 | — |
+| UDP  | 0 | **1** | — |
+| ICMP | 0 | 0 | row falls back to the dropped reference → ICMP is implied |
 
 ```python
 # sklearn

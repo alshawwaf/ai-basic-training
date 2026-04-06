@@ -39,20 +39,15 @@ For each mini-batch, this layer:
 
 The result: each layer always receives inputs with approximately mean=0 and std=1, regardless of what happened in earlier layers.
 
-```
-BatchNorm transformation (per feature, within one mini-batch):
+**BatchNorm transformation, per feature, within one mini-batch**
 
- Before BN                  After BN
- (shifting distribution)    (stable, centred)
+| Stage | Distribution mean | Distribution std | Notes |
+|---|---:|---:|---|
+| Before BatchNorm (layer input) | 2.1 | 3.8 | drifts as earlier layers train |
+| After step 1 (centre + rescale) | 0.0 | 1.0 | mean and variance computed across the batch |
+| After step 2 (`γ·z + β`) | β | γ | learned scale `γ` and shift `β` give the layer freedom to undo BN if it's actually unhelpful |
 
-      __                         __
-    /    \   mean=2.1          /    \   mean~0
-   /      \  std=3.8          /      \  std~1
-  /        \                 /        \
- /          \               /          \
-─┼──────────┼──►         ──┼──────────┼──►
- -2    0  2  4             -2    0    2
-```
+The key effect: every later layer receives inputs whose statistics are pinned to a stable target instead of drifting around as training progresses, which is exactly what cures internal covariate shift.
 
 ---
 
@@ -91,31 +86,15 @@ In practice the difference is small for most problems. Use the first (simpler) p
 The standard order is: `Dense → BatchNorm → Dropout → next Dense`
 BatchNorm comes before Dropout because Dropout changes the scale of inputs.
 
-```
-Recommended layer stack (one "block"):
+**Recommended layer stack — one block, repeated**
 
-┌──────────────────────┐
-│  Dense(256, relu)    │  ← compute activations
-├──────────────────────┤
-│  BatchNormalization  │  ← normalise to mean~0, std~1
-├──────────────────────┤
-│  Dropout(0.3)        │  ← randomly zero 30% of neurons
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  Dense(256, relu)    │  ← next block receives clean,
-├──────────────────────┤     normalised, regularised input
-│  BatchNormalization  │
-├──────────────────────┤
-│  Dropout(0.3)        │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│  Dense(1, sigmoid)   │  ← output layer (no BN, no Dropout)
-└──────────────────────┘
-```
+| Order | Layer | Role |
+|---:|---|---|
+| 1 | `Dense(256, activation='relu')` | compute activations |
+| 2 | `BatchNormalization()` | normalise to mean ≈ 0, std ≈ 1 |
+| 3 | `Dropout(0.3)` | randomly zero 30% of neurons (training only) |
+
+Stack two or three of these blocks back-to-back, then finish with `Dense(1, sigmoid)` (or `Dense(N, softmax)`). The final output layer gets neither BatchNorm nor Dropout — its job is to produce the actual prediction distribution, and both regularisers would distort it.
 
 ---
 

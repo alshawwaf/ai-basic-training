@@ -23,21 +23,15 @@ The system prompt is a persistent instruction that frames the model's role befor
 - **Scope**: what it should and should not do ("Only answer security questions")
 - **Context**: what it knows ("You are analysing logs from our AWS environment")
 
-```
-How system + user + assistant messages stack up
-──────────────────────────────────────────────────────
+**How `system` + `user` + `assistant` messages stack up**
 
-| Role      | Content                                          |
-|-----------|--------------------------------------------------|
-| SYSTEM    | "You are a senior SOC analyst. Be concise."      |
-|           | (hidden from end user)                           |
-| USER      | "Analyse this log entry: ..."                    |
-| ASSISTANT | (model generates response here, shaped by        |
-|           |  the system prompt above)                        |
+| Role | Content | Visible to end user? |
+|---|---|---|
+| **SYSTEM** | `"You are a senior SOC analyst. Be concise."` | no |
+| **USER** | `"Analyse this log entry: ..."` | yes |
+| **ASSISTANT** | model's reply, shaped by the system prompt above | yes |
 
-The system prompt is always at the top, influencing
-every assistant response in the conversation.
-```
+The system prompt sits at the top of every request and influences every assistant response in the conversation — even though the end user never sees it.
 
 ---
 

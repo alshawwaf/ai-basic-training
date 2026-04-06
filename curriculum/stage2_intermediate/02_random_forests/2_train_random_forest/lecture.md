@@ -43,17 +43,17 @@ At each split, the random forest considers only a **random subset** of features 
 
 Default: `max_features='sqrt'` → √(n_features) features considered per split.
 
-```
-All 7 features: [entropy, packer, vsize, imports, imp_ent, code_sz, sections]
+**Feature subsampling at one node, three different trees**
 
-At each split, each tree picks a RANDOM subset of sqrt(7) ~ 3 features:
+The full feature pool: `[entropy, packer, vsize, imports, imp_ent, code_sz, sections]`. At each split, every tree is shown only a random subset of `√7 ≈ 3` of those features.
 
-Tree 1, node A:  picks [entropy, packer, code_sz]  ───► splits on entropy
-Tree 2, node A:  picks [vsize, imports, sections]   ───► splits on vsize
-Tree 3, node A:  picks [entropy, imp_ent, imports]  ───► splits on entropy
+| Tree | Random feature subset offered at this node | Best split chosen |
+|---|---|---|
+| 1 | `[entropy, packer, code_sz]` | splits on `entropy` |
+| 2 | `[vsize, imports, sections]` | splits on `vsize` |
+| 3 | `[entropy, imp_ent, imports]` | splits on `entropy` |
 
-Result: trees make DIFFERENT splits ───► diverse, uncorrelated predictions
-```
+The trees end up splitting on **different** features even when one feature (here, `entropy`) is genuinely strong — that diversity is what stops the trees from agreeing too closely with each other and is the real source of the forest's lower variance.
 
 For 7 features: √7 ≈ 2.6 → 2 or 3 features considered at each node. This is small enough to create diversity but large enough to use the good features most of the time.
 

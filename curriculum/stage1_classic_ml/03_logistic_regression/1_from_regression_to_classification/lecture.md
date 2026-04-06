@@ -46,28 +46,17 @@ Where `z = w₀ + w₁x₁ + w₂x₂ + ...` is the linear combination of featur
 | +2 | 0.881 | Probably phishing |
 | +5 | 0.993 | Almost certainly phishing |
 
-The sigmoid produces an **S-curve**: near 0 for very negative z, near 1 for very positive z, passing through 0.5 at z=0.
+The sigmoid produces an **S-curve**: near 0 for very negative `z`, near 1 for very positive `z`, passing through `0.5` at `z = 0`. Pictured another way, it's a flat floor on the left, a steep climb in the middle, and a flat ceiling on the right — every linear score gets mapped into the `(0, 1)` band.
 
-```
-  The Sigmoid (S-curve)
+| `z` (linear score) | `σ(z)` (probability) | Side of the decision boundary | Predicted class |
+|---:|---:|---|---|
+| −5 | 0.007 | well left of 0 | **legitimate** |
+| −1 | 0.269 | left of 0 | legitimate |
+| **0** | **0.500** | **decision boundary** | tie — model is maximally unsure |
+| +1 | 0.731 | right of 0 | phishing |
+| +5 | 0.993 | well right of 0 | **phishing** |
 
-  P(phishing)
-  1.0 │                          ─────────
-      │                        /
-  0.8 │                      /
-      │                    /
-  0.5 │─ ─ ─ ─ ─ ─ ─ ─ ×  ← decision boundary (default threshold)
-      │                /
-  0.2 │              /
-      │            /
-  0.0 │───────────
-      └────────────────────────────────
-      -5    -3    -1    0    1    3    5
-                     z (linear score)
-
-  z < 0 → P < 0.5 → predict legitimate
-  z > 0 → P > 0.5 → predict phishing
-```
+Reading the table left-to-right walks you up the S-curve: floor → ramp → ceiling. The default rule "predict phishing when `p ≥ 0.5`" is equivalent to "predict phishing when `z ≥ 0`".
 
 ---
 
@@ -100,17 +89,16 @@ Despite the name, logistic regression is a **classification** algorithm. It:
 
 The model learns the weights `w` during training by maximising the likelihood of the observed labels — a process called **maximum likelihood estimation** (equivalent to minimising log-loss).
 
-```
-  Logistic regression pipeline
+**Logistic regression pipeline — one URL flowing through the model**
 
-  ┌──────────────────┐     ┌─────────────────┐     ┌───────┐     ┌───────────┐
-  │ Features         │     │ Linear score    │     │Sigmoid│     │ Decision  │
-  │ url_length=120   │────►│ z = w0 + w1*120 │────►│ σ(z)  │────►│ p >= 0.5? │
-  │ num_dots=5       │     │     + w2*5 +... │     │= 0.89 │     │  YES → 1  │
-  │ has_at=1         │     │     = 2.1       │     │       │     │ (phishing)│
-  └──────────────────┘     └─────────────────┘     └───────┘     └───────────┘
-       raw inputs            weighted sum          probability      class label
-```
+| Stage | What it holds | Worked example |
+|---|---|---|
+| 1. **Features** (raw inputs) | the numbers you measured | `url_length=120`, `num_dots=5`, `has_at=1` |
+| 2. **Linear score `z`** (weighted sum) | `w₀ + w₁·url_length + w₂·num_dots + …` | `z = 2.1` |
+| 3. **Sigmoid `σ(z)`** (probability) | squashes `z` into `(0, 1)` | `p = 0.89` |
+| 4. **Decision** (class label) | `1` if `p ≥ 0.5` else `0` | `1` → **phishing** |
+
+Steps 1–2 are exactly what linear regression does. Step 3 is the only thing logistic regression adds, and step 4 is a thresholding rule the user controls.
 
 ---
 

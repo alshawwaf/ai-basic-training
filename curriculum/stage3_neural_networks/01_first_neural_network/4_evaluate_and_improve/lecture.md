@@ -41,19 +41,16 @@ The sigmoid output is a probability, not a class label. You apply a threshold to
 y_pred = (model.predict(X_test).flatten() > 0.5).astype(int)
 ```
 
-```
-Prediction pipeline:  raw output → threshold → class label
+**Prediction pipeline: raw probability → threshold → class label**
 
-model.predict(X_test)     threshold=0.5       y_pred
-┌────────────────┐        ┌───────────┐       ┌───┐
-│ sample 0: 0.92 │ ─────► │ 0.92>0.5? │ YES ► │ 1 │  attack
-│ sample 1: 0.14 │ ─────► │ 0.14>0.5? │ NO  ► │ 0 │  benign
-│ sample 2: 0.67 │ ─────► │ 0.67>0.5? │ YES ► │ 1 │  attack
-│ sample 3: 0.03 │ ─────► │ 0.03>0.5? │ NO  ► │ 0 │  benign
-└────────────────┘        └───────────┘       └───┘
-  shape: (n, 1)                                shape: (n,)
-  call .flatten() first
-```
+| Sample | `model.predict()` (prob) | `> 0.5`? | Predicted label | Meaning |
+|---:|---:|:---:|---:|---|
+| 0 | 0.92 | yes | 1 | attack |
+| 1 | 0.14 | no  | 0 | benign |
+| 2 | 0.67 | yes | 1 | attack |
+| 3 | 0.03 | no  | 0 | benign |
+
+`predict()` returns shape `(n, 1)` for a binary model — call `.flatten()` to drop the trailing dimension to `(n,)` so it lines up with `y_test` and sklearn's metric helpers.
 
 This is identical to the threshold tuning concept from Lesson 1.3. A lower threshold (e.g., 0.3) increases recall but decreases precision for the positive class. In security work, you often lower the threshold to catch more attacks, accepting more false positives.
 
@@ -65,12 +62,12 @@ With 90% benign, 10% attack:
 - A model that predicts "benign" for everything gets **90% accuracy** — useless!
 - AUC measures whether the model's **probability scores rank positives above negatives** — it's threshold-independent
 
-```
-AUC = 0.5  → Random classifier (no skill)
-AUC = 0.7  → Reasonable baseline
-AUC = 0.9  → Good model
-AUC = 1.0  → Perfect ranking
-```
+| AUC | Interpretation |
+|---:|---|
+| 0.5 | random classifier — no skill |
+| 0.7 | reasonable baseline |
+| 0.9 | good model |
+| 1.0 | perfect ranking |
 
 Always report AUC (or average precision) alongside accuracy on imbalanced datasets.
 

@@ -35,19 +35,11 @@ Machine learning problems divide into two broad types depending on what you are 
 
 The rule of thumb: if you can put your output on a number line and care about *how far off* you are, use regression. If you only care about *which bucket* the output falls into, use classification.
 
-```
-  Regression output                 Classification output
-
-  ◄────────────────────────►        ┌─────────┬─────────┐
-  0 ms         150 ms    300 ms     │ "attack"│ "benign"│
-       ▲                            └─────────┴─────────┘
-       │ predicted: 145.2 ms           predicted: "attack"
-       │ actual:    148.0 ms
-       │ error:       2.8 ms         Either right or wrong bucket.
-                                     No concept of "how far off."
-  Continuous number line.
-  Error = distance from truth.
-```
+|  | **Regression** | **Classification** |
+|---|---|---|
+| Output type   | continuous number on a line (e.g. *0 ms → 300 ms*) | one of a fixed set of buckets (e.g. *"attack"* or *"benign"*) |
+| Example prediction | predicted: **145.2 ms**, actual: **148.0 ms** | predicted: **"attack"** |
+| Error means | distance from the truth (here: 2.8 ms) | right bucket or wrong bucket — no notion of "how far off" |
 
 ---
 
@@ -89,25 +81,7 @@ A scatter plot of `requests_per_second` (x-axis) vs `response_time_ms` (y-axis) 
 - **No pattern** — suggests the features are not predictive
 - **Outliers** — individual points far from the main cloud; investigate before trusting them
 
-For our server data you should see a clear positive trend with some Gaussian noise around a straight line.
-
-```
-  response_time_ms
-  300 │                          · ·
-      │                       ·  ·
-  250 │                    ·  ·
-      │                 · · ·
-  200 │              ·  ·              ← points cluster around
-      │           · · ·                 a straight line
-  150 │        ·  · ·
-      │      · · ·
-  100 │   ·  · ·
-      │  · ·
-   50 │ ·
-      └──────────────────────────────
-       0   25   50   75  100  125  150
-                requests_per_second
-```
+For our server data you should see a clear positive trend with some Gaussian noise around a straight line — points start near `(0 rps, ~50 ms)` and rise steadily toward `(150 rps, ~280 ms)`, scattered loosely around an imaginary diagonal. The cloud is tight enough that you can mentally draw the best-fit line with a ruler, which is exactly what `LinearRegression` will do for you in the next exercise.
 
 ---
 

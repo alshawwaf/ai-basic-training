@@ -30,26 +30,22 @@ Phishing URLs share structural patterns that differ measurably from legitimate o
 
 These features are **binary** (0/1) or **integer counts** — all numeric, so sklearn can use them directly without encoding.
 
-```
-  From a raw URL to a feature vector
+**From a raw URL to a feature vector**
 
-  Input:  http://192.168.1.1/secure-login-paypal@evil.com/redirect?token=abc123
+Input URL: `http://192.168.1.1/secure-login-paypal@evil.com/redirect?token=abc123`
 
-  ┌──────────────────────────────────────────────────────────┐
-  │  Feature extraction                                      │
-  │                                                          │
-  │  url_length ────────► 62                                 │
-  │  num_dots ──────────► 4                                  │
-  │  has_at_symbol ─────► 1                                  │
-  │  uses_https ────────► 0                                  │
-  │  num_subdomains ────► 3                                  │
-  │  has_ip_address ────► 1                                  │
-  │  num_hyphens ───────► 2                                  │
-  │  path_length ───────► 31                                 │
-  └──────────────────────────────────────────────────────────┘
+| Feature | Extraction rule | Value for this URL |
+|---|---|---:|
+| `url_length` | `len(url)` | 62 |
+| `num_dots` | count of `.` | 4 |
+| `has_at_symbol` | `1` if `@` present else `0` | 1 |
+| `uses_https` | `1` if URL starts with `https://` else `0` | 0 |
+| `num_subdomains` | dots in the host minus 1 | 3 |
+| `has_ip_address` | `1` if host is an IP literal | 1 |
+| `num_hyphens` | count of `-` | 2 |
+| `path_length` | `len(parsed.path)` | 31 |
 
-  Output: [62, 4, 1, 0, 3, 1, 2, 31]  ← one row for the model
-```
+The model never sees the URL string — it sees the row `[62, 4, 1, 0, 3, 1, 2, 31]`. Every later step (training, prediction, importance) operates on these eight numbers.
 
 ---
 
@@ -89,19 +85,14 @@ Plotting the distribution of each feature split by class reveals which features 
 
 A quick technique: `df.groupby('is_phishing').mean()` shows the average feature value for each class — a table that immediately reveals which features differ most between phishing and legitimate.
 
-```
-  Feature distributions — well-separated vs overlapping
+**Feature distributions — well-separated vs overlapping**
 
-  url_length                        uses_https
-  (well-separated = strong)         (overlapping = weak)
+| Feature | Where legitimate URLs cluster | Where phishing URLs cluster | Verdict |
+|---|---|---|---|
+| `url_length` | short end (~30–60 chars) | long end (~80–140 chars) | **strong** — peaks barely overlap |
+| `uses_https` | mostly `1` | mostly `1` (phishing increasingly uses HTTPS) | **weak** — distributions sit on top of each other |
 
-  Legit:  ████████░░░░░░░░          Legit:  ░░░░░████████████
-  Phish:  ░░░░░░░░░████████         Phish:  ░░░░░░░░░████████
-          ◄── short  long ──►               ◄── no    yes ──►
-
-  Big gap between peaks             Peaks overlap heavily
-  → strong predictor                → weaker predictor alone
-```
+A feature is useful when the two class distributions sit in **different places**. When the peaks overlap heavily, no single threshold can separate the classes — the feature can still help in combination with others, but on its own it carries little signal.
 
 ---
 

@@ -23,21 +23,7 @@ For simple linear regression (one feature):
 y_predicted = slope * x + intercept
 ```
 
-```
-  What .fit() finds — the best line through the data
-
-  response_time
-  300 │             ·  ·       · ·
-      │          ·  · ·  ·  ·
-  200 │       · ·─────────────────── ← best-fit line
-      │    · ·───·  ·
-  100 │  ·───· ·          residual = actual - predicted
-      │──·                    │
-      └───────────────────────┼──── requests_per_second
-                              ▼
-              .fit() minimises the sum of all
-              squared residuals (vertical gaps)
-```
+**What `.fit()` is doing.** Imagine the scatter plot from the previous exercise. `.fit()` slides a straight line around the cloud, looking for the unique line where the **vertical gaps** between each point and the line — the **residuals** — are as small as possible overall. Concretely it minimises the sum of those gaps *squared*, so a few large misses are penalised much more than many small ones.
 
 Mathematically, sklearn solves:
 
@@ -69,27 +55,17 @@ response_time_ms = slope * requests_per_second + intercept
 - Each additional request per second adds ~1.82 ms
 - At 100 rps: 1.82 × 100 + 29.5 = 211.5 ms predicted
 
-```
-  response_time = 1.82 * requests_per_second + 29.5
+**Reading the equation `response_time = 1.82 * requests_per_second + 29.5` as points on a line:**
 
-  ms
-  350 │                              /
-      │                            /
-  300 │                          /  ← slope = 1.82 ms per extra rps
-      │                        /
-  250 │                      /
-      │                    /
-  200 │                  /
-      │                /
-  150 │              /
-      │            /
-  100 │          /
-      │        /
-   50 │      /
-  29.5│..../ ← intercept (baseline overhead at 0 rps)
-      └──────────────────────────────────
-       0    25   50   75  100  125  150  rps
-```
+| Requests/sec | Predicted response (ms) | What it represents |
+|---:|---:|---|
+| **0** | **29.5** | the **intercept** — baseline overhead with no traffic |
+| 25 | 75.0 | |
+| 50 | 120.5 | |
+| 100 | 211.5 | |
+| 150 | 302.5 | |
+
+The gap between consecutive rows is exactly `25 × 1.82 ≈ 45.5 ms` — that constant gap *is* the **slope**. Every extra request per second adds `1.82 ms` to the predicted response time, no matter where on the line you stand.
 
 This is far more interpretable than a black-box model — and that interpretability is why linear regression remains a valuable baseline.
 
@@ -110,15 +86,13 @@ You can also predict for the entire test set:
 y_pred = model.predict(X_test)    # returns an array of predictions
 ```
 
-```
-  model.predict() pipeline
+**`model.predict()` pipeline**
 
-  ┌────────────────┐     ┌─────────────────────────┐     ┌──────────────┐
-  │   New X value  │────►│ slope * X + intercept    │────►│  Prediction │
-  │   [[150]]      │     │ 1.82 * 150 + 29.5       │     │   302.5 ms   │
-  └────────────────┘     └─────────────────────────┘     └──────────────┘
-       input                  learned equation               output
-```
+| Stage | Input | Learned equation | Output |
+|---|---|---|---|
+| Single value | `[[150]]` | `1.82 * 150 + 29.5` | `302.5 ms` |
+
+The model carries the learned `slope` and `intercept` inside `.coef_` / `.intercept_`, and `predict()` is just plugging the new `X` into that equation row by row.
 
 The predictions are point estimates — no uncertainty bounds. Later you will learn about prediction intervals.
 

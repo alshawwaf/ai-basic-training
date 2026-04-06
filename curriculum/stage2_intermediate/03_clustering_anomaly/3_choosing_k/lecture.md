@@ -15,22 +15,18 @@
 
 Inertia = sum of squared distances from each sample to its nearest centroid. Lower inertia = tighter clusters, but K=N (every point is its own cluster) has inertia=0 trivially.
 
-```
-Inertia (elbow method)             Silhouette score
+**The same dataset measured two ways across `K = 2..7`**
 
- 8000 │\                            0.65 │
-      │ \                                │        ●
- 6000 │  \                          0.55 │     ●     ●
-      │   \                              │  ●           ●
- 4000 │    ●── elbow                0.45 │                 ●
-      │      \___                        │●                  ●
- 2000 │          \___●───●──        0.35 │
-      │                                  │
-      └──┬──┬──┬──┬──┬──┬──►            └──┬──┬──┬──┬──┬──┬──►
-         2  3  4  5  6  7  K                2  3  4  5  6  7  K
-               ▲                                  ▲
-           K=4 (elbow)                     K=4 (highest score)
-```
+| K | Inertia (lower is tighter clusters) | Silhouette (higher is better) | What this row tells you |
+|---:|---:|---:|---|
+| 2 | 8000 | 0.41 | too few clusters; both metrics weak |
+| 3 | 6000 | 0.53 | improving but still merging real groups |
+| **4** | **4000** | **0.62** | the **elbow** in inertia *and* the peak silhouette — chosen K |
+| 5 | 3700 | 0.60 | adding clusters barely tightens fit and silhouette starts dropping |
+| 6 | 3500 | 0.55 | inertia plateaus, silhouette drops further |
+| 7 | 3400 | 0.50 | clearly past the elbow |
+
+Both metrics agree: `K = 4` is the sweet spot. **Inertia** is the curve that drops steeply then flattens — its "elbow" marks the K where extra clusters stop buying tightness. **Silhouette** is a separate score that peaks at the K where samples sit nicely inside their own cluster and far from neighbouring clusters. When the two methods agree, you have a defensible choice; when they disagree, lean on domain knowledge.
 
 Plot inertia vs K. Look for the "elbow" where inertia drops steeply then flattens. The elbow suggests the K where adding more clusters gives diminishing improvement.
 

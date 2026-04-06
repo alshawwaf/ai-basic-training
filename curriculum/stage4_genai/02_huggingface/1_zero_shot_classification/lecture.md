@@ -32,27 +32,20 @@ result = classifier(
 
 The model has never seen your labels before. It uses its general understanding of language to assess how well each label fits the input text.
 
-```
-Zero-Shot Classification Flow
-──────────────────────────────────────────────────────────────
+**Zero-shot classification — pipeline at a glance**
 
- Input text                       Candidate labels
- "Outbound connection from         "malicious activity"
-  workstation to 185.234..."       "normal traffic"
-                                   "configuration change"
-               │                            │
-               ▼                            ▼
-            NLI Model (BART-large-MNLI)
-            "does text entail each label?"
-                        │
-                        ▼
+| Stage | What it is | Example value |
+|---|---|---|
+| 1. Input text | the document you want to classify | `"Outbound connection from workstation to 185.234.219.47:443 after powershell execution"` |
+| 2. Candidate labels | the classes you invent at inference time | `["malicious activity", "normal traffic", "configuration change"]` |
+| 3. NLI scoring | BART-large-MNLI asks "does the text entail each label?" | one entailment score per label |
+| 4. Result | labels ranked by entailment score | see below |
 
- | Label              | Score |       |
- |--------------------|-------|-------|
- | malicious activity | 0.87  | ← top |
- | normal traffic     | 0.09  |       |
- | config change      | 0.04  |       |
-```
+| Label | Score | |
+|---|---:|---|
+| malicious activity | 0.87 | ← top |
+| normal traffic | 0.09 | |
+| configuration change | 0.04 | |
 
 ---
 
@@ -68,23 +61,20 @@ Hypothesis: "This is an example of malicious activity"
 
 The entailment score becomes the classification probability. This works because NLI models were trained to reason about whether one statement follows from another.
 
-```
-NLI Scoring for one label
-──────────────────────────────────────────────────────
- Premise:    "Outbound connection to suspicious IP..."
- Hypothesis: "This is an example of malicious activity"
-                           │
-                           ▼
-                      NLI Model
-                           │
-                           ▼
+**NLI scoring — what the model actually computes for one label**
 
- | Prediction     | Score | Note                  |
- |----------------|-------|-----------------------|
- | ENTAILMENT     | 0.87  | → score for this label |
- | NEUTRAL        | 0.09  |                       |
- | CONTRADICTION  | 0.04  |                       |
-```
+| Field | Value |
+|---|---|
+| Premise | `"Outbound connection to suspicious IP after powershell"` |
+| Hypothesis | `"This is an example of malicious activity"` |
+
+| NLI prediction | Score | Used as |
+|---|---:|---|
+| **ENTAILMENT** | 0.87 | the classification score for this label |
+| NEUTRAL | 0.09 | discarded |
+| CONTRADICTION | 0.04 | discarded |
+
+The pipeline runs this NLI step once per candidate label, then ranks the labels by their entailment scores.
 
 ---
 

@@ -41,25 +41,17 @@ When you raise the threshold:
 
 This is a **fundamental tradeoff** — you cannot have both perfect precision and perfect recall simultaneously (unless your model is perfect).
 
-```
-  The precision-recall tradeoff as you slide the threshold
+**The precision-recall tradeoff as you slide the threshold**
 
-  threshold = 0.2 (low)              threshold = 0.7 (high)
+|  | Low threshold (0.2) | High threshold (0.7) |
+|---|---|---|
+| Rule applied | flag as phishing if `P ≥ 0.2` | flag as phishing if `P ≥ 0.7` |
+| Recall | **HIGH** (catches almost all phishing) | LOW (misses some) |
+| Precision | LOW (many false alarms) | **HIGH** (few false alarms) |
+| Alerts produced | many | few |
+| Dominant error type | False Positives (analyst fatigue) | False Negatives (missed attacks) |
 
-  ┌────────────────────┐             ┌────────────────────┐
-  │ Flag as phishing   │             │ Flag as phishing   │
-  │ if P >= 0.2        │             │ if P >= 0.7        │
-  │                    │             │                    │
-  │ Recall:   HIGH     │             │ Recall:   LOW      │
-  │ (catch almost all) │             │ (miss some)        │
-  │                    │             │                    │
-  │ Precision: LOW     │             │ Precision: HIGH    │
-  │ (many false alarms)│             │ (few false alarms) │
-  └────────────────────┘             └────────────────────┘
-
-       ◄── lower threshold    higher threshold ──►
-       more alerts, more FP   fewer alerts, more FN
-```
+Sliding the threshold trades the two error types against each other. There is no single "best" setting — only the one that matches your operational priorities.
 
 | Priority | Preferred threshold | Effect |
 |:---|:---|:---|

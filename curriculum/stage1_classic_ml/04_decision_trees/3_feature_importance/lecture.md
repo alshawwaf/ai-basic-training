@@ -17,26 +17,23 @@
 
 After training, `model.feature_importances_` is an array with one value per feature. Each value represents the total **information gain** contributed by that feature across all splits in the tree, normalised so all values sum to 1.0.
 
-```
+```python
 feature_importances_ = [0.52, 0.28, 0.09, 0.07, 0.03, 0.01]
-                        ↑                               ↑
-                  most important                  least important
+#                        ^                                ^
+#                  most important                  least important
 ```
 
-```
-  Feature importance — which features drive predictions
+**Feature importance — which features drive predictions**
 
-  connection_rate   ████████████████████████████  0.524
-  bytes_sent        ██████████████               0.283
-  unique_dest_ports ██████                       0.107
-  duration_seconds  ███                          0.052
-  failed_conns      ██                           0.024
-  bytes_received    █                            0.010
-                    └──────────────────────────┘
-                    0.0        0.25         0.5
-
-  Sum = 1.0 (importances are normalised)
-```
+| Feature | Importance | Share of total |
+|---|---:|---|
+| `connection_rate`   | **0.524** | dominant — over half the tree's gain comes from this one feature |
+| `bytes_sent`        | 0.283 | strong secondary signal |
+| `unique_dest_ports` | 0.107 | moderate |
+| `duration_seconds`  | 0.052 | minor |
+| `failed_connections`| 0.024 | minor |
+| `bytes_received`    | 0.010 | barely used |
+| **Sum**             | **1.000** | importances are normalised |
 
 This is also called the **Mean Decrease in Impurity (MDI)**. A feature that appears near the root (where it improves the split most) accumulates more importance.
 
@@ -75,20 +72,14 @@ model_small = DecisionTreeClassifier(max_depth=4).fit(X_train_small, y_train)
 
 If the accuracy drop is small (< 2%), the simpler model is often preferred in production.
 
-```
-  Feature selection — keep top-3, retrain
+**Feature selection — keep top-3, retrain**
 
-  Full model (6 features)          Top-3 model (3 features)
-  ┌────────────────────────┐       ┌────────────────────────┐
-  │ connection_rate    0.52│       │ connection_rate    0.52│
-  │ bytes_sent         0.28│──────►│ bytes_sent         0.28│
-  │ unique_dest_ports  0.11│       │ unique_dest_ports  0.11│
-  │ duration_seconds   0.05│       └────────────────────────┘
-  │ failed_connections 0.02│        Accuracy: 95.1% (-1.1%)
-  │ bytes_received     0.01│
-  └────────────────────────┘       Simpler, faster, nearly
-   Accuracy: 96.2%                 as accurate → prefer this
-```
+| Model | Features kept | Accuracy | Notes |
+|---|---|---:|---|
+| Full | all 6 | **96.2%** | baseline |
+| Top-3 | `connection_rate`, `bytes_sent`, `unique_dest_ports` | 95.1% | only 1.1 pp lower |
+
+For a production sensor running on limited hardware, the simpler model is almost always preferred — losing 1.1 percentage points of accuracy is a fair trade for halving the feature pipeline.
 
 ---
 

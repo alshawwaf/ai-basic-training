@@ -34,24 +34,15 @@ X_test_scaled  = scaler.transform(X_test)         # transforms only (no fit!)
 
 If you fit the scaler on `X_test` or the full dataset, you leak information about the test distribution into the model.
 
-```
-  Correct scaling workflow
+**Correct scaling workflow**
 
-  ┌───────────────┐          ┌───────────────┐
-  │   X_train     │          │    X_test     │
-  │ (raw values)  │          │  (raw values) │
-  └───────┬───────┘          └───────┬───────┘
-          │                          │
-   fit_transform()             transform() only
-   (learn mean/std             (use train's
-    AND scale)                  mean/std)
-          │                          │
-          ▼                          ▼
-  ┌───────────────┐          ┌───────────────┐
-  │ X_train_scaled│          │ X_test_scaled │
-  │  mean≈0 std≈1 │          │ (same scale)  │
-  └───────────────┘          └───────────────┘
-```
+| Step | Train side | Test side |
+|---|---|---|
+| 1. Start with | `X_train` (raw values) | `X_test` (raw values) |
+| 2. Call | `scaler.fit_transform(X_train)` — *learns* mean/std *and* scales | `scaler.transform(X_test)` — uses **train's** mean/std, no fitting |
+| 3. End with | `X_train_scaled` (mean ≈ 0, std ≈ 1) | `X_test_scaled` (same scale as train) |
+
+The scaler is fitted exactly once, on training data only. The test set is then squeezed through that **same** scaler — never re-fitted — so the model meets test inputs on the same scale it learned during training.
 
 ---
 
@@ -97,25 +88,14 @@ Actual: Phishing          FN                       TP
 
 A good phishing detector **minimises FN** (missed phishing) even at the cost of higher FP (more analyst work).
 
-```
-  Confusion matrix — security perspective
+**Confusion matrix — security perspective**
 
-                         Predicted
-                    Legit        Phishing
-                ┌────────────┬────────────┐
-  Actual Legit  │  TN = 93   │  FP = 7    │  FP: analyst wastes time
-                │  (correct) │  (false    │  investigating legit URL
-                │            │   alarm)   │
-                ├────────────┼────────────┤
-  Actual Phish  │  FN = 9    │  TP = 91   │  TP: phishing caught!
-                │  (MISSED   │  (correct) │
-                │   ATTACK!) │            │
-                └────────────┴────────────┘
-                      ▲
-                      │
-               Most dangerous cell:
-               FN = real phishing slipped through
-```
+|              | Predicted **Legit** | Predicted **Phishing** | Operational meaning |
+|---           |---:                 |---:                    |---|
+| **Actual Legit**    | **TN = 93** (correct) | FP = 7 (false alarm) | FPs cost analyst time investigating legit URLs |
+| **Actual Phishing** | **FN = 9** (MISSED ATTACK) | **TP = 91** (correct) | FNs are the dangerous cell — real phishing slipped through |
+
+Read the rows as *what really happened* and the columns as *what the model said*. The diagonal (TN, TP) is the "got it right" cells. The off-diagonal cells are where the costs live — and in a security context, the FN cell is almost always the most expensive.
 
 ---
 

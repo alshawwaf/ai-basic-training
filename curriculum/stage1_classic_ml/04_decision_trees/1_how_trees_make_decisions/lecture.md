@@ -17,17 +17,16 @@
 
 A decision tree is a flowchart of yes/no questions. Each internal node asks a question about one feature; each branch is an answer; each leaf is a prediction.
 
-Example for network traffic:
+Example for network traffic — read each row as a path of yes/no answers from the root question down to a final prediction:
 
-```
-Is connection_rate > 50?
-├── YES → Is unique_dest_ports > 20?
-│          ├── YES → port_scan
-│          └── NO  → Is bytes_sent > 100000?
-│                     ├── YES → exfil
-│                     └── NO  → benign
-└── NO  → benign
-```
+| `connection_rate > 50`? | `unique_dest_ports > 20`? | `bytes_sent > 100000`? | Prediction |
+|:---:|:---:|:---:|---|
+| no  | — | — | **benign** |
+| yes | yes | — | **port_scan** |
+| yes | no  | yes | **exfil** |
+| yes | no  | no  | **benign** |
+
+Each row corresponds to one root-to-leaf path in the tree. A real tree may have many more questions, but the structure is the same: each internal node splits the data on one feature, each leaf is a final prediction.
 
 The model learns *which* questions to ask and *which* threshold to use by finding splits that best separate the classes.
 
@@ -63,27 +62,15 @@ Gain = Gini(parent) - [weighted average of Gini(left child), Gini(right child)]
 
 A high information gain means the split dramatically reduces uncertainty. The tree evaluates every possible feature and every possible threshold, then picks the (feature, threshold) pair with the highest gain.
 
-```
-  Information gain from splitting on connection_rate <= 55
+**Information gain from splitting on `connection_rate <= 55`**
 
-  PARENT (100 samples)                Gini = 0.480
-  ┌──────────────────────────────┐
-  │  60 benign     40 DoS        │
-  └──────────────┬───────────────┘
-                 │
-      connection_rate <= 55?
-        ┌────────┴────────┐
-        ▼                 ▼
-  LEFT (60 samples)    RIGHT (40 samples)
-  ┌──────────────┐    ┌──────────────┐
-  │ 58 benign    │    │  2 benign    │
-  │  2 DoS       │    │ 38 DoS       │
-  │ Gini = 0.065 │    │ Gini = 0.095 │
-  └──────────────┘    └──────────────┘
-       almost pure         almost pure
+| Node | Samples | Composition | Gini | Notes |
+|---|---:|---|---:|---|
+| **Parent** | 100 | 60 benign, 40 DoS | **0.480** | mixed — high impurity |
+| Left child (`rate ≤ 55`) | 60 (60%) | 58 benign, 2 DoS | 0.065 | almost pure benign |
+| Right child (`rate > 55`) | 40 (40%) | 2 benign, 38 DoS | 0.095 | almost pure DoS |
 
-  Gain = 0.480 - (0.6*0.065 + 0.4*0.095) = 0.403  ← great split!
-```
+The weighted child impurity is `0.6 × 0.065 + 0.4 × 0.095 = 0.077`, so the **information gain** is `0.480 − 0.077 = 0.403`. A near-half drop in impurity is a great split — the tree's split-search routine would happily pick this one over any competing feature.
 
 **Security intuition:** The feature `connection_rate` splits benign (low rate) from DoS (very high rate) cleanly → high Gini gain. The feature `src_port` is more uniformly distributed → low gain.
 

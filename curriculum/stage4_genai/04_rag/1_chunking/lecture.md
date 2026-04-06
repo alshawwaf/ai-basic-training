@@ -27,24 +27,17 @@ But chunking is not just a technical constraint — it also determines retrieval
 
 **Rule of thumb:** 100–300 words per chunk, with 20–50 word overlap.
 
-```
-Long Document ───► Chunks
-──────────────────────────────────────────────────────
- Original document (800 words)
-  word 1 ... word 100 ... word 200 ... word 300 ...
-  ... word 400 ... word 500 ... word 600 ... word 800
-                      │
-                      ▼  split into chunks
+**Splitting one 800-word document into 100-word chunks**
 
- | Chunk   | Contents       |
- |---------|----------------|
- | Chunk 1 | words 1-100    |
- | Chunk 2 | words 101-200  |
- | Chunk 3 | words 201-300  |
- | ...     | ...            |
+| Chunk | Word range | Word count |
+|---|---:|---:|
+| Chunk 1 | 1 – 100 | 100 |
+| Chunk 2 | 101 – 200 | 100 |
+| Chunk 3 | 201 – 300 | 100 |
+| … | … | … |
+| Chunk 8 | 701 – 800 | 100 |
 
- Each chunk is small enough to embed (128-512 tokens)
-```
+Each resulting chunk is small enough to fit through a sentence-embedding model (typical limit: 128–512 tokens) and produces its own vector in the index.
 
 ---
 
@@ -65,17 +58,14 @@ def chunk_fixed(text, chunk_size=100):
 
 Problem: a sentence may be cut in half, losing meaning at chunk boundaries.
 
-```
-Fixed-Size Chunking (no overlap) — boundary problem
-──────────────────────────────────────────────────────
+**Fixed-size chunking (no overlap) — the boundary problem**
 
- | Chunk 1                 | Chunk 2                 |
- |-------------------------|-------------------------|
- | ... detection           | relies on Sysmon        |
- | of LSASS access         | Event ID 10 ...         |
-        ▲ sentence is cut here ▲
-        key fact split across two chunks!
-```
+| Chunk | Words it contains |
+|---|---|
+| Chunk 1 | `… detection of LSASS access` |
+| Chunk 2 | `relies on Sysmon Event ID 10 …` |
+
+The sentence *"detection of LSASS access relies on Sysmon Event ID 10"* is now split across two chunks. A query about "LSASS detection" matches Chunk 1 but the actual answer (the Event ID) lives in Chunk 2 — and neither chunk's embedding fully captures the fact.
 
 ---
 
@@ -95,23 +85,15 @@ def chunk_overlap(text, chunk_size=100, overlap=20):
     return chunks
 ```
 
-```
-Overlap Chunking — boundary facts preserved
-──────────────────────────────────────────────────────
- chunk_size=100, overlap=20
+**Overlap chunking — boundary facts preserved (`chunk_size=100, overlap=20`)**
 
- Chunk 1 (words 1-100):
-   ... detection of LSASS access
-   relies on Sysmon Event ID 10 ...
-                         │
-                    overlap zone (words 81-100)
-                         │
- Chunk 2 (words 81-180):
-   ... relies on Sysmon Event ID 10
-   for detecting...
+| Chunk | Word range | Overlap with neighbour |
+|---|---:|---|
+| Chunk 1 | 1 – 100 | shares words 81–100 with Chunk 2 |
+| Chunk 2 | 81 – 180 | shares words 81–100 with Chunk 1, words 161–180 with Chunk 3 |
+| Chunk 3 | 161 – 260 | shares words 161–180 with Chunk 2, words 241–260 with Chunk 4 |
 
- Words 81-100 appear in BOTH chunks
-```
+Because words 81–100 appear in **both** Chunk 1 and Chunk 2, the sentence *"detection of LSASS access relies on Sysmon Event ID 10"* now lives intact in at least one chunk — so a retrieval query about it can find a single chunk that contains the whole answer.
 
 ---
 

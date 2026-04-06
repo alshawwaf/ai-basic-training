@@ -22,20 +22,15 @@ Raw numeric fields like `bytes_sent` and `duration` are useful, but their *combi
 | `bytes_sent`, `bytes_received` | `bytes_ratio` | Asymmetric connections (much more sent than received) suggest upload/exfil |
 | `bytes_sent`, `packets` | `bytes_per_packet` | Large bytes/packet = file transfer; small = control traffic |
 
-```
-Raw fields                          Derived features
-┌──────────────┐
-│ bytes_sent   │───┐
-│   14580      │   ├──►  bytes_per_second = 14580 / 2.3 = 6339
-│ duration     │───┘
-│   2.3        │───┐
-│ packets      │   ├──►  packet_rate     = 12 / 2.3   = 5.2
-│   12         │───┘
-│ bytes_recv   │───┐
-│   820        │   ├──►  bytes_ratio     = 14580 / 821 = 17.8
-│              │───┘          (add 1 to avoid /0)
-└──────────────┘
-```
+**From raw fields to derived features**
+
+| Derived feature | Formula | Worked example | Result |
+|---|---|---|---:|
+| `bytes_per_second` | `bytes_sent / duration` | `14580 / 2.3` | **6339** |
+| `packet_rate`      | `packets / duration`    | `12 / 2.3` | **5.2** |
+| `bytes_ratio`      | `bytes_sent / (bytes_received + 1)` | `14580 / (820 + 1)` | **17.8** |
+
+The `+1` in `bytes_ratio` is a guard against division by zero when a connection received nothing back.
 
 > **Want to go deeper?** [Feature engineering (Wikipedia)](https://en.wikipedia.org/wiki/Feature_engineering)
 
@@ -55,17 +50,16 @@ Instead of using raw port numbers as features (which have no natural numerical o
 | Ports < 1024 (other) | 3 | Well-known, potentially dangerous |
 | Ports >= 1024 | 1 | Ephemeral, typically benign |
 
-```
-Raw port number              Port risk score
-┌──────────┐                 ┌───┐
-│ dst_port │                 │   │
-│    443   │  ─── map ───►   │ 1 │  (standard HTTPS)
-│     22   │  ─── map ───►   │ 3 │  (SSH — targeted)
-│   3389   │  ─── map ───►   │ 5 │  (RDP — high risk)
-│  51234   │  ─── map ───►   │ 1 │  (ephemeral)
-└──────────┘                 └───┘
-  No natural order            Encodes security knowledge
-```
+**Mapping raw port numbers to a risk score**
+
+| Raw `dst_port` | Mapped risk | Interpretation |
+|---:|---:|---|
+| 443   | 1 | standard HTTPS — normal |
+| 22    | 3 | SSH — legitimate but targeted |
+| 3389  | 5 | RDP — high-risk, frequently exploited |
+| 51234 | 1 | ephemeral source-side port — typically benign |
+
+Port numbers themselves have no meaningful ordering — `3389` is not "more" than `443` in any sense the model can use. The lookup table is how we *inject security knowledge* into the feature space, so the model doesn't have to learn that RDP is risky from scratch.
 
 This embeds domain knowledge into the feature space — the model does not need to learn port semantics from scratch.
 

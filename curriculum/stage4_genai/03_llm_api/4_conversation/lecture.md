@@ -33,36 +33,16 @@ reply2 = client.chat(system=..., messages=messages, max_tokens=200)
 
 This is why the conversation list grows with each turn. You are sending the entire conversation to the model every time.
 
-```
-Conversation State: messages list grows each turn
-──────────────────────────────────────────────────────────
+**Conversation state — `messages` grows on every turn**
 
-Turn 1 — you send:
+| Turn | Length of `messages` you send | Last entry added |
+|---:|---:|---|
+| 1 | 1 | `{user: "What is lateral movement?"}` |
+| 2 | 3 | `{user: "How do I detect it?"}` (after appending the assistant reply from turn 1) |
+| 3 | 5 | `{user: "Show me a Sigma rule"}` (after appending the assistant reply from turn 2) |
+| N | `2N − 1` | the latest user question |
 
-  messages = [
-    {user: "What is lateral movement?"}
-  ]
-
-Turn 2 — you send the FULL history:
-
-  messages = [
-    {user: "What is lateral movement?"}       ← turn 1
-    {assistant: "Lateral movement is..."}     ← reply 1
-    {user: "How do I detect it?"}             ← turn 2
-  ]
-
-Turn 3 — even bigger:
-
-  messages = [
-    {user: "What is lateral movement?"}
-    {assistant: "Lateral movement is..."}
-    {user: "How do I detect it?"}
-    {assistant: "Common detection..."}
-    {user: "Show me a Sigma rule"}            ← turn 3
-  ]
-
-The list keeps growing ───► eventually hits context limit
-```
+Every call ships the *entire* history because the API itself is stateless. The list keeps growing until you eventually hit the model's context window — at which point you must summarise older turns or drop them.
 
 ---
 
@@ -97,20 +77,15 @@ Model: [assesses C2 communication, recommends isolation and threat hunting]
 
 Each turn adds context. The model's later responses are informed by the full incident picture.
 
-```
-Incident Investigation — context builds progressively
-──────────────────────────────────────────────────────
- Turn 1: "unusual outbound traffic from WORKSTATION-042"
-              │
-              ▼  model sees: traffic anomaly
- Turn 2: + "powershell.exe spawned by winword.exe"
-              │
-              ▼  model sees: macro execution → initial access
- Turn 3: + "connected to 185.219.47.33:443"
-              │
-              ▼  model sees: full kill chain
-                 (phishing → execution → C2 communication)
-```
+**Incident investigation — context builds progressively**
+
+| Turn | New evidence the user shares | What the model can now reason about |
+|---:|---|---|
+| 1 | `"unusual outbound traffic from WORKSTATION-042"` | a traffic anomaly with no attribution |
+| 2 | + `"powershell.exe spawned by winword.exe"` | macro-enabled document execution → likely spear-phishing initial access |
+| 3 | + `"connected to 185.219.47.33:443"` | full kill chain: phishing → execution → C2 communication |
+
+Each turn doesn't *replace* the picture — it *extends* it. Because the previous turns are still in `messages`, the model's turn-3 answer is informed by everything from turns 1 and 2.
 
 ---
 

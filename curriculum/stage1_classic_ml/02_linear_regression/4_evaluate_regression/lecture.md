@@ -50,22 +50,13 @@ A **residual** is `actual - predicted`. Examining residuals reveals:
 
 In the security context, **large positive residuals** (actual >> predicted) are the most interesting: they mean the server is slower than expected, which could indicate an attack.
 
-```
-  Residual analysis — what the gaps tell you
+**Reading residuals — `residual = actual - predicted`**
 
-  response_time
-      │    ·                  · ← large positive residual
-      │       ·  ·        · /     (actual >> predicted)
-      │     · ──·──── · ──/──── predicted line
-      │    · /·   ·  ·
-      │  · / ·            · ← large negative residual
-      │  /                      (actual << predicted)
-      └──────────────────────── requests_per_second
-
-  residual = actual - predicted
-  positive = server slower than expected  → investigate!
-  negative = server faster than expected  → normal variation
-```
+| Sign of residual | Position vs the regression line | What it means | Why you care |
+|---|---|---|---|
+| **Large positive** | well **above** the line | server is **slower** than the model expected | possible DoS, resource exhaustion, noisy neighbour — **investigate** |
+| Near zero | sitting **on** the line | matches the baseline | normal traffic |
+| **Large negative** | well **below** the line | server is **faster** than expected | usually benign — caching, low load, lucky retry |
 
 ---
 
@@ -81,31 +72,16 @@ Once the model is trained on normal traffic, it defines a **behavioural baseline
 
 This is a statistical process control approach — the same idea as control charts used in manufacturing, now applied to network security.
 
-```
-Normal zone:     predicted ± 2σ
-Warning zone:    predicted ± 3σ
-Alert threshold: residual > 3σ  →  possible DoS / resource exhaustion
-```
+**The bands around the regression line — measured in σ (standard deviations of the training residuals)**
 
-```
-  Security baseline — anomaly detection via residuals
+| Distance from prediction | Zone | Meaning | Action |
+|---|---|---|---|
+| within ±2σ | **Normal** | typical variation around the baseline | ignore |
+| ±2σ to ±3σ | **Warning** | unusual but not extreme | log, watch |
+| beyond +3σ (above the line) | **Alert** | server far slower than predicted | possible DoS / resource exhaustion — page on-call |
+| beyond −3σ (below the line) | rare | server far faster than predicted | almost always benign (cache hit, low load) |
 
-  response_time
-      │
-      │  · · · · · · · · ·          ← ALERT ZONE (> 3σ above)
-      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  3σ threshold
-      │  · · · · · · · · · ·        ← WARNING ZONE
-      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  2σ threshold
-      │  · · · · · · · · · · · ·
-      │════════════════════════════  predicted (regression line)
-      │  · · · · · · · · · · · ·
-      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  -2σ
-      │  · · · · · · · · · ·
-      │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  -3σ
-      └──────────────────────────── requests_per_second
-
-  Observations above the 3σ line trigger an alert.
-```
+The asymmetry matters — in security baselines, only the *upper* tail is interesting. A detector that fires on `residual > 3σ` follows exactly the same logic as a control chart in manufacturing quality control.
 
 ---
 

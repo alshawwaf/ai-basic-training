@@ -32,31 +32,14 @@ This is called **overfitting to the training set** and is one of the most common
 
 The fix is to hold out a portion of your data *before* training and never touch it until final evaluation.
 
-```
-Full dataset (500 rows)
-├── Training set  (80% = 400 rows)  ← model learns from this
-└── Test set      (20% = 100 rows)  ← model evaluated on this, ONCE, at the end
-```
+**Splitting a 500-row dataset 80/20**
 
-```
-  ┌──────────────────────────────────────────────────┐
-  │                Full dataset (500 rows)           │
-  └──────────────────────────────────────────────────┘
-                         │
-              train_test_split(test_size=0.2)
-                         │
-           ┌─────────────┴──────────────┐
-           ▼                            ▼
-  ┌────────────────────────┐   ┌──────────────┐
-  │  Training set (400)    │   │ Test set(100)│
-  │  model.fit(X_train,    │   │ LOCKED until │
-  │           y_train)     │   │ final eval   │
-  └────────────────────────┘   └──────────────┘
-           │                            │
-           ▼                            ▼
-     Model learns               model.score(X_test,
-     patterns here                       y_test)
-```
+| Subset | Rows | Used by | When |
+|---|---:|---|---|
+| **Full dataset** | 500 | — | starting point |
+| ⬇ `train_test_split(test_size=0.2)` |  |  |  |
+| **Training set** | 400 (80%) | `model.fit(X_train, y_train)` | model learns the patterns here |
+| **Test set** | 100 (20%) | `model.score(X_test, y_test)` | LOCKED until final evaluation |
 
 sklearn provides `train_test_split()`:
 
@@ -101,23 +84,16 @@ Data leakage means information from the test set "leaks" into the training proce
 
 In a security context, data leakage can make a model look 99% accurate on your benchmark but fail completely on live traffic.
 
-```
-  Data leakage — what NOT to do
+**Data leakage — what NOT to do**
 
-  ┌─────────────────────────────┐
-  │      Full dataset           │
-  │  ┌────────┐  ┌──────────┐   │
-  │  │ Train  │  │  Test    │   │
-  │  └───┬────┘  └────┬─────┘   │
-  └──────┼────────────┼─────────┘
-         │            │
-    scaler.fit()  scaler.fit()    ← WRONG: test stats leak in
-         │            │
-    ┌────▼────────────▼────┐
-    │  Model sees test     │      Result: 99% accuracy in lab,
-    │  distribution info   │      fails on real traffic
-    └──────────────────────┘
-```
+| Step | Train set | Test set | Problem |
+|---|---|---|---|
+| 1. Have full dataset | ✓ | ✓ | fine |
+| 2. Call `scaler.fit()` on the **whole** dataset | feeds in | **feeds in too** | test statistics leak into the scaler |
+| 3. Train model | sees scaled X | — | model has indirectly seen test distribution |
+| 4. Evaluate on test | — | scored | **99% accuracy in the lab, fails in production** |
+
+The fix: split first, then fit the scaler on `X_train` only and call `scaler.transform(X_test)` (never `fit_transform`) when the test set arrives.
 
 ---
 

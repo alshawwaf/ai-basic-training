@@ -72,16 +72,15 @@ With `restore_best_weights=True`:
 - Model stops at epoch 23 but restores epoch-18 weights
 - You get the best model for free, automatically
 
-```
-Without restore_best_weights:       With restore_best_weights:
+**Same training run, two final-state policies**
 
- Training stops at epoch 23          Training stops at epoch 23
- ┌────────────────────────┐         ┌──────────────────────┐
- │ Keeps epoch 23 weights │         │ Restores epoch 18    │
- │ (slightly overfit)     │         │ weights (best val)   │
- └────────────────────────┘         └──────────────────────┘
- val_loss = 0.184                    val_loss = 0.169
-```
+|  | `restore_best_weights=False` | `restore_best_weights=True` |
+|---|---|---|
+| Epoch where training stops | 23 | 23 |
+| Weights kept at the end | epoch 23 (slightly overfit) | **epoch 18** (the best the model ever was) |
+| Final `val_loss` | 0.184 | **0.169** |
+
+The "stop epoch" and the "best epoch" are different things. `restore_best_weights=True` gives you the best model for free — there's almost no reason to leave it off.
 
 Always use `restore_best_weights=True` unless you have a specific reason not to.
 

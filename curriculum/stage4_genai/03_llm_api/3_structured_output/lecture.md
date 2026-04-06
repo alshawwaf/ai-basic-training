@@ -39,20 +39,16 @@ The log entry indicates a brute-force attack. The severity is high because there
 
 The JSON version can be consumed directly by a SIEM, ticketing system, or automated response playbook.
 
-```
-Structured Output Flow
-──────────────────────────────────────────────────────────
+**Structured output — log entry to actionable record**
 
- Log entry               LLM                 Downstream system
- ──────────              ─────────────        ─────────────────
- "198 failed             LLM Model            json.loads()
-  logins in 60s   ────►  (with JSON    ────►       │
-  from 45.33..."          system prompt)           │
-                          responds with JSON       ▼
-                                              SIEM / SOAR
-                                              ticket system
-                                              playbook
-```
+| Stage | What it does | Example |
+|---|---|---|
+| 1. Log entry | raw text input | `"198 failed logins in 60s from 45.33.32.156"` |
+| 2. LLM call | runs the model with a JSON-only system prompt | model returns a JSON string |
+| 3. `json.loads()` | parses to a Python dict | `{"threat_type": "brute_force", "severity": "High", ...}` |
+| 4. Downstream system | consumes the dict directly | SIEM / SOAR / ticket system / response playbook |
+
+The whole point: every step after the LLM is just normal Python code working on a dict — no scraping, no regex on prose.
 
 ---
 
@@ -78,13 +74,14 @@ import json
 data = json.loads(response)
 ```
 
-```
-Prompt ───► Model ───► JSON string ───► json.loads() ───► Python dict
-                       '{"threat_type":       │
-                         "brute_force",       ▼
-                         "severity":     data["severity"]  →  "High"
-                         "High",...}'    data["confidence"] →  0.92
-```
+**From prompt to Python dict**
+
+| Step | What you have | Type |
+|---|---|---|
+| 1. Prompt | system prompt + user log entry | strings |
+| 2. Model output | `'{"threat_type": "brute_force", "severity": "High", "confidence": 0.92, ...}'` | str (JSON text) |
+| 3. `json.loads(response)` | `{"threat_type": "brute_force", "severity": "High", "confidence": 0.92, ...}` | dict |
+| 4. Field access | `data["severity"]` → `"High"`, `data["confidence"]` → `0.92` | normal Python values |
 
 ---
 

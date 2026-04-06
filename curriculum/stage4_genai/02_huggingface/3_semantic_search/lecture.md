@@ -31,34 +31,14 @@ top-k scores → return ranked documents
 
 Phase 2 is fast because document embeddings were computed in Phase 1. Only the query needs encoding at runtime.
 
-```
-Semantic Search: Two-Phase Architecture
-───────────────────────────────────────────────────────────────
-PHASE 1 — Indexing (offline, done once)
+**Semantic search — two-phase architecture**
 
- Doc 1, Doc 2, Doc 3, ... Doc N
-           │
-      model.encode()
-           │
-           ▼
-  Embedding Matrix (N × 384)
-   doc 1: [0.23, -0.45, 0.87, ...]
-   doc 2: [0.11,  0.55, 0.02, ...]
-   ...
+| Phase | When it runs | Input | Operation | Output |
+|---|---|---|---|---|
+| **1. Indexing** | offline, once per corpus update | `Doc 1 … Doc N` | `model.encode(docs)` | Embedding matrix `(N, 384)` cached on disk |
+| **2. Query** | real-time, every search | `"how to stop credential theft"` | `model.encode(query)` → `cosine_similarity(q, matrix)` → `argsort` | top-k document IDs with scores, e.g. `Doc 2 (0.89), Doc 3 (0.71)` |
 
-PHASE 2 — Query (real-time)
-
- "how to stop          model.encode()    cosine_similarity()
-  credential theft" ─────────────────► [0.18, 0.52, ...]
-                                              │
-                                              ▼
-                                  scores: [0.34, 0.89, 0.71, ...]
-                                              │
-                                         argsort + top-k
-                                              │
-                                              ▼
-                                  Doc 2 (0.89), Doc 3 (0.71), ...
-```
+Phase 1 is the expensive step (encode every document once). Phase 2 only encodes the *query* and runs a single matrix-vector cosine similarity, so it stays fast even with thousands of documents.
 
 ---
 
@@ -77,20 +57,17 @@ Semantic search finds:
 
 Semantic search understands intent. Keyword search matches strings.
 
-```
-Keyword vs Semantic Search
-──────────────────────────────────────────────────────
- Query: "how to stop credential theft"
+**Keyword vs semantic search — same query, very different results**
 
- Keyword search                 Semantic search
- ─────────────────              ────────────────────
- looks for exact words:         looks for meaning:
- "credential" AND "theft"       ● Mimikatz detection
-       │                        ● DCSync attacks
-       ▼                        ● LSASS memory dumping
- only docs with those words     ● Pass-the-Hash defense
- (misses related concepts)      (finds related concepts!)
-```
+> Query: `"how to stop credential theft"`
+
+| | Keyword search | Semantic search |
+|---|---|---|
+| **What it matches** | exact tokens: `"credential"` AND `"theft"` | overall meaning of the sentence |
+| **Hits returned** | only documents containing both literal words | Mimikatz detection, DCSync attacks, LSASS memory dumping, Pass-the-Hash defence |
+| **Failure mode** | misses related concepts that don't share the exact words | rarely misses relevant docs; may surface loosely related ones |
+
+Semantic search understands intent. Keyword search matches strings.
 
 ---
 

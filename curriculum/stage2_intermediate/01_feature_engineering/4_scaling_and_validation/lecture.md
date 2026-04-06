@@ -18,20 +18,17 @@
 | `StandardScaler` | z = (x - mean) / std | Unbounded; ~[-3, 3] typical | Linear models, neural networks, features with outliers |
 | `MinMaxScaler` | z = (x - min) / (max - min) | Strictly [0, 1] | KNN, when you need bounded output |
 
-```
-StandardScaler (z-score)                MinMaxScaler
-Before         After                    Before         After
-┌─────────┐    ┌─────────┐             ┌─────────┐    ┌─────────┐
-│    10   │    │  -0.85  │             │    10   │    │  0.00   │
-│   100   │    │  -0.12  │             │   100   │    │  0.02   │
-│   150   │    │   0.28  │             │   150   │    │  0.03   │
-│   200   │    │   0.69  │             │   200   │    │  0.04   │
-│  5000   │───►│   4.57  │  outlier    │  5000   │───►│  1.00   │  outlier
-└─────────┘    └─────────┘             └─────────┘    └─────────┘
-  mean=0, std=1 (outlier                 [0, 1] range (outlier
-  visible but doesn't                    compresses all other
-  crush other values)                    values near 0.00)
-```
+**Same five values scaled two different ways**
+
+| Raw value | StandardScaler (z-score) | MinMaxScaler ([0, 1]) | Notes |
+|---:|---:|---:|---|
+|    10 | −0.85 | 0.00 | |
+|   100 | −0.12 | 0.02 | |
+|   150 | +0.28 | 0.03 | |
+|   200 | +0.69 | 0.04 | |
+| **5000** | **+4.57** | **1.00** | the outlier |
+
+`StandardScaler` keeps the four normal values spread across roughly `[-0.9, 0.7]` and pushes the outlier to `+4.57` — visible but not destructive. `MinMaxScaler` is forced to fit *everything* into `[0, 1]`, so the outlier pins itself to `1.00` and crushes all four normal values into the tiny range `[0.00, 0.04]` near the bottom.
 
 **For network security data:**
 - `bytes_per_second` can have extreme outliers (a single large transfer → very high value)
@@ -52,18 +49,14 @@ X_train_scaled = scaler.fit_transform(X_train)   # learns mean and std from trai
 X_test_scaled  = scaler.transform(X_test)          # applies SAME mean/std to test
 ```
 
-```
-                  ┌──────────────┐
-  X_train ──────► │ scaler.fit() │  learns mean, std from train ONLY
-                  │  then        │
-                  │ .transform() │ ───► X_train_scaled
-                  └──────┬───────┘
-                         │ same mean, std
-                  ┌──────▼───────┐
-  X_test  ──────► │  .transform()│ ───► X_test_scaled
-                  └──────────────┘
-                  (NO .fit() here — that would be leakage!)
-```
+**The contract — fit once, on the train side; reuse on the test side**
+
+| Step | Input | Call | Output |
+|---|---|---|---|
+| 1 | `X_train` | `scaler.fit_transform(X_train)` — *learns* mean & std from train and scales | `X_train_scaled` |
+| 2 | `X_test`  | `scaler.transform(X_test)` — applies the **same** mean & std (no `fit`) | `X_test_scaled` |
+
+Calling `.fit()` on the test side leaks the test distribution into the scaler and corrupts your evaluation.
 
 If you fit the scaler on `X_test` or the full dataset, the test set's distribution leaks into the scaling parameters, giving optimistic performance estimates.
 

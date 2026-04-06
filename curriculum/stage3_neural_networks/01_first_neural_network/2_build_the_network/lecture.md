@@ -17,17 +17,17 @@ Activation functions determine what kind of signal flows through the network.
 
 ### ReLU (Rectified Linear Unit) — for hidden layers
 
-```
-relu(x) = max(0, x)
+`relu(x) = max(0, x)`
 
-Output:
-   |        /
-   |       /
-   |      /
-   |_____/
-   +---------> x
-    negative = 0
-```
+| Input `x` | Output `relu(x)` | Behaviour |
+|---:|---:|---|
+| −5 | 0 | clamped — neuron is "off" |
+| −1 | 0 | clamped |
+|  0 | 0 | exactly zero |
+|  1 | 1 | passes through unchanged |
+|  5 | 5 | passes through unchanged |
+
+The shape is a flat floor at zero for any negative input, then a straight 45° ramp upward for positive input — no saturation at the top, no expensive `exp()`.
 
 Why ReLU for hidden layers?
 - Computationally cheap
@@ -72,20 +72,17 @@ Use when your problem has 3+ mutually exclusive classes.
 
 The number of output units must match the number of classes in your problem.
 
-```
-Binary classification:                Multi-class (3 classes):
+**Same hidden layer, two different output layers**
 
- Hidden          Output               Hidden          Output
-  (64)            (1)                   (64)           (3)
+|  | Binary classification | Multi-class (3 classes) |
+|---|---|---|
+| Hidden layer | `Dense(64, relu)` | `Dense(64, relu)` |
+| Output layer | `Dense(1, sigmoid)` | `Dense(3, softmax)` |
+| Output shape | `(batch, 1)` | `(batch, 3)` |
+| Example output for one sample | `0.82` (probability of attack) | `[0.66, 0.24, 0.10]` (sums to 1.0) |
+| Loss function | `binary_crossentropy` | `sparse_categorical_crossentropy` |
 
-   o ──────────► o  → sigmoid          o ──────────► o  → softmax
-   o ──────────►     → P(attack)       o ──────────► o  → [0.66, 0.24, 0.10]
-   o ──────────►     = 0.82            o ──────────► o     sums to 1.0
-   o                                   o
-  ...                                 ...
-
- Loss: binary_crossentropy            Loss: sparse_categorical_crossentropy
-```
+Same hidden network, different head: choose the head and loss to match the *number of mutually exclusive classes* in your problem.
 
 ---
 

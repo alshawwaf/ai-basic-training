@@ -37,22 +37,15 @@ depth_options = [1, 2, 3]
 Total combinations: 3 × 3 = 9 models to train
 ```
 
-```
-Grid search: every cell = one trained model
+**Grid search results — every cell is one trained model**
 
-                units
-            32      64      128
-         ┌───────┬───────┬───────┐
-     1   │ 0.891 │ 0.903 │ 0.910 │
-         ├───────┼───────┼───────┤
-depth 2  │ 0.905 │ 0.915 │ 0.912 │  ← val_accuracy per combo
-         ├───────┼───────┼───────┤
-     3   │ 0.898 │ 0.909 │ 0.907 │
-         └───────┴───────┴───────┘
-                    ▲
-                 winner: depth=2, units=64
-                 (example values — yours will differ)
-```
+| depth ＼ units | 32 | 64 | 128 |
+|---:|---:|---:|---:|
+| **1** | 0.891 | 0.903 | 0.910 |
+| **2** | 0.905 | **0.915** | 0.912 |
+| **3** | 0.898 | 0.909 | 0.907 |
+
+Each cell is one full training run; the value is `val_accuracy` at the end. The bold cell (`depth=2, units=64`) is the winning combination in this example — your numbers will differ on a re-run, but the pattern of "moderate depth + moderate width is usually best" is typical.
 
 For each combination:
 1. Build the model
@@ -70,19 +63,15 @@ This is the brute-force approach. It works fine when the search space is small. 
 
 ## Concept: Why Deeper Is Not Always Better
 
-```
-Depth 1 (1 hidden layer): fast, underfit risk for complex problems
-Depth 2:                   usually a good balance
-Depth 3:                   more capacity, but harder to train, more parameters
-```
+**Depth comparison — same width (`Dense(64)`), different number of hidden layers**
 
-```
-Depth 1:   Input ──► Dense(64) ──► Output       ~1,400 params
-Depth 2:   Input ──► Dense(64) ──► Dense(64) ──► Output   ~5,500 params
-Depth 3:   Input ──► Dense(64) ──► Dense(64) ──► Dense(64) ──► Output  ~9,600 params
-                                                              ▲
-                                      more params, but not always better accuracy
-```
+| Depth | Architecture | Params (approx) | Character |
+|---:|---|---:|---|
+| 1 | `Input → Dense(64) → Output` | ~1,400 | fast, may underfit complex problems |
+| 2 | `Input → Dense(64) → Dense(64) → Output` | ~5,500 | usually the best balance |
+| 3 | `Input → Dense(64) → Dense(64) → Dense(64) → Output` | ~9,600 | more capacity, harder to train, often no accuracy gain |
+
+For this dataset (20 features, 2 classes, 1600 samples) depth 2 typically wins. More parameters do not automatically mean more accuracy — when the problem isn't complex enough to justify the extra capacity, the deeper model just trains slower and overfits more easily.
 
 For this dataset (20 features, 2 classes, 1600 samples) depth 2 often wins. Deeper networks don't always help when the problem isn't complex enough to justify the extra capacity.
 

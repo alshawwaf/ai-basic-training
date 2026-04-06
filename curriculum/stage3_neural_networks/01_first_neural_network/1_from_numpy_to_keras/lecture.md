@@ -27,15 +27,15 @@ class Layer_Dense:
 
 Keras `Dense(8, activation='relu')` does exactly this — plus the activation function in one step. The API looks different but the maths is identical.
 
-```
-Single Dense Neuron (what happens inside ONE unit):
+**Inside one Dense neuron, step by step**
 
-  x1 ──w1──┐
-  x2 ──w2──┤
-  x3 ──w3──┼──► [ sum + bias ] ──► [ relu ] ──► output
-  x4 ──w4──┘
-            weighted sum = x1*w1 + x2*w2 + x3*w3 + x4*w4 + b
-```
+| Stage | What it does | Formula |
+|---|---|---|
+| 1. Multiply | each input is multiplied by its own weight | `x1·w1, x2·w2, x3·w3, x4·w4` |
+| 2. Sum + bias | the weighted contributions are added together with one bias term | `z = x1·w1 + x2·w2 + x3·w3 + x4·w4 + b` |
+| 3. Activation | the sum passes through a non-linear function | `output = relu(z)` |
+
+A `Dense(N)` layer is just **N copies** of this same circuit, each with its own private set of weights and bias.
 
 ---
 
@@ -55,25 +55,15 @@ Data flow:
 Input (shape: 4)  →  Dense(8, relu)  →  Dense(1, sigmoid)  →  Output (shape: 1)
 ```
 
-How Dense layers connect — every input feeds every neuron:
+**How Dense layers connect — every input feeds every neuron**
 
-```
- Input          Dense(8, relu)       Dense(1, sigmoid)
-  (4)              (8)                   (1)
+| Layer | Neurons | Each neuron receives | Each neuron's output goes to |
+|---|---:|---|---|
+| Input | 4 | the raw feature value | every neuron in the next Dense |
+| `Dense(8, relu)` | 8 | all 4 inputs (its own weights + bias) | every neuron in the next Dense |
+| `Dense(1, sigmoid)` | 1 | all 8 outputs from the previous layer | the model's final probability |
 
-  o ─────┬──────► o
-  o ─────┼──────► o ─────┬──────────► o  → output
-  o ─────┼──────► o ─────┘               (probability)
-  o ─────┼──────► o
-         ├──────► o        All 8 neurons
-         ├──────► o        connect to the
-         ├──────► o        1 output neuron
-         └──────► o
-
-  4 inputs       8 neurons             1 neuron
-  each connects  each connects
-  to ALL 8       to the 1 output
-```
+This "all-to-all" wiring is what makes a layer "Dense": every input is connected to every neuron via its own private weight, with no missing edges.
 
 You only need to specify `input_shape` on the first layer. Keras infers the rest.
 
@@ -100,17 +90,15 @@ b:     8 =  8  entries
 Total = 40 parameters
 ```
 
-```
-Weight matrix W          Bias vector b
-(4 inputs × 8 units)    (8 units)
-┌─────────────────────┐  ┌───┐
-│ w11 w12 w13 ... w18 │  │b1 │
-│ w21 w22 w23 ... w28 │  │b2 │
-│ w31 w32 w33 ... w38 │  │...│
-│ w41 w42 w43 ... w48 │  │b8 │
-└─────────────────────┘  └───┘
-     32 values            8 values   = 40 params total
-```
+**Counting the parameters of `Dense(8)` with 4 inputs**
+
+| Component | Shape | Number of values |
+|---|---|---:|
+| Weight matrix `W` | `(4 inputs, 8 units)` | `4 × 8 = 32` |
+| Bias vector `b`   | `(8 units,)`           | `8` |
+| **Total**         |                        | **40** |
+
+This is exactly what `model.summary()` reports in the "Param #" column for that layer.
 
 This is exactly what `model.summary()` shows in the "Param #" column.
 

@@ -38,27 +38,14 @@ Training learns (parameters):
   Layer 2 weights: ...
 ```
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   YOU DECIDE                             │
-│  (hyperparameters — fixed before training)               │
-│                                                          │
-│  units=64, lr=0.001, batch_size=32, epochs=20            │
-└──────────────────────┬───────────────────────────────────┘
-                       │
-                       ▼
-              ┌────────────────┐
-              │  model.fit()   │  ← training loop
-              └───────┬────────┘
-                      │
-                      ▼
-┌──────────────────────────────────────────────────────────┐
-│                TRAINING LEARNS                           │
-│  (parameters — updated every batch by gradient descent)  │
-│                                                          │
-│  W1: 640 values, b1: 64 values, W2: 65 values, ...       │
-└──────────────────────────────────────────────────────────┘
-```
+**Two clearly separated buckets**
+
+| Owned by | Examples | When set | How they change |
+|---|---|---|---|
+| **You** (hyperparameters) | `units=64`, `lr=0.001`, `batch_size=32`, `epochs=20` | **before** `model.fit()` | only when you re-run training with new values |
+| **Training loop** (parameters) | `W1`: 640 values, `b1`: 64 values, `W2`: 65 values, … | **inside** `model.fit()` | updated by gradient descent on every batch |
+
+You wire up the training process; the training process fills in the weights. Hyperparameter tuning means *systematically* trying different "you decide" combinations and measuring which one produces the best learned weights.
 
 ---
 

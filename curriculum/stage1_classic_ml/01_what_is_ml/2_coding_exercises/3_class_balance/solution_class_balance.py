@@ -6,6 +6,7 @@ digits = load_digits()
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 
+print("##SECTION:Samples per class##")
 # Count how many samples exist for each digit (0-9)
 counts = df["target"].value_counts().sort_index()
 print("Samples per class:")
@@ -22,6 +23,7 @@ print(f"Minority class: {minority} samples")
 print(f"Imbalance ratio: {ratio:.2f} : 1")
 print("This dataset is well balanced.")
 
+print("##SECTION:The accuracy trap — security scenario##")
 # Simulate an imbalanced intrusion-detection scenario to show why balance matters
 normal_count = 950
 attack_count = 50
@@ -41,6 +43,7 @@ print(f"  Attacks caught :  {attack_recall*100:.1f}%   <- completely useless")
 print()
 print("This is why accuracy alone is a dangerous metric in security.")
 
+print("##SECTION:Class distribution chart##")
 # Simple text-based bar chart to visualise class distribution in the terminal
 print("\nClass distribution:")
 for label, count in counts.items():

@@ -4,7 +4,7 @@
     <h3>Redaction in action</h3>
     <p>Type or paste a prompt below. The real-time scanner highlights sensitive content and shows what gets redacted before it reaches the AI service.</p>
 
-    <textarea id="prompt-input" rows="5" style="width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:14px; font-family:'Roboto Mono',monospace; color:var(--text); resize:vertical;"
+    <textarea id="prompt-input" rows="5" style="width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:14px; font-family:'Space Mono',monospace; color:var(--text); resize:vertical;"
         placeholder="Try: My name is John Smith, SSN 412-55-8901. Our API key is sk-prod-a8f2e1b9c4d7..."
     >My name is John Smith, SSN 412-55-8901. Please review this code: api_key = 'sk-prod-a8f2e1b9c4d7' and connect to 10.0.5.23:4444</textarea>
 
@@ -130,11 +130,11 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div>
                     <div style="font-size:12px; font-weight:600; color:var(--red); margin-bottom:6px;">ORIGINAL (sent with Allow):</div>
-                    <div style="font-family:'Roboto Mono',monospace; font-size:12px; padding:12px; background:rgba(244,63,94,0.05); border:1px solid var(--red); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(text)}</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:12px; padding:12px; background:rgba(244,63,94,0.05); border:1px solid var(--red); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(text)}</div>
                 </div>
                 <div>
                     <div style="font-size:12px; font-weight:600; color:var(--green); margin-bottom:6px;">REDACTED (sent with Redact):</div>
-                    <div style="font-family:'Roboto Mono',monospace; font-size:12px; padding:12px; background:rgba(16,185,129,0.05); border:1px solid var(--green); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(redacted)}</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:12px; padding:12px; background:rgba(16,185,129,0.05); border:1px solid var(--green); border-radius:6px; line-height:1.6; white-space:pre-wrap;">${escapeHtml(redacted)}</div>
                 </div>
             </div>` : ''}
         `;

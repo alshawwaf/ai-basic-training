@@ -6,7 +6,7 @@
     <title>{% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <!-- Prism.js for syntax highlighting (code modal) -->
@@ -14,50 +14,24 @@
     <script>if(localStorage.getItem('portalTheme')!=='light')document.documentElement.setAttribute('data-theme','dark');</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
-<body>
-    <!-- Theme toggle (fixed top-right on lesson pages) -->
-    <div class="lesson-top-controls">
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <span class="icon-sun">&#9728;</span>
-            <span class="icon-moon">&#9790;</span>
-        </button>
-    </div>
+<body class="lesson-page">
+    {% from "icons.html" import brand_logo %}
+    <nav class="top-nav">
+        <a href="/" class="nav-brand" title="Back to portal">{{ brand_logo(38) }}</a>
+        <div class="top-controls">
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <span class="icon-sun">&#9728;</span>
+                <span class="icon-moon">&#9790;</span>
+            </button>
+        </div>
+    </nav>
+
     <!-- Mobile hamburger -->
     <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <nav class="sidebar">
-        <h2><a href="/">AI Ninja</a></h2>
-        <p class="subtitle"><a href="{{ url_prefix }}/" style="color:inherit; text-decoration:none;">{{ lesson_title }}</a></p>
-
-        <!-- Command menu (inline in sidebar) -->
-        <div class="cmd-sidebar" id="cmdSidebar">
-            <button class="cmd-sidebar-toggle" onclick="toggleSidebarMenu()">
-                <span class="cmd-icon">&#9776;</span> Quick Actions
-                <span class="cmd-chevron" id="cmdChevron">&#9662;</span>
-            </button>
-            <div class="cmd-sidebar-panel" id="cmdSidebarPanel">
-                <div class="cmd-section" id="cmdContinue"></div>
-                <div class="cmd-section" id="cmdBookmarks"></div>
-                <div class="cmd-section" id="cmdStats"></div>
-                <div class="cmd-divider"></div>
-                <div class="cmd-section cmd-actions">
-                    <button class="cmd-btn cmd-btn-bookmark" id="cmdAddBookmark" onclick="addBookmark()">
-                        <span class="cmd-icon">&#9734;</span> Bookmark this step
-                    </button>
-                    <button class="cmd-btn cmd-btn-danger" onclick="confirmResetAll()">
-                        <span class="cmd-icon">&#8635;</span> Reset all progress
-                    </button>
-                </div>
-                <div class="cmd-confirm" id="cmdConfirm" style="display:none">
-                    <p>Clear all progress and bookmarks?</p>
-                    <div class="cmd-confirm-btns">
-                        <button class="cmd-btn cmd-btn-danger" onclick="resetAllProgress()">Yes, reset</button>
-                        <button class="cmd-btn" onclick="cancelReset()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h2 class="sidebar-lesson-title"><a href="{{ url_prefix }}/">{{ lesson_title }}</a></h2>
 
         <ul>
             {% for s in steps %}
@@ -89,8 +63,7 @@
         <div class="learning-path">
             <div class="lp-step lp-active" data-lp="explore">
                 <span class="lp-num">1</span>
-                <span class="lp-label">Explore</span>
-                <span class="lp-hint">Play with the interactive below</span>
+                <span class="lp-text"><span class="lp-label">Explore</span><span class="lp-hint">Play below</span></span>
             </div>
             {% set has_lecture = materials | selectattr('0', 'equalto', 'lecture') | list %}
             {% set has_lab = materials | selectattr('0', 'equalto', 'lab') | list %}
@@ -99,31 +72,27 @@
             <div class="lp-arrow">&#8250;</div>
             <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', '{{ has_lecture[0][1] }}'); activateLpStep(this)">
                 <span class="lp-num">2</span>
-                <span class="lp-label">Read</span>
-                <span class="lp-hint">Understand the concept</span>
+                <span class="lp-text"><span class="lp-label">Read</span><span class="lp-hint">Understand</span></span>
             </div>
             {% endif %}
             {% if has_lab %}
             <div class="lp-arrow">&#8250;</div>
             <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', '{{ has_lab[0][1] }}'); activateLpStep(this)">
                 <span class="lp-num">{{ 3 if has_lecture else 2 }}</span>
-                <span class="lp-label">Build</span>
-                <span class="lp-hint">Follow the hands-on lab</span>
+                <span class="lp-text"><span class="lp-label">Build</span><span class="lp-hint">Hands-on lab</span></span>
             </div>
             {% endif %}
             {% if has_solution %}
             <div class="lp-arrow">&#8250;</div>
             <div class="lp-step lp-clickable" onclick="openCodeModal('{{ has_solution[0][2] }}', '{{ has_solution[0][1] }}'); activateLpStep(this)">
                 <span class="lp-num">{{ (3 if has_lecture else 2) + (1 if has_lab else 0) }}</span>
-                <span class="lp-label">Compare</span>
-                <span class="lp-hint">Check the solution</span>
+                <span class="lp-text"><span class="lp-label">Compare</span><span class="lp-hint">Solution</span></span>
             </div>
             {% endif %}
             <div class="lp-arrow">&#8250;</div>
             <div class="lp-step lp-clickable" onclick="openHintModal(); activateLpStep(this)">
                 <span class="lp-num lp-num-last">&#128161;</span>
-                <span class="lp-label">Challenge</span>
-                <span class="lp-hint">Think deeper</span>
+                <span class="lp-text"><span class="lp-label">Challenge</span><span class="lp-hint">Think deeper</span></span>
             </div>
         </div>
 
@@ -441,7 +410,7 @@
                 '<title>' + escapeHtml(_drawerFileName || 'Document') + '</title>' +
                 '<style>' +
                 'body { font-family: "Segoe UI", Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a2e; line-height: 1.7; font-size: 14px; }' +
-                'h1, h2, h3 { font-family: "Space Grotesk", sans-serif; }' +
+                'h1, h2, h3 { font-family: "Space Mono", monospace; }' +
                 'pre, code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; }' +
                 'pre { padding: 12px 16px; overflow-x: auto; }' +
                 'pre code { background: none; padding: 0; }' +

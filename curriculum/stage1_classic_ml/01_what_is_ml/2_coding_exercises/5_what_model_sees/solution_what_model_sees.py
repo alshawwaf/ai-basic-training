@@ -7,12 +7,14 @@ digits = load_digits()
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
 df["target"] = digits.target
 
+print("##SECTION:Raw pixel grid##")
 # Print the raw 8x8 pixel grid — this is exactly what the ML model receives as input
 image = digits.images[0].astype(int)
 print(f"Image index 0 — label: {digits.target[0]}")
 for row in image:
     print("  ".join(f"{v:2d}" for v in row))
 
+print("##SECTION:Side-by-side comparison (1 vs 7)##")
 # Compare two digits side-by-side to see how different classes differ numerically
 for digit in [1, 7]:
     example = digits.images[digits.target == digit][0].astype(int)
@@ -20,12 +22,14 @@ for digit in [1, 7]:
     for row in example:
         print("  ".join(f"{v:2d}" for v in row))
 
+print("##SECTION:Most predictive pixels##")
 # Find which pixel positions are most predictive of the label
 # High correlation means that pixel carries useful signal for classification
 correlations = df.corr()["target"].abs().drop("target").sort_values(ascending=False)
 print("\nTop 10 pixels most correlated with digit label:")
 print(correlations.head(10).round(2))
 
+print("##SECTION:Security feature analogy##")
 # Key takeaway: to the model, an image is just a row of numbers — same as network logs
 print("\n=== Security Feature Analogy ===")
 print("Digits:   [0, 0, 5, 13, 9, ...]  <- pixel brightnesses")

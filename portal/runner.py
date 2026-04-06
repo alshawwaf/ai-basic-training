@@ -8,9 +8,12 @@ Usage (internal — called by app.py's /api/run endpoint):
 
 import base64
 import os
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import glob
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -39,6 +42,7 @@ try:
                 fig = _plt.figure(fig_num)
                 path = os.path.join(_fig_dir, f"fig_{_fig_counter:03d}.png")
                 fig.savefig(path, dpi=100, bbox_inches="tight", facecolor="white")
+                print(f"##FIGURE:{_fig_counter}##")
                 _fig_counter += 1
             _plt.close("all")
 
@@ -146,10 +150,168 @@ def run_script(rel_path: str, timeout: int = 60) -> dict:
             with open(png, "rb") as img:
                 images.append(base64.b64encode(img.read()).decode("ascii"))
 
-    return {
-        "stdout": stdout,
+    # Parse sections if markers are present
+    sections = _parse_sections(stdout, images)
+
+    result = {
         "stderr": stderr,
-        "images": images,
         "exit_code": exit_code,
         "timed_out": timed_out,
     }
+
+    if sections is not None:
+        result["sections"] = sections
+        # Strip markers from flat stdout (fallback display)
+        result["stdout"] = re.sub(r'##(?:SECTION:.+?|FIGURE:\d+)##\n?', '', stdout).strip()
+        result["images"] = images
+    else:
+        result["stdout"] = stdout
+        result["images"] = images
+
+    return result
+
+
+def run_script_stream(rel_path: str, timeout: int = 60):
+    """Execute a Python script, yielding NDJSON events as output is produced.
+
+    Yields dicts with 'type' key:
+        section  – new section started (title)
+        output   – a line of stdout
+        figure   – base64 PNG image
+        stderr   – collected stderr (sent after process exits)
+        done     – execution finished (exit_code)
+        error    – something went wrong (text)
+    """
+    def _err(msg):
+        yield {'type': 'error', 'text': msg}
+
+    if not rel_path.startswith(ALLOWED_PREFIX):
+        yield from _err("Access denied: scripts must be in curriculum/")
+        return
+
+    full_path = os.path.normpath(os.path.join(REPO_ROOT, rel_path))
+    if not full_path.startswith(REPO_ROOT):
+        yield from _err("Access denied")
+        return
+    if not os.path.isfile(full_path):
+        yield from _err(f"File not found: {rel_path}")
+        return
+    if not full_path.endswith(".py"):
+        yield from _err("Only .py files can be executed")
+        return
+
+    with open(full_path, encoding="utf-8") as f:
+        user_code = f.read()
+
+    tmp_dir = tempfile.mkdtemp()
+    fig_dir = os.path.join(tmp_dir, "figs")
+    os.makedirs(fig_dir)
+
+    script_path = os.path.join(tmp_dir, "run.py")
+    with open(script_path, "w", encoding="utf-8") as f:
+        f.write(_WRAPPER)
+        f.write(user_code)
+
+    env = {k: v for k, v in os.environ.items() if k in _SAFE_ENV_KEYS}
+    env["MPLBACKEND"] = "Agg"
+    env["_FIG_DIR"] = fig_dir
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+
+    proc = subprocess.Popen(
+        [sys.executable, "-u", script_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=os.path.dirname(full_path),
+        env=env,
+    )
+
+    timed_out = [False]
+
+    def _kill_on_timeout():
+        timed_out[0] = True
+        proc.kill()
+
+    timer = threading.Timer(timeout, _kill_on_timeout)
+    timer.start()
+
+    try:
+        for raw_line in iter(proc.stdout.readline, b''):
+            line = raw_line.decode('utf-8', errors='replace').rstrip('\n\r')
+
+            if line.startswith('##SECTION:') and line.endswith('##'):
+                yield {'type': 'section', 'title': line[10:-2]}
+
+            elif line.startswith('##FIGURE:') and line.endswith('##'):
+                fig_num = int(line[9:-2])
+                fig_path = os.path.join(fig_dir, f"fig_{fig_num:03d}.png")
+                if os.path.isfile(fig_path):
+                    with open(fig_path, "rb") as img:
+                        b64 = base64.b64encode(img.read()).decode("ascii")
+                    yield {'type': 'figure', 'data': b64}
+
+            else:
+                yield {'type': 'output', 'text': line}
+
+        proc.wait()
+        timer.cancel()
+
+        stderr = proc.stderr.read()
+        if stderr:
+            stderr_text = stderr.decode('utf-8', errors='replace')[:MAX_OUTPUT_BYTES]
+            if stderr_text.strip():
+                yield {'type': 'stderr', 'text': stderr_text}
+
+        if timed_out[0]:
+            yield {'type': 'error', 'text': f'Script timed out after {timeout}s'}
+
+        yield {'type': 'done', 'exit_code': proc.returncode}
+
+    except Exception as e:
+        timer.cancel()
+        proc.kill()
+        yield {'type': 'error', 'text': str(e)}
+
+    finally:
+        timer.cancel()
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+def _parse_sections(stdout: str, images: list) -> list | None:
+    """Split stdout by ##SECTION:Title## markers, associate figures.
+
+    Returns None if no section markers found (use flat rendering).
+    Returns list of {title, stdout, images[]} dicts otherwise.
+    """
+    if '##SECTION:' not in stdout:
+        return None
+
+    parts = re.split(r'##SECTION:(.+?)##\n?', stdout)
+
+    sections = []
+
+    # parts[0] = text before first marker (preamble — usually empty)
+    # parts[1] = first section title, parts[2] = first section body, etc.
+    preamble = parts[0].strip()
+    if preamble:
+        clean = re.sub(r'##FIGURE:\d+##\n?', '', preamble).strip()
+        fig_ids = [int(m) for m in re.findall(r'##FIGURE:(\d+)##', preamble)]
+        if clean or fig_ids:
+            sections.append({
+                'title': 'Setup',
+                'stdout': clean,
+                'images': [images[i] for i in fig_ids if i < len(images)],
+            })
+
+    for i in range(1, len(parts), 2):
+        title = parts[i].strip()
+        body = parts[i + 1] if i + 1 < len(parts) else ''
+        fig_ids = [int(m) for m in re.findall(r'##FIGURE:(\d+)##', body)]
+        clean = re.sub(r'##FIGURE:\d+##\n?', '', body).strip()
+
+        sections.append({
+            'title': title,
+            'stdout': clean,
+            'images': [images[idx] for idx in fig_ids if idx < len(images)],
+        })
+
+    return sections

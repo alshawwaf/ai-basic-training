@@ -73,14 +73,14 @@
         const display = document.getElementById('ctx-display');
         display.innerHTML = `<div style="text-align:center;font-size:14px;margin-bottom:16px;">
             Context vector for "<strong>${sentence[idx]}</strong>" =
-            <span style="font-family:'Roboto Mono',monospace;">[${context.map(v => v.toFixed(2)).join(', ')}]</span>
+            <span style="font-family:'Space Mono',monospace;">[${context.map(v => v.toFixed(2)).join(', ')}]</span>
         </div>` +
         contributions.filter(c => c.weight > 0.01).map(c => {
             const pct = (c.weight * 100).toFixed(0);
             return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
                 <span style="min-width:100px;font-weight:600;">${c.word}</span>
                 <span style="min-width:40px;color:var(--text-dim);font-size:12px;">${pct}%</span>
-                <span style="font-family:'Roboto Mono',monospace;font-size:11px;color:var(--text-dim);">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);">
                     [${c.contrib.map(v => v.toFixed(3)).join(', ')}]
                 </span>
             </div>`;

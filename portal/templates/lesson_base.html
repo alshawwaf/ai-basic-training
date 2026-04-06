@@ -85,28 +85,46 @@
             <p>{{ steps[current].sub }}</p>
         </div>
 
-        <!-- Material + hint toolbar -->
-        <div class="material-toolbar">
-            {% if materials %}
-            {% for mtype, label, path in materials %}
-            {% if mtype == 'lecture' %}
-            <button class="mat-btn mat-lecture" onclick="openDrawer('{{ path }}', '{{ label }}')" title="{{ label }}">
-                <span class="mat-icon">&#128214;</span> Lecture
-            </button>
-            {% elif mtype == 'lab' %}
-            <button class="mat-btn mat-lab" onclick="openDrawer('{{ path }}', '{{ label }}')" title="{{ label }}">
-                <span class="mat-icon">&#128295;</span> {{ label }}
-            </button>
-            {% elif mtype == 'solution' %}
-            <button class="mat-btn mat-solution" onclick="openCodeModal('{{ path }}', '{{ label }}')" title="{{ label }}">
-                <span class="mat-icon">&#128187;</span> Solution
-            </button>
+        <!-- Learning path toolbar -->
+        <div class="learning-path">
+            <div class="lp-step lp-active" data-lp="explore">
+                <span class="lp-num">1</span>
+                <span class="lp-label">Explore</span>
+                <span class="lp-hint">Play with the interactive below</span>
+            </div>
+            {% set has_lecture = materials | selectattr('0', 'equalto', 'lecture') | list %}
+            {% set has_lab = materials | selectattr('0', 'equalto', 'lab') | list %}
+            {% set has_solution = materials | selectattr('0', 'equalto', 'solution') | list %}
+            {% if has_lecture %}
+            <div class="lp-arrow">&#8250;</div>
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', '{{ has_lecture[0][1] }}'); activateLpStep(this)">
+                <span class="lp-num">2</span>
+                <span class="lp-label">Read</span>
+                <span class="lp-hint">Understand the concept</span>
+            </div>
             {% endif %}
-            {% endfor %}
+            {% if has_lab %}
+            <div class="lp-arrow">&#8250;</div>
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', '{{ has_lab[0][1] }}'); activateLpStep(this)">
+                <span class="lp-num">{{ 3 if has_lecture else 2 }}</span>
+                <span class="lp-label">Build</span>
+                <span class="lp-hint">Follow the hands-on lab</span>
+            </div>
             {% endif %}
-            <button class="mat-btn mat-hint" onclick="openHintModal()" title="Challenge &amp; Security notes">
-                <span class="mat-icon">&#128161;</span> Think Deeper
-            </button>
+            {% if has_solution %}
+            <div class="lp-arrow">&#8250;</div>
+            <div class="lp-step lp-clickable" onclick="openCodeModal('{{ has_solution[0][2] }}', '{{ has_solution[0][1] }}'); activateLpStep(this)">
+                <span class="lp-num">{{ (3 if has_lecture else 2) + (1 if has_lab else 0) }}</span>
+                <span class="lp-label">Compare</span>
+                <span class="lp-hint">Check the solution</span>
+            </div>
+            {% endif %}
+            <div class="lp-arrow">&#8250;</div>
+            <div class="lp-step lp-clickable" onclick="openHintModal(); activateLpStep(this)">
+                <span class="lp-num lp-num-last">&#128161;</span>
+                <span class="lp-label">Challenge</span>
+                <span class="lp-hint">Think deeper</span>
+            </div>
         </div>
 
         <div class="content-layout">

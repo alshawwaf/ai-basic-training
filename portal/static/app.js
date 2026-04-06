@@ -339,6 +339,13 @@ function animateValue(el, start, end, duration = 600, suffix = '') {
     requestAnimationFrame(step);
 }
 
+/* ── Learning path step activation ──────────────────────────────────────── */
+
+function activateLpStep(el) {
+    document.querySelectorAll('.lp-step').forEach(s => s.classList.remove('lp-active'));
+    el.classList.add('lp-active');
+}
+
 /* ── Hint modal (challenge + security) ───────────────────────────────────── */
 
 function openHintModal() {

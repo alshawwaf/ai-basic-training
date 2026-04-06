@@ -231,17 +231,29 @@ function grayRText(value, max = 16) {
     return (value / max) > 0.45 ? '#fff' : '#222';
 }
 
-/* Hot color map: black → red → yellow → white */
+/* Cool heat map: dark navy → indigo → violet → cyan → light cyan
+   Replaces the previous black-red-yellow-white scheme — fits the brand
+   palette and stays readable on a dark background. */
 function hotColor(value, max = 16) {
     const t = Math.max(0, Math.min(1, value / max));
-    let r, g, b;
-    if (t < 0.33)      { r = t / 0.33 * 255; g = 0; b = 0; }
-    else if (t < 0.66)  { r = 255; g = (t - 0.33) / 0.33 * 255; b = 0; }
-    else                 { r = 255; g = 255; b = (t - 0.66) / 0.34 * 255; }
-    return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+    // Stops: navy(0) -> indigo(0.33) -> violet(0.66) -> cyan(1)
+    const stops = [
+        [10,  12,  32],   // #0a0c20  near-black navy
+        [55,  48,  140],  // #37308c  indigo
+        [139, 92,  246],  // #8b5cf6  violet
+        [92,  242, 251],  // #5cf2fb  bright cyan
+    ];
+    const seg = t * (stops.length - 1);
+    const i = Math.min(stops.length - 2, Math.floor(seg));
+    const f = seg - i;
+    const r = Math.round(stops[i][0] + (stops[i + 1][0] - stops[i][0]) * f);
+    const g = Math.round(stops[i][1] + (stops[i + 1][1] - stops[i][1]) * f);
+    const b = Math.round(stops[i][2] + (stops[i + 1][2] - stops[i][2]) * f);
+    return `rgb(${r},${g},${b})`;
 }
 function hotText(value, max = 16) {
-    return (value / max) < 0.4 ? '#ccc' : '#000';
+    // Dark text on the bright cyan end, light text on the dark navy/violet end.
+    return (value / max) > 0.7 ? '#04141a' : '#e6edff';
 }
 
 /* Green / red mask */

@@ -328,9 +328,9 @@ body.lesson-page .card p {
     margin-bottom: 4px;
     line-height: 1.45;
 }
-body.lesson-page .digit-grid.large { width: 220px; }
-body.lesson-page .digit-grid.medium { width: 180px; }
-body.lesson-page .digit-grid.small { width: 130px; }
+body.lesson-page .digit-grid.large { width: 280px; }
+body.lesson-page .digit-grid.medium { width: 260px; }
+body.lesson-page .digit-grid.small { width: 150px; }
 body.lesson-page .grid-container { margin: 0 8px; }
 body.lesson-page .grid-container .label {
     font-size: 12px;

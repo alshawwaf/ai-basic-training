@@ -1195,19 +1195,27 @@ select:hover, .btn:hover {
 }
 .guess-btn.selected {
     border-color: var(--accent);
-    background: var(--accent);
-    color: #fff;
+    background: linear-gradient(135deg, #5cf2fb, #06b6d4);
+    color: #04141a;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.45);
 }
 .guess-btn.correct {
     border-color: var(--green);
-    background: var(--green);
-    color: #fff;
+    background: linear-gradient(135deg, #34d399, #10b981);
+    color: #04231a;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     animation: pop 0.3s ease;
 }
 .guess-btn.wrong {
     border-color: var(--red);
-    background: var(--red);
-    color: #fff;
+    background: linear-gradient(135deg, #fb7185, #e11d48);
+    color: #2a0508;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+.guess-btn.correct .shortcut,
+.guess-btn.wrong .shortcut,
+.guess-btn.selected .shortcut {
+    color: rgba(0,0,0,0.55);
 }
 .guess-btn.was-answer {
     border-color: var(--green);

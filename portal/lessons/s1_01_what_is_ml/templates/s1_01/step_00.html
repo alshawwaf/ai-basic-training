@@ -79,8 +79,21 @@
 
         updateStreak();
         document.getElementById('result-area').classList.remove('hidden');
-        document.getElementById('answer-area').classList.remove('hidden');
+        const answerArea = document.getElementById('answer-area');
+        answerArea.classList.remove('hidden');
         document.getElementById('flat-display').textContent = '[' + flat.join(', ') + ']';
+
+        // Reveal the flat-array section by scrolling the lesson content panel.
+        // The scroll container is .content-main (viewport-locked layout) — fall
+        // back to window scroll if that element isn't found for any reason.
+        requestAnimationFrame(function() {
+            const scroller = document.querySelector('.content-main');
+            if (scroller) {
+                scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
+            } else {
+                answerArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        });
     }
 
     function updateStreak() {

@@ -15,43 +15,50 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- Theme toggle -->
-    <div class="top-controls" style="z-index:200;">
+    <!-- Theme toggle (fixed top-right on lesson pages) -->
+    <div class="lesson-top-controls">
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
             <span class="icon-sun">&#9728;</span>
             <span class="icon-moon">&#9790;</span>
         </button>
-    </div>
-    <!-- Command menu (shared with portal_base) -->
-    <div class="cmd-overlay" id="cmdOverlay" onclick="closeCommandMenu()"></div>
-    <div class="cmd-menu" id="cmdMenu">
-        <div class="cmd-section" id="cmdContinue"></div>
-        <div class="cmd-section" id="cmdBookmarks"></div>
-        <div class="cmd-section" id="cmdStats"></div>
-        <div class="cmd-divider"></div>
-        <div class="cmd-section cmd-actions">
-            <button class="cmd-btn cmd-btn-bookmark" id="cmdAddBookmark" onclick="addBookmark()" style="display:none">
-                <span class="cmd-icon">&#9733;</span> Bookmark this step
-            </button>
-            <button class="cmd-btn cmd-btn-danger" onclick="confirmResetAll()">
-                <span class="cmd-icon">&#8635;</span> Reset all progress
-            </button>
-        </div>
-        <div class="cmd-confirm" id="cmdConfirm" style="display:none">
-            <p>Clear all progress and bookmarks?</p>
-            <div class="cmd-confirm-btns">
-                <button class="cmd-btn cmd-btn-danger" onclick="resetAllProgress()">Yes, reset</button>
-                <button class="cmd-btn" onclick="cancelReset()">Cancel</button>
-            </div>
-        </div>
     </div>
     <!-- Mobile hamburger -->
     <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <nav class="sidebar">
-        <h2><a href="/" onclick="toggleCommandMenu(event)">AI Ninja</a></h2>
+        <h2><a href="/">AI Ninja</a></h2>
         <p class="subtitle"><a href="{{ url_prefix }}/" style="color:inherit; text-decoration:none;">{{ lesson_title }}</a></p>
+
+        <!-- Command menu (inline in sidebar) -->
+        <div class="cmd-sidebar" id="cmdSidebar">
+            <button class="cmd-sidebar-toggle" onclick="toggleSidebarMenu()">
+                <span class="cmd-icon">&#9776;</span> Quick Actions
+                <span class="cmd-chevron" id="cmdChevron">&#9662;</span>
+            </button>
+            <div class="cmd-sidebar-panel" id="cmdSidebarPanel">
+                <div class="cmd-section" id="cmdContinue"></div>
+                <div class="cmd-section" id="cmdBookmarks"></div>
+                <div class="cmd-section" id="cmdStats"></div>
+                <div class="cmd-divider"></div>
+                <div class="cmd-section cmd-actions">
+                    <button class="cmd-btn cmd-btn-bookmark" id="cmdAddBookmark" onclick="addBookmark()">
+                        <span class="cmd-icon">&#9734;</span> Bookmark this step
+                    </button>
+                    <button class="cmd-btn cmd-btn-danger" onclick="confirmResetAll()">
+                        <span class="cmd-icon">&#8635;</span> Reset all progress
+                    </button>
+                </div>
+                <div class="cmd-confirm" id="cmdConfirm" style="display:none">
+                    <p>Clear all progress and bookmarks?</p>
+                    <div class="cmd-confirm-btns">
+                        <button class="cmd-btn cmd-btn-danger" onclick="resetAllProgress()">Yes, reset</button>
+                        <button class="cmd-btn" onclick="cancelReset()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <ul>
             {% for s in steps %}
             <li class="{{ 'active' if s.id == current else '' }}" data-step="{{ s.id }}">

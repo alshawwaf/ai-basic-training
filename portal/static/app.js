@@ -42,9 +42,26 @@ function closeCommandMenu() {
     const overlay = document.getElementById('cmdOverlay');
     if (menu) menu.classList.remove('open');
     if (overlay) overlay.classList.remove('open');
-    // Reset confirm state
     const confirm = document.getElementById('cmdConfirm');
     if (confirm) confirm.style.display = 'none';
+}
+
+/* Sidebar variant (lesson pages) */
+function toggleSidebarMenu() {
+    const panel = document.getElementById('cmdSidebarPanel');
+    const chevron = document.getElementById('cmdChevron');
+    if (!panel) return;
+    const opening = !panel.classList.contains('open');
+    if (opening) {
+        renderCommandMenu();
+        panel.classList.add('open');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+    } else {
+        panel.classList.remove('open');
+        if (chevron) chevron.style.transform = '';
+        const confirm = document.getElementById('cmdConfirm');
+        if (confirm) confirm.style.display = 'none';
+    }
 }
 
 function renderCommandMenu() {

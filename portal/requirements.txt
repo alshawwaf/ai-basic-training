@@ -1,6 +1,7 @@
 flask
 gunicorn
 markdown
+xhtml2pdf
 
 # ML / Data
 numpy

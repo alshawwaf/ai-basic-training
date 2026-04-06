@@ -118,6 +118,130 @@ def api_content():
         return jsonify({"type": "python", "raw": raw, "path": rel_path})
 
 
+# ── PDF generation API ──────────────────────────────────────────────────────
+
+# Pure-Python PDF generator. Doesn't need GTK/Pango/Cairo system libs the way
+# WeasyPrint does, so it works on Windows out of a plain `pip install`.
+# Trade-off: less complete CSS support (no flexbox, no gradients) — fine for
+# rendered markdown which is mostly headings, paragraphs, tables, code blocks.
+try:
+    from xhtml2pdf import pisa
+    _PDF_AVAILABLE = True
+except Exception:
+    _PDF_AVAILABLE = False
+
+
+PDF_STYLE = """
+<style>
+    @page { size: A4; margin: 18mm 16mm; }
+    body { font-family: Helvetica, Arial, sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.5; }
+    h1 { font-size: 20pt; color: #06b6d4; margin: 0 0 8pt; -pdf-keep-with-next: true; }
+    h2 { font-size: 15pt; color: #0e7490; margin: 14pt 0 6pt; border-bottom: 1pt solid #e2e8f0; padding-bottom: 3pt; -pdf-keep-with-next: true; }
+    h3 { font-size: 12pt; color: #334155; margin: 10pt 0 4pt; -pdf-keep-with-next: true; }
+    h4 { font-size: 11pt; color: #475569; margin: 8pt 0 3pt; -pdf-keep-with-next: true; }
+    p { margin: 6pt 0; }
+    ul, ol { margin: 6pt 0 6pt 18pt; }
+    li { margin: 2pt 0; }
+    a { color: #0891b2; text-decoration: none; }
+    code { background: #f1f5f9; font-family: Courier, monospace; font-size: 9.5pt; padding: 1pt 3pt; }
+    pre { background: #f1f5f9; padding: 8pt 10pt; font-family: Courier, monospace; font-size: 9pt; -pdf-keep-in-frame-mode: shrink; }
+    pre code { background: transparent; padding: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 8pt 0; -pdf-keep-in-frame-mode: shrink; }
+    th { background: #e2e8f0; font-weight: bold; border: 1pt solid #94a3b8; padding: 4pt 6pt; text-align: left; }
+    td { border: 1pt solid #cbd5e1; padding: 4pt 6pt; vertical-align: top; }
+    blockquote { margin: 8pt 0 8pt 12pt; padding-left: 10pt; border-left: 3pt solid #06b6d4; color: #475569; }
+    hr { border: 0; border-top: 1pt solid #e2e8f0; margin: 12pt 0; }
+    .pdf-header { border-bottom: 2pt solid #06b6d4; padding-bottom: 6pt; margin-bottom: 12pt; }
+    .pdf-header .pdf-title { font-size: 18pt; font-weight: bold; color: #0e7490; }
+    .pdf-header .pdf-subtitle { font-size: 9pt; color: #64748b; margin-top: 2pt; }
+    .pdf-footer { font-size: 8pt; color: #94a3b8; text-align: center; margin-top: 14pt; padding-top: 6pt; border-top: 1pt solid #e2e8f0; }
+</style>
+"""
+
+
+@app.route("/api/pdf")
+def api_pdf():
+    """Render a markdown file in the repo to a PDF and return it as a download."""
+    if not _PDF_AVAILABLE:
+        return jsonify({
+            "error": "PDF generator not installed. Run: pip install xhtml2pdf"
+        }), 503
+
+    rel_path = request.args.get("path", "")
+    title = request.args.get("title", "")
+    if not rel_path:
+        return jsonify({"error": "Missing path parameter"}), 400
+
+    # Security: prevent path traversal — same model as /api/content
+    full = os.path.normpath(os.path.join(REPO_ROOT, rel_path))
+    if not full.startswith(REPO_ROOT):
+        return jsonify({"error": "Access denied"}), 403
+    if not os.path.isfile(full):
+        return jsonify({"error": "File not found"}), 404
+    if not full.lower().endswith(".md"):
+        return jsonify({"error": "Only .md files can be exported to PDF"}), 403
+
+    with open(full, encoding="utf-8") as f:
+        raw = f.read()
+
+    # xhtml2pdf's default fonts (Helvetica/Times) don't carry the typographic
+    # punctuation that markdown source files use heavily, so we normalize a
+    # small set of common code-points to ASCII equivalents before rendering.
+    # The text reads identically; we just lose decorative glyphs.
+    _PDF_CHAR_MAP = {
+        "\u2014": "--",   # em-dash
+        "\u2013": "-",    # en-dash
+        "\u2018": "'",    # left single quote
+        "\u2019": "'",    # right single quote
+        "\u201c": '"',    # left double quote
+        "\u201d": '"',    # right double quote
+        "\u2026": "...",  # ellipsis
+        "\u2192": "->",   # rightwards arrow
+        "\u2190": "<-",   # leftwards arrow
+        "\u2022": "*",    # bullet
+        "\u00a0": " ",    # non-breaking space
+        "\u00d7": "x",    # multiplication sign
+        "\u2248": "~=",   # almost equal
+        "\u2265": ">=",   # >=
+        "\u2264": "<=",   # <=
+    }
+    for src, dst in _PDF_CHAR_MAP.items():
+        raw = raw.replace(src, dst)
+
+    body_html = markdown.markdown(raw, extensions=MD_EXTENSIONS)
+    display_title = title or os.path.basename(full)
+    for src, dst in _PDF_CHAR_MAP.items():
+        display_title = display_title.replace(src, dst)
+
+    full_html = (
+        '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+        f'<title>{display_title}</title>'
+        f'{PDF_STYLE}</head><body>'
+        f'<div class="pdf-header"><div class="pdf-title">{display_title}</div>'
+        f'<div class="pdf-subtitle">AI Ninja Program -- {rel_path}</div></div>'
+        f'{body_html}'
+        '<div class="pdf-footer">Generated by AI Ninja Program</div>'
+        '</body></html>'
+    )
+
+    import io
+    buf = io.BytesIO()
+    result = pisa.CreatePDF(src=full_html, dest=buf, encoding="utf-8")
+    if result.err:
+        return jsonify({"error": "PDF rendering failed"}), 500
+
+    pdf_bytes = buf.getvalue()
+    download_name = os.path.splitext(os.path.basename(full))[0] + ".pdf"
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{download_name}"',
+            "Content-Length": str(len(pdf_bytes)),
+        },
+    )
+
+
 # ── Script execution API ─────────────────────────────────────────────────────
 
 @app.route("/api/run", methods=["POST"])

@@ -31,7 +31,7 @@
     --bg-card:    #111122;
     --bg-sidebar: #0d0d1a;
     --text:       #e8eaf4;
-    --text-dim:   #8890b5;
+    --text-dim:   #b4bcd9;
     --accent:     #06d6e0;
     --accent-dim: rgba(6, 214, 224, 0.12);
     --violet:     #a855f7;
@@ -179,23 +179,36 @@ code, .flat-array, .guess-input {
     font-weight: 600;
 }
 [data-theme="dark"] .sidebar li.active a {
-    color: #fff;
-    background: linear-gradient(90deg, rgba(6,214,224,0.12), transparent);
+    color: #ffffff;
+    background: linear-gradient(90deg, rgba(6,214,224,0.28), rgba(168,85,247,0.12) 60%, transparent);
     border-left-color: var(--cyan);
-    box-shadow: inset 3px 0 12px rgba(6,214,224,0.08);
+    box-shadow: inset 4px 0 18px rgba(6,214,224,0.18);
+    text-shadow: 0 0 10px rgba(6,214,224,0.55);
+    font-weight: 700;
 }
 .step-num {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: var(--border);
-    font-size: 12px;
-    font-weight: 600;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 700;
     flex-shrink: 0;
-    transition: background 0.2s, box-shadow 0.2s;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+[data-theme="dark"] .step-num {
+    background: rgba(6,214,224,0.14);
+    color: #d8dffa;
+    border: 1px solid rgba(6,214,224,0.28);
+}
+[data-theme="dark"] .sidebar li a:hover .step-num {
+    background: rgba(6,214,224,0.22);
+    color: #ffffff;
+    border-color: rgba(6,214,224,0.45);
 }
 .active .step-num {
     background: var(--accent);
@@ -294,6 +307,83 @@ body.lesson-page .content-main {
 }
 body.lesson-page .nav-buttons { flex-shrink: 0; }
 
+/* Lesson pages: tighten card padding and grid sizes so multi-card steps
+   fit within the viewport-locked content area without forcing the user
+   to scroll the inner pane. Other contexts (lesson index, portal home)
+   keep the spacious defaults. */
+body.lesson-page .card {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+body.lesson-page .card h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+body.lesson-page .card p {
+    margin-bottom: 4px;
+    line-height: 1.45;
+}
+body.lesson-page .digit-grid.large { width: 220px; }
+body.lesson-page .digit-grid.medium { width: 180px; }
+body.lesson-page .digit-grid.small { width: 130px; }
+body.lesson-page .grid-container { margin: 0 8px; }
+body.lesson-page .grid-container .label {
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+body.lesson-page .grids-row { margin: 8px 0; gap: 12px; }
+body.lesson-page .controls { margin: 8px 0; gap: 12px; }
+body.lesson-page .info-box { padding: 10px 14px; margin-bottom: 8px; }
+
+/* Compact chart wrappers — Chart.js uses 2:1 aspect by default, so the
+   chart canvas height is determined by wrapper width. Cap the wrapper so
+   charts never grow taller than the viewport-locked content area. */
+body.lesson-page .chart-wrap {
+    max-width: 520px;
+    margin: 6px auto;
+}
+body.lesson-page .chart-wrap canvas {
+    max-height: 260px;
+}
+
+/* Compact metric cards (Step 6 etc.) */
+body.lesson-page .metrics-row { margin: 10px 0; gap: 10px; }
+body.lesson-page .metric-card { padding: 10px 12px; min-width: 100px; }
+body.lesson-page .metric-card .val { font-size: 22px; }
+body.lesson-page .metric-card .name { margin-bottom: 2px; font-size: 11px; }
+
+/* Compact stats row (Step 3 etc.) */
+body.lesson-page .stat { margin: 4px 14px; }
+body.lesson-page .stat .value { font-size: 24px; }
+
+/* Compact step header + learning path so more vertical room is left for
+   the actual interactive content */
+body.lesson-page .step-header { margin-bottom: 8px; }
+body.lesson-page .step-header h1 { font-size: 19px; margin-bottom: 2px; }
+body.lesson-page .step-header p { font-size: 12px; }
+body.lesson-page .learning-path { margin: 4px 0 10px; padding: 6px 10px; }
+body.lesson-page .progress-wrap { margin: 0 -32px 8px; }
+body.lesson-page main { padding: 6px 32px 10px; }
+
+/* Make the inner scrollbar visible so learners know when an interactive
+   page has more content below the fold (instead of looking "cut off"). */
+body.lesson-page .content-main {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(6,214,224,0.45) transparent;
+}
+body.lesson-page .content-main::-webkit-scrollbar { width: 10px; }
+body.lesson-page .content-main::-webkit-scrollbar-track { background: transparent; }
+body.lesson-page .content-main::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(6,214,224,0.55), rgba(168,85,247,0.45));
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+body.lesson-page .content-main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(6,214,224,0.8), rgba(168,85,247,0.7));
+    background-clip: padding-box;
+}
+
 .step-header {
     margin-bottom: 14px;
     animation: fadeSlideUp 0.4s ease both;
@@ -340,11 +430,12 @@ body.lesson-page .nav-buttons { flex-shrink: 0; }
     color: var(--text);
 }
 .card p {
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--text-dim);
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: 13.5px;
 }
+[data-theme="dark"] .card p { color: #c4ccea; }
 
 /* ── Digit grids ─────────────────────────────────────────────────────────── */
 .grid-container {
@@ -471,10 +562,21 @@ select:hover, .btn:hover {
 .btn-primary {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: #06121c;
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.25);
 }
 .btn-primary:hover {
-    background: #0891b2;
+    background: #22e6f0;
+    border-color: #22e6f0;
+    color: #06121c;
+}
+[data-theme="dark"] .btn-primary {
+    color: #04141a;
+    box-shadow: 0 0 14px rgba(6,214,224,0.35);
+}
+[data-theme="dark"] .btn-primary:hover {
+    box-shadow: 0 0 18px rgba(6,214,224,0.55);
 }
 .btn-sm {
     padding: 5px 12px;
@@ -537,9 +639,12 @@ select:hover, .btn:hover {
     color: var(--accent);
 }
 .stat .label {
-    font-size: 12px;
+    font-size: 12.5px;
     color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0.2px;
 }
+[data-theme="dark"] .stat .label { color: #c4ccea; }
 
 /* ── Metrics bar (Step 6) ────────────────────────────────────────────────── */
 .metrics-row {

@@ -153,8 +153,11 @@
             <button class="drawer-action-btn" onclick="copyDrawerContent()" title="Copy to clipboard">
                 <span class="drawer-action-icon">&#128203;</span> Copy
             </button>
-            <button class="drawer-action-btn" onclick="downloadDrawerContent()" title="Download as file">
+            <button class="drawer-action-btn" onclick="downloadDrawerContent()" title="Download as Markdown">
                 <span class="drawer-action-icon">&#11015;</span> Download
+            </button>
+            <button class="drawer-action-btn drawer-action-pdf" onclick="downloadDrawerPdf()" title="Download as PDF">
+                <span class="drawer-action-icon">&#128196;</span> PDF
             </button>
             <button class="drawer-action-btn" onclick="printDrawerContent()" title="Print">
                 <span class="drawer-action-icon">&#128424;</span> Print
@@ -280,9 +283,24 @@
         })();
 
         // ── Drawer logic ──────────────────────────────────────────────────
-        var _drawerBasePath = '';   // directory of the currently loaded file
-        var _drawerRawContent = ''; // raw markdown/text for copy/download
-        var _drawerFileName = '';   // filename for download
+        var _drawerBasePath = '';    // directory of the currently loaded file
+        var _drawerRawContent = '';  // raw markdown/text for copy/download
+        var _drawerFileName = '';    // source filename (e.g. README.md)
+        var _drawerHumanTitle = '';  // human label passed to openDrawer (e.g. "Lecture")
+
+        // Build a download filename that tells the user which lesson/step
+        // and which document this came from. Sanitised for Windows.
+        function buildDownloadName(extension) {
+            var lt = {{ lesson_title | tojson }};
+            var stepNum = {{ current }};
+            var sanitize = function(s) {
+                return (s || '').replace(/[<>:"/\\|?*]+/g, '').replace(/\s+/g, ' ').trim();
+            };
+            var safeLesson = sanitize(lt) || 'Lesson';
+            var safeDoc = sanitize(_drawerHumanTitle) ||
+                          sanitize((_drawerFileName || 'document').replace(/\.[^.]+$/, ''));
+            return safeLesson + ' - Step ' + stepNum + ' - ' + safeDoc + '.' + extension;
+        }
 
         function _resolveRelative(base, rel) {
             // resolve a relative path against a base directory
@@ -306,6 +324,7 @@
             // store base directory for resolving relative links
             _drawerBasePath = path.replace(/\/[^\/]*$/, '');
             _drawerFileName = path.split('/').pop();
+            _drawerHumanTitle = title;
 
             fetch('/api/content?path=' + encodeURIComponent(path))
                 .then(r => r.json())
@@ -394,7 +413,7 @@
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = _drawerFileName || 'document.md';
+            a.download = buildDownloadName('md');
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -409,16 +428,24 @@
                 '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
                 '<title>' + escapeHtml(_drawerFileName || 'Document') + '</title>' +
                 '<style>' +
+                '@page { size: A4; margin: 18mm 16mm; }' +
                 'body { font-family: "Segoe UI", Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a2e; line-height: 1.7; font-size: 14px; }' +
-                'h1, h2, h3 { font-family: "Space Mono", monospace; }' +
+                'h1, h2, h3, h4 { font-family: "Space Mono", monospace; break-after: avoid; page-break-after: avoid; }' +
+                'h1 + p, h2 + p, h3 + p { break-before: avoid; page-break-before: avoid; }' +
+                'p { orphans: 3; widows: 3; }' +
                 'pre, code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; }' +
-                'pre { padding: 12px 16px; overflow-x: auto; }' +
+                'pre { padding: 12px 16px; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; }' +
                 'pre code { background: none; padding: 0; }' +
-                'table { border-collapse: collapse; width: 100%; margin: 16px 0; }' +
+                'table { border-collapse: collapse; width: 100%; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }' +
+                'thead { display: table-header-group; }' +
+                'tr, td, th { break-inside: avoid; page-break-inside: avoid; }' +
                 'th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }' +
                 'th { background: #f4f4f8; font-weight: 600; }' +
-                'img { max-width: 100%; }' +
-                '@media print { body { margin: 20px; } }' +
+                'img, figure { max-width: 100%; break-inside: avoid; page-break-inside: avoid; }' +
+                'ul, ol { break-inside: avoid; page-break-inside: avoid; }' +
+                'li { break-inside: avoid; page-break-inside: avoid; }' +
+                'blockquote { break-inside: avoid; page-break-inside: avoid; }' +
+                '@media print { body { margin: 0; max-width: none; padding: 0; } }' +
                 '</style></head><body>' +
                 body.innerHTML +
                 '</body></html>'
@@ -426,6 +453,40 @@
             win.document.close();
             win.focus();
             win.print();
+        }
+
+        function downloadDrawerPdf() {
+            if (!_drawerBasePath && !_drawerFileName) return;
+            var path = _drawerBasePath ? (_drawerBasePath + '/' + _drawerFileName) : _drawerFileName;
+            var downloadName = buildDownloadName('pdf');
+            // The PDF cover title shown inside the document should match the
+            // download filename so the open document also tells the user
+            // which lesson/step it came from.
+            var pdfTitle = downloadName.replace(/\.pdf$/, '');
+            var btn = document.querySelector('.drawer-action-pdf');
+            var origHtml = btn ? btn.innerHTML : null;
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span class="drawer-action-icon">&#8987;</span> Generating...'; }
+
+            fetch('/api/pdf?path=' + encodeURIComponent(path) + '&title=' + encodeURIComponent(pdfTitle))
+                .then(function(r) {
+                    if (!r.ok) return r.json().then(function(j) { throw new Error(j.error || 'PDF generation failed'); });
+                    return r.blob();
+                })
+                .then(function(blob) {
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = downloadName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    if (btn) { btn.innerHTML = '<span class="drawer-action-icon">&#10003;</span> Saved!'; setTimeout(function(){ btn.innerHTML = origHtml; btn.disabled = false; }, 1500); }
+                })
+                .catch(function(err) {
+                    if (btn) { btn.innerHTML = origHtml; btn.disabled = false; }
+                    alert('PDF download failed: ' + err.message);
+                });
         }
 
         function closeDrawer() {

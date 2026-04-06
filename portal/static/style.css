@@ -1163,7 +1163,7 @@ select:hover, .btn:hover {
 .portal-home {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 0 24px 60px;
+    padding: 56px 24px 60px;
     animation: fadeSlideUp 0.5s ease both;
 }
 
@@ -1171,7 +1171,7 @@ select:hover, .btn:hover {
 .portal-hero {
     position: relative;
     text-align: center;
-    padding: 48px 0 40px;
+    padding: 24px 0 40px;
 }
 .hero-glow {
     position: absolute;
@@ -1188,13 +1188,6 @@ select:hover, .btn:hover {
     background: radial-gradient(ellipse, rgba(6,214,224,0.18) 0%, rgba(168,85,247,0.08) 40%, transparent 70%);
     width: 600px;
     height: 260px;
-}
-.hero-brand {
-    position: relative;
-    z-index: 2;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: center;
 }
 .brand-logo-wrap {
     position: relative;
@@ -1753,7 +1746,7 @@ select:hover, .btn:hover {
 .stage-detail {
     max-width: 800px;
     margin: 40px auto;
-    padding: 0 24px;
+    padding: 56px 24px 0;
     animation: fadeSlideUp 0.5s ease both;
 }
 .stage-detail .back-link {
@@ -1767,11 +1760,50 @@ select:hover, .btn:hover {
 .stage-detail .back-link:hover { color: var(--accent); }
 
 /* ── Top controls (theme + demo toggles) ───────────────────────────────── */
-.top-controls {
+/* ── Top navigation bar ─────────────────────────────────────────────── */
+.top-nav {
     position: fixed;
-    top: 16px;
-    right: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: rgba(248,250,252,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+[data-theme="dark"] .top-nav {
+    background: rgba(11,17,32,0.85);
+    border-bottom-color: rgba(255,255,255,0.06);
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.nav-brand .brand-logo-wrap { filter: drop-shadow(0 0 10px rgba(6,214,224,0.25)); }
+.nav-brand:hover .brand-logo-wrap { filter: drop-shadow(0 0 18px rgba(6,214,224,0.5)) drop-shadow(0 0 36px rgba(168,85,247,0.25)); transform: scale(1.08); }
+[data-theme="dark"] .nav-brand .brand-logo-wrap { filter: drop-shadow(0 0 14px rgba(6,214,224,0.4)) drop-shadow(0 0 28px rgba(168,85,247,0.15)); }
+[data-theme="dark"] .nav-brand:hover .brand-logo-wrap { filter: drop-shadow(0 0 24px rgba(6,214,224,0.6)) drop-shadow(0 0 48px rgba(168,85,247,0.3)); }
+/* Tooltip positioning when in nav (open below-right instead of center) */
+.nav-brand .brand-tooltip {
+    left: 0;
+    transform: translateX(0) translateY(8px);
+}
+.nav-brand:hover .brand-tooltip,
+.nav-brand .brand-logo-wrap:hover .brand-tooltip {
+    transform: translateX(0) translateY(0);
+}
+.nav-brand .brand-tooltip::before {
+    left: 24px;
+    transform: rotate(45deg);
+}
+.top-controls {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1929,7 +1961,8 @@ select:hover, .btn:hover {
     .rpos-5::after { display: none; }
     .stage-card { padding: 18px; }
     .tier-badge { font-size: 9px; }
-    .top-controls { top: 10px; right: 10px; gap: 8px; }
+    .top-nav { padding: 6px 12px; }
+    .top-controls { gap: 8px; }
     .theme-toggle { width: 34px; height: 34px; font-size: 16px; }
     .demo-label { display: none; }
 }
@@ -1939,7 +1972,7 @@ select:hover, .btn:hover {
     .stage-num { width: 36px; height: 36px; font-size: 16px; }
     .stage-icon-wrap { width: 34px; height: 34px; }
     .stage-icon-wrap svg { width: 28px; height: 28px; }
-    .hero-brand svg { width: 44px; height: 44px; }
+    .nav-brand svg { width: 30px; height: 30px; }
 }
 
 /* ── Feature Engineering lesson (s2_01) ──────────────────────────────────── */

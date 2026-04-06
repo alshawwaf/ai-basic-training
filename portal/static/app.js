@@ -30,6 +30,24 @@ function toggleCommandMenu(e) {
     const opening = !menu.classList.contains('open');
     if (opening) {
         renderCommandMenu();
+        // Position near click target
+        if (e && e.currentTarget) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const isNavBrand = e.currentTarget.classList.contains('nav-brand');
+            if (isNavBrand) {
+                menu.style.top = '58px';
+                menu.style.left = '16px';
+                menu.style.right = 'auto';
+            } else {
+                // Position below the clicked element, centered
+                const menuWidth = 320;
+                let left = rect.left + rect.width / 2 - menuWidth / 2;
+                left = Math.max(16, Math.min(left, window.innerWidth - menuWidth - 16));
+                menu.style.top = (rect.bottom + 12) + 'px';
+                menu.style.left = left + 'px';
+                menu.style.right = 'auto';
+            }
+        }
         menu.classList.add('open');
         overlay.classList.add('open');
     } else {

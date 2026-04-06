@@ -775,12 +775,24 @@ select:hover, .btn:hover {
     gap: 24px;
     margin-bottom: 32px;
 }
-.progress-ring-wrap {
+.progress-ring-wrap, .cmd-ring-btn {
     position: relative;
     width: 64px;
     height: 64px;
 }
-.progress-ring-wrap svg { transform: rotate(-90deg); }
+.cmd-ring-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform 0.2s, filter 0.2s;
+}
+.cmd-ring-btn:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 12px rgba(6,214,224,0.4));
+}
+.progress-ring-wrap svg, .cmd-ring-btn svg { transform: rotate(-90deg); }
 .progress-ring-bg { stroke: var(--border); }
 .progress-ring-fill {
     stroke: var(--accent);

@@ -40,6 +40,10 @@
 </div>
 {% endmacro %}
 
+{% block scripts %}
+<script src="/static/roadmap-mesh.js"></script>
+{% endblock %}
+
 {% block body %}
 <div class="portal-home">
     <div class="portal-hero">
@@ -66,6 +70,8 @@
     </div>
 
     <div class="roadmap">
+        {# Neural-network mesh overlay (drawn by roadmap-mesh.js) #}
+        <svg class="roadmap-mesh" id="roadmap-mesh" aria-hidden="true"></svg>
         {# Row 1: Stage 1 → Stage 2 #}
         <div class="roadmap-stage rpos-1" style="animation-delay: 0s;">
             {{ stage_card(stages[0]) }}

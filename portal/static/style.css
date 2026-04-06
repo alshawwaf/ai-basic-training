@@ -1607,8 +1607,65 @@ select:hover, .btn:hover {
     grid-template-columns: 1fr 72px 1fr;
     grid-template-rows: auto 52px auto 52px auto;
     align-items: stretch;
+    position: relative;
 }
-.roadmap-stage { animation: fadeSlideUp 0.6s ease both; }
+.roadmap-stage {
+    animation: fadeSlideUp 0.6s ease both;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Neural-network mesh overlay (drawn by roadmap-mesh.js) ────────────── */
+.roadmap-mesh {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 0;
+}
+.mesh-path {
+    fill: none;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    opacity: 0.28;
+    transition: opacity 0.45s ease, stroke-width 0.3s ease;
+}
+.mesh-path[data-pair="s1-s2"] { stroke: var(--accent); }
+.mesh-path[data-pair="s2-s3"] { stroke: var(--violet); }
+.mesh-path[data-pair="s3-s4"] { stroke: var(--orange); }
+.mesh-path[data-pair="s4-s5"] { stroke: var(--red);    }
+.mesh-path.mesh-dropped {
+    opacity: 0.04;
+}
+/* When any lesson is hovered, dim the whole web and only highlight that
+ * lesson's own incoming + outgoing connections. */
+.roadmap-mesh.mesh-hover .mesh-path {
+    opacity: 0.06;
+}
+.roadmap-mesh.mesh-hover .mesh-path.mesh-active {
+    opacity: 0.95;
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 4px currentColor);
+}
+[data-theme="dark"] .mesh-path { opacity: 0.32; }
+[data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.05; }
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path { opacity: 0.08; }
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active {
+    filter: drop-shadow(0 0 6px currentColor) drop-shadow(0 0 14px currentColor);
+}
+
+/* On desktop the mesh replaces the single-arrow connectors entirely. */
+@media (min-width: 961px) {
+    .rm-arrow.rm-h::before,
+    .rm-arrow.rm-h::after,
+    .rm-arrow.rm-v::before,
+    .rm-arrow.rm-v::after,
+    .pulse-dot {
+        display: none !important;
+    }
+}
 
 /* Grid positions (zigzag: 1→2 then 3←4 then 5) */
 .rpos-1 { grid-column: 1; grid-row: 1; }

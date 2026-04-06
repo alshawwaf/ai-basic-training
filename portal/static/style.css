@@ -1931,24 +1931,24 @@ select:hover, .btn:hover {
 .lesson-card.gated  { opacity: 0.4; pointer-events: none; }
 
 .lesson-card .lesson-num {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
     background: var(--border);
-    color: var(--text-dim);
-    font-weight: 700;
-    font-size: 13px;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 15px;
     flex-shrink: 0;
     transition: all 0.25s;
 }
-.lesson-card.active .lesson-num.s1 { background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff; }
-.lesson-card.active .lesson-num.s2 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; }
-.lesson-card.active .lesson-num.s3 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
-.lesson-card.active .lesson-num.s4 { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; }
-.lesson-card.active .lesson-num.s5 { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+.lesson-card.active .lesson-num.s1 { background: linear-gradient(135deg, #5cf2fb, #06b6d4); color: #04141a; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+.lesson-card.active .lesson-num.s2 { background: linear-gradient(135deg, #c4a3ff, #8b5cf6); color: #1a0a2e; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+.lesson-card.active .lesson-num.s3 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #2a1505; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+.lesson-card.active .lesson-num.s4 { background: linear-gradient(135deg, #fb7185, #f43f5e); color: #2a040c; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+.lesson-card.active .lesson-num.s5 { background: linear-gradient(135deg, #34d399, #10b981); color: #04231a; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
 
 [data-theme="dark"] .lesson-card.active .lesson-num.s1 { box-shadow: 0 0 12px rgba(6,214,224,0.45); }
 [data-theme="dark"] .lesson-card.active .lesson-num.s2 { box-shadow: 0 0 12px rgba(168,85,247,0.45); }

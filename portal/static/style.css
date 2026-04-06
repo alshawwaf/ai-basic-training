@@ -788,9 +788,33 @@ select:hover, .btn:hover {
     border-radius: 50%;
     transition: transform 0.2s, filter 0.2s;
 }
+.cmd-ring-btn::after {
+    content: '\2699';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background 0.2s;
+}
+[data-theme="dark"] .cmd-ring-btn::after {
+    background: var(--accent);
+    box-shadow: 0 2px 8px rgba(6,214,224,0.4);
+}
 .cmd-ring-btn:hover {
     transform: scale(1.1);
     filter: drop-shadow(0 0 12px rgba(6,214,224,0.4));
+}
+.cmd-ring-btn:hover::after {
+    transform: rotate(90deg);
+    background: var(--violet);
 }
 .progress-ring-wrap svg, .cmd-ring-btn svg { transform: rotate(-90deg); }
 .progress-ring-bg { stroke: var(--border); }
@@ -1803,7 +1827,7 @@ select:hover, .btn:hover {
 .nav-brand:hover .brand-logo-wrap { filter: drop-shadow(0 0 18px rgba(6,214,224,0.5)) drop-shadow(0 0 36px rgba(168,85,247,0.25)); transform: scale(1.08); }
 [data-theme="dark"] .nav-brand .brand-logo-wrap { filter: drop-shadow(0 0 14px rgba(6,214,224,0.4)) drop-shadow(0 0 28px rgba(168,85,247,0.15)); }
 [data-theme="dark"] .nav-brand:hover .brand-logo-wrap { filter: drop-shadow(0 0 24px rgba(6,214,224,0.6)) drop-shadow(0 0 48px rgba(168,85,247,0.3)); }
-.nav-brand { cursor: pointer; }
+.nav-brand { text-decoration: none; }
 
 /* ── Lesson page top controls (fixed top-right) ────────────────────── */
 .lesson-top-controls {

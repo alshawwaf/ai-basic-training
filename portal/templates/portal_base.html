@@ -14,7 +14,7 @@
 <body style="justify-content: center;">
     {% from "icons.html" import brand_logo %}
     <nav class="top-nav">
-        <div class="nav-brand" onclick="toggleCommandMenu(event)">{{ brand_logo(38) }}</div>
+        <a href="/" class="nav-brand">{{ brand_logo(38) }}</a>
         <div class="top-controls">
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="icon-sun">&#9728;</span>

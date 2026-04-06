@@ -825,27 +825,44 @@ select:hover, .btn:hover {
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    border-top: 1px solid rgba(6,214,224,0.18);
 }
 .nav-buttons a {
-    padding: 7px 18px;
+    padding: 9px 22px;
     border-radius: var(--radius);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
+    background: linear-gradient(180deg, rgba(6,214,224,0.10), rgba(6,214,224,0.04));
+    border: 1px solid rgba(6,214,224,0.45);
+    color: #e6edff;
     text-decoration: none;
     font-size: 13px;
-    transition: border-color 0.15s, transform 0.1s, background 0.15s;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 0 1px rgba(6,214,224,0.08), 0 2px 10px rgba(6,214,224,0.12);
+    transition: all 0.18s;
 }
 .nav-buttons a:hover {
-    border-color: var(--accent);
-    background: var(--accent-dim);
+    border-color: rgba(6,214,224,0.85);
+    background: linear-gradient(180deg, rgba(6,214,224,0.22), rgba(6,214,224,0.10));
+    color: #5cf2fb;
     transform: translateY(-1px);
+    box-shadow: 0 0 0 1px rgba(6,214,224,0.35), 0 4px 18px rgba(6,214,224,0.3);
 }
 .nav-buttons .kbd-hint {
-    font-size: 11px;
-    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    color: #c4ccea;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.nav-buttons .kbd-hint .kbd {
+    background: rgba(6,214,224,0.10);
+    border: 1px solid rgba(6,214,224,0.4);
+    color: #5cf2fb;
+    font-weight: 700;
+    padding: 3px 8px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 /* ── Table ───────────────────────────────────────────────────────────────── */

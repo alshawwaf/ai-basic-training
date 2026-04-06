@@ -356,6 +356,7 @@ function openHintModal() {
 function closeHintModal() {
     document.getElementById('hintModal').classList.remove('open');
     document.getElementById('hintOverlay').classList.remove('open');
+    if (typeof activateExploreLp === 'function') activateExploreLp();
 }
 
 function showAnswer() {

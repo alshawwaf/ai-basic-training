@@ -1189,6 +1189,16 @@ select:hover, .btn:hover {
     width: 600px;
     height: 260px;
 }
+.hero-brand {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+    filter: drop-shadow(0 0 16px rgba(6,214,224,0.3));
+}
+[data-theme="dark"] .hero-brand { filter: drop-shadow(0 0 24px rgba(6,214,224,0.5)) drop-shadow(0 0 48px rgba(168,85,247,0.2)); }
+
 .portal-home h1 {
     position: relative;
     font-size: 48px;
@@ -1497,6 +1507,32 @@ select:hover, .btn:hover {
     flex-shrink: 0;
     color: #fff;
 }
+.stage-icon-wrap {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px;
+}
+[data-theme="dark"] .stage-icon-wrap {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+}
+.stage-icon-wrap.s1 { box-shadow: 0 0 16px rgba(6,182,212,0.15); }
+.stage-icon-wrap.s2 { box-shadow: 0 0 16px rgba(139,92,246,0.15); }
+.stage-icon-wrap.s3 { box-shadow: 0 0 16px rgba(245,158,11,0.15); }
+.stage-icon-wrap.s4 { box-shadow: 0 0 16px rgba(244,63,94,0.15); }
+.stage-icon-wrap.s5 { box-shadow: 0 0 16px rgba(16,185,129,0.15); }
+[data-theme="dark"] .stage-icon-wrap.s1 { box-shadow: 0 0 20px rgba(6,214,224,0.3); }
+[data-theme="dark"] .stage-icon-wrap.s2 { box-shadow: 0 0 20px rgba(168,85,247,0.3); }
+[data-theme="dark"] .stage-icon-wrap.s3 { box-shadow: 0 0 20px rgba(245,158,11,0.3); }
+[data-theme="dark"] .stage-icon-wrap.s4 { box-shadow: 0 0 20px rgba(244,63,94,0.3); }
+[data-theme="dark"] .stage-icon-wrap.s5 { box-shadow: 0 0 20px rgba(34,211,160,0.3); }
 .stage-num.s1 { background: linear-gradient(135deg, #06b6d4, #0891b2); box-shadow: 0 4px 14px rgba(6,182,212,0.3); }
 .stage-num.s2 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 4px 14px rgba(139,92,246,0.3); }
 .stage-num.s3 { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245,158,11,0.3); }
@@ -1813,6 +1849,9 @@ select:hover, .btn:hover {
     .portal-home h1 { font-size: 26px; }
     .stage-header { flex-wrap: wrap; }
     .stage-num { width: 36px; height: 36px; font-size: 16px; }
+    .stage-icon-wrap { width: 40px; height: 40px; }
+    .stage-icon-wrap svg { width: 36px; height: 36px; }
+    .hero-brand svg { width: 44px; height: 44px; }
 }
 
 /* ── Feature Engineering lesson (s2_01) ──────────────────────────────────── */

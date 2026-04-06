@@ -1,7 +1,10 @@
 {% extends "portal_base.html" %}
 {% block title %}Stage {{ stage.num }}: {{ stage.title }} — AI Ninja Program{% endblock %}
+{% from "icons.html" import stage_icon_s1, stage_icon_s2, stage_icon_s3, stage_icon_s4, stage_icon_s5 %}
 
 {% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
+
+{% set stage_icons = {"s1": stage_icon_s1, "s2": stage_icon_s2, "s3": stage_icon_s3, "s4": stage_icon_s4, "s5": stage_icon_s5} %}
 
 {% block body %}
 <div class="stage-detail">
@@ -10,7 +13,7 @@
     <div class="stage-card {{ stage.id }}" style="margin-bottom: 24px;">
         <div class="stage-card-glow {{ stage.id }}"></div>
         <div class="stage-header">
-            <div class="stage-num {{ stage.id }}">{{ stage.num }}</div>
+            <div class="stage-icon-wrap {{ stage.id }}">{{ stage_icons[stage.id](44) }}</div>
             <div class="stage-info">
                 <h2>Stage {{ stage.num }}: {{ stage.title }}</h2>
                 <p>{{ stage.desc }}</p>

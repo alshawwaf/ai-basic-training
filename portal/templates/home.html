@@ -1,14 +1,18 @@
 {% extends "portal_base.html" %}
 {% block title %}AI Ninja Program — Training Portal{% endblock %}
+{% from "icons.html" import brand_logo, stage_icon_s1, stage_icon_s2, stage_icon_s3, stage_icon_s4, stage_icon_s5 %}
 
 {% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
+
+{# Map stage id to its icon macro #}
+{% set stage_icons = {"s1": stage_icon_s1, "s2": stage_icon_s2, "s3": stage_icon_s3, "s4": stage_icon_s4, "s5": stage_icon_s5} %}
 
 {# ── Reusable stage card (avoids repeating HTML 5 times) ──────────── #}
 {% macro stage_card(stage) %}
 <div class="stage-card {{ stage.id }}">
     <div class="stage-card-glow {{ stage.id }}"></div>
     <div class="stage-header">
-        <div class="stage-num {{ stage.id }}">{{ stage.num }}</div>
+        <div class="stage-icon-wrap {{ stage.id }}">{{ stage_icons[stage.id](44) }}</div>
         <div class="stage-info">
             <h2>{{ stage.title }}</h2>
             <p>{{ stage.desc }}</p>
@@ -40,6 +44,7 @@
 <div class="portal-home">
     <div class="portal-hero">
         <div class="hero-glow"></div>
+        <div class="hero-brand">{{ brand_logo(56) }}</div>
         <h1>AI Ninja Program</h1>
         <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
         <div class="hero-stats">

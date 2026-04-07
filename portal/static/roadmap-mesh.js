@@ -39,27 +39,31 @@
 
     /* ── Satellite layout ──────────────────────────────────────────────── */
 
-    /* Place each satellite in cluster on an arc. The arc fans outward from
-     * the cluster's outer side (left for `.left`, right for `.right`).
-     * Returns an array of {sat, sx, sy, cx, cy} for the branch drawer. */
+    /* Place each satellite in the cluster's .neuron-stage area on an arc.
+     * The arc fans outward from the cluster's outer side (left for `.left`,
+     * right for `.right`). Returns an array of {sat, sx, sy, cx, cy} that
+     * the branch drawer consumes — coordinates are stage-local. */
     function layoutCluster(cluster) {
-        const core = cluster.querySelector('.neuron-core');
-        const sats = cluster.querySelectorAll('.neuron-satellite');
-        if (!core || sats.length === 0) return [];
+        const stage = cluster.querySelector('.neuron-stage');
+        const core  = cluster.querySelector('.neuron-core');
+        const sats  = cluster.querySelectorAll('.neuron-satellite');
+        if (!stage || !core || sats.length === 0) return [];
 
         const isLeft = cluster.classList.contains('left');
-        const cRect  = cluster.getBoundingClientRect();
+        const sRect  = stage.getBoundingClientRect();
         const coreR  = core.getBoundingClientRect();
-        const cx = coreR.left + coreR.width  / 2 - cRect.left;
-        const cy = coreR.top  + coreR.height / 2 - cRect.top;
+        /* Half the satellite dot — used to align the branch endpoint with
+         * the centre of the dot rather than the edge of the link element. */
+        const DOT_HALF = 15;
+        const cx = coreR.left + coreR.width  / 2 - sRect.left;
+        const cy = coreR.top  + coreR.height / 2 - sRect.top;
 
         const N = sats.length;
-        /* Arc parameters tuned for 4–6 satellites. The arc spans 150°
-         * symmetric around the outward normal so satellites never collide
-         * with the core. radius is the distance from core centre to
-         * satellite centre. */
-        const radius   = 200;
-        const arcDeg   = 150;
+        /* Arc parameters tuned for 4–6 satellites. A 120° arc keeps the
+         * top and bottom satellites well clear of the title strip while
+         * still giving each one breathing room. */
+        const radius   = 180;
+        const arcDeg   = 120;
         const halfArc  = arcDeg / 2;
 
         const placements = [];
@@ -81,16 +85,22 @@
             const sx = cx + dx * radius;
             const sy = cy + dy * radius;
 
-            /* Position the satellite element. We use top/left rather than
-             * transform so the click target stays accurately hit-tested. */
+            /* Position the satellite element relative to the stage. We use
+             * top/left in pixels so click targets stay accurately
+             * hit-tested. The translate() offset puts the centre of the
+             * 30px dot on (sx, sy):
+             *   - Left clusters use flex-direction: row-reverse, so the dot
+             *     sits at the right edge; offset the right edge to sx by
+             *     pulling the element 100% left then back right by DOT_HALF.
+             *   - Right clusters have the dot at the left edge; pull right
+             *     by DOT_HALF so the dot's centre lands on sx.
+             */
             sat.style.position = 'absolute';
             sat.style.left = `${sx}px`;
             sat.style.top  = `${sy}px`;
-            /* Anchor the dot at the centre of the computed point and let
-             * the label flow naturally to the side. */
             sat.style.transform = isLeft
-                ? 'translate(-100%, -50%)'
-                : 'translate(0%, -50%)';
+                ? `translate(calc(-100% + ${DOT_HALF}px), -50%)`
+                : `translate(${-DOT_HALF}px, -50%)`;
 
             placements.push({ sat, sx, sy, cx, cy, isLeft });
         });
@@ -112,10 +122,11 @@
     }
 
     function drawBranches(cluster, placements) {
-        const svg = cluster.querySelector('.neuron-branches');
-        if (!svg) return;
-        const cRect = cluster.getBoundingClientRect();
-        svg.setAttribute('viewBox', `0 0 ${cRect.width} ${cRect.height}`);
+        const svg   = cluster.querySelector('.neuron-branches');
+        const stage = cluster.querySelector('.neuron-stage');
+        if (!svg || !stage) return;
+        const sRect = stage.getBoundingClientRect();
+        svg.setAttribute('viewBox', `0 0 ${sRect.width} ${sRect.height}`);
         /* Clear previous paths. */
         Array.from(svg.querySelectorAll('.neuron-branch')).forEach(p => p.remove());
 

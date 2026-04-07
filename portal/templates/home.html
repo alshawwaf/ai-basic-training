@@ -10,31 +10,36 @@
 {# by roadmap-mesh.js and the branches drawn in the SVG layer. #}
 {% macro neuron_cluster(stage, side) %}
 <div class="neuron-cluster {{ stage.id }} {{ side }}" data-stage="{{ stage.id }}">
-    <svg class="neuron-branches" aria-hidden="true"></svg>
-
-    <div class="neuron-label">
+    <header class="neuron-header">
+        <div class="neuron-header-row">
+            <span class="neuron-stage-num">Stage {{ stage.num }}</span>
+            <span class="neuron-tier">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
+        </div>
         <h2>{{ stage.title }}</h2>
         <p>{{ stage.desc }}</p>
-        <span class="neuron-tier">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
-    </div>
+    </header>
 
-    <div class="neuron-core">
-        <span class="neuron-core-num">{{ stage.num }}</span>
-    </div>
+    <div class="neuron-stage">
+        <svg class="neuron-branches" aria-hidden="true"></svg>
 
-    {% for lesson in stage.lessons %}
-    {% set is_active = lesson.id in registered %}
-    <a href="{% if is_active %}/lesson/{{ lesson.id }}/{% else %}#{% endif %}"
-       class="neuron-satellite {{ stage.id }} {{ 'active' if is_active else 'gated' }}"
-       data-idx="{{ loop.index0 }}"
-       data-total="{{ stage.lessons | length }}"
-       {% if not is_active %}data-gated="true" aria-disabled="true"{% endif %}>
-        <span class="neuron-sat-dot">{{ lesson.num }}</span>
-        <span class="neuron-sat-label">
-            {{ lesson.title }}{% if is_active %}<span class="neuron-sat-visited" id="badge-{{ lesson.id }}"></span>{% endif %}
-        </span>
-    </a>
-    {% endfor %}
+        <div class="neuron-core">
+            <span class="neuron-core-num">{{ stage.num }}</span>
+        </div>
+
+        {% for lesson in stage.lessons %}
+        {% set is_active = lesson.id in registered %}
+        <a href="{% if is_active %}/lesson/{{ lesson.id }}/{% else %}#{% endif %}"
+           class="neuron-satellite {{ stage.id }} {{ 'active' if is_active else 'gated' }}"
+           data-idx="{{ loop.index0 }}"
+           data-total="{{ stage.lessons | length }}"
+           {% if not is_active %}data-gated="true" aria-disabled="true"{% endif %}>
+            <span class="neuron-sat-dot">{{ lesson.num }}</span>
+            <span class="neuron-sat-label">
+                {{ lesson.title }}{% if is_active %}<span class="neuron-sat-visited" id="badge-{{ lesson.id }}"></span>{% endif %}
+            </span>
+        </a>
+        {% endfor %}
+    </div>
 </div>
 {% endmacro %}
 

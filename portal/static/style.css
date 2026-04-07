@@ -2423,10 +2423,18 @@ select:hover, .btn:hover {
 /* On desktop the mesh replaces the single-arrow connectors entirely. */
 /* ══════════════════════════════════════════════════════════════════════════
    Neuron cluster — soma core, dendrite branches, lesson satellites
-   ══════════════════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════════
+   Each cluster is split into two stacked regions:
+     1. .neuron-header — full-width strip with stage title, description, tier.
+     2. .neuron-stage  — positioning context for the soma core, satellites,
+                         and the SVG branch layer.
+   Keeping the title strip outside the stage prevents text from colliding
+   with the dendrite arc.
+*/
 .neuron-cluster {
     position: relative;
-    height: 340px;
+    display: flex;
+    flex-direction: column;
     --cluster-c: var(--violet);
     --cluster-c-soft: rgba(168,85,247,0.18);
     --cluster-c-mid:  rgba(168,85,247,0.45);
@@ -2436,6 +2444,69 @@ select:hover, .btn:hover {
 .neuron-cluster.s3 { --cluster-c: var(--orange); --cluster-c-soft: rgba(245,158,11,0.18); --cluster-c-mid: rgba(245,158,11,0.45); }
 .neuron-cluster.s4 { --cluster-c: var(--red);    --cluster-c-soft: rgba(244,63,94,0.18);  --cluster-c-mid: rgba(244,63,94,0.45);  }
 .neuron-cluster.s5 { --cluster-c: var(--green);  --cluster-c-soft: rgba(34,211,160,0.18); --cluster-c-mid: rgba(34,211,160,0.45); }
+
+/* ── Header strip ──────────────────────────────────────────────────────── */
+.neuron-header {
+    padding: 4px 24px 14px;
+    max-width: 640px;
+    margin-bottom: 6px;
+}
+.neuron-cluster.left  .neuron-header { text-align: left;  margin-right: auto; }
+.neuron-cluster.right .neuron-header { text-align: right; margin-left:  auto; }
+.neuron-header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+.neuron-cluster.right .neuron-header-row { justify-content: flex-end; }
+.neuron-stage-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--cluster-c);
+    opacity: 0.85;
+}
+.neuron-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin: 0 0 6px;
+    white-space: nowrap;
+}
+.neuron-header p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 460px;
+}
+.neuron-cluster.right .neuron-header p { margin-left: auto; }
+.neuron-tier {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cluster-c);
+    background: color-mix(in srgb, var(--cluster-c) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cluster-c) 30%, transparent);
+}
+[data-theme="dark"] .neuron-tier {
+    text-shadow: 0 0 8px color-mix(in srgb, var(--cluster-c) 60%, transparent);
+}
+
+/* ── Stage area ────────────────────────────────────────────────────────── */
+.neuron-stage {
+    position: relative;
+    height: 360px;
+    width: 100%;
+}
 
 /* SVG layer — branches drawn by roadmap-mesh.js, sits behind everything. */
 .neuron-branches {
@@ -2461,8 +2532,8 @@ select:hover, .btn:hover {
 /* ── Soma core ─────────────────────────────────────────────────────────── */
 .neuron-core {
     position: absolute;
-    width: 132px;
-    height: 132px;
+    width: 108px;
+    height: 108px;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%,
                 color-mix(in srgb, var(--cluster-c) 85%, white 15%),
@@ -2496,7 +2567,7 @@ select:hover, .btn:hover {
 .neuron-cluster.is-hovered .neuron-core { transform: scale(1.06); }
 .neuron-core-num {
     font-family: 'Space Mono', monospace;
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 700;
     color: #fff;
     text-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 24px var(--cluster-c);
@@ -2518,51 +2589,13 @@ select:hover, .btn:hover {
     pointer-events: none;
 }
 
-/* ── Cluster label (stage title + tier) ────────────────────────────────── */
-.neuron-label {
-    position: absolute;
-    z-index: 3;
-    max-width: 280px;
-}
-.neuron-label h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.15;
-    margin-bottom: 6px;
-}
-.neuron-label p {
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.45;
-    margin-bottom: 10px;
-}
-.neuron-tier {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--cluster-c);
-    background: color-mix(in srgb, var(--cluster-c) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--cluster-c) 30%, transparent);
-}
-[data-theme="dark"] .neuron-tier {
-    text-shadow: 0 0 8px color-mix(in srgb, var(--cluster-c) 60%, transparent);
-}
-
-/* Cluster orientation: left-anchored (S1, S3, S5) places the core on the
- * right side and the satellites/label fan out to the left. Right-anchored
- * (S2, S4) is mirrored. JS positions individual satellites. */
-.neuron-cluster.left  .neuron-core   { right: calc(50% + 80px); top: 50%; transform: translate(50%, -50%); }
-.neuron-cluster.right .neuron-core   { left:  calc(50% + 80px); top: 50%; transform: translate(-50%, -50%); }
-.neuron-cluster.is-hovered.left  .neuron-core { transform: translate(50%, -50%) scale(1.06); }
-.neuron-cluster.is-hovered.right .neuron-core { transform: translate(-50%, -50%) scale(1.06); }
-
-.neuron-cluster.left  .neuron-label  { right: calc(50% + 220px); top: 50%; transform: translateY(-50%); text-align: right; }
-.neuron-cluster.right .neuron-label  { left:  calc(50% + 220px); top: 50%; transform: translateY(-50%); text-align: left;  }
+/* Core position within the stage area. Left-anchored clusters keep the
+ * core in the right third of the stage so the satellites can fan left.
+ * Right-anchored clusters mirror that. */
+.neuron-cluster.left  .neuron-stage > .neuron-core { right: 32%; top: 50%; transform: translate(50%, -50%); }
+.neuron-cluster.right .neuron-stage > .neuron-core { left:  32%; top: 50%; transform: translate(-50%, -50%); }
+.neuron-cluster.is-hovered.left  .neuron-stage > .neuron-core { transform: translate(50%, -50%) scale(1.06); }
+.neuron-cluster.is-hovered.right .neuron-stage > .neuron-core { transform: translate(-50%, -50%) scale(1.06); }
 
 /* ── Lesson satellites ─────────────────────────────────────────────────── */
 .neuron-satellite {
@@ -2573,7 +2606,7 @@ select:hover, .btn:hover {
     gap: 10px;
     text-decoration: none;
     transition: transform 0.3s ease;
-    /* JS sets top + left in pixels relative to the cluster. */
+    /* JS sets top + left in pixels relative to the .neuron-stage. */
 }
 .neuron-sat-dot {
     width: 30px;
@@ -2614,7 +2647,10 @@ select:hover, .btn:hover {
     opacity: 0.85;
     transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
-.neuron-cluster.right .neuron-satellite { flex-direction: row-reverse; }
+/* For left-anchored clusters the dot is on the right (closest to the core)
+ * and the label flows left. For right-anchored clusters it's the natural
+ * order: dot on the left, label flows right. */
+.neuron-cluster.left .neuron-satellite { flex-direction: row-reverse; }
 
 .neuron-satellite:hover .neuron-sat-dot {
     transform: scale(1.25);
@@ -3344,24 +3380,35 @@ select:hover, .btn:hover {
      * collapsed to a vertical list under each core. */
     .roadmap { gap: 32px; padding: 12px 0 40px; }
     .neuron-cluster {
-        height: auto;
-        min-height: auto;
-        display: flex;
-        flex-direction: column;
         align-items: center;
         gap: 12px;
         padding: 16px 0;
     }
-    .neuron-cluster .neuron-branches { display: none; }
-    .neuron-cluster.left  .neuron-core,
-    .neuron-cluster.right .neuron-core { position: relative; left: auto; right: auto; top: auto; transform: none; }
-    .neuron-cluster.is-hovered.left  .neuron-core,
-    .neuron-cluster.is-hovered.right .neuron-core { transform: scale(1.04); }
-    .neuron-cluster.left  .neuron-label,
-    .neuron-cluster.right .neuron-label {
-        position: relative; left: auto; right: auto; top: auto;
-        transform: none; text-align: center; max-width: 90%;
+    .neuron-cluster.left  .neuron-header,
+    .neuron-cluster.right .neuron-header {
+        text-align: center;
+        margin: 0 auto;
+        max-width: 90%;
+        padding: 4px 12px 8px;
     }
+    .neuron-cluster.left  .neuron-header-row,
+    .neuron-cluster.right .neuron-header-row { justify-content: center; }
+    .neuron-cluster.right .neuron-header p { margin: 0 auto; }
+    .neuron-header h2 { white-space: normal; }
+    .neuron-stage {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .neuron-cluster .neuron-branches { display: none; }
+    .neuron-cluster.left  .neuron-stage > .neuron-core,
+    .neuron-cluster.right .neuron-stage > .neuron-core {
+        position: relative; left: auto; right: auto; top: auto; transform: none;
+    }
+    .neuron-cluster.is-hovered.left  .neuron-stage > .neuron-core,
+    .neuron-cluster.is-hovered.right .neuron-stage > .neuron-core { transform: scale(1.04); }
     .neuron-cluster .neuron-satellite {
         position: relative !important;
         top: auto !important;

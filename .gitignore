@@ -7,3 +7,6 @@ venv/
 *.png
 # Keep asset images
 !ops/assets/*.png
+
+# Per-deployment portal settings (admin-toggleable home view, etc.)
+portal/site_settings.json

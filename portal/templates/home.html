@@ -1,13 +1,49 @@
 {% extends "portal_base.html" %}
 {% block title %}AI Ninja Program — Training Portal{% endblock %}
-{% from "icons.html" import brand_logo %}
+{% from "icons.html" import brand_logo, stage_icon_s1, stage_icon_s2, stage_icon_s3, stage_icon_s4, stage_icon_s5 %}
 
 {% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
 
-{# ── Neuron cluster — soma core + lesson satellites ──────────────────── #}
+{# Map stage id to its icon macro — used by the cards view. #}
+{% set stage_icons = {"s1": stage_icon_s1, "s2": stage_icon_s2, "s3": stage_icon_s3, "s4": stage_icon_s4, "s5": stage_icon_s5} %}
+
+{# ── Stage card (default cards view) ──────────────────────────────────── #}
+{% macro stage_card(stage) %}
+<div class="stage-card {{ stage.id }}">
+    <div class="stage-card-glow {{ stage.id }}"></div>
+    <div class="stage-header">
+        <div class="stage-icon-wrap {{ stage.id }}">{{ stage_icons[stage.id](32) }}</div>
+        <div class="stage-info">
+            <h2>{{ stage.title }}</h2>
+            <p>{{ stage.desc }}</p>
+        </div>
+    </div>
+    <span class="tier-badge {{ stage.id }}">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
+    <div class="lesson-cards roadmap-lessons">
+        {% for lesson in stage.lessons %}
+        <a href="/lesson/{{ lesson.id }}/"
+           class="lesson-card {{ stage.id }} {{ 'active' if lesson.id in registered else 'gated' }}"
+           {% if lesson.id not in registered %}data-gated="true"{% endif %}>
+            <div class="lesson-num {{ stage.id }}">{{ lesson.num }}</div>
+            <div class="lesson-info">
+                <div class="title">{{ lesson.title }}</div>
+                <div class="desc">{{ lesson.desc }}</div>
+            </div>
+            {% if lesson.id in registered %}
+            <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
+            {% else %}
+            <span class="lesson-lock">Soon</span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
+
+{# ── Neuron cluster (opt-in via admin Display Settings) ──────────────── #}
 {# Each stage renders as a glowing neuron node, with lessons as satellite #}
 {# dots radiating outward as dendrite branches. Satellites are positioned #}
-{# by roadmap-mesh.js and the branches drawn in the SVG layer. #}
+{# by roadmap-mesh-neuron.js and the branches drawn in the SVG layer. #}
 {% macro neuron_cluster(stage, side) %}
 <div class="neuron-cluster {{ stage.id }} {{ side }}" data-stage="{{ stage.id }}">
     <header class="neuron-header">
@@ -43,8 +79,15 @@
 </div>
 {% endmacro %}
 
+{# View dispatcher. Default to cards; admin can flip to neuron in /admin. #}
+{% set view = home_view | default('cards') %}
+
 {% block scripts %}
-<script src="/static/roadmap-mesh.js"></script>
+{% if view == 'neuron' %}
+<script src="/static/roadmap-mesh-neuron.js"></script>
+{% else %}
+<script src="/static/roadmap-mesh-cards.js"></script>
+{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -72,9 +115,9 @@
 
     </div>
 
-    <div class="roadmap">
-        {# Inter-stage mesh overlay drawn by roadmap-mesh.js — synapses
-           between neuron cores. #}
+    {% if view == 'neuron' %}
+    {# ── Neuron view ─────────────────────────────────────────────────── #}
+    <div class="roadmap view-neuron">
         <svg class="roadmap-mesh" id="roadmap-mesh" aria-hidden="true"></svg>
         <div class="roadmap-stage" style="animation-delay: 0s;">
             {{ neuron_cluster(stages[0], 'left') }}
@@ -92,33 +135,70 @@
             {{ neuron_cluster(stages[4], 'left') }}
         </div>
     </div>
+    {% else %}
+    {# ── Cards view (default) ────────────────────────────────────────── #}
+    <div class="roadmap view-cards">
+        {# Neural-network mesh overlay (drawn by roadmap-mesh-cards.js) #}
+        <svg class="roadmap-mesh" id="roadmap-mesh" aria-hidden="true"></svg>
+        {# Row 1: Stage 1 → Stage 2 #}
+        <div class="roadmap-stage rpos-1" style="animation-delay: 0s;">
+            {{ stage_card(stages[0]) }}
+        </div>
+        <div class="rm-arrow rm-h rm-r rm-1-2"><span class="pulse-dot"></span></div>
+        <div class="roadmap-stage rpos-2" style="animation-delay: 0.12s;">
+            {{ stage_card(stages[1]) }}
+        </div>
+
+        {# Vertical drop: right side, S2 → S3 #}
+        <div class="rm-arrow rm-v rm-2-3"><span class="pulse-dot"></span></div>
+
+        {# Row 2: Stage 4 ← Stage 3 (S3 on right, S4 on left) #}
+        <div class="roadmap-stage rpos-4" style="animation-delay: 0.36s;">
+            {{ stage_card(stages[3]) }}
+        </div>
+        <div class="rm-arrow rm-h rm-l rm-3-4"><span class="pulse-dot"></span></div>
+        <div class="roadmap-stage rpos-3" style="animation-delay: 0.24s;">
+            {{ stage_card(stages[2]) }}
+        </div>
+
+        {# Vertical drop: left side, S4 → S5 #}
+        <div class="rm-arrow rm-v rm-4-5"><span class="pulse-dot"></span></div>
+
+        {# Row 3: Stage 5 #}
+        <div class="roadmap-stage rpos-5" style="animation-delay: 0.48s;">
+            {{ stage_card(stages[4]) }}
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 
 <script>
-    // Completion badges — show "N steps" inline next to each visited lesson satellite.
+    // Completion badges — appended inline next to each visited lesson.
+    // Cards view: "N visited"; neuron view: " · N".
     try {
         const visited = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+        const isNeuron = {{ 'true' if view == 'neuron' else 'false' }};
         Object.keys(visited).forEach(lessonId => {
             const badge = document.getElementById('badge-' + lessonId);
             const steps = visited[lessonId] || [];
             if (badge && steps.length > 0) {
-                badge.textContent = ' · ' + steps.length;
+                badge.textContent = isNeuron ? (' · ' + steps.length) : (steps.length + ' visited');
             }
         });
     } catch(e) {}
 
-    // Auto-scroll to the most recently visited lesson satellite on load.
+    // Auto-scroll to the most recently visited lesson on page load.
     try {
         const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
         if (last && last.lessonId) {
             const badge = document.getElementById('badge-' + last.lessonId);
-            const sat = badge && badge.closest('.neuron-satellite');
-            if (sat) {
+            const target = badge && (badge.closest('.lesson-card') || badge.closest('.neuron-satellite'));
+            if (target) {
                 setTimeout(() => {
-                    sat.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    sat.classList.add('cmd-highlight');
-                    setTimeout(() => sat.classList.remove('cmd-highlight'), 2000);
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.classList.add('cmd-highlight');
+                    setTimeout(() => target.classList.remove('cmd-highlight'), 2000);
                 }, 600);
             }
         }

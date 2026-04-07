@@ -28,6 +28,7 @@ from flask import (
 )
 from config import STAGES, get_all_lessons, get_lesson
 from runner import run_script, run_script_stream
+from site_settings import ALLOWED_HOME_VIEWS, get_home_view, set_home_view
 
 warnings.filterwarnings("ignore")
 
@@ -81,7 +82,12 @@ for stage in STAGES:
 
 @app.route("/")
 def home():
-    return render_template("home.html", stages=STAGES, registered=registered_lessons)
+    return render_template(
+        "home.html",
+        stages=STAGES,
+        registered=registered_lessons,
+        home_view=get_home_view(),
+    )
 
 
 @app.route("/lesson/<lesson_id>/")
@@ -89,7 +95,12 @@ def lesson_placeholder(lesson_id):
     """Placeholder page for lessons not yet built (demo mode)."""
     if lesson_id in registered_lessons:
         # Blueprint handles this — redirect just in case
-        return render_template("home.html", stages=STAGES, registered=registered_lessons)
+        return render_template(
+            "home.html",
+            stages=STAGES,
+            registered=registered_lessons,
+            home_view=get_home_view(),
+        )
     lesson = get_lesson(lesson_id)
     if not lesson:
         return "Not found", 404
@@ -171,7 +182,28 @@ def admin_console():
     redirect_response = _require_admin()
     if redirect_response is not None:
         return redirect_response
-    return render_template("admin.html")
+    saved = request.args.get("saved")  # 'view' after a successful settings POST
+    return render_template(
+        "admin.html",
+        home_view=get_home_view(),
+        allowed_home_views=ALLOWED_HOME_VIEWS,
+        saved=saved,
+    )
+
+
+@app.route("/admin/settings", methods=["POST"])
+def admin_update_settings():
+    """Persist instructor-only display settings (currently just home_view)."""
+    redirect_response = _require_admin()
+    if redirect_response is not None:
+        return redirect_response
+    new_view = request.form.get("home_view", "")
+    if new_view not in ALLOWED_HOME_VIEWS:
+        # Bounce back without saving — the form only ever sends a valid value,
+        # so this only triggers on a hand-crafted request.
+        return redirect(url_for("admin_console"))
+    set_home_view(new_view)
+    return redirect(url_for("admin_console", saved="view"))
 
 
 @app.route("/proposal.<fmt>")

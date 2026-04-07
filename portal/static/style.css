@@ -2084,6 +2084,96 @@ select:hover, .btn:hover {
     color: var(--text-dim);
 }
 
+/* ── Display Settings — home view toggle ─────────────────────────────── */
+.admin-saved-flash {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(34,211,160,0.08);
+    border: 1px solid rgba(34,211,160,0.35);
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 600;
+}
+.admin-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.admin-view-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.admin-view-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.admin-view-option:hover {
+    border-color: rgba(6,214,224,0.45);
+}
+.admin-view-option input[type="radio"] {
+    margin-top: 4px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+}
+.admin-view-option.is-selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 4px 18px rgba(6,214,224,0.18);
+    background: linear-gradient(135deg, rgba(6,214,224,0.07), rgba(168,85,247,0.07));
+}
+.admin-view-option-body { flex: 1; min-width: 0; }
+.admin-view-option-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.admin-view-option-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+.admin-view-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(6,214,224,0.12);
+    border: 1px solid rgba(6,214,224,0.4);
+    color: var(--accent);
+    font-weight: 600;
+}
+.admin-view-tag-exp {
+    background: rgba(168,85,247,0.10);
+    border-color: rgba(168,85,247,0.4);
+    color: var(--violet);
+}
+.admin-settings-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+@media (max-width: 720px) {
+    .admin-view-toggle { grid-template-columns: 1fr; }
+}
+
 .admin-footnote {
     margin-top: 56px;
     padding: 14px 18px;
@@ -2367,26 +2457,27 @@ select:hover, .btn:hover {
 .hero-stat-sep { width: 1px; height: 24px; background: var(--border); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   Roadmap — neuron cluster chain
-   Each stage is rendered as a glowing soma core with lesson satellites
-   radiating outward as dendrite branches. Inter-stage mesh connects the
-   cores. There are no rectangular cards on the home page anymore.
+   Roadmap — two-column zigzag grid (default cards view)
+   The home page can render in one of two layouts; the admin console picks
+   which one. The cards view is the default and uses a CSS grid that
+   alternates left/right column with horizontal/vertical connector arrows.
+   The neuron view is opt-in and uses a flex column with .view-neuron
+   overrides further down.
    ══════════════════════════════════════════════════════════════════════════ */
 .roadmap {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+    display: grid;
+    grid-template-columns: 1fr 72px 1fr;
+    grid-template-rows: auto 52px auto 52px auto;
+    align-items: stretch;
     position: relative;
-    padding: 24px 0 60px;
 }
 .roadmap-stage {
     animation: fadeSlideUp 0.6s ease both;
     position: relative;
     z-index: 1;
-    width: 100%;
 }
 
-/* ── Neural-network mesh overlay (drawn by roadmap-mesh.js) ────────────── */
+/* ── Neural-network mesh overlay (drawn by roadmap-mesh-cards.js) ──────── */
 .roadmap-mesh {
     position: absolute;
     inset: 0;
@@ -2398,29 +2489,268 @@ select:hover, .btn:hover {
 }
 .mesh-path {
     fill: none;
-    stroke-width: 2;
+    stroke-width: 1.6;
     stroke-linecap: round;
-    opacity: 0.7;
+    opacity: 0.55;
     transition: opacity 0.45s ease, stroke-width 0.3s ease, stroke 0.3s ease;
 }
 .mesh-path[data-pair="s1-s2"] { stroke: var(--violet); }
 .mesh-path[data-pair="s2-s3"] { stroke: var(--accent); }
 .mesh-path[data-pair="s3-s4"] { stroke: var(--orange); }
 .mesh-path[data-pair="s4-s5"] { stroke: var(--red);    }
-.mesh-path.mesh-dropped { opacity: 0.18; }
-.mesh-path.mesh-active {
+.mesh-path.mesh-dropped { opacity: 0.12; }
+/* When any lesson is hovered, gently mute the rest of the web and
+ * highlight that lesson's own incoming + outgoing connections. The
+ * non-active paths stay readable so the mesh doesn't collapse into
+ * an empty stage with one glowing line. */
+.roadmap-mesh.mesh-hover .mesh-path { opacity: 0.38; }
+.roadmap-mesh.mesh-hover .mesh-path.mesh-active {
+    opacity: 1;
+    stroke-width: 2.6;
+    filter: drop-shadow(0 0 1.5px currentColor);
+}
+[data-theme="dark"] .mesh-path { opacity: 0.6; }
+[data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.14; }
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path { opacity: 0.42; }
+/* Active state in dark mode: bright, almost-white inner stroke with the
+ * stage colour serving as a tight aura around it. */
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active {
+    stroke-width: 2.4;
+    filter: none;
+}
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s1-s2"] {
+    stroke: #e9d5ff;
+    filter: drop-shadow(0 0 1.5px #a855f7);
+}
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s2-s3"] {
+    stroke: #cffafe;
+    filter: drop-shadow(0 0 1.5px #06d6e0);
+}
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s3-s4"] {
+    stroke: #fef3c7;
+    filter: drop-shadow(0 0 1.5px #f59e0b);
+}
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s4-s5"] {
+    stroke: #ffe4e6;
+    filter: drop-shadow(0 0 1.5px #f43f5e);
+}
+
+/* On desktop the mesh replaces the single-arrow connectors entirely. */
+@media (min-width: 961px) {
+    .rm-arrow.rm-h::before,
+    .rm-arrow.rm-h::after,
+    .rm-arrow.rm-v::before,
+    .rm-arrow.rm-v::after,
+    .pulse-dot {
+        display: none !important;
+    }
+}
+
+/* Grid positions (zigzag: 1→2 then 3←4 then 5) */
+.rpos-1 { grid-column: 1; grid-row: 1; }
+.rpos-2 { grid-column: 3; grid-row: 1; }
+.rpos-3 { grid-column: 3; grid-row: 3; }
+.rpos-4 { grid-column: 1; grid-row: 3; }
+.rpos-5 { grid-column: 1; grid-row: 5; }
+
+.rm-1-2 { grid-column: 2; grid-row: 1; }
+.rm-2-3 { grid-column: 3; grid-row: 2; }
+.rm-3-4 { grid-column: 2; grid-row: 3; }
+.rm-4-5 { grid-column: 1; grid-row: 4; }
+
+/* ── Horizontal connector arrows ─────────────────────────────────────── */
+.rm-arrow.rm-h {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 6px;
+}
+.rm-arrow.rm-h::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    height: 3px;
+    border-radius: 2px;
+    transform: translateY(-50%);
+}
+.rm-arrow.rm-h::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+}
+/* Right-pointing (S1 → S2) */
+.rm-h.rm-r::before {
+    left: 0;
+    right: 14px;
+    background: linear-gradient(90deg, var(--accent), var(--violet));
+}
+.rm-h.rm-r::after {
+    right: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid var(--violet);
+    filter: drop-shadow(0 0 4px rgba(139,92,246,0.4));
+}
+/* Left-pointing (S3 → S4) */
+.rm-h.rm-l::before {
+    right: 0;
+    left: 14px;
+    background: linear-gradient(90deg, var(--red), var(--orange));
+}
+.rm-h.rm-l::after {
+    left: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 12px solid var(--red);
+    filter: drop-shadow(0 0 4px rgba(244,63,94,0.4));
+}
+
+/* ── Vertical connector arrows ───────────────────────────────────────── */
+.rm-arrow.rm-v {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 6px 0;
+}
+.rm-arrow.rm-v::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 3px;
+    border-radius: 2px;
+    transform: translateX(-50%);
+}
+.rm-arrow.rm-v::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+}
+/* S2 → S3 (right column, down) */
+.rm-2-3::before {
+    top: 0;
+    bottom: 14px;
+    background: linear-gradient(180deg, var(--violet), var(--orange));
+}
+.rm-2-3::after {
+    bottom: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 12px solid var(--orange);
+    filter: drop-shadow(0 0 4px rgba(245,158,11,0.4));
+}
+/* S4 → S5 (left column, down) */
+.rm-4-5::before {
+    top: 0;
+    bottom: 14px;
+    background: linear-gradient(180deg, var(--red), var(--green));
+}
+.rm-4-5::after {
+    bottom: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 12px solid var(--green);
+    filter: drop-shadow(0 0 4px rgba(16,185,129,0.4));
+}
+
+/* Animated pulse travelling along the connector arrows */
+@keyframes arrowPulseH {
+    0%   { left: 0; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { left: calc(100% - 16px); opacity: 0; }
+}
+@keyframes arrowPulseHRev {
+    0%   { right: 0; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { right: calc(100% - 16px); opacity: 0; }
+}
+@keyframes arrowPulseV {
+    0%   { top: 0; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { top: calc(100% - 16px); opacity: 0; }
+}
+.rm-h.rm-r .pulse-dot {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--violet);
+    box-shadow: 0 0 8px var(--violet);
+    transform: translateY(-50%);
+    animation: arrowPulseH 2.2s ease-in-out infinite;
+}
+.rm-h.rm-l .pulse-dot {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+    transform: translateY(-50%);
+    animation: arrowPulseHRev 2.2s ease-in-out infinite;
+}
+.rm-v .pulse-dot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: arrowPulseV 2s ease-in-out infinite;
+}
+.rm-2-3 .pulse-dot { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.rm-4-5 .pulse-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
+[data-theme="dark"] .rm-h.rm-r .pulse-dot { box-shadow: 0 0 14px var(--violet), 0 0 30px rgba(168,85,247,0.3); }
+[data-theme="dark"] .rm-h.rm-l .pulse-dot { box-shadow: 0 0 14px var(--red), 0 0 30px rgba(244,63,94,0.3); }
+[data-theme="dark"] .rm-2-3 .pulse-dot    { box-shadow: 0 0 14px var(--orange), 0 0 30px rgba(245,158,11,0.3); }
+[data-theme="dark"] .rm-4-5 .pulse-dot    { box-shadow: 0 0 14px var(--green), 0 0 30px rgba(34,211,160,0.3); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Neuron view overrides — applied when admin flips the home view to neuron.
+   The .view-neuron modifier on .roadmap reshapes the container to a flex
+   column and tunes the inter-cluster mesh-path styling to match the
+   thicker, brighter dendrites the neuron clusters use.
+   ══════════════════════════════════════════════════════════════════════════ */
+.roadmap.view-neuron {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    gap: 28px;
+    padding: 24px 0 60px;
+}
+.roadmap.view-neuron .roadmap-stage { width: 100%; }
+.roadmap.view-neuron .mesh-path {
+    stroke-width: 2;
+    opacity: 0.7;
+}
+.roadmap.view-neuron .mesh-path.mesh-dropped { opacity: 0.18; }
+.roadmap.view-neuron .mesh-path.mesh-active {
     opacity: 1;
     stroke-width: 3;
     filter: drop-shadow(0 0 4px currentColor);
 }
-[data-theme="dark"] .mesh-path { opacity: 0.75; }
-[data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.2; }
-[data-theme="dark"] .mesh-path.mesh-active {
+[data-theme="dark"] .roadmap.view-neuron .mesh-path { opacity: 0.75; }
+[data-theme="dark"] .roadmap.view-neuron .mesh-path.mesh-dropped { opacity: 0.2; }
+[data-theme="dark"] .roadmap.view-neuron .mesh-path.mesh-active {
     stroke-width: 3.2;
     filter: drop-shadow(0 0 5px currentColor);
 }
 
-/* On desktop the mesh replaces the single-arrow connectors entirely. */
 /* ══════════════════════════════════════════════════════════════════════════
    Neuron cluster — soma core, dendrite branches, lesson satellites
    ══════════════════════════════════════════════════════════════════════════
@@ -3375,10 +3705,44 @@ select:hover, .btn:hover {
     .portal-home h1 { font-size: 32px; }
     .hero-stats { gap: 16px; }
     .hero-stat-val { font-size: 22px; }
+
+    /* ── Cards view (default) on mobile ──────────────────────────────── */
+    .roadmap.view-cards {
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: none;
+        grid-template-rows: none;
+        gap: 0;
+    }
+    .roadmap.view-cards .rpos-1 { order: 1; }
+    .roadmap.view-cards .rpos-2 { order: 3; }
+    .roadmap.view-cards .rpos-3 { order: 5; }
+    .roadmap.view-cards .rpos-4 { order: 7; }
+    .roadmap.view-cards .rpos-5 { order: 9; }
+    .roadmap.view-cards .rm-arrow.rm-h { display: none; }
+    .roadmap.view-cards .rm-2-3 { order: 4; height: 40px; }
+    .roadmap.view-cards .rm-4-5 { order: 8; height: 40px; }
+    /* Simple vertical connectors between stacked cards on mobile. */
+    .roadmap.view-cards .roadmap-stage::after {
+        content: '';
+        display: block;
+        width: 3px;
+        height: 28px;
+        margin: 6px auto;
+        border-radius: 2px;
+        background: var(--border);
+    }
+    .roadmap.view-cards .rpos-2::after,
+    .roadmap.view-cards .rpos-4::after { display: none; } /* rm-v handles these */
+    .roadmap.view-cards .rpos-5::after { display: none; }
+    .stage-card { padding: 18px; }
+    .tier-badge { font-size: 9px; }
+
+    /* ── Neuron view (opt-in) on mobile ──────────────────────────────── */
     /* Mobile fallback: stacked compact list rather than clusters. The
      * cluster layout assumes a wide canvas; on mobile the satellites are
      * collapsed to a vertical list under each core. */
-    .roadmap { gap: 32px; padding: 12px 0 40px; }
+    .roadmap.view-neuron { gap: 32px; padding: 12px 0 40px; }
     .neuron-cluster {
         align-items: center;
         gap: 12px;
@@ -3418,6 +3782,7 @@ select:hover, .btn:hover {
         gap: 12px;
     }
     .neuron-cluster .neuron-sat-label { white-space: normal; }
+
     .top-nav { padding: 6px 12px; }
     .top-controls { gap: 8px; }
     .theme-toggle { width: 34px; height: 34px; font-size: 16px; }

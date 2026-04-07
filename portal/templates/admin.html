@@ -19,6 +19,42 @@
 
     <section class="admin-section">
         <div class="admin-section-head">
+            <h2>Display Settings</h2>
+            <p>Pick the layout that public visitors see on the home page. Cards is the default; Neuron is an experimental view.</p>
+        </div>
+
+        {% if saved == 'view' %}
+        <div class="admin-saved-flash" role="status">Saved &middot; the home page is now using the {{ home_view }} view.</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('admin_update_settings') }}" class="admin-settings-form">
+            <fieldset class="admin-view-toggle" aria-label="Home page layout">
+                <label class="admin-view-option {{ 'is-selected' if home_view == 'cards' else '' }}">
+                    <input type="radio" name="home_view" value="cards"
+                           {% if home_view == 'cards' %}checked{% endif %}>
+                    <div class="admin-view-option-body">
+                        <div class="admin-view-option-title">Cards <span class="admin-view-tag">default</span></div>
+                        <div class="admin-view-option-desc">Zigzag stage cards with a neural-network mesh between them.</div>
+                    </div>
+                </label>
+                <label class="admin-view-option {{ 'is-selected' if home_view == 'neuron' else '' }}">
+                    <input type="radio" name="home_view" value="neuron"
+                           {% if home_view == 'neuron' %}checked{% endif %}>
+                    <div class="admin-view-option-body">
+                        <div class="admin-view-option-title">Neuron <span class="admin-view-tag admin-view-tag-exp">experimental</span></div>
+                        <div class="admin-view-option-desc">Glowing soma cores with lesson satellites radiating outward as dendrites.</div>
+                    </div>
+                </label>
+            </fieldset>
+            <div class="admin-settings-actions">
+                <button type="submit" class="admin-btn primary">Save view</button>
+                <a class="admin-btn" href="/" target="_blank" rel="noopener">Open home in new tab &rarr;</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="admin-section">
+        <div class="admin-section-head">
             <h2>Executive Proposal</h2>
             <p>The 8-slide briefing for sharing the AI Ninja Program with security engineering leadership.</p>
         </div>

@@ -1313,14 +1313,17 @@ select:hover, .btn:hover {
     border-color: rgba(6,214,224,0.22);
 }
 
-.welcome-gear {
+/* Reset-this-lesson button on the welcome topbar. Sized like the old
+   gear so the topbar layout is unchanged, but uses a circular-arrow
+   icon and rotates on hover to telegraph the destructive action. */
+.welcome-reset {
     width: 38px;
     height: 38px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--input-bg);
     color: var(--text-dim);
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1;
     cursor: pointer;
     display: inline-flex;
@@ -1329,12 +1332,12 @@ select:hover, .btn:hover {
     transition: all 0.25s ease;
     flex-shrink: 0;
 }
-.welcome-gear:hover {
-    background: linear-gradient(135deg, rgba(6,214,224,0.18), rgba(168,85,247,0.18));
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: rotate(60deg);
-    box-shadow: 0 0 18px rgba(6,214,224,0.3),
+.welcome-reset:hover {
+    background: linear-gradient(135deg, rgba(244,63,94,0.18), rgba(168,85,247,0.18));
+    border-color: var(--red);
+    color: var(--red);
+    transform: rotate(-90deg);
+    box-shadow: 0 0 18px rgba(244,63,94,0.30),
                 0 0 32px rgba(168,85,247,0.18);
 }
 
@@ -1402,7 +1405,7 @@ select:hover, .btn:hover {
 @media (max-width: 600px) {
     .welcome-topbar { margin-bottom: 22px; }
     .welcome-back { padding: 7px 12px; font-size: 12px; }
-    .welcome-gear { width: 34px; height: 34px; font-size: 15px; }
+    .welcome-reset { width: 34px; height: 34px; font-size: 16px; }
     .welcome-progress-meta { font-size: 11.5px; gap: 7px; }
 }
 
@@ -2261,36 +2264,6 @@ select:hover, .btn:hover {
 }
 .hero-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-top: 2px; }
 .hero-stat-sep { width: 1px; height: 24px; background: var(--border); }
-
-.hero-gear {
-    margin-left: 14px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid rgba(6,214,224,0.35);
-    background: rgba(6,214,224,0.07);
-    color: var(--accent);
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.28s ease;
-    flex-shrink: 0;
-}
-.hero-gear:hover {
-    background: linear-gradient(135deg, rgba(6,214,224,0.22), rgba(168,85,247,0.22));
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: rotate(60deg);
-    box-shadow: 0 0 18px rgba(6,214,224,0.4),
-                0 0 36px rgba(168,85,247,0.22);
-}
-[data-theme="dark"] .hero-gear {
-    background: rgba(6,214,224,0.08);
-    border-color: rgba(6,214,224,0.4);
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    Roadmap — two-column zigzag grid
@@ -4515,17 +4488,14 @@ body[data-stage] .welcome-back:hover {
     box-shadow: 0 0 18px var(--stage-glow-soft);
 }
 
-body[data-stage] .welcome-gear {
+/* Idle state picks up the lesson's stage colour so it sits naturally in
+   the page. The hover state intentionally falls through to the global
+   .welcome-reset:hover (red) so the destructive intent is unambiguous
+   regardless of which stage you're in. */
+body[data-stage] .welcome-reset {
     border-color: var(--stage-tint-28);
     background: var(--stage-tint-08);
     color: var(--stage-accent);
-}
-body[data-stage] .welcome-gear:hover {
-    background: var(--stage-grad-soft);
-    border-color: var(--stage-accent);
-    color: var(--stage-accent);
-    box-shadow: 0 0 18px var(--stage-glow-soft),
-                0 0 32px var(--stage-tint-18);
 }
 
 /* Lesson page top progress bar */

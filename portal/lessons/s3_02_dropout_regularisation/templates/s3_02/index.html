@@ -5,7 +5,7 @@
 <div class="welcome">
     <div class="welcome-topbar">
         <a href="/" class="welcome-back"><span class="welcome-back-icon">&larr;</span> Back to portal</a>
-        <button class="welcome-gear" onclick="toggleCommandMenu(event)" title="Quick actions" aria-label="Quick actions">&#9881;</button>
+        <button class="welcome-reset" onclick="resetLessonProgress('{{ lesson_id }}', event)" title="Reset progress for this lesson" aria-label="Reset progress for this lesson">&#8634;</button>
     </div>
 <h1>{{ lesson_title }}</h1>
     <p class="tagline">Tame overfitting with dropout, batch normalisation, and early stopping</p>

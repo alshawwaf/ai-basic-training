@@ -207,6 +207,48 @@ function resetAllProgress() {
     window.location.reload();
 }
 
+/* Reset progress for a single lesson — wired to the welcome-reset button
+   on each lesson index page. Drops that lesson's step progress, removes
+   any of its bookmarks, clears the global "last visited" pointer if it
+   was pointing here, and reloads so the welcome page reflects the new
+   empty state. Other lessons are left untouched. */
+function resetLessonProgress(lessonId, event) {
+    if (event) event.preventDefault();
+    if (!lessonId) return;
+    if (!confirm('Reset progress for this lesson?\n\nThis clears which steps you have completed and removes any bookmarks for this lesson. Other lessons are not affected.')) {
+        return;
+    }
+
+    try {
+        const progress = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+        if (lessonId in progress) {
+            delete progress[lessonId];
+            localStorage.setItem('portalProgress', JSON.stringify(progress));
+        }
+    } catch (e) {}
+
+    try {
+        const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+        const filtered = bookmarks.filter(bm => bm.lessonId !== lessonId);
+        if (filtered.length !== bookmarks.length) {
+            localStorage.setItem('portalBookmarks', JSON.stringify(filtered));
+        }
+    } catch (e) {}
+
+    try {
+        const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
+        if (last && last.lessonId === lessonId) {
+            localStorage.removeItem('portalLastVisited');
+        }
+    } catch (e) {}
+
+    // visitedSteps is a flat per-page cache (single-lesson scope), so it's
+    // always safe to drop when resetting whichever lesson the user is on.
+    localStorage.removeItem('visitedSteps');
+
+    window.location.reload();
+}
+
 /* ── Color maps ──────────────────────────────────────────────────────────── */
 
 /* Default teal theme: dark → bright teal (matches dark UI) */

@@ -2367,23 +2367,23 @@ select:hover, .btn:hover {
 .hero-stat-sep { width: 1px; height: 24px; background: var(--border); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   Roadmap — two-column zigzag grid
+   Roadmap — neuron cluster chain
+   Each stage is rendered as a glowing soma core with lesson satellites
+   radiating outward as dendrite branches. Inter-stage mesh connects the
+   cores. There are no rectangular cards on the home page anymore.
    ══════════════════════════════════════════════════════════════════════════ */
 .roadmap {
-    /* Staircase zigzag: each card spans 2 half-card rows, offset by 1 row
-     * from the previous card. Result: card N+1 starts at the vertical
-     * midpoint of card N, alternating between the left and right column. */
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: minmax(150px, auto);
-    column-gap: 96px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
     position: relative;
+    padding: 24px 0 60px;
 }
 .roadmap-stage {
     animation: fadeSlideUp 0.6s ease both;
     position: relative;
     z-index: 1;
+    width: 100%;
 }
 
 /* ── Neural-network mesh overlay (drawn by roadmap-mesh.js) ────────────── */
@@ -2398,249 +2398,261 @@ select:hover, .btn:hover {
 }
 .mesh-path {
     fill: none;
-    stroke-width: 1.6;
+    stroke-width: 2;
     stroke-linecap: round;
-    opacity: 0.55;
+    opacity: 0.7;
     transition: opacity 0.45s ease, stroke-width 0.3s ease, stroke 0.3s ease;
 }
 .mesh-path[data-pair="s1-s2"] { stroke: var(--violet); }
 .mesh-path[data-pair="s2-s3"] { stroke: var(--accent); }
 .mesh-path[data-pair="s3-s4"] { stroke: var(--orange); }
 .mesh-path[data-pair="s4-s5"] { stroke: var(--red);    }
-.mesh-path.mesh-dropped {
-    opacity: 0.12;
-}
-/* When any lesson is hovered, gently mute the rest of the web and
- * highlight that lesson's own incoming + outgoing connections. The
- * non-active paths stay readable so the mesh doesn't collapse into
- * an empty stage with one glowing line. */
-.roadmap-mesh.mesh-hover .mesh-path {
-    opacity: 0.38;
-}
-.roadmap-mesh.mesh-hover .mesh-path.mesh-active {
+.mesh-path.mesh-dropped { opacity: 0.18; }
+.mesh-path.mesh-active {
     opacity: 1;
-    stroke-width: 2.6;
-    filter: drop-shadow(0 0 1.5px currentColor);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 4px currentColor);
 }
-[data-theme="dark"] .mesh-path { opacity: 0.6; }
-[data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.14; }
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path { opacity: 0.42; }
-
-/* Active state in dark mode: bright, almost-white inner stroke with the
- * stage colour serving as a tight aura around it. The previous version
- * used a coloured stroke + large blurred glow which made each line blend
- * into its own halo, washing out the actual curve. */
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active {
-    stroke-width: 2.4;
-    filter: none;
-}
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s1-s2"] {
-    stroke: #e9d5ff;
-    filter: drop-shadow(0 0 1.5px #a855f7);
-}
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s2-s3"] {
-    stroke: #cffafe;
-    filter: drop-shadow(0 0 1.5px #06d6e0);
-}
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s3-s4"] {
-    stroke: #fef3c7;
-    filter: drop-shadow(0 0 1.5px #f59e0b);
-}
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s4-s5"] {
-    stroke: #ffe4e6;
-    filter: drop-shadow(0 0 1.5px #f43f5e);
+[data-theme="dark"] .mesh-path { opacity: 0.75; }
+[data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.2; }
+[data-theme="dark"] .mesh-path.mesh-active {
+    stroke-width: 3.2;
+    filter: drop-shadow(0 0 5px currentColor);
 }
 
 /* On desktop the mesh replaces the single-arrow connectors entirely. */
-@media (min-width: 961px) {
-    .rm-arrow.rm-h::before,
-    .rm-arrow.rm-h::after,
-    .rm-arrow.rm-v::before,
-    .rm-arrow.rm-v::after,
-    .pulse-dot {
-        display: none !important;
-    }
+/* ══════════════════════════════════════════════════════════════════════════
+   Neuron cluster — soma core, dendrite branches, lesson satellites
+   ══════════════════════════════════════════════════════════════════════════ */
+.neuron-cluster {
+    position: relative;
+    height: 340px;
+    --cluster-c: var(--violet);
+    --cluster-c-soft: rgba(168,85,247,0.18);
+    --cluster-c-mid:  rgba(168,85,247,0.45);
 }
+.neuron-cluster.s1 { --cluster-c: var(--violet); --cluster-c-soft: rgba(168,85,247,0.18); --cluster-c-mid: rgba(168,85,247,0.45); }
+.neuron-cluster.s2 { --cluster-c: var(--accent); --cluster-c-soft: rgba(6,214,224,0.18);  --cluster-c-mid: rgba(6,214,224,0.45);  }
+.neuron-cluster.s3 { --cluster-c: var(--orange); --cluster-c-soft: rgba(245,158,11,0.18); --cluster-c-mid: rgba(245,158,11,0.45); }
+.neuron-cluster.s4 { --cluster-c: var(--red);    --cluster-c-soft: rgba(244,63,94,0.18);  --cluster-c-mid: rgba(244,63,94,0.45);  }
+.neuron-cluster.s5 { --cluster-c: var(--green);  --cluster-c-soft: rgba(34,211,160,0.18); --cluster-c-mid: rgba(34,211,160,0.45); }
 
-/* Grid positions — staircase zigzag. Each card spans 2 half-card rows,
- * starting one row later than the previous card so it lands at exactly
- * the midpoint of its predecessor. Cards alternate columns left/right.
- * Mesh paths drawn by roadmap-mesh.js handle the diagonal connections. */
-.rpos-1 { grid-column: 1; grid-row: 1 / span 2; }
-.rpos-2 { grid-column: 2; grid-row: 2 / span 2; }
-.rpos-3 { grid-column: 1; grid-row: 3 / span 2; }
-.rpos-4 { grid-column: 2; grid-row: 4 / span 2; }
-.rpos-5 { grid-column: 1; grid-row: 5 / span 2; }
+/* SVG layer — branches drawn by roadmap-mesh.js, sits behind everything. */
+.neuron-branches {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1;
+}
+.neuron-branch {
+    fill: none;
+    stroke: var(--cluster-c);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: 0.55;
+    transition: opacity 0.3s ease, stroke-width 0.3s ease;
+}
+.neuron-cluster.is-hovered .neuron-branch { opacity: 0.32; }
+.neuron-cluster .neuron-branch.is-active  { opacity: 1; stroke-width: 2.2; filter: drop-shadow(0 0 4px var(--cluster-c)); }
 
-/* ── Horizontal arrows ────────────────────────────────────────────────── */
-.rm-arrow.rm-h {
+/* ── Soma core ─────────────────────────────────────────────────────────── */
+.neuron-core {
+    position: absolute;
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%,
+                color-mix(in srgb, var(--cluster-c) 85%, white 15%),
+                var(--cluster-c) 45%,
+                color-mix(in srgb, var(--cluster-c) 60%, black 40%) 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--cluster-c) 70%, transparent),
+        0 0 24px var(--cluster-c-mid),
+        0 0 60px var(--cluster-c-soft),
+        inset 0 0 24px rgba(255,255,255,0.12);
     display: flex;
     align-items: center;
-    position: relative;
-    padding: 0 6px;
+    justify-content: center;
+    z-index: 4;
+    cursor: default;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    animation: neuronCoreBreathe 4.6s ease-in-out infinite;
 }
-/* Line */
-.rm-arrow.rm-h::before {
+@keyframes neuronCoreBreathe {
+    0%, 100% { box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--cluster-c) 70%, transparent),
+        0 0 22px var(--cluster-c-mid),
+        0 0 52px var(--cluster-c-soft),
+        inset 0 0 24px rgba(255,255,255,0.12); }
+    50%      { box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--cluster-c) 90%, transparent),
+        0 0 36px var(--cluster-c-mid),
+        0 0 90px var(--cluster-c-soft),
+        inset 0 0 28px rgba(255,255,255,0.16); }
+}
+.neuron-cluster.is-hovered .neuron-core { transform: scale(1.06); }
+.neuron-core-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 38px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 24px var(--cluster-c);
+    letter-spacing: -1px;
+    user-select: none;
+}
+
+/* The soma also carries a faint inner nucleus dot — pure decoration. */
+.neuron-core::after {
     content: '';
     position: absolute;
     top: 50%;
-    height: 3px;
-    border-radius: 2px;
-    transform: translateY(-50%);
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, transparent 55%, color-mix(in srgb, var(--cluster-c) 30%, transparent) 100%);
+    pointer-events: none;
 }
-/* Arrow head triangle */
-.rm-arrow.rm-h::after {
-    content: '';
+
+/* ── Cluster label (stage title + tier) ────────────────────────────────── */
+.neuron-label {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
+    z-index: 3;
+    max-width: 280px;
+}
+.neuron-label h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 6px;
+}
+.neuron-label p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin-bottom: 10px;
+}
+.neuron-tier {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cluster-c);
+    background: color-mix(in srgb, var(--cluster-c) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cluster-c) 30%, transparent);
+}
+[data-theme="dark"] .neuron-tier {
+    text-shadow: 0 0 8px color-mix(in srgb, var(--cluster-c) 60%, transparent);
 }
 
-/* Right-pointing (S1 → S2) */
-.rm-h.rm-r::before {
-    left: 0;
-    right: 14px;
-    background: linear-gradient(90deg, var(--accent), var(--violet));
-}
-.rm-h.rm-r::after {
-    right: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 12px solid var(--violet);
-    filter: drop-shadow(0 0 4px rgba(139,92,246,0.4));
-}
+/* Cluster orientation: left-anchored (S1, S3, S5) places the core on the
+ * right side and the satellites/label fan out to the left. Right-anchored
+ * (S2, S4) is mirrored. JS positions individual satellites. */
+.neuron-cluster.left  .neuron-core   { right: calc(50% + 80px); top: 50%; transform: translate(50%, -50%); }
+.neuron-cluster.right .neuron-core   { left:  calc(50% + 80px); top: 50%; transform: translate(-50%, -50%); }
+.neuron-cluster.is-hovered.left  .neuron-core { transform: translate(50%, -50%) scale(1.06); }
+.neuron-cluster.is-hovered.right .neuron-core { transform: translate(-50%, -50%) scale(1.06); }
 
-/* Left-pointing (S3 → S4) */
-.rm-h.rm-l::before {
-    right: 0;
-    left: 14px;
-    background: linear-gradient(90deg, var(--red), var(--orange));
-}
-.rm-h.rm-l::after {
-    left: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-right: 12px solid var(--red);
-    filter: drop-shadow(0 0 4px rgba(244,63,94,0.4));
-}
+.neuron-cluster.left  .neuron-label  { right: calc(50% + 220px); top: 50%; transform: translateY(-50%); text-align: right; }
+.neuron-cluster.right .neuron-label  { left:  calc(50% + 220px); top: 50%; transform: translateY(-50%); text-align: left;  }
 
-/* ── Vertical arrows ──────────────────────────────────────────────────── */
-.rm-arrow.rm-v {
+/* ── Lesson satellites ─────────────────────────────────────────────────── */
+.neuron-satellite {
+    position: absolute;
+    z-index: 2;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    position: relative;
-    padding: 6px 0;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+    /* JS sets top + left in pixels relative to the cluster. */
 }
-.rm-arrow.rm-v::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    width: 3px;
-    border-radius: 2px;
-    transform: translateX(-50%);
+.neuron-sat-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%,
+                color-mix(in srgb, var(--cluster-c) 75%, white 25%),
+                var(--cluster-c) 65%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--cluster-c) 60%, transparent),
+        0 0 10px var(--cluster-c-mid),
+        0 0 22px var(--cluster-c-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 4px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.rm-arrow.rm-v::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
+.neuron-sat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    padding: 5px 10px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--cluster-c) 22%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.neuron-cluster.right .neuron-satellite { flex-direction: row-reverse; }
+
+.neuron-satellite:hover .neuron-sat-dot {
+    transform: scale(1.25);
+    box-shadow:
+        0 0 0 2px var(--cluster-c),
+        0 0 14px var(--cluster-c-mid),
+        0 0 32px var(--cluster-c-mid);
+}
+.neuron-satellite:hover .neuron-sat-label {
+    opacity: 1;
+    border-color: var(--cluster-c);
+    background: color-mix(in srgb, var(--cluster-c) 10%, var(--bg) 90%);
+}
+.neuron-satellite.gated .neuron-sat-dot {
+    filter: grayscale(0.6);
+    opacity: 0.55;
+}
+.neuron-satellite.gated .neuron-sat-label {
+    opacity: 0.45;
+    font-style: italic;
+}
+.neuron-satellite.gated::after {
+    content: 'soon';
+    font-size: 9px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* S2 → S3 (right column, down) */
-.rm-2-3::before {
-    top: 0;
-    bottom: 14px;
-    background: linear-gradient(180deg, var(--violet), var(--orange));
+/* Visited badge — appended by inline JS in home.html, mirrors the
+ * existing #badge-{lesson_id} pattern. */
+.neuron-sat-visited {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 10px;
+    color: var(--cluster-c);
+    opacity: 0.8;
 }
-.rm-2-3::after {
-    bottom: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 12px solid var(--orange);
-    filter: drop-shadow(0 0 4px rgba(245,158,11,0.4));
-}
-
-/* S4 → S5 (left column, down) */
-.rm-4-5::before {
-    top: 0;
-    bottom: 14px;
-    background: linear-gradient(180deg, var(--red), var(--green));
-}
-.rm-4-5::after {
-    bottom: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 12px solid var(--green);
-    filter: drop-shadow(0 0 4px rgba(16,185,129,0.4));
-}
-
-/* Animated pulse travelling along all arrows */
-@keyframes arrowPulseH {
-    0%   { left: 0; opacity: 0; }
-    20%  { opacity: 1; }
-    80%  { opacity: 1; }
-    100% { left: calc(100% - 16px); opacity: 0; }
-}
-@keyframes arrowPulseHRev {
-    0%   { right: 0; opacity: 0; }
-    20%  { opacity: 1; }
-    80%  { opacity: 1; }
-    100% { right: calc(100% - 16px); opacity: 0; }
-}
-@keyframes arrowPulseV {
-    0%   { top: 0; opacity: 0; }
-    20%  { opacity: 1; }
-    80%  { opacity: 1; }
-    100% { top: calc(100% - 16px); opacity: 0; }
-}
-/* Travelling glow dot — horizontal right */
-.rm-h.rm-r .pulse-dot {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--violet);
-    box-shadow: 0 0 8px var(--violet);
-    transform: translateY(-50%);
-    animation: arrowPulseH 2.2s ease-in-out infinite;
-}
-/* Travelling glow dot — horizontal left */
-.rm-h.rm-l .pulse-dot {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--red);
-    box-shadow: 0 0 8px var(--red);
-    transform: translateY(-50%);
-    animation: arrowPulseHRev 2.2s ease-in-out infinite;
-}
-/* Travelling glow dot — vertical */
-.rm-v .pulse-dot {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    transform: translateX(-50%);
-    animation: arrowPulseV 2s ease-in-out infinite;
-}
-.rm-2-3 .pulse-dot { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
-.rm-4-5 .pulse-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
-[data-theme="dark"] .rm-h.rm-r .pulse-dot { box-shadow: 0 0 14px var(--violet), 0 0 30px rgba(168,85,247,0.3); }
-[data-theme="dark"] .rm-h.rm-l .pulse-dot { box-shadow: 0 0 14px var(--red), 0 0 30px rgba(244,63,94,0.3); }
-[data-theme="dark"] .rm-2-3 .pulse-dot    { box-shadow: 0 0 14px var(--orange), 0 0 30px rgba(245,158,11,0.3); }
-[data-theme="dark"] .rm-4-5 .pulse-dot    { box-shadow: 0 0 14px var(--green), 0 0 30px rgba(34,211,160,0.3); }
 
 /* ── Stage card ────────────────────────────────────────────────────────── */
 .stage-card {
@@ -3327,34 +3339,38 @@ select:hover, .btn:hover {
     .portal-home h1 { font-size: 32px; }
     .hero-stats { gap: 16px; }
     .hero-stat-val { font-size: 22px; }
-    /* Collapse roadmap to single column */
-    .roadmap {
+    /* Mobile fallback: stacked compact list rather than clusters. The
+     * cluster layout assumes a wide canvas; on mobile the satellites are
+     * collapsed to a vertical list under each core. */
+    .roadmap { gap: 32px; padding: 12px 0 40px; }
+    .neuron-cluster {
+        height: auto;
+        min-height: auto;
         display: flex;
         flex-direction: column;
-        gap: 0;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 0;
     }
-    .rpos-1, .rpos-2, .rpos-3, .rpos-4, .rpos-5 {
-        grid-column: auto;
-        grid-row: auto;
+    .neuron-cluster .neuron-branches { display: none; }
+    .neuron-cluster.left  .neuron-core,
+    .neuron-cluster.right .neuron-core { position: relative; left: auto; right: auto; top: auto; transform: none; }
+    .neuron-cluster.is-hovered.left  .neuron-core,
+    .neuron-cluster.is-hovered.right .neuron-core { transform: scale(1.04); }
+    .neuron-cluster.left  .neuron-label,
+    .neuron-cluster.right .neuron-label {
+        position: relative; left: auto; right: auto; top: auto;
+        transform: none; text-align: center; max-width: 90%;
     }
-    .rpos-1 { order: 1; }
-    .rpos-2 { order: 2; }
-    .rpos-3 { order: 3; }
-    .rpos-4 { order: 4; }
-    .rpos-5 { order: 5; }
-    /* Mesh is desktop-only — give mobile a simple vertical connector. */
-    .roadmap-stage::after {
-        content: '';
-        display: block;
-        width: 3px;
-        height: 28px;
-        margin: 6px auto;
-        border-radius: 2px;
-        background: var(--border);
+    .neuron-cluster .neuron-satellite {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        flex-direction: row !important;
+        width: min(360px, 90%);
+        gap: 12px;
     }
-    .rpos-5::after { display: none; }
-    .stage-card { padding: 18px; }
-    .tier-badge { font-size: 9px; }
+    .neuron-cluster .neuron-sat-label { white-space: normal; }
     .top-nav { padding: 6px 12px; }
     .top-controls { gap: 8px; }
     .theme-toggle { width: 34px; height: 34px; font-size: 16px; }

@@ -1,13 +1,21 @@
-/* roadmap-mesh.js — neural-network connector overlay for the AI Ninja home page.
+/* roadmap-mesh.js — neuron cluster layout + connector overlay
  *
- * Replaces the four single-arrow connectors between stage cards with a fully
- * connected web of curved bezier paths (one per source-lesson × target-lesson
- * pair), styled per stage colour. Includes:
- *   - hover highlighting: hovering a lesson dims all paths except its own
- *   - dropout animation: a random subset of paths fades briefly every ~1.5s,
- *     visualising the dropout regularisation concept covered in lesson 3.2
+ * Each .neuron-cluster on the home page is rendered as a glowing soma core
+ * with N lesson satellites radiating outward as dendrite branches. This
+ * script:
+ *   1. Positions every satellite on an arc around its core (left clusters
+ *      arc to the left, right clusters arc to the right).
+ *   2. Draws the dendrite branches as bezier paths inside each cluster's
+ *      .neuron-branches SVG.
+ *   3. Draws the inter-cluster mesh — diagonal synapses connecting each
+ *      core to the next core in the chain — into the page-level
+ *      #roadmap-mesh SVG.
+ *   4. Wires up hover highlighting: hovering a satellite lights up its
+ *      branch; hovering a core lights up all branches in its cluster
+ *      plus the inter-cluster paths attached to it.
  *
- * The mesh is desktop-only (matches the existing 960px breakpoint).
+ * Desktop-only — the mobile media query collapses each cluster into a
+ * vertical list and hides the SVG branch layer entirely.
  */
 (function () {
     'use strict';
@@ -15,166 +23,244 @@
     const SVG_NS = 'http://www.w3.org/2000/svg';
     const MOBILE_QUERY = '(max-width: 960px)';
 
-    /* Connector definitions — zigzag column layout: every hop is a
-     * diagonal swoosh between alternating left/right cards. */
-    const CONNECTORS = [
-        { source: 's1', target: 's2', dir: 'h-right' },
-        { source: 's2', target: 's3', dir: 'h-left'  },
-        { source: 's3', target: 's4', dir: 'h-right' },
-        { source: 's4', target: 's5', dir: 'h-left'  },
+    /* Inter-cluster connector flow — the curriculum chain. */
+    const INTER_CONNECTORS = [
+        { source: 's1', target: 's2' },
+        { source: 's2', target: 's3' },
+        { source: 's3', target: 's4' },
+        { source: 's4', target: 's5' },
     ];
 
     function svgEl(tag, attrs) {
         const node = document.createElementNS(SVG_NS, tag);
-        if (attrs) {
-            for (const key in attrs) node.setAttribute(key, attrs[key]);
-        }
+        if (attrs) for (const k in attrs) node.setAttribute(k, attrs[k]);
         return node;
     }
 
-    /* Compute one attachment point per lesson card.
-     * For horizontal connectors we attach to the per-lesson left/right edge.
-     * For vertical connectors we spread N points along the stage card's
-     * top/bottom edge — stacked lessons share an x range so per-lesson edges
-     * would overlap into a blur. */
-    function attachPoints(stageCard, side) {
-        const lessons = stageCard.querySelectorAll('.lesson-card');
-        const points = [];
-        if (side === 'right' || side === 'left') {
-            lessons.forEach((lesson) => {
-                const r = lesson.getBoundingClientRect();
-                points.push({
-                    x: side === 'right' ? r.right : r.left,
-                    y: r.top + r.height / 2,
-                });
+    /* ── Satellite layout ──────────────────────────────────────────────── */
+
+    /* Place each satellite in cluster on an arc. The arc fans outward from
+     * the cluster's outer side (left for `.left`, right for `.right`).
+     * Returns an array of {sat, sx, sy, cx, cy} for the branch drawer. */
+    function layoutCluster(cluster) {
+        const core = cluster.querySelector('.neuron-core');
+        const sats = cluster.querySelectorAll('.neuron-satellite');
+        if (!core || sats.length === 0) return [];
+
+        const isLeft = cluster.classList.contains('left');
+        const cRect  = cluster.getBoundingClientRect();
+        const coreR  = core.getBoundingClientRect();
+        const cx = coreR.left + coreR.width  / 2 - cRect.left;
+        const cy = coreR.top  + coreR.height / 2 - cRect.top;
+
+        const N = sats.length;
+        /* Arc parameters tuned for 4–6 satellites. The arc spans 150°
+         * symmetric around the outward normal so satellites never collide
+         * with the core. radius is the distance from core centre to
+         * satellite centre. */
+        const radius   = 200;
+        const arcDeg   = 150;
+        const halfArc  = arcDeg / 2;
+
+        const placements = [];
+        sats.forEach((sat, i) => {
+            /* t goes 0..1 across the arc; with N=1 we centre it. */
+            const t = N === 1 ? 0.5 : i / (N - 1);
+            /* angleDeg is measured from the outward normal — positive
+             * angles bend downward on screen, negative bend upward. */
+            const angleDeg = -halfArc + t * arcDeg;
+            const a = angleDeg * Math.PI / 180;
+
+            /* Outward direction: -1 for left clusters, +1 for right. */
+            const ox = isLeft ? -1 : 1;
+            /* Rotated unit vector. ox * cos rotates the outward normal
+             * by `a`; sin handles the vertical sweep. */
+            const dx = ox * Math.cos(a);
+            const dy = Math.sin(a);
+
+            const sx = cx + dx * radius;
+            const sy = cy + dy * radius;
+
+            /* Position the satellite element. We use top/left rather than
+             * transform so the click target stays accurately hit-tested. */
+            sat.style.position = 'absolute';
+            sat.style.left = `${sx}px`;
+            sat.style.top  = `${sy}px`;
+            /* Anchor the dot at the centre of the computed point and let
+             * the label flow naturally to the side. */
+            sat.style.transform = isLeft
+                ? 'translate(-100%, -50%)'
+                : 'translate(0%, -50%)';
+
+            placements.push({ sat, sx, sy, cx, cy, isLeft });
+        });
+        return placements;
+    }
+
+    /* Bezier from core to one satellite. The control point is offset
+     * perpendicular to the chord so each branch curves organically. */
+    function branchPath(cx, cy, sx, sy, curveSign) {
+        const mx = (cx + sx) / 2;
+        const my = (cy + sy) / 2;
+        const dx = sx - cx;
+        const dy = sy - cy;
+        /* Perpendicular vector, scaled. curveSign alternates so adjacent
+         * branches don't all bow the same way. */
+        const px = -dy * 0.18 * curveSign;
+        const py =  dx * 0.18 * curveSign;
+        return `M ${cx} ${cy} Q ${mx + px} ${my + py} ${sx} ${sy}`;
+    }
+
+    function drawBranches(cluster, placements) {
+        const svg = cluster.querySelector('.neuron-branches');
+        if (!svg) return;
+        const cRect = cluster.getBoundingClientRect();
+        svg.setAttribute('viewBox', `0 0 ${cRect.width} ${cRect.height}`);
+        /* Clear previous paths. */
+        Array.from(svg.querySelectorAll('.neuron-branch')).forEach(p => p.remove());
+
+        placements.forEach((pl, i) => {
+            const sign = i % 2 === 0 ? 1 : -1;
+            const path = svgEl('path', {
+                d: branchPath(pl.cx, pl.cy, pl.sx, pl.sy, sign),
+                class: 'neuron-branch',
+                'data-sat-idx': i,
             });
-        } else {
-            const cardRect = stageCard.getBoundingClientRect();
-            const y = side === 'bottom' ? cardRect.bottom : cardRect.top;
-            const n = lessons.length;
-            for (let i = 0; i < n; i++) {
-                points.push({
-                    x: cardRect.left + (cardRect.width * (i + 1)) / (n + 1),
-                    y: y,
-                });
-            }
-        }
-        return points;
-    }
-
-    /* Bezier path string for one source→target line. Control points are
-     * pulled toward the centre of the connector to give an organic synaptic
-     * curve rather than a straight line. */
-    function bezierPath(s, t, dir) {
-        if (dir === 'v-down') {
-            const dy = (t.y - s.y) * 0.5;
-            return `M ${s.x} ${s.y} C ${s.x} ${s.y + dy}, ${t.x} ${t.y - dy}, ${t.x} ${t.y}`;
-        }
-        const dx = (t.x - s.x) * 0.5;
-        return `M ${s.x} ${s.y} C ${s.x + dx} ${s.y}, ${t.x - dx} ${t.y}, ${t.x} ${t.y}`;
-    }
-
-    function sourceSideFor(dir) {
-        if (dir === 'h-right') return 'right';
-        if (dir === 'h-left')  return 'left';
-        return 'bottom';
-    }
-
-    function targetSideFor(dir) {
-        if (dir === 'h-right') return 'left';
-        if (dir === 'h-left')  return 'right';
-        return 'top';
-    }
-
-    /* Tag every lesson card with a stable mesh id so hover handlers can
-     * cross-reference paths. Format: "<stage>-<index>" — same as data-source
-     * and data-target on each path. */
-    function tagLessons() {
-        document.querySelectorAll('.stage-card').forEach((card) => {
-            let stage = null;
-            for (const cls of card.classList) {
-                if (/^s\d$/.test(cls)) { stage = cls; break; }
-            }
-            if (!stage) return;
-            card.querySelectorAll('.lesson-card').forEach((lesson, idx) => {
-                lesson.dataset.meshId = `${stage}-${idx}`;
-            });
+            svg.appendChild(path);
         });
     }
 
-    function drawMesh() {
+    /* ── Inter-cluster mesh ────────────────────────────────────────────── */
+
+    /* Bezier from one core's outer edge to the next core's outer edge.
+     * Cores in the chain alternate columns, so every hop is a diagonal
+     * swoosh — exactly the synapse silhouette we want. */
+    function interBezier(s, t) {
+        const dx = t.x - s.x;
+        const dy = t.y - s.y;
+        const cx1 = s.x + dx * 0.55;
+        const cy1 = s.y + dy * 0.05;
+        const cx2 = t.x - dx * 0.55;
+        const cy2 = t.y - dy * 0.05;
+        return `M ${s.x} ${s.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${t.x} ${t.y}`;
+    }
+
+    function coreEdgePoint(cluster, side) {
+        const core = cluster.querySelector('.neuron-core');
+        if (!core) return null;
+        const r = core.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top  + r.height / 2;
+        const radius = r.width / 2;
+        /* Connect from the inner edge of the core (the side facing the
+         * other cluster) so the synapse path doesn't cut through the
+         * soma. */
+        if (side === 'right') return { x: cx + radius, y: cy };
+        if (side === 'left')  return { x: cx - radius, y: cy };
+        return { x: cx, y: cy };
+    }
+
+    function drawInterMesh() {
         const roadmap = document.querySelector('.roadmap');
         const svg = document.getElementById('roadmap-mesh');
         if (!roadmap || !svg) return;
 
-        /* Clear previous paths (preserves any <defs> if added later). */
-        Array.from(svg.querySelectorAll('.mesh-path')).forEach((p) => p.remove());
+        Array.from(svg.querySelectorAll('.mesh-path')).forEach(p => p.remove());
 
         const rmRect = roadmap.getBoundingClientRect();
         svg.setAttribute('width',  rmRect.width);
         svg.setAttribute('height', rmRect.height);
         svg.setAttribute('viewBox', `0 0 ${rmRect.width} ${rmRect.height}`);
 
-        CONNECTORS.forEach((cfg) => {
-            const sourceCard = document.querySelector(`.stage-card.${cfg.source}`);
-            const targetCard = document.querySelector(`.stage-card.${cfg.target}`);
-            if (!sourceCard || !targetCard) return;
+        INTER_CONNECTORS.forEach((cfg) => {
+            const sourceCluster = document.querySelector(`.neuron-cluster.${cfg.source}`);
+            const targetCluster = document.querySelector(`.neuron-cluster.${cfg.target}`);
+            if (!sourceCluster || !targetCluster) return;
 
-            const sourcePts = attachPoints(sourceCard, sourceSideFor(cfg.dir));
-            const targetPts = attachPoints(targetCard, targetSideFor(cfg.dir));
+            /* Source core attaches on its inner edge — the side facing
+             * the target column. */
+            const sourceSide = sourceCluster.classList.contains('left')  ? 'right' : 'left';
+            const targetSide = targetCluster.classList.contains('right') ? 'left'  : 'right';
 
-            sourcePts.forEach((sPt, si) => {
-                targetPts.forEach((tPt, ti) => {
-                    const s = { x: sPt.x - rmRect.left, y: sPt.y - rmRect.top };
-                    const t = { x: tPt.x - rmRect.left, y: tPt.y - rmRect.top };
-                    const path = svgEl('path', {
-                        d: bezierPath(s, t, cfg.dir),
-                        class: 'mesh-path',
-                        'data-pair':   `${cfg.source}-${cfg.target}`,
-                        'data-source': `${cfg.source}-${si}`,
-                        'data-target': `${cfg.target}-${ti}`,
-                    });
-                    svg.appendChild(path);
-                });
+            const sPt = coreEdgePoint(sourceCluster, sourceSide);
+            const tPt = coreEdgePoint(targetCluster, targetSide);
+            if (!sPt || !tPt) return;
+
+            const s = { x: sPt.x - rmRect.left, y: sPt.y - rmRect.top };
+            const t = { x: tPt.x - rmRect.left, y: tPt.y - rmRect.top };
+
+            const path = svgEl('path', {
+                d: interBezier(s, t),
+                class: 'mesh-path',
+                'data-pair': `${cfg.source}-${cfg.target}`,
             });
+            svg.appendChild(path);
         });
     }
 
-    /* Hover: highlight only paths attached to the hovered lesson, dim the rest. */
-    function bindHover() {
-        const svg = document.getElementById('roadmap-mesh');
+    /* ── Hover orchestration ───────────────────────────────────────────── */
+
+    function bindClusterHover(cluster) {
+        const sats = cluster.querySelectorAll('.neuron-satellite');
+        const svg  = cluster.querySelector('.neuron-branches');
         if (!svg) return;
-        document.querySelectorAll('.lesson-card').forEach((card) => {
-            card.addEventListener('mouseenter', () => {
-                const meshId = card.dataset.meshId;
-                if (!meshId) return;
-                svg.classList.add('mesh-hover');
-                svg.querySelectorAll('.mesh-path').forEach((p) => {
-                    if (p.getAttribute('data-source') === meshId ||
-                        p.getAttribute('data-target') === meshId) {
-                        p.classList.add('mesh-active');
+        sats.forEach((sat, i) => {
+            sat.addEventListener('mouseenter', () => {
+                cluster.classList.add('is-hovered');
+                const branches = svg.querySelectorAll('.neuron-branch');
+                branches.forEach((b) => {
+                    if (Number(b.getAttribute('data-sat-idx')) === i) {
+                        b.classList.add('is-active');
                     }
                 });
             });
-            card.addEventListener('mouseleave', () => {
-                svg.classList.remove('mesh-hover');
-                svg.querySelectorAll('.mesh-path.mesh-active')
-                   .forEach((p) => p.classList.remove('mesh-active'));
+            sat.addEventListener('mouseleave', () => {
+                cluster.classList.remove('is-hovered');
+                svg.querySelectorAll('.neuron-branch.is-active')
+                   .forEach(b => b.classList.remove('is-active'));
             });
         });
+        const core = cluster.querySelector('.neuron-core');
+        if (core) {
+            core.addEventListener('mouseenter', () => {
+                cluster.classList.add('is-hovered');
+                /* Highlight every branch in the cluster. */
+                svg.querySelectorAll('.neuron-branch').forEach(b => b.classList.add('is-active'));
+                /* Also highlight inter-cluster mesh paths attached to this stage. */
+                const stageId = cluster.dataset.stage;
+                const mesh = document.getElementById('roadmap-mesh');
+                if (mesh) {
+                    mesh.querySelectorAll('.mesh-path').forEach(p => {
+                        const pair = p.getAttribute('data-pair') || '';
+                        if (pair.startsWith(stageId + '-') || pair.endsWith('-' + stageId)) {
+                            p.classList.add('mesh-active');
+                        }
+                    });
+                }
+            });
+            core.addEventListener('mouseleave', () => {
+                cluster.classList.remove('is-hovered');
+                svg.querySelectorAll('.neuron-branch.is-active')
+                   .forEach(b => b.classList.remove('is-active'));
+                const mesh = document.getElementById('roadmap-mesh');
+                if (mesh) {
+                    mesh.querySelectorAll('.mesh-path.mesh-active')
+                        .forEach(p => p.classList.remove('mesh-active'));
+                }
+            });
+        }
     }
 
-    /* Dropout: ~12% of paths fade out for ~1s every 1.6s. The animation runs
-     * indefinitely; pauses while a lesson is hovered (mesh-hover state owns
-     * the visuals). */
+    /* ── Inter-cluster mesh dropout (legacy "dropout" effect) ──────────── */
+    /* A handful of inter-cluster paths fade briefly every ~1.6s, echoing
+     * the dropout regularisation idea covered in the deep-learning stage. */
     function startDropout() {
         const svg = document.getElementById('roadmap-mesh');
         if (!svg) return;
         setInterval(() => {
-            if (svg.classList.contains('mesh-hover')) return;
             const paths = svg.querySelectorAll('.mesh-path');
             paths.forEach((p) => {
-                if (Math.random() < 0.12) {
+                if (Math.random() < 0.18) {
                     p.classList.add('mesh-dropped');
                     setTimeout(() => p.classList.remove('mesh-dropped'),
                                700 + Math.random() * 500);
@@ -183,19 +269,32 @@
         }, 1600);
     }
 
+    /* ── Layout pipeline ───────────────────────────────────────────────── */
+
+    function relayoutAll() {
+        const clusters = document.querySelectorAll('.neuron-cluster');
+        clusters.forEach((cluster) => {
+            const placements = layoutCluster(cluster);
+            drawBranches(cluster, placements);
+        });
+        /* Defer the inter-cluster mesh to the next frame so it sees the
+         * post-layout core positions. */
+        requestAnimationFrame(drawInterMesh);
+    }
+
     function init() {
         if (window.matchMedia(MOBILE_QUERY).matches) return;
-        tagLessons();
-        drawMesh();
-        bindHover();
+        relayoutAll();
+        document.querySelectorAll('.neuron-cluster').forEach(bindClusterHover);
         startDropout();
 
         const roadmap = document.querySelector('.roadmap');
         if (roadmap && 'ResizeObserver' in window) {
-            const ro = new ResizeObserver(() => drawMesh());
+            const ro = new ResizeObserver(() => relayoutAll());
             ro.observe(roadmap);
         }
-        window.addEventListener('resize', drawMesh);
+        window.addEventListener('resize', relayoutAll);
+        window.addEventListener('load', relayoutAll);
     }
 
     if (document.readyState === 'loading') {

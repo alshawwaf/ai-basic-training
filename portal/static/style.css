@@ -1930,15 +1930,68 @@ select option:hover {
 }
 
 /* ── Auto-play button ───────────────────────────────────────────────────── */
+/* Sits next to the slider as the secondary "watch it animate" affordance.
+   The plain .btn rendering disappeared into the dark card, so promote it
+   to a violet-tinted pill that visibly pairs with the cyan slider — and
+   flips to a red 'recording' state while autoplay is running. */
 .btn-play {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    padding: 9px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    border-radius: 999px;
+    color: #ffffff;
+    border: 1px solid rgba(168, 85, 247, 0.65);
+    background: linear-gradient(180deg,
+        rgba(168, 85, 247, 0.22) 0%,
+        rgba(168, 85, 247, 0.10) 100%);
+    box-shadow:
+        0 0 0 1px rgba(168, 85, 247, 0.10) inset,
+        0 0 16px rgba(168, 85, 247, 0.30),
+        0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.btn-play:hover {
+    border-color: rgba(192, 132, 252, 0.95);
+    background: linear-gradient(180deg,
+        rgba(168, 85, 247, 0.34) 0%,
+        rgba(168, 85, 247, 0.18) 100%);
+    box-shadow:
+        0 0 0 1px rgba(168, 85, 247, 0.18) inset,
+        0 0 22px rgba(168, 85, 247, 0.50),
+        0 6px 16px rgba(0, 0, 0, 0.40);
+    transform: translateY(-1px);
+}
+.btn-play:active {
+    transform: translateY(0);
 }
 .btn-play.playing {
-    background: var(--red);
-    border-color: var(--red);
     color: #fff;
+    border-color: rgba(244, 63, 94, 0.85);
+    background: linear-gradient(180deg,
+        rgba(244, 63, 94, 0.32) 0%,
+        rgba(244, 63, 94, 0.16) 100%);
+    box-shadow:
+        0 0 0 1px rgba(244, 63, 94, 0.18) inset,
+        0 0 20px rgba(244, 63, 94, 0.45),
+        0 4px 14px rgba(0, 0, 0, 0.40);
+    animation: btn-play-pulse 1.2s ease-in-out infinite;
+}
+@keyframes btn-play-pulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 1px rgba(244, 63, 94, 0.18) inset,
+            0 0 20px rgba(244, 63, 94, 0.45),
+            0 4px 14px rgba(0, 0, 0, 0.40);
+    }
+    50% {
+        box-shadow:
+            0 0 0 1px rgba(244, 63, 94, 0.28) inset,
+            0 0 30px rgba(244, 63, 94, 0.65),
+            0 4px 14px rgba(0, 0, 0, 0.40);
+    }
 }
 
 /* ── Paint grid overrides ───────────────────────────────────────────────── */

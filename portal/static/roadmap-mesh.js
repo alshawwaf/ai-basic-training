@@ -15,12 +15,13 @@
     const SVG_NS = 'http://www.w3.org/2000/svg';
     const MOBILE_QUERY = '(max-width: 960px)';
 
-    /* Connector definitions — direction follows the curriculum flow. */
+    /* Connector definitions — zigzag column layout: every hop is a
+     * diagonal swoosh between alternating left/right cards. */
     const CONNECTORS = [
         { source: 's1', target: 's2', dir: 'h-right' },
-        { source: 's2', target: 's3', dir: 'v-down'  },
-        { source: 's3', target: 's4', dir: 'h-left'  },
-        { source: 's4', target: 's5', dir: 'v-down'  },
+        { source: 's2', target: 's3', dir: 'h-left'  },
+        { source: 's3', target: 's4', dir: 'h-right' },
+        { source: 's4', target: 's5', dir: 'h-left'  },
     ];
 
     function svgEl(tag, attrs) {

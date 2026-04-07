@@ -2370,10 +2370,14 @@ select:hover, .btn:hover {
    Roadmap — two-column zigzag grid
    ══════════════════════════════════════════════════════════════════════════ */
 .roadmap {
+    /* Staircase zigzag: each card spans 2 half-card rows, offset by 1 row
+     * from the previous card. Result: card N+1 starts at the vertical
+     * midpoint of card N, alternating between the left and right column. */
     display: grid;
-    grid-template-columns: 1fr 72px 1fr;
-    grid-template-rows: auto 52px auto 52px auto;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: minmax(150px, auto);
+    column-gap: 96px;
+    align-items: start;
     position: relative;
 }
 .roadmap-stage {
@@ -2458,17 +2462,15 @@ select:hover, .btn:hover {
     }
 }
 
-/* Grid positions (zigzag: 1→2 then 3←4 then 5) */
-.rpos-1 { grid-column: 1; grid-row: 1; }
-.rpos-2 { grid-column: 3; grid-row: 1; }
-.rpos-3 { grid-column: 3; grid-row: 3; }
-.rpos-4 { grid-column: 1; grid-row: 3; }
-.rpos-5 { grid-column: 1; grid-row: 5; }
-
-.rm-1-2 { grid-column: 2; grid-row: 1; }
-.rm-2-3 { grid-column: 3; grid-row: 2; }
-.rm-3-4 { grid-column: 2; grid-row: 3; }
-.rm-4-5 { grid-column: 1; grid-row: 4; }
+/* Grid positions — staircase zigzag. Each card spans 2 half-card rows,
+ * starting one row later than the previous card so it lands at exactly
+ * the midpoint of its predecessor. Cards alternate columns left/right.
+ * Mesh paths drawn by roadmap-mesh.js handle the diagonal connections. */
+.rpos-1 { grid-column: 1; grid-row: 1 / span 2; }
+.rpos-2 { grid-column: 2; grid-row: 2 / span 2; }
+.rpos-3 { grid-column: 1; grid-row: 3 / span 2; }
+.rpos-4 { grid-column: 2; grid-row: 4 / span 2; }
+.rpos-5 { grid-column: 1; grid-row: 5 / span 2; }
 
 /* ── Horizontal arrows ────────────────────────────────────────────────── */
 .rm-arrow.rm-h {
@@ -2672,6 +2674,107 @@ select:hover, .btn:hover {
 [data-theme="dark"] .stage-card.s3:hover { box-shadow: 0 0 30px rgba(245,158,11,0.25), 0 0 60px rgba(245,158,11,0.08), 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(245,158,11,0.3); }
 [data-theme="dark"] .stage-card.s4:hover { box-shadow: 0 0 30px rgba(244,63,94,0.25),  0 0 60px rgba(244,63,94,0.08), 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(244,63,94,0.3); }
 [data-theme="dark"] .stage-card.s5:hover { box-shadow: 0 0 30px rgba(34,211,160,0.25), 0 0 60px rgba(34,211,160,0.08), 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(34,211,160,0.3); }
+
+/* ── Neuron soma layers ────────────────────────────────────────────────── */
+/* The card visually behaves like a neuron cell body: a faint membrane ring
+ * pulses at a slow ~4s rhythm (each stage offset so the page reads as five
+ * neurons firing slightly out of sync), synaptic terminals sit on the edges
+ * where mesh paths attach, and a brief activation flash washes outward on
+ * hover. None of these layers add real DOM nodes — they all hang off pseudo
+ * elements on .stage-card so the existing markup stays untouched. */
+@keyframes neuronPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--neuron-pulse-c, rgba(168,85,247,0.0)); }
+    50%      { box-shadow: 0 0 0 6px var(--neuron-pulse-c, rgba(168,85,247,0.18)); }
+}
+@keyframes neuronFlash {
+    0%   { opacity: 0; transform: scale(0.8); }
+    30%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.4); }
+}
+.stage-card {
+    /* Soma "membrane" — a hairline ring just outside the card edge, plus
+     * a slow pulse that uses --neuron-pulse-c per stage. */
+    animation: neuronPulse 4.2s ease-in-out infinite;
+}
+.stage-card.s1 { --neuron-pulse-c: rgba(168,85,247,0.18); animation-delay: 0s;   }
+.stage-card.s2 { --neuron-pulse-c: rgba(6,214,224,0.18);  animation-delay: 0.6s; }
+.stage-card.s3 { --neuron-pulse-c: rgba(245,158,11,0.18); animation-delay: 1.2s; }
+.stage-card.s4 { --neuron-pulse-c: rgba(244,63,94,0.18);  animation-delay: 1.8s; }
+.stage-card.s5 { --neuron-pulse-c: rgba(34,211,160,0.18); animation-delay: 2.4s; }
+[data-theme="dark"] .stage-card.s1 { --neuron-pulse-c: rgba(168,85,247,0.28); }
+[data-theme="dark"] .stage-card.s2 { --neuron-pulse-c: rgba(6,214,224,0.28);  }
+[data-theme="dark"] .stage-card.s3 { --neuron-pulse-c: rgba(245,158,11,0.28); }
+[data-theme="dark"] .stage-card.s4 { --neuron-pulse-c: rgba(244,63,94,0.28);  }
+[data-theme="dark"] .stage-card.s5 { --neuron-pulse-c: rgba(34,211,160,0.28); }
+
+/* Synaptic terminals — small glowing nodes on the card edges where mesh
+ * paths attach. ::before is the input terminal (mesh enters), ::after is
+ * the output terminal (mesh leaves). Even-stage cards (S2, S4) live in
+ * column 2, so their input is on the left and output is also on the left
+ * (the mesh swings down to the next left-column card). */
+.stage-card::before,
+.stage-card::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--neuron-terminal-c, var(--violet));
+    box-shadow: 0 0 8px var(--neuron-terminal-c, var(--violet)),
+                0 0 14px var(--neuron-terminal-c, var(--violet));
+    opacity: 0.55;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+.stage-card.s1 { --neuron-terminal-c: var(--violet); }
+.stage-card.s2 { --neuron-terminal-c: var(--accent); }
+.stage-card.s3 { --neuron-terminal-c: var(--orange); }
+.stage-card.s4 { --neuron-terminal-c: var(--red);    }
+.stage-card.s5 { --neuron-terminal-c: var(--green);  }
+
+/* In the staircase layout, every connection lands on the inner edge of
+ * each card (the edge facing its neighbouring column). Inputs sit on the
+ * upper portion, outputs on the lower portion — same pattern as a real
+ * neuron with dendrites at the top and the axon hillock at the bottom. */
+
+/* Left-column cards (S1, S3, S5): inner edge = right. */
+.stage-card.s1::after,
+.stage-card.s3::after,
+.stage-card.s5::after  { right: -5px; }
+.stage-card.s1::before,
+.stage-card.s3::before,
+.stage-card.s5::before { right: -5px; }
+
+/* Right-column cards (S2, S4): inner edge = left. */
+.stage-card.s2::after,
+.stage-card.s4::after  { left: -5px; }
+.stage-card.s2::before,
+.stage-card.s4::before { left: -5px; }
+
+/* Vertical positions — input on upper third, output on lower third. */
+.stage-card::before { top: 30%; }
+.stage-card::after  { top: 70%; }
+
+/* S1 is the entry point — no input terminal. S5 is terminal — no output. */
+.stage-card.s1::before { display: none; }
+.stage-card.s5::after  { display: none; }
+
+.stage-card:hover::before,
+.stage-card:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.3);
+}
+.stage-card::before,
+.stage-card::after { transform: translateY(-50%); }
+
+/* Activation flash — a single radial wash that ripples out from the card
+ * centre on hover. Uses .stage-card-glow's existing pseudo by piggy-backing
+ * on a fresh pseudo would clash, so we drive it via animation on the
+ * existing glow blob: when hovered, the glow briefly scales up. */
+.stage-card:hover .stage-card-glow {
+    animation: neuronFlash 0.9s ease-out;
+}
 
 /* Corner glow blob */
 .stage-card-glow {
@@ -3230,15 +3333,16 @@ select:hover, .btn:hover {
         flex-direction: column;
         gap: 0;
     }
+    .rpos-1, .rpos-2, .rpos-3, .rpos-4, .rpos-5 {
+        grid-column: auto;
+        grid-row: auto;
+    }
     .rpos-1 { order: 1; }
-    .rpos-2 { order: 3; }
-    .rpos-3 { order: 5; }
-    .rpos-4 { order: 7; }
-    .rpos-5 { order: 9; }
-    .rm-arrow.rm-h { display: none; }
-    .rm-2-3 { order: 4; height: 40px; }
-    .rm-4-5 { order: 8; height: 40px; }
-    /* Add simple vertical connectors for mobile between S1-S2 and S3-S4 */
+    .rpos-2 { order: 2; }
+    .rpos-3 { order: 3; }
+    .rpos-4 { order: 4; }
+    .rpos-5 { order: 5; }
+    /* Mesh is desktop-only — give mobile a simple vertical connector. */
     .roadmap-stage::after {
         content: '';
         display: block;
@@ -3248,7 +3352,6 @@ select:hover, .btn:hover {
         border-radius: 2px;
         background: var(--border);
     }
-    .rpos-2::after, .rpos-4::after { display: none; } /* rm-v handles these */
     .rpos-5::after { display: none; }
     .stage-card { padding: 18px; }
     .tier-badge { font-size: 9px; }

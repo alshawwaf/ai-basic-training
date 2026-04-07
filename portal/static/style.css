@@ -4272,9 +4272,9 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     max-width: none;
 }
 .content-drawer.is-fullscreen .drawer-body {
-    max-width: 920px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 32px 40px;
+    padding: 36px 56px;
 }
 .content-drawer.is-fullscreen .drawer-resize-handle { display: none; }
 

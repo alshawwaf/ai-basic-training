@@ -14,7 +14,7 @@
     <script>if(localStorage.getItem('portalTheme')!=='light')document.documentElement.setAttribute('data-theme','dark');</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
-<body class="lesson-page">
+<body class="lesson-page"{% if lesson_id is defined and lesson_id %} data-stage="{{ lesson_id[:2] }}"{% endif %}>
     {% from "icons.html" import brand_logo %}
     <nav class="top-nav">
         <a href="/" class="nav-brand" title="Back to portal">{{ brand_logo(38) }}</a>
@@ -43,8 +43,11 @@
             </li>
             {% endfor %}
         </ul>
-        <div style="padding: 16px 20px; border-top: 1px solid var(--border); margin-top: 12px;">
-            <a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 13px;">&larr; Back to portal</a>
+        <div class="sidebar-back-wrap">
+            <a href="/" class="sidebar-back">
+                <span class="sidebar-back-icon">&larr;</span>
+                <span>Back to portal</span>
+            </a>
         </div>
     </nav>
 
@@ -124,17 +127,9 @@
 
         <!-- Nav -->
         <div class="nav-buttons">
-            {% if current > 0 %}
-                <a href="{{ url_prefix }}/step/{{ current - 1 }}">&#8592; Previous</a>
-            {% else %}
-                <a href="{{ url_prefix }}/">&#8592; Overview</a>
-            {% endif %}
+            <a id="prevPhaseBtn" href="#" onclick="goToPreviousPhase(event)">&#8592; Previous</a>
             <span class="kbd-hint"><span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> to navigate</span>
-            {% if current < (steps | length) - 1 %}
-                <a href="{{ url_prefix }}/step/{{ current + 1 }}">Next step &#8594;</a>
-            {% else %}
-                <a href="/">Back to portal</a>
-            {% endif %}
+            <a id="nextPhaseBtn" href="#" onclick="goToNextPhase(event)">Next &#8594;</a>
         </div>
     </main>
 
@@ -237,22 +232,122 @@
         markStepVisitedPortal({{ current }});
         applyVisitedSteps();
 
-        // Keyboard nav scoped to lesson
+        // ── Phase-aware navigation ────────────────────────────────────────
+        // The "Next" button advances through Explore → Read → Build → Compare
+        // → Challenge before moving to the next step. Same for left/right
+        // arrow keys. Available phases depend on which materials this step
+        // has, so we read the .lp-step elements as the source of truth.
+        const TOTAL_STEPS = {{ steps | length }};
+        const CUR_STEP = {{ current }};
+
+        function _lpSteps() {
+            return Array.from(document.querySelectorAll('.learning-path .lp-step'));
+        }
+
+        function _activeLpIndex() {
+            var steps = _lpSteps();
+            for (var i = 0; i < steps.length; i++) {
+                if (steps[i].classList.contains('lp-active')) return i;
+            }
+            return 0;
+        }
+
+        // Close any overlay that's currently open. The close functions no
+        // longer reset the active phase, so it's safe to call all three —
+        // the upcoming pill click will set the new active phase.
+        function _closeAllPhaseOverlays() {
+            closeDrawer();
+            closeCodeModal();
+            closeHintModal();
+        }
+
+        function goToNextPhase(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var steps = _lpSteps();
+            var idx = _activeLpIndex();
+            if (idx < steps.length - 1) {
+                _closeAllPhaseOverlays();
+                steps[idx + 1].click();
+            } else if (CUR_STEP < TOTAL_STEPS - 1) {
+                window.location.href = urlPrefix + '/step/' + (CUR_STEP + 1);
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        function goToPreviousPhase(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var idx = _activeLpIndex();
+            if (idx > 0) {
+                if (idx === 1) {
+                    // Stepping back to Explore — close everything and reactivate.
+                    returnToExplore();
+                } else {
+                    _closeAllPhaseOverlays();
+                    _lpSteps()[idx - 1].click();
+                }
+            } else if (CUR_STEP > 0) {
+                window.location.href = urlPrefix + '/step/' + (CUR_STEP - 1);
+            } else {
+                window.location.href = urlPrefix + '/';
+            }
+        }
+
+        function updateNavLabels() {
+            var nextBtn = document.getElementById('nextPhaseBtn');
+            var prevBtn = document.getElementById('prevPhaseBtn');
+            if (!nextBtn || !prevBtn) return;
+            var steps = _lpSteps();
+            var idx = _activeLpIndex();
+
+            // Next label
+            if (idx < steps.length - 1) {
+                var nextLabelEl = steps[idx + 1].querySelector('.lp-label');
+                var nextLabel = nextLabelEl ? nextLabelEl.textContent : 'Next';
+                nextBtn.innerHTML = 'Next: ' + nextLabel + ' &#8594;';
+            } else if (CUR_STEP < TOTAL_STEPS - 1) {
+                nextBtn.innerHTML = 'Next step &#8594;';
+            } else {
+                nextBtn.innerHTML = 'Back to portal';
+            }
+
+            // Previous label
+            if (idx > 0) {
+                var prevLabelEl = steps[idx - 1].querySelector('.lp-label');
+                var prevLabel = prevLabelEl ? prevLabelEl.textContent : 'Previous';
+                prevBtn.innerHTML = '&#8592; ' + prevLabel;
+            } else if (CUR_STEP > 0) {
+                prevBtn.innerHTML = '&#8592; Previous step';
+            } else {
+                prevBtn.innerHTML = '&#8592; Overview';
+            }
+        }
+
+        // Watch for active-phase changes so the labels stay in sync as the
+        // learner clicks pills, opens drawers, or dismisses overlays.
+        (function() {
+            var lp = document.querySelector('.learning-path');
+            if (!lp) return;
+            var observer = new MutationObserver(updateNavLabels);
+            _lpSteps().forEach(function(s) {
+                observer.observe(s, { attributes: true, attributeFilter: ['class'] });
+            });
+            updateNavLabels();
+        })();
+
+        // Keyboard nav scoped to lesson — arrows now advance through phases.
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
-            const total = {{ steps | length }};
-            const cur = {{ current }};
             if (e.key === 'Escape') {
                 if (document.getElementById('runModal').classList.contains('open')) { closeRunModal(); return; }
                 closeDrawer(); closeCodeModal(); closeHintModal(); return;
             }
-            if (document.getElementById('contentDrawer').classList.contains('open')) return;
-            if (document.getElementById('codeModal').classList.contains('open')) return;
-            if (document.getElementById('hintModal').classList.contains('open')) return;
-            if (e.key === 'ArrowLeft' && cur > 0) {
-                window.location.href = urlPrefix + '/step/' + (cur - 1);
-            } else if (e.key === 'ArrowRight' && cur < total - 1) {
-                window.location.href = urlPrefix + '/step/' + (cur + 1);
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goToPreviousPhase();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                goToNextPhase();
             }
         });
 
@@ -532,7 +627,9 @@
         function closeDrawer() {
             document.getElementById('contentDrawer').classList.remove('open');
             document.getElementById('drawerOverlay').classList.remove('open');
-            activateExploreLp();
+            // Intentionally do NOT reactivate Explore here — leaving the
+            // last visited phase as 'active' lets the Next button advance
+            // to the following phase instead of looping on the same one.
         }
 
         // Re-highlight the Explore pill once any overlay panel is dismissed,
@@ -584,7 +681,8 @@
         function closeCodeModal() {
             document.getElementById('codeModal').classList.remove('open');
             document.getElementById('codeModalOverlay').classList.remove('open');
-            activateExploreLp();
+            // Same as closeDrawer: keep the last visited phase active so the
+            // Next button keeps walking forward through the flow.
         }
 
         // ── Run Output Modal ──────────────────────────────────────────────

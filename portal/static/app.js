@@ -368,7 +368,9 @@ function openHintModal() {
 function closeHintModal() {
     document.getElementById('hintModal').classList.remove('open');
     document.getElementById('hintOverlay').classList.remove('open');
-    if (typeof activateExploreLp === 'function') activateExploreLp();
+    // Intentionally do NOT reactivate Explore — keep the last visited phase
+    // active so the lesson Next button advances along the flow on close.
+    // Use the Explore pill itself if you want to return to the start.
 }
 
 function showAnswer() {

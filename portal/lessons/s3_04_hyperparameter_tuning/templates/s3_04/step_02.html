@@ -75,6 +75,6 @@ for bs in batch_sizes:
 
 {% block security %}
 <div class="security-callout">
-    <strong>Security connection:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99% benign). With a large batch size, some batches may contain <strong>zero attack samples</strong>, producing gradients that only learn "everything is benign." Smaller batch sizes increase the chance that each batch contains at least some attack samples, leading to more balanced learning -- critical for recall on rare attack classes.
+    <strong>Cybersecurity tie-in:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99% benign). With a large batch size, some batches may contain <strong>zero attack samples</strong>, producing gradients that only learn "everything is benign." Smaller batch sizes increase the chance that each batch contains at least some attack samples, leading to more balanced learning -- critical for recall on rare attack classes.
 </div>
 {% endblock %}

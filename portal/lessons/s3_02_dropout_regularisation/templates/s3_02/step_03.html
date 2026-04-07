@@ -69,6 +69,6 @@ print(f"Current model val_loss: {final_val_loss[0]:.4f}")</code></pre>
 
 {% block security %}
 <div class="security-callout">
-    <strong>Security connection:</strong> Early stopping is essential for security ML pipelines that retrain automatically. Without it, an automated nightly retrain of a phishing classifier could silently overfit -- performing perfectly on yesterday's phishing emails but <strong>missing tomorrow's new campaigns</strong>. Early stopping with <code>restore_best_weights=True</code> ensures every retrain produces the best-generalising model, not the most-memorised one.
+    <strong>Cybersecurity tie-in:</strong> Early stopping is essential for security ML pipelines that retrain automatically. Without it, an automated nightly retrain of a phishing classifier could silently overfit -- performing perfectly on yesterday's phishing emails but <strong>missing tomorrow's new campaigns</strong>. Early stopping with <code>restore_best_weights=True</code> ensures every retrain produces the best-generalising model, not the most-memorised one.
 </div>
 {% endblock %}

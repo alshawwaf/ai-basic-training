@@ -71,7 +71,7 @@ print(f"Stratified 5-fold AUC: {scores.mean():.4f} +/- {scores.std():.4f}")</cod
 
 {% block security %}
 <div class="security-callout">
-    <strong>Security connection:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99%
+    <strong>Cybersecurity tie-in:</strong> Security datasets are often <strong>heavily imbalanced</strong> (1% attacks, 99%
     benign). A single train/test split might accidentally put most attacks in the training set, giving misleadingly high test
     scores. <strong>Stratified K-fold</strong> guarantees every fold has the same attack ratio, producing honest performance
     estimates that reflect real-world detection capability.

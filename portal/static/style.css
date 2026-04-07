@@ -860,10 +860,11 @@ select:hover, .btn:hover {
     font-size: 12px;
 }
 
-/* "New digit" CTA on the Step 0 hook — needs to be the obvious next action
-   once the learner has guessed, so it gets bigger padding and a steady
-   cyan glow on top of the .btn-primary base. */
-.btn-new-digit {
+/* Reusable "obvious next action" CTA — pill, slow cyan pulse, lift on
+   hover. Pair with .btn-primary so the base colour matches the brand.
+   Used by 'New digit' (Step 0), 'Random pair' (Step 2), and future
+   explore-step CTAs that need to read as the primary affordance. */
+.btn-cta-pulse {
     padding: 12px 26px;
     font-size: 15px;
     font-weight: 700;
@@ -873,22 +874,22 @@ select:hover, .btn:hover {
         0 0 0 1px rgba(6,214,224,0.55),
         0 0 22px rgba(6,214,224,0.45),
         0 6px 18px rgba(0,0,0,0.35);
-    animation: btn-new-digit-pulse 2.4s ease-in-out infinite;
+    animation: btn-cta-pulse-glow 2.4s ease-in-out infinite;
 }
-.btn-new-digit:hover {
+.btn-cta-pulse:hover {
     transform: translateY(-1px);
     box-shadow:
         0 0 0 1px rgba(34,230,240,0.75),
         0 0 28px rgba(6,214,224,0.65),
         0 8px 22px rgba(0,0,0,0.40);
 }
-.btn-new-digit span[aria-hidden="true"] {
+.btn-cta-pulse span[aria-hidden="true"] {
     display: inline-block;
     margin-right: 6px;
     font-size: 17px;
     transform: translateY(1px);
 }
-@keyframes btn-new-digit-pulse {
+@keyframes btn-cta-pulse-glow {
     0%, 100% {
         box-shadow:
             0 0 0 1px rgba(6,214,224,0.55),

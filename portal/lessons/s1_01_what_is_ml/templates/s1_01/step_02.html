@@ -15,7 +15,9 @@
                 {% for d in range(10) %}<option value="{{ d }}" {{ 'selected' if d == 8 }}>{{ d }}</option>{% endfor %}
             </select>
         </label>
-        <button class="btn" onclick="randomPair()">Random pair</button>
+        <button class="btn btn-primary btn-cta-pulse" onclick="randomPair()">
+            <span aria-hidden="true">&#8634;</span> Random pair
+        </button>
     </div>
 
     <!-- Quick preset buttons -->

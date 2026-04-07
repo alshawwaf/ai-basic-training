@@ -2491,7 +2491,7 @@ select:hover, .btn:hover {
 .mesh-path {
     fill: none;
     stroke-width: 1.6;
-    stroke-linecap: butt;
+    stroke-linecap: round;
     opacity: 0.55;
     transition: opacity 0.45s ease, stroke-width 0.3s ease, stroke 0.3s ease;
 }
@@ -3086,66 +3086,6 @@ select:hover, .btn:hover {
 [data-theme="dark"] .stage-card.s4 { --neuron-pulse-c: rgba(244,63,94,0.28);  }
 [data-theme="dark"] .stage-card.s5 { --neuron-pulse-c: rgba(34,211,160,0.28); }
 
-/* Synaptic terminals — small glowing nodes on the card edges where mesh
- * paths attach. ::before is the input terminal (mesh enters), ::after is
- * the output terminal (mesh leaves). Even-stage cards (S2, S4) live in
- * column 2, so their input is on the left and output is also on the left
- * (the mesh swings down to the next left-column card). */
-.stage-card::before,
-.stage-card::after {
-    content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--neuron-terminal-c, var(--violet));
-    box-shadow: 0 0 8px var(--neuron-terminal-c, var(--violet)),
-                0 0 14px var(--neuron-terminal-c, var(--violet));
-    opacity: 0.55;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 2;
-    pointer-events: none;
-}
-.stage-card.s1 { --neuron-terminal-c: var(--violet); }
-.stage-card.s2 { --neuron-terminal-c: var(--accent); }
-.stage-card.s3 { --neuron-terminal-c: var(--orange); }
-.stage-card.s4 { --neuron-terminal-c: var(--red);    }
-.stage-card.s5 { --neuron-terminal-c: var(--green);  }
-
-/* In the staircase layout, every connection lands on the inner edge of
- * each card (the edge facing its neighbouring column). Inputs sit on the
- * upper portion, outputs on the lower portion — same pattern as a real
- * neuron with dendrites at the top and the axon hillock at the bottom. */
-
-/* Left-column cards (S1, S3, S5): inner edge = right. */
-.stage-card.s1::after,
-.stage-card.s3::after,
-.stage-card.s5::after  { right: -5px; }
-.stage-card.s1::before,
-.stage-card.s3::before,
-.stage-card.s5::before { right: -5px; }
-
-/* Right-column cards (S2, S4): inner edge = left. */
-.stage-card.s2::after,
-.stage-card.s4::after  { left: -5px; }
-.stage-card.s2::before,
-.stage-card.s4::before { left: -5px; }
-
-/* Vertical positions — input on upper third, output on lower third. */
-.stage-card::before { top: 30%; }
-.stage-card::after  { top: 70%; }
-
-/* S1 is the entry point — no input terminal. S5 is terminal — no output. */
-.stage-card.s1::before { display: none; }
-.stage-card.s5::after  { display: none; }
-
-.stage-card:hover::before,
-.stage-card:hover::after {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.3);
-}
-.stage-card::before,
-.stage-card::after { transform: translateY(-50%); }
 
 /* Activation flash — a single radial wash that ripples out from the card
  * centre on hover. Uses .stage-card-glow's existing pseudo by piggy-backing

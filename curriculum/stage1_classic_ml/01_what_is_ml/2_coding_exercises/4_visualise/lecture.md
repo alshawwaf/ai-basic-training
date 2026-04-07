@@ -1,4 +1,4 @@
-# Exercise 4 — Visualising Your Data
+# Visualising Your Data
 
 > Read this guide fully before opening the lab.
 

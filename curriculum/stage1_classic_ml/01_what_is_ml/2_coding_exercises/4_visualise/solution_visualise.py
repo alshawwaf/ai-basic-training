@@ -50,4 +50,4 @@ plt.tight_layout()
 plt.savefig("average_digits.png")
 plt.show()
 
-print("\n--- Exercise 4 complete. Move to 05_what_model_sees.py ---")
+print("\n--- Visualising Your Data — complete ---")

@@ -1,4 +1,4 @@
-# Lab — Exercise 2: Shape, Statistics, and Missing Values
+# Lab — Shape, Statistics, and Missing Values
 
 > Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
@@ -104,7 +104,7 @@ Total missing values: 0
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 2 complete. Move to 03_class_balance.py ---")
+print("\n--- Shape, Statistics, and Missing Values — complete ---")
 ```
 
 ---

@@ -1,4 +1,4 @@
-# Lab — Exercise 4: Visualising Your Data
+# Lab — Visualising Your Data
 
 > Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
@@ -94,7 +94,7 @@ Run your file and look at which digit pairs have the most similar prototypes. Co
 ## Step 6: Add the completion message
 
 ```python
-print("\n--- Exercise 4 complete. Move to 05_what_model_sees.py ---")
+print("\n--- Visualising Your Data — complete ---")
 ```
 
 ---

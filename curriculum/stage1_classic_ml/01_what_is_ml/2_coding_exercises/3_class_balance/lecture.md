@@ -1,4 +1,4 @@
-# Exercise 3 — Class Balance: The Silent Model Killer
+# Class Balance & the Accuracy Trap
 
 > Read this guide fully before opening the lab.
 

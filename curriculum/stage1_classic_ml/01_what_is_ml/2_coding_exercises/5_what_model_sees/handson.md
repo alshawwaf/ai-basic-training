@@ -1,4 +1,4 @@
-# Lab — Exercise 5: What the Model Actually Sees
+# Lab — What the Model Actually Sees
 
 > Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
@@ -106,8 +106,8 @@ print("Same structure. Same algorithms. Different domain.")
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 5 complete ---")
-print("You have completed all 5 exercises for Lesson 1.1.")
+print("\n--- What the Model Actually Sees — complete ---")
+print("You have completed all 5 hands-on labs for Lesson 1.1.")
 print("")
 print("Next steps:")
 print("  1. Open the matching solution file to compare your code")

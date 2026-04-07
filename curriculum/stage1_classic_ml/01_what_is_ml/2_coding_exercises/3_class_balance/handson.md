@@ -1,4 +1,4 @@
-# Lab — Exercise 3: Class Balance — The Silent Model Killer
+# Lab — Class Balance & the Accuracy Trap
 
 > Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
@@ -135,7 +135,7 @@ Run your file. You should see a horizontal bar for each digit class, all approxi
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 3 complete. Move to 04_visualise.py ---")
+print("\n--- Class Balance & the Accuracy Trap — complete ---")
 ```
 
 ---

@@ -1,4 +1,4 @@
-# Lab — Exercise 1: Loading a Dataset
+# Lab — Loading a Dataset
 
 > Follow each step in order. Write the code into your script file as you go. By the final step you will have a complete, runnable Python script.
 
@@ -190,7 +190,7 @@ First 10 pixel values: [ 0.  0.  5. 13.  9.  1.  0.  0.  0.  0.]
 ## Step 7: Add the completion message
 
 ```python
-print("\n--- Exercise 1 complete. Move to 02_statistics.py ---")
+print("\n--- Loading a Dataset — complete ---")
 ```
 
 ---

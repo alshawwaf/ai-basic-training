@@ -29,4 +29,4 @@ print("\nMissing values per column (showing first 5):")
 print(missing.head())
 print(f"\nTotal missing values: {df.isnull().sum().sum()}")
 
-print("\n--- Exercise 2 complete. Move to 03_class_balance.py ---")
+print("\n--- Shape, Statistics, and Missing Values — complete ---")

@@ -1,4 +1,4 @@
-# Exercise 1 — Loading a Dataset
+# Loading a Dataset
 
 > Read this guide fully before opening the lab.
 

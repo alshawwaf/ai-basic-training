@@ -55,4 +55,4 @@ for label, count in counts.items():
     bar = "█" * filled + "░" * (BAR_WIDTH - filled)
     print(f"{label} | {bar} ({count})")
 
-print("\n--- Exercise 3 complete. Move to 04_visualise.py ---")
+print("\n--- Class Balance & the Accuracy Trap — complete ---")

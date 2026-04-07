@@ -33,4 +33,4 @@ print("##SECTION:Inspect a single sample##")
 print(f"\nFirst sample — label: {digits.target[0]}")
 print(f"First 10 pixel values: {digits.data[0, :10]}")
 
-print("\n--- Exercise 1 complete. Move to 02_statistics.py ---")
+print("\n--- Loading a Dataset — complete ---")

@@ -1166,8 +1166,10 @@ select:hover, .btn:hover {
     font-size: 14px; line-height: 1.7; color: var(--text-dim); margin: 0;
 }
 .challenge-box .answer {
-    margin-top: 12px; padding: 12px;
-    background: rgba(16, 185, 129, 0.08);
+    margin-top: 12px; padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(6, 214, 224, 0.10), rgba(6, 214, 224, 0.04));
+    border: 1px solid rgba(6, 214, 224, 0.30);
+    border-left: 3px solid var(--accent);
     border-radius: var(--radius); display: none;
     font-size: 14px; line-height: 1.7; color: var(--text);
 }

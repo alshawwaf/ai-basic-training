@@ -833,6 +833,21 @@ select:hover, .btn:hover {
     border-color: var(--accent);
     background: rgba(6, 182, 212, 0.1);
 }
+/* Native <option> rendering ignores most CSS, but Chromium and Firefox
+   honour background+color on the dropdown panel. Without this rule the
+   options inherit a near-black-on-near-black combo from the page theme
+   and are unreadable. */
+select option {
+    background: #0b1220;
+    color: #e6edff;
+    font-weight: 600;
+    padding: 6px 10px;
+}
+select option:checked,
+select option:hover {
+    background: rgba(6,214,224,0.22);
+    color: #ffffff;
+}
 .btn:active {
     transform: scale(0.97);
 }
@@ -904,16 +919,43 @@ select:hover, .btn:hover {
     }
 }
 
-/* Scenario / preset button group */
+/* Scenario / preset button group — sits beneath the main controls and
+   acts as one-click jumps to canonical settings. Default .btn was too
+   quiet against the dark card; bump contrast so each chip reads as an
+   actionable preset, and let hover lift it like a real button. */
 .btn-group {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin: 12px 0;
+    margin: 14px 0;
 }
 .btn-group .btn {
-    font-size: 12px;
-    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 16px;
+    color: #e6edff;
+    border: 1px solid rgba(6,214,224,0.45);
+    background: linear-gradient(180deg,
+        rgba(6,214,224,0.10) 0%,
+        rgba(6,214,224,0.04) 100%);
+    box-shadow:
+        0 0 0 1px rgba(6,214,224,0.05) inset,
+        0 1px 0 rgba(255,255,255,0.04) inset;
+    letter-spacing: 0.2px;
+}
+.btn-group .btn:hover {
+    color: #ffffff;
+    border-color: rgba(34,230,240,0.85);
+    background: linear-gradient(180deg,
+        rgba(6,214,224,0.22) 0%,
+        rgba(6,214,224,0.10) 100%);
+    box-shadow:
+        0 0 0 1px rgba(6,214,224,0.10) inset,
+        0 0 14px rgba(6,214,224,0.30);
+    transform: translateY(-1px);
+}
+.btn-group .btn:active {
+    transform: translateY(0);
 }
 
 /* ── Keyboard shortcut badge ────────────────────────────────────────────── */

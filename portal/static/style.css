@@ -2491,7 +2491,7 @@ select:hover, .btn:hover {
 .mesh-path {
     fill: none;
     stroke-width: 1.6;
-    stroke-linecap: round;
+    stroke-linecap: butt;
     opacity: 0.55;
     transition: opacity 0.45s ease, stroke-width 0.3s ease, stroke 0.3s ease;
 }

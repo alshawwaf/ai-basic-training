@@ -11,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <script>if(localStorage.getItem('portalTheme')!=='light')document.documentElement.setAttribute('data-theme','dark');</script>
 </head>
-<body style="justify-content: center;">
+<body style="justify-content: center;"{% if lesson_id is defined and lesson_id %} data-stage="{{ lesson_id[:2] }}"{% endif %}>
     {% from "icons.html" import brand_logo %}
     <nav class="top-nav">
         <a href="/" class="nav-brand">{{ brand_logo(38) }}</a>

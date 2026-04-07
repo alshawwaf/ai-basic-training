@@ -3,24 +3,23 @@
 
 {% block body %}
 <div class="welcome">
-    <p style="margin-bottom: 8px;">
-        <a href="/" style="color: var(--text-dim); text-decoration: none; font-size: 14px;">&larr; Back to portal</a>
-    </p>
-    <h1>{{ lesson_title }}</h1>
+    <div class="welcome-topbar">
+        <a href="/" class="welcome-back"><span class="welcome-back-icon">&larr;</span> Back to portal</a>
+        <button class="welcome-gear" onclick="toggleCommandMenu(event)" title="Quick actions" aria-label="Quick actions">&#9881;</button>
+    </div>
+<h1>{{ lesson_title }}</h1>
     <p class="tagline">Turn the knobs that separate a 75% model from a 95% model</p>
 
     <div class="welcome-progress">
-        <button class="cmd-ring-btn" onclick="toggleCommandMenu(event)" title="Quick Actions">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-                <circle class="progress-ring-bg" cx="32" cy="32" r="26" fill="none" stroke-width="5"/>
-                <circle class="progress-ring-fill" id="progRing" cx="32" cy="32" r="26" fill="none" stroke-width="5"
-                    stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="163.36"/>
-            </svg>
-            <span class="progress-ring-text" id="progPct">0%</span>
-        </button>
-        <div class="progress-detail">
-            <div class="prog-label" id="progLabel">0 of {{ steps | length }} steps completed</div>
-            <div class="prog-sub">~90 min &middot; Learning rate, batch size, and architecture experiments</div>
+        <div class="welcome-progress-track">
+            <div class="welcome-progress-fill" id="progRing"></div>
+        </div>
+        <div class="welcome-progress-meta">
+            <span class="welcome-progress-pct" id="progPct">0%</span>
+            <span class="welcome-progress-dot">&middot;</span>
+            <span id="progLabel">0 of {{ steps | length }} steps completed</span>
+            <span class="welcome-progress-dot">&middot;</span>
+            <span class="welcome-progress-sub">~90 min &middot; Learning rate, batch size, and architecture experiments</span>
         </div>
     </div>
 
@@ -50,10 +49,9 @@
             card.querySelector('.step-status').textContent = 'Done';
         }
     });
-    const circumference = 163.36;
     const pct = total > 0 ? count / total : 0;
     const ring = document.getElementById('progRing');
-    if (ring) ring.style.strokeDashoffset = circumference * (1 - pct);
+    if (ring) ring.style.width = (pct * 100) + '%';
     document.getElementById('progPct').textContent = Math.round(pct * 100) + '%';
     document.getElementById('progLabel').textContent = count + ' of ' + total + ' steps completed';
 </script>

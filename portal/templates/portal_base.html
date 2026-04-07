@@ -47,6 +47,18 @@
         </div>
     </div>
 
+    <!-- Reusable confirm modal — replaces native browser confirm() -->
+    <div class="confirm-modal-overlay" id="confirmModalOverlay" onclick="hideConfirmModal(false)"></div>
+    <div class="confirm-modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="confirm-modal-icon" id="confirmModalIcon" aria-hidden="true">&#9888;</div>
+        <h2 class="confirm-modal-title" id="confirmModalTitle">Are you sure?</h2>
+        <p class="confirm-modal-body" id="confirmModalBody"></p>
+        <div class="confirm-modal-actions">
+            <button class="confirm-modal-btn confirm-modal-cancel" id="confirmModalCancel" type="button" onclick="hideConfirmModal(false)">Cancel</button>
+            <button class="confirm-modal-btn confirm-modal-ok" id="confirmModalOk" type="button" onclick="hideConfirmModal(true)">Confirm</button>
+        </div>
+    </div>
+
     {% block body %}{% endblock %}
     <script src="/static/app.js"></script>
     {% block scripts %}{% endblock %}

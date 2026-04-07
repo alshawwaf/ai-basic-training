@@ -207,17 +207,86 @@ function resetAllProgress() {
     window.location.reload();
 }
 
+/* ── Reusable confirm modal ─────────────────────────────────────────────────
+   Promise-based replacement for native browser confirm(). Resolves true if
+   the user clicks the primary button, false on Cancel / Esc / overlay click.
+   Markup lives in portal_base.html so any page in the portal can call this. */
+
+let _confirmResolver = null;
+
+function showConfirm(opts = {}) {
+    const {
+        title = 'Are you sure?',
+        body = '',
+        confirmLabel = 'Confirm',
+        cancelLabel = 'Cancel',
+        danger = false,
+    } = opts;
+    return new Promise((resolve) => {
+        // If something else is already showing, dismiss it as Cancel first.
+        if (_confirmResolver) {
+            try { _confirmResolver(false); } catch (e) {}
+        }
+        _confirmResolver = resolve;
+
+        document.getElementById('confirmModalTitle').textContent = title;
+        document.getElementById('confirmModalBody').textContent = body;
+
+        const okBtn = document.getElementById('confirmModalOk');
+        const cancelBtn = document.getElementById('confirmModalCancel');
+        okBtn.textContent = confirmLabel;
+        cancelBtn.textContent = cancelLabel;
+        okBtn.classList.toggle('danger', !!danger);
+
+        document.getElementById('confirmModalOverlay').classList.add('open');
+        document.getElementById('confirmModal').classList.add('open');
+
+        // Focus Cancel by default on destructive prompts (safer if the user
+        // hits Enter), focus the primary button otherwise.
+        setTimeout(() => {
+            (danger ? cancelBtn : okBtn).focus();
+        }, 60);
+    });
+}
+
+function hideConfirmModal(result) {
+    document.getElementById('confirmModalOverlay').classList.remove('open');
+    document.getElementById('confirmModal').classList.remove('open');
+    if (_confirmResolver) {
+        const r = _confirmResolver;
+        _confirmResolver = null;
+        r(!!result);
+    }
+}
+
+// Esc cancels the confirm modal whenever it's open. Registered globally so
+// the handler is available on every page that extends portal_base.html.
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const modal = document.getElementById('confirmModal');
+    if (modal && modal.classList.contains('open')) {
+        e.stopPropagation();
+        hideConfirmModal(false);
+    }
+});
+
 /* Reset progress for a single lesson — wired to the welcome-reset button
    on each lesson index page. Drops that lesson's step progress, removes
    any of its bookmarks, clears the global "last visited" pointer if it
    was pointing here, and reloads so the welcome page reflects the new
    empty state. Other lessons are left untouched. */
-function resetLessonProgress(lessonId, event) {
+async function resetLessonProgress(lessonId, event) {
     if (event) event.preventDefault();
     if (!lessonId) return;
-    if (!confirm('Reset progress for this lesson?\n\nThis clears which steps you have completed and removes any bookmarks for this lesson. Other lessons are not affected.')) {
-        return;
-    }
+
+    const ok = await showConfirm({
+        title: 'Reset progress for this lesson?',
+        body: 'This clears which steps you have completed and removes any bookmarks for this lesson. Other lessons are not affected.',
+        confirmLabel: 'Reset lesson',
+        cancelLabel: 'Cancel',
+        danger: true,
+    });
+    if (!ok) return;
 
     try {
         const progress = JSON.parse(localStorage.getItem('portalProgress') || '{}');

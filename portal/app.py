@@ -10,7 +10,7 @@ import json
 import os
 import warnings
 import markdown
-from flask import Flask, render_template, jsonify, request, abort, Response, stream_with_context
+from flask import Flask, render_template, jsonify, request, abort, Response, stream_with_context, send_from_directory
 from config import STAGES, get_all_lessons, get_lesson
 from runner import run_script, run_script_stream
 
@@ -80,6 +80,62 @@ def stage_view(stage_id):
     if not stage:
         return "Stage not found", 404
     return render_template("stage.html", stage=stage, stages=STAGES, registered=registered_lessons)
+
+
+# ── Executive proposal downloads ────────────────────────────────────────────
+
+DOCS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs"))
+PROPOSAL_FILES = {
+    "pdf":  ("AI-Ninja-Program-Exec-Deck.pdf",  "application/pdf"),
+    "pptx": ("AI-Ninja-Program-Exec-Deck.pptx",
+             "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
+}
+
+# Loopback addresses that count as "the instructor's own machine".
+# IPv4 loopback is the whole 127.0.0.0/8 block, plus IPv6 ::1.
+_LOCAL_ADDRS = {"127.0.0.1", "::1", "localhost"}
+
+
+def _require_local():
+    """Abort with 404 unless the request originated from this machine.
+
+    Zero-config guard for /admin and /proposal.* — if the portal is ever
+    bound to a network interface, these routes stay invisible to anyone
+    who isn't on loopback. 404 (not 403) so the URL leaks no signal that
+    something protected lives here.
+    """
+    addr = request.remote_addr or ""
+    if addr in _LOCAL_ADDRS or addr.startswith("127."):
+        return
+    abort(404)
+
+
+@app.route("/proposal.<fmt>")
+def download_proposal(fmt):
+    """Serve the AI Ninja Program executive proposal as PDF or PPTX.
+
+    Linked only from the hidden /admin page and gated to loopback callers.
+    """
+    _require_local()
+    fmt = fmt.lower()
+    if fmt not in PROPOSAL_FILES:
+        abort(404)
+    filename, mimetype = PROPOSAL_FILES[fmt]
+    if not os.path.exists(os.path.join(DOCS_DIR, filename)):
+        abort(404)
+    return send_from_directory(
+        DOCS_DIR, filename,
+        mimetype=mimetype,
+        as_attachment=True,
+        download_name=filename,
+    )
+
+
+@app.route("/admin")
+def admin_console():
+    """Hidden instructor-only page. Loopback-only, unlinked from the public portal."""
+    _require_local()
+    return render_template("admin.html")
 
 
 # ── Content API (serve markdown / Python files) ────────────────────────────

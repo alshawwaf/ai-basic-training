@@ -123,6 +123,9 @@ def run_script(rel_path: str, timeout: int = 60) -> dict:
         env["MPLBACKEND"] = "Agg"
         env["_FIG_DIR"] = fig_dir
         env["PYTHONDONTWRITEBYTECODE"] = "1"
+        # Force UTF-8 stdout/stderr in the child so unicode glyphs
+        # (em-dash, arrows, block chars) survive the cp1252 default on Windows.
+        env["PYTHONIOENCODING"] = "utf-8"
 
         # Run the script
         timed_out = False
@@ -131,6 +134,8 @@ def run_script(rel_path: str, timeout: int = 60) -> dict:
                 [sys.executable, "-u", script_path],
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=timeout,
                 cwd=os.path.dirname(full_path),
                 env=env,
@@ -216,6 +221,11 @@ def run_script_stream(rel_path: str, timeout: int = 60):
     env["MPLBACKEND"] = "Agg"
     env["_FIG_DIR"] = fig_dir
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    # Force the child interpreter to write UTF-8 to stdout/stderr regardless
+    # of the host locale. Without this, em-dashes / arrows / block glyphs
+    # from print() come out as mojibake on Windows (cp1252) and we render
+    # them as the U+FFFD replacement character.
+    env["PYTHONIOENCODING"] = "utf-8"
 
     proc = subprocess.Popen(
         [sys.executable, "-u", script_path],

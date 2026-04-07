@@ -44,10 +44,15 @@ print()
 print("This is why accuracy alone is a dangerous metric in security.")
 
 print("##SECTION:Class distribution chart##")
-# Simple text-based bar chart to visualise class distribution in the terminal
+# Simple text-based bar chart to visualise class distribution in the terminal.
+# Scale every bar to a fixed width so the chart stays on one line per class
+# instead of wrapping into a wall of characters.
+BAR_WIDTH = 40
+max_count = counts.max()
 print("\nClass distribution:")
 for label, count in counts.items():
-    bar = "#" * count
+    filled = round(count / max_count * BAR_WIDTH)
+    bar = "█" * filled + "░" * (BAR_WIDTH - filled)
     print(f"{label} | {bar} ({count})")
 
 print("\n--- Exercise 3 complete. Move to 04_visualise.py ---")

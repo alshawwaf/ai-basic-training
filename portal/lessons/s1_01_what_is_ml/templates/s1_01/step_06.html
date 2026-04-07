@@ -27,7 +27,7 @@
         </div>
         <div class="metric-card" id="mc-prec">
             <div class="metric-tip">When it says "target", how often is it right?</div>
-            <div class="name">Precision</div><div class="val">��</div>
+            <div class="name">Precision</div><div class="val">—</div>
         </div>
         <div class="metric-card" id="mc-rec">
             <div class="metric-tip">Of all real targets, how many does it find?</div>
@@ -102,12 +102,54 @@
         updateChart(pct);
     }
 
-    function updateChart(currentPct) {
+    // Custom plugin: draws a cyan dashed vertical cursor at the current
+    // slider position so the chart visibly "tracks" the drag without
+    // pulling in chartjs-plugin-annotation.
+    const cursorPlugin = {
+        id: 'sliderCursor',
+        afterDatasetsDraw(chart) {
+            const idx = chart.$cursorIndex;
+            if (idx == null) return;
+            const xScale = chart.scales.x;
+            const yScale = chart.scales.y;
+            const x = xScale.getPixelForValue(idx);
+            const ctx = chart.ctx;
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([5, 4]);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(6, 214, 224, 0.85)';
+            ctx.moveTo(x, yScale.top);
+            ctx.lineTo(x, yScale.bottom);
+            ctx.stroke();
+            // glow halo
+            ctx.shadowColor = 'rgba(6, 214, 224, 0.55)';
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+            ctx.restore();
+        }
+    };
+
+    function buildChart() {
         const pcts = Object.keys(metricsData).map(Number).sort((a, b) => a - b);
-        const acc = pcts.map(p => metricsData[String(p)].acc);
+        const acc  = pcts.map(p => metricsData[String(p)].acc);
         const prec = pcts.map(p => metricsData[String(p)].prec);
-        const rec = pcts.map(p => metricsData[String(p)].rec);
-        const f1 = pcts.map(p => metricsData[String(p)].f1);
+        const rec  = pcts.map(p => metricsData[String(p)].rec);
+        const f1   = pcts.map(p => metricsData[String(p)].f1);
+
+        const baseRadius = pcts.map(() => 3);
+        const mkDataset = (label, data, color) => ({
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color,
+            tension: 0.3,
+            pointRadius: baseRadius.slice(),
+            pointHoverRadius: baseRadius.map(() => 6),
+            pointBorderColor: pcts.map(() => color),
+            pointBackgroundColor: pcts.map(() => color),
+            borderWidth: 2,
+        });
 
         if (lineChart) lineChart.destroy();
         lineChart = new Chart(document.getElementById('line-chart'), {
@@ -115,26 +157,43 @@
             data: {
                 labels: pcts.map(p => p + '%'),
                 datasets: [
-                    {label: 'Accuracy',  data: acc,  borderColor: '#10b981', tension: 0.3, pointRadius: 3},
-                    {label: 'Precision', data: prec, borderColor: '#06b6d4', tension: 0.3, pointRadius: 3},
-                    {label: 'Recall',    data: rec,  borderColor: '#f43f5e', tension: 0.3, pointRadius: 3},
-                    {label: 'F1 Score',  data: f1,   borderColor: '#f59e0b', tension: 0.3, pointRadius: 3},
+                    mkDataset('Accuracy',  acc,  '#10b981'),
+                    mkDataset('Precision', prec, '#06b6d4'),
+                    mkDataset('Recall',    rec,  '#f43f5e'),
+                    mkDataset('F1 Score',  f1,   '#f59e0b'),
                 ],
             },
             options: {
                 responsive: true,
+                animation: false,
+                interaction: { mode: 'index', intersect: false },
                 scales: {
                     y: {min: 0, max: 1.05, ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
                     x: {ticks: {color: getCSS('--text-dim')}, grid: {color: getCSS('--border')}},
                 },
                 plugins: {
                     legend: {labels: {color: getCSS('--text'), font: {family: "'Space Mono'"}}},
-                    annotation: currentPct ? {
-                        annotations: {line1: {type: 'line', xMin: currentPct/5, xMax: currentPct/5, borderColor: '#888', borderDash: [4,4]}}
-                    } : {},
                 },
             },
+            plugins: [cursorPlugin],
         });
+    }
+
+    function updateChart(currentPct) {
+        if (!lineChart) return;
+        const pcts = Object.keys(metricsData).map(Number).sort((a, b) => a - b);
+        const idx = pcts.indexOf(currentPct);
+        lineChart.$cursorIndex = idx >= 0 ? idx : null;
+
+        // Highlight the current point on every line so the eye snaps to it.
+        lineChart.data.datasets.forEach(ds => {
+            const radii = pcts.map((_, i) => i === idx ? 7 : 3);
+            const borderColors = pcts.map((_, i) => i === idx ? '#ffffff' : ds.borderColor);
+            ds.pointRadius = radii;
+            ds.pointBorderColor = borderColors;
+            ds.pointBorderWidth = pcts.map((_, i) => i === idx ? 2 : 1);
+        });
+        lineChart.update('none');
     }
 
     function toggleAutoplay() {
@@ -171,6 +230,7 @@
         const cls = document.getElementById('sel-class').value;
         const data = await fetchJSON(`${urlPrefix}/api/trap-all?cls=${cls}`);
         metricsData = data;
+        buildChart();
         updateDisplay();
     }
 

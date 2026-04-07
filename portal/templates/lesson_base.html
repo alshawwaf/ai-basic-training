@@ -95,7 +95,7 @@
             <div class="lp-arrow">&#8250;</div>
             <div class="lp-step lp-clickable" onclick="openHintModal(); activateLpStep(this)">
                 <span class="lp-num lp-num-last">&#128161;</span>
-                <span class="lp-text"><span class="lp-label">Challenge</span><span class="lp-hint">Think deeper</span></span>
+                <span class="lp-text"><span class="lp-label">Reflect</span><span class="lp-hint">Think deeper</span></span>
             </div>
         </div>
 
@@ -135,14 +135,26 @@
 
     <!-- ── Content Drawer (markdown) ──────────────────────────────────────── -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="content-drawer" id="contentDrawer">
+    <div class="content-drawer" id="contentDrawer" onclick="restoreDrawerIfMinimized(event)">
         <div class="drawer-resize-handle" id="drawerResizeHandle"></div>
         <div class="drawer-header">
             <div>
                 <div class="drawer-breadcrumb" id="drawerBreadcrumb"></div>
                 <h2 class="drawer-title" id="drawerTitle"></h2>
             </div>
-            <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+            <div class="drawer-window-controls">
+                <button class="drawer-icon-btn" onclick="minimizeDrawer()" title="Minimize" aria-label="Minimize">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="19"/></svg>
+                </button>
+                <button class="drawer-icon-btn" onclick="toggleDrawerFullscreen()" title="Fullscreen" aria-label="Toggle fullscreen">
+                    <svg class="drawer-icon-fs-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"/></svg>
+                    <svg class="drawer-icon-fs-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"/></svg>
+                </button>
+                <button class="drawer-icon-btn" onclick="popOutDrawer()" title="Open in new window" aria-label="Pop out">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>
+                </button>
+                <button class="drawer-close" onclick="closeDrawer()" title="Close" aria-label="Close">&times;</button>
+            </div>
         </div>
         <div class="drawer-actions">
             <button class="drawer-action-btn" onclick="copyDrawerContent()" title="Copy to clipboard">
@@ -160,6 +172,16 @@
         </div>
         <div class="drawer-body md-content" id="drawerBody">
             <div class="drawer-loading">Loading...</div>
+        </div>
+        <!-- Visible only when drawer is minimized -->
+        <div class="drawer-mini-tab" aria-hidden="true">
+            <div class="drawer-mini-tab-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </div>
+            <div class="drawer-mini-tab-label" id="drawerMiniTabLabel">Lecture</div>
+            <div class="drawer-mini-tab-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>
+            </div>
         </div>
     </div>
 
@@ -382,6 +404,65 @@
             });
         })();
 
+        // ── Drawer view modes (fullscreen / pop-out / minimize) ───────────
+        function toggleDrawerFullscreen() {
+            var drawer = document.getElementById('contentDrawer');
+            if (drawer.classList.contains('is-minimized')) {
+                drawer.classList.remove('is-minimized');
+            }
+            drawer.classList.toggle('is-fullscreen');
+            // Drop any inline width set by the resize handle so the class wins.
+            drawer.style.width = '';
+        }
+
+        function minimizeDrawer() {
+            var drawer = document.getElementById('contentDrawer');
+            if (drawer.classList.contains('is-fullscreen')) {
+                drawer.classList.remove('is-fullscreen');
+            }
+            drawer.classList.add('is-minimized');
+            drawer.style.width = '';
+        }
+
+        function restoreDrawerIfMinimized(event) {
+            var drawer = document.getElementById('contentDrawer');
+            if (!drawer.classList.contains('is-minimized')) return;
+            drawer.classList.remove('is-minimized');
+            drawer.style.width = '';
+            if (event) event.stopPropagation();
+        }
+
+        function popOutDrawer() {
+            var body = document.getElementById('drawerBody');
+            var title = document.getElementById('drawerTitle').textContent || 'Lesson content';
+            var breadcrumb = document.getElementById('drawerBreadcrumb').textContent || '';
+            var theme = document.documentElement.getAttribute('data-theme') || '';
+            var origin = window.location.origin;
+            var win = window.open('', '_blank', 'noopener,width=900,height=900');
+            if (!win) { alert('Pop-out blocked by the browser. Allow pop-ups for this site.'); return; }
+            // Self-contained HTML page that reuses the portal stylesheet so the
+            // popped-out content matches the brand without a server round-trip.
+            var html = '<!DOCTYPE html><html lang="en"><head>' +
+                '<meta charset="UTF-8">' +
+                '<title>' + title.replace(/[<>]/g, '') + '</title>' +
+                '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                '<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">' +
+                '<link rel="stylesheet" href="' + origin + '/static/style.css">' +
+                '<style>body{margin:0;padding:48px 56px;}.popout-shell{max-width:860px;margin:0 auto;}' +
+                '.popout-breadcrumb{font-family:"Space Mono",monospace;font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan,#06d6e0);opacity:.85;margin-bottom:8px;}' +
+                '.popout-title{font-family:"Space Mono",monospace;font-size:26px;margin:0 0 24px;background:linear-gradient(135deg,#fff 0%,var(--cyan,#06d6e0) 60%,var(--violet,#a855f7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}' +
+                '</style>' +
+                '</head><body class="lesson-page"' + (theme ? ' data-theme="' + theme + '"' : '') + '>' +
+                '<div class="popout-shell">' +
+                '<div class="popout-breadcrumb">' + breadcrumb + '</div>' +
+                '<h1 class="popout-title">' + title + '</h1>' +
+                '<div class="md-content">' + body.innerHTML + '</div>' +
+                '</div></body></html>';
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+        }
+
         // ── Drawer logic ──────────────────────────────────────────────────
         var _drawerBasePath = '';    // directory of the currently loaded file
         var _drawerRawContent = '';  // raw markdown/text for copy/download
@@ -418,6 +499,9 @@
             document.getElementById('drawerTitle').textContent = title;
             document.getElementById('drawerBreadcrumb').textContent = '{{ lesson_title }} — Step {{ current }}';
             document.getElementById('drawerBody').innerHTML = '<div class="drawer-loading">Loading...</div>';
+            var miniLabel = document.getElementById('drawerMiniTabLabel');
+            if (miniLabel) miniLabel.textContent = title;
+            drawer.classList.remove('is-minimized');
             drawer.classList.add('open');
             overlay.classList.add('open');
 
@@ -625,7 +709,11 @@
         }
 
         function closeDrawer() {
-            document.getElementById('contentDrawer').classList.remove('open');
+            var drawer = document.getElementById('contentDrawer');
+            drawer.classList.remove('open');
+            drawer.classList.remove('is-fullscreen');
+            drawer.classList.remove('is-minimized');
+            drawer.style.width = '';
             document.getElementById('drawerOverlay').classList.remove('open');
             // Intentionally do NOT reactivate Explore here — leaving the
             // last visited phase as 'active' lets the Next button advance

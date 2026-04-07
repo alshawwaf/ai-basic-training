@@ -87,25 +87,45 @@ function renderCommandMenu() {
     const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
     const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
 
-    // ── Continue section
+    // Aggregate progress once — used by both the Continue card and the meta strip.
+    let totalSteps = 0, lessonsStarted = 0;
+    Object.keys(progress).forEach(lid => {
+        const steps = progress[lid] || [];
+        if (steps.length > 0) lessonsStarted++;
+        totalSteps += steps.length;
+    });
+
+    // ── Continue card (always shown — empty state when nothing visited)
     const contEl = document.getElementById('cmdContinue');
     if (last) {
         contEl.innerHTML = `
-            <div class="cmd-label">Continue</div>
             <a class="cmd-item cmd-continue" href="/lesson/${last.lessonId}/step/${last.step}">
                 <span class="cmd-icon">&#9654;</span>
                 <span class="cmd-item-info">
                     <strong>${last.title}</strong>
-                    <span class="cmd-sub">Step ${last.step}</span>
+                    <span class="cmd-sub">Resume at step ${last.step}</span>
                 </span>
             </a>`;
     } else {
         contEl.innerHTML = `
-            <div class="cmd-label">Continue</div>
-            <div class="cmd-empty">No steps visited yet</div>`;
+            <div class="cmd-empty cmd-empty-quiet">Open any lesson to start tracking progress.</div>`;
     }
 
-    // ── Bookmarks section
+    // ── Compact progress strip (replaces the 3-tile stats grid)
+    const statsEl = document.getElementById('cmdStats');
+    if (totalSteps === 0) {
+        statsEl.innerHTML = '';
+    } else {
+        statsEl.innerHTML = `
+            <div class="cmd-meta">
+                <span class="cmd-meta-item"><strong>${lessonsStarted}</strong> of 21 lessons</span>
+                <span class="cmd-meta-dot" aria-hidden="true">&middot;</span>
+                <span class="cmd-meta-item"><strong>${totalSteps}</strong> ${totalSteps === 1 ? 'step' : 'steps'} explored</span>
+            </div>`;
+    }
+
+    // ── Bookmarks: only render the section when there's at least one saved.
+    //    No header, no empty-state line — fully hidden when the list is empty.
     const bmEl = document.getElementById('cmdBookmarks');
     if (bookmarks.length > 0) {
         const items = bookmarks.map((bm, i) => `
@@ -120,8 +140,10 @@ function renderCommandMenu() {
                 <button class="cmd-remove" onclick="removeBookmark(${i})" title="Remove">&times;</button>
             </div>`).join('');
         bmEl.innerHTML = `<div class="cmd-label">Bookmarks</div>${items}`;
+        bmEl.style.display = '';
     } else {
-        bmEl.innerHTML = `<div class="cmd-label">Bookmarks</div><div class="cmd-empty">No bookmarks saved</div>`;
+        bmEl.innerHTML = '';
+        bmEl.style.display = 'none';
     }
 
     // ── Show "Bookmark this step" button only on lesson step pages
@@ -146,31 +168,6 @@ function renderCommandMenu() {
             addBmBtn.style.display = 'none';
         }
     }
-
-    // ── Stats section
-    const statsEl = document.getElementById('cmdStats');
-    let totalSteps = 0, lessonsStarted = 0;
-    Object.keys(progress).forEach(lid => {
-        const steps = progress[lid] || [];
-        if (steps.length > 0) lessonsStarted++;
-        totalSteps += steps.length;
-    });
-    statsEl.innerHTML = `
-        <div class="cmd-label">Progress</div>
-        <div class="cmd-stats-grid">
-            <div class="cmd-stat">
-                <span class="cmd-stat-val">${totalSteps}</span>
-                <span class="cmd-stat-label">Steps visited</span>
-            </div>
-            <div class="cmd-stat">
-                <span class="cmd-stat-val">${lessonsStarted}</span>
-                <span class="cmd-stat-label">/ 21 lessons</span>
-            </div>
-            <div class="cmd-stat">
-                <span class="cmd-stat-val">${bookmarks.length}</span>
-                <span class="cmd-stat-label">Bookmarks</span>
-            </div>
-        </div>`;
 }
 
 function addBookmark() {

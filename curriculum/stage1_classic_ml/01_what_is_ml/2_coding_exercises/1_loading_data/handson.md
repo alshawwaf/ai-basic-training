@@ -4,15 +4,41 @@
 
 ---
 
-## Step 0: Install the required packages
+## Step 0: Set up your environment and install the required packages
 
-If you haven't already, activate your virtual environment and install the libraries used throughout Modules 1 and 2:
+A **virtual environment** ("venv") is an isolated Python sandbox for one project — packages you install inside it stay inside it, so different projects can't break each other's dependencies. You create it once, then activate it every time you sit down to work.
+
+**1. Create the venv** (only the very first time):
+
+Open a terminal in the root of the `AI Basic Training` folder and run:
+
+```bash
+python -m venv .venv
+```
+
+This creates a hidden `.venv` folder containing a private copy of Python.
+
+> **Note on the `venv` module:** It ships with Python's standard library, so Windows and macOS users already have it. On **Ubuntu / Debian** it is split into a separate system package — if the command above complains that `venv` is missing, install it once with `sudo apt install python3-venv` and re-run. On **macOS**, if `python` isn't found, use `python3` (and `python3 -m venv .venv`) — newer macOS versions don't alias `python` to Python 3 by default.
+
+**2. Activate it** (every time you open a new terminal):
+
+| Platform | Command |
+|----------|---------|
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
+| Windows (cmd.exe)    | `.venv\Scripts\activate.bat` |
+| macOS / Linux        | `source .venv/bin/activate` |
+
+You'll know it worked when your prompt changes to start with `(.venv)`.
+
+> **PowerShell blocked the script?** Run this once, then try again: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+**3. Install the libraries** used throughout Modules 1 and 2:
 
 ```bash
 pip install pandas scikit-learn matplotlib seaborn
 ```
 
-> You only need to do this once. If you have already installed these packages, skip to Step 1.
+> You only need to install once per venv. From now on, just **activate** the venv at the start of each session and you're ready to go.
 
 ---
 

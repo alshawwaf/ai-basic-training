@@ -3,6 +3,14 @@
 
 {% block body %}
 <div class="admin-page">
+    <div class="admin-logout-row">
+        <form method="POST" action="{{ url_for('admin_logout') }}">
+            <button type="submit" class="admin-logout-btn" title="End the admin session">
+                <span aria-hidden="true">&#8634;</span> Sign out
+            </button>
+        </form>
+    </div>
+
     <header class="admin-header">
         <div class="admin-eyebrow">Internal · Instructor only</div>
         <h1>Admin Console</h1>
@@ -84,7 +92,7 @@
 
     <footer class="admin-footnote">
         <span class="admin-footnote-icon" aria-hidden="true">&#128274;</span>
-        Loopback-only. Unlinked from the public portal and refused to any non-local request. URL: <code>/admin</code>
+        Login-gated. Set <code>PORTAL_ADMIN_PASSWORD</code> and <code>PORTAL_SECRET_KEY</code> in your environment for production use. URL: <code>/admin</code>
     </footer>
 </div>
 {% endblock %}

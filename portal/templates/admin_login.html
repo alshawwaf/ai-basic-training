@@ -1,0 +1,52 @@
+{% extends "portal_base.html" %}
+{% block title %}Sign in · Admin · AI Ninja Program{% endblock %}
+
+{% block body %}
+<div class="admin-page admin-login-page">
+    <header class="admin-header">
+        <div class="admin-eyebrow">Internal &middot; Instructor only</div>
+        <h1>Admin sign-in</h1>
+        <p class="admin-tagline">Authenticate to reach the AI Ninja Program admin console.</p>
+    </header>
+
+    <section class="admin-section admin-login-card">
+        <form method="POST" action="{{ url_for('admin_login') }}" class="admin-login-form" autocomplete="off">
+            {% if next_url %}
+            <input type="hidden" name="next" value="{{ next_url }}">
+            {% endif %}
+
+            <label class="admin-login-label" for="admin-password">Password</label>
+            <input
+                id="admin-password"
+                name="password"
+                type="password"
+                class="admin-login-input"
+                autocomplete="current-password"
+                autofocus
+                required>
+
+            {% if error %}
+            <div class="admin-login-error" role="alert">
+                <span aria-hidden="true">&#9888;</span> {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="admin-btn primary admin-login-submit">
+                Sign in &rarr;
+            </button>
+        </form>
+
+        <p class="admin-login-hint">
+            The password lives in the <code>PORTAL_ADMIN_PASSWORD</code> environment
+            variable. If unset, the portal falls back to a default for first-run
+            convenience &mdash; change it before exposing the portal to anyone else.
+        </p>
+    </section>
+
+    <footer class="admin-footnote">
+        <span class="admin-footnote-icon" aria-hidden="true">&#128274;</span>
+        Sessions are signed with <code>PORTAL_SECRET_KEY</code>. Set it in your
+        environment so logins survive a portal restart.
+    </footer>
+</div>
+{% endblock %}

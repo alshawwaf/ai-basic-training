@@ -8,9 +8,24 @@ Open:  http://localhost:5000
 import importlib
 import json
 import os
+import secrets
 import warnings
+from hmac import compare_digest
+
 import markdown
-from flask import Flask, render_template, jsonify, request, abort, Response, stream_with_context, send_from_directory
+from flask import (
+    Flask,
+    render_template,
+    jsonify,
+    request,
+    abort,
+    redirect,
+    url_for,
+    session,
+    Response,
+    stream_with_context,
+    send_from_directory,
+)
 from config import STAGES, get_all_lessons, get_lesson
 from runner import run_script, run_script_stream
 
@@ -18,6 +33,13 @@ warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024  # 1 MB max request size
+
+# Session signing key. Use PORTAL_SECRET_KEY if set so /admin sessions
+# survive a restart; otherwise mint a per-process random key (logs you
+# out on every restart, but the portal still works without configuration).
+app.secret_key = os.environ.get("PORTAL_SECRET_KEY") or secrets.token_hex(32)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 
 @app.after_request
@@ -82,7 +104,7 @@ def stage_view(stage_id):
     return render_template("stage.html", stage=stage, stages=STAGES, registered=registered_lessons)
 
 
-# ── Executive proposal downloads ────────────────────────────────────────────
+# ── Admin console (login-gated) ─────────────────────────────────────────────
 
 DOCS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs"))
 PROPOSAL_FILES = {
@@ -91,32 +113,76 @@ PROPOSAL_FILES = {
              "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
 }
 
-# Loopback addresses that count as "the instructor's own machine".
-# IPv4 loopback is the whole 127.0.0.0/8 block, plus IPv6 ::1.
-_LOCAL_ADDRS = {"127.0.0.1", "::1", "localhost"}
+# Admin password. Set PORTAL_ADMIN_PASSWORD in your environment for a real
+# secret; falls back to a known default so the portal still works out of
+# the box on a fresh checkout.
+ADMIN_PASSWORD = os.environ.get("PORTAL_ADMIN_PASSWORD", "ninja")
+if ADMIN_PASSWORD == "ninja":
+    print(
+        "  [admin] Using default admin password 'ninja'. "
+        "Set PORTAL_ADMIN_PASSWORD env var to override."
+    )
 
 
-def _require_local():
-    """Abort with 404 unless the request originated from this machine.
+def _is_admin():
+    """True iff the current session has been authenticated as admin."""
+    return bool(session.get("is_admin"))
 
-    Zero-config guard for /admin and /proposal.* — if the portal is ever
-    bound to a network interface, these routes stay invisible to anyone
-    who isn't on loopback. 404 (not 403) so the URL leaks no signal that
-    something protected lives here.
-    """
-    addr = request.remote_addr or ""
-    if addr in _LOCAL_ADDRS or addr.startswith("127."):
-        return
-    abort(404)
+
+def _require_admin():
+    """Redirect to the admin login page if the session isn't authenticated."""
+    if not _is_admin():
+        # Remember where the user was trying to go so we can bounce them
+        # back after a successful login.
+        return redirect(url_for("admin_login", next=request.path))
+    return None
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    """Single-password login form for the admin console."""
+    error = None
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        # compare_digest avoids leaking length / first-mismatch timing.
+        if compare_digest(password, ADMIN_PASSWORD):
+            session["is_admin"] = True
+            session.permanent = False
+            target = request.form.get("next") or url_for("admin_console")
+            # Refuse open redirects — only allow same-site relative paths.
+            if not target.startswith("/") or target.startswith("//"):
+                target = url_for("admin_console")
+            return redirect(target)
+        error = "Incorrect password."
+    next_url = request.args.get("next", "")
+    return render_template("admin_login.html", error=error, next_url=next_url)
+
+
+@app.route("/admin/logout", methods=["POST", "GET"])
+def admin_logout():
+    """Drop the admin session and bounce back to the public home."""
+    session.pop("is_admin", None)
+    return redirect(url_for("home"))
+
+
+@app.route("/admin")
+def admin_console():
+    """Instructor-only console. Login-gated via session cookie."""
+    redirect_response = _require_admin()
+    if redirect_response is not None:
+        return redirect_response
+    return render_template("admin.html")
 
 
 @app.route("/proposal.<fmt>")
 def download_proposal(fmt):
     """Serve the AI Ninja Program executive proposal as PDF or PPTX.
 
-    Linked only from the hidden /admin page and gated to loopback callers.
+    Login-gated — only reachable once you've authenticated at /admin/login.
     """
-    _require_local()
+    redirect_response = _require_admin()
+    if redirect_response is not None:
+        return redirect_response
     fmt = fmt.lower()
     if fmt not in PROPOSAL_FILES:
         abort(404)
@@ -129,13 +195,6 @@ def download_proposal(fmt):
         as_attachment=True,
         download_name=filename,
     )
-
-
-@app.route("/admin")
-def admin_console():
-    """Hidden instructor-only page. Loopback-only, unlinked from the public portal."""
-    _require_local()
-    return render_template("admin.html")
 
 
 # ── Content API (serve markdown / Python files) ────────────────────────────

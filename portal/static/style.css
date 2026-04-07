@@ -2406,19 +2406,21 @@ select:hover, .btn:hover {
 .mesh-path.mesh-dropped {
     opacity: 0.12;
 }
-/* When any lesson is hovered, dim the whole web and only highlight that
- * lesson's own incoming + outgoing connections. */
+/* When any lesson is hovered, gently mute the rest of the web and
+ * highlight that lesson's own incoming + outgoing connections. The
+ * non-active paths stay readable so the mesh doesn't collapse into
+ * an empty stage with one glowing line. */
 .roadmap-mesh.mesh-hover .mesh-path {
-    opacity: 0.12;
+    opacity: 0.38;
 }
 .roadmap-mesh.mesh-hover .mesh-path.mesh-active {
     opacity: 1;
-    stroke-width: 3;
-    filter: drop-shadow(0 0 3px currentColor);
+    stroke-width: 2.6;
+    filter: drop-shadow(0 0 1.5px currentColor);
 }
 [data-theme="dark"] .mesh-path { opacity: 0.6; }
 [data-theme="dark"] .mesh-path.mesh-dropped { opacity: 0.14; }
-[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path { opacity: 0.15; }
+[data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path { opacity: 0.42; }
 
 /* Active state in dark mode: bright, almost-white inner stroke with the
  * stage colour serving as a tight aura around it. The previous version
@@ -2430,19 +2432,19 @@ select:hover, .btn:hover {
 }
 [data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s1-s2"] {
     stroke: #e9d5ff;
-    filter: drop-shadow(0 0 2px #a855f7) drop-shadow(0 0 4px rgba(168,85,247,0.6));
+    filter: drop-shadow(0 0 1.5px #a855f7);
 }
 [data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s2-s3"] {
     stroke: #cffafe;
-    filter: drop-shadow(0 0 2px #06d6e0) drop-shadow(0 0 4px rgba(6,214,224,0.6));
+    filter: drop-shadow(0 0 1.5px #06d6e0);
 }
 [data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s3-s4"] {
     stroke: #fef3c7;
-    filter: drop-shadow(0 0 2px #f59e0b) drop-shadow(0 0 4px rgba(245,158,11,0.6));
+    filter: drop-shadow(0 0 1.5px #f59e0b);
 }
 [data-theme="dark"] .roadmap-mesh.mesh-hover .mesh-path.mesh-active[data-pair="s4-s5"] {
     stroke: #ffe4e6;
-    filter: drop-shadow(0 0 2px #f43f5e) drop-shadow(0 0 4px rgba(244,63,94,0.6));
+    filter: drop-shadow(0 0 1.5px #f43f5e);
 }
 
 /* On desktop the mesh replaces the single-arrow connectors entirely. */

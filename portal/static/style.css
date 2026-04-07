@@ -1001,16 +1001,22 @@ select:hover, .btn:hover {
 [data-theme="dark"] .mat-hint:hover { border-color: rgba(245,158,11,0.5); box-shadow: 0 0 14px rgba(245,158,11,0.15); }
 
 /* ── Hint modal overlay ──────────────────────────────────────────────────── */
+/* Stops above the lesson nav row so the Previous/Next arrows underneath
+   stay clickable while the Challenge hint is open. */
 .hint-modal-overlay {
-    position: fixed; inset: 0; background: var(--overlay-bg);
+    position: fixed; top: 0; right: 0; left: 0; bottom: 64px;
+    background: var(--overlay-bg);
     z-index: 800; opacity: 0; pointer-events: none; transition: opacity 0.3s;
 }
 .hint-modal-overlay.open { opacity: 1; pointer-events: auto; }
 
 /* ── Hint modal ──────────────────────────────────────────────────────────── */
+/* Centered within the viewport ABOVE the nav row, not within the full
+   viewport — keeps the arrows uncovered even at small heights. */
 .hint-modal {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
-    width: 480px; max-width: 92vw; max-height: 80vh;
+    position: fixed; top: calc(50% - 32px); left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 480px; max-width: 92vw; max-height: calc(80vh - 64px);
     background: var(--bg-card); border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.25);
     z-index: 810; opacity: 0; pointer-events: none;
@@ -3950,9 +3956,10 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .md-content strong { color: var(--text); }
 .md-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
 
-/* Code modal overlay */
+/* Code modal overlay — stops above the lesson nav row so the
+   Previous/Next arrows stay clickable while the Compare script is open. */
 .code-modal-overlay {
-    position: fixed; inset: 0;
+    position: fixed; top: 0; right: 0; left: 0; bottom: 64px;
     background: radial-gradient(ellipse at center, rgba(8,12,28,0.55), rgba(2,4,12,0.85));
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -3960,11 +3967,13 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 }
 .code-modal-overlay.open { opacity: 1; pointer-events: auto; }
 
-/* Code modal — modern frosted card with gradient border */
+/* Code modal — modern frosted card with gradient border.
+   Centered within the area ABOVE the nav row and capped to leave that
+   row visible, so the arrows aren't covered even on short displays. */
 .code-modal {
-    position: fixed; top: 50%; left: 50%;
+    position: fixed; top: calc(50% - 32px); left: 50%;
     transform: translate(-50%, -50%) scale(0.96);
-    width: min(960px, 92vw); max-height: 85vh;
+    width: min(960px, 92vw); max-height: calc(85vh - 64px);
     z-index: 910;
     background: linear-gradient(180deg, #08091a 0%, #04050f 100%);
     border-radius: 14px;

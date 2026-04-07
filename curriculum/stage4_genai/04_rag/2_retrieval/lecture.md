@@ -102,12 +102,3 @@ Run 3 security queries. For each, print the top 3 results. Check manually: does 
 
 ### Task 4 — Reciprocal Rank metric (Bonus)
 For each query, compute the reciprocal rank (1/rank) of the first relevant result. Average across queries = Mean Reciprocal Rank (MRR). Target: MRR > 0.8.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../3_rag_pipeline/lecture.md](../3_rag_pipeline/lecture.md) — combine retrieval with LLM generation for grounded answers.

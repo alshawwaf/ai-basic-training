@@ -168,7 +168,3 @@ TASK 3 — Tree visualisation created.
 | Using `plot_tree` without a figure size | Tiny, unreadable figure | Set `figsize=(20, 10)` |
 | Reading feature importance from node appearance alone | Misleading | Use `.feature_importances_` (Exercise 3) |
 | Confusing "class" in a node with "prediction" | Node class is the majority class, not always correct | Only leaf nodes give final predictions |
-
----
-
-> Next: [../3_feature_importance/lecture.md](../3_feature_importance/lecture.md)

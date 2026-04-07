@@ -138,7 +138,3 @@ At this threshold: precision = 0.79, flagged = 120/200
 | Forgetting to re-scale X_test | Wrong probabilities | Always pass `X_test_scaled` to the scaled model |
 | Maximising accuracy when choosing threshold | Accuracy ignores cost asymmetry | Optimise for recall or F1 depending on business need |
 | Choosing threshold on test data | Data leakage | Ideally choose threshold on a validation set |
-
----
-
-> Back to [README.md](README.md) | Next lesson: [Lesson 1.4 Decision Trees](../../04_decision_trees/README.md)

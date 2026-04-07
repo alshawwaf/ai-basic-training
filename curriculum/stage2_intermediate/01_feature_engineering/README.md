@@ -137,7 +137,3 @@ Raw firewall and NetFlow logs contain strings, IP addresses, timestamps, and pro
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage2_intermediate/01_feature_engineering/1_why_raw_logs_fail/solution_feature_engineering.py
 ```
-
-## Next Lesson
-
-[Lesson 2.2 — Random Forests](../../02_random_forests/README.md)

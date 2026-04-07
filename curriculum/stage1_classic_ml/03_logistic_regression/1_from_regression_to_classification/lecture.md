@@ -150,7 +150,3 @@ Decision boundary: url_length = 74.3
 | Forgetting `[:, 1]` on `predict_proba()` | Returns both columns (P(0) and P(1)) | Index `[:, 1]` to get P(phishing) |
 | Confusing sigmoid input (z) with probability (p) | Misinterpretation | z is the linear score; p = σ(z) is the probability |
 | Applying `np.exp` to very large z | Overflow warning | `scipy.special.expit` handles this safely |
-
----
-
-> Next: [../2_feature_engineering_urls/lecture.md](../2_feature_engineering_urls/lecture.md)

@@ -145,7 +145,3 @@ In this workshop you will discover why accuracy is a dangerous metric for imbala
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage1_classic_ml/05_model_evaluation/1_the_accuracy_trap/solution_model_evaluation.py
 ```
-
-## Next Lesson
-
-[Lesson 2.1 — Feature Engineering](../../stage2_intermediate/01_feature_engineering/README.md)

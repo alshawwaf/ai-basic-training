@@ -180,12 +180,3 @@ Loop over the class counts. For each class, print a bar of `#` characters propor
 This lesson uses a balanced dataset intentionally — it lets you learn the workflow without fighting imbalance at the same time. Starting in **Stage 2** you will work with real imbalanced datasets.
 
 In every lesson from this point on, the first check after loading data is: what is the class distribution? Before checking accuracy. Before looking at any other metric. Always.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../4_visualise/lecture.md](../4_visualise/lecture.md) — plotting sample images, average class prototypes, and predicting where your model will struggle before it is even trained.

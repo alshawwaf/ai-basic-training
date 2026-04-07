@@ -129,7 +129,3 @@ In this workshop you will build a decision tree classifier that identifies four 
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage1_classic_ml/04_decision_trees/1_how_trees_make_decisions/solution_decision_trees.py
 ```
-
-## Next Lesson
-
-[Lesson 1.5 — Model Evaluation](../../05_model_evaluation/README.md)

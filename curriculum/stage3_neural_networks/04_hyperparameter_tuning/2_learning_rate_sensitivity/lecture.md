@@ -118,12 +118,3 @@ Make sure you are creating a fresh model for each experiment — reusing a train
 
 **Results wildly different from expected**
 Neural network training has randomness. Set `tf.random.set_seed(42)` and `np.random.seed(42)` before each model build.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../3_batch_size_effects/lecture.md](../3_batch_size_effects/lecture.md) — how batch size controls gradient noise and training stability.

@@ -135,7 +135,3 @@ Scatter plot saved/shown — upward trend visible.
 | Calling `.info()` instead of `.describe()` for stats | No numeric summaries | Use `.describe()` for statistics, `.info()` for dtypes |
 | Plotting y on x-axis and x on y-axis | Misleading chart | Feature (input) → x-axis; target (output) → y-axis |
 | Skipping EDA and jumping straight to modelling | Undetected issues corrupt the model | Always inspect data first |
-
----
-
-> Next: [../2_train_test_split/lecture.md](../2_train_test_split/lecture.md)

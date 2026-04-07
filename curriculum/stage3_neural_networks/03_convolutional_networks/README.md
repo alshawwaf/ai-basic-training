@@ -121,7 +121,3 @@ python stage3_neural_networks/03_convolutional_networks/1_why_dense_fails_on_ima
 - MNIST downloads automatically on first run (~11MB) and caches locally
 - Training the CNN (exercise 3) may take 1-3 minutes without GPU
 - Exercise 4 requires only numpy and matplotlib — no TensorFlow download needed
-
-## After This Workshop
-
-Move to [Lesson 3.12 — Hyperparameter Tuning](../../04_hyperparameter_tuning/README.md)

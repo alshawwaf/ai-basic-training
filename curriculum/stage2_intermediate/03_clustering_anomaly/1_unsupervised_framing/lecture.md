@@ -96,7 +96,3 @@ Plot shows 4 natural groupings:
 | Using labels during K-Means training | No longer unsupervised — defeats the purpose | Never pass labels to KMeans.fit() |
 | Expecting perfect separation | Clusters will overlap with real data | Anomaly detection is probabilistic |
 | Forgetting to scale before clustering | Large-scale features (bytes_sent) dominate distance calculations | Always scale before K-Means |
-
----
-
-> Next: [../2_kmeans_and_visualisation/lecture.md](../2_kmeans_and_visualisation/lecture.md)

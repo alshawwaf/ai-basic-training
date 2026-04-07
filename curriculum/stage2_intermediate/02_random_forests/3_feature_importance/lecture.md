@@ -97,7 +97,3 @@ Top-4 model accuracy: 0.940  (vs full model 0.943 — drop of 0.003)
 | Using single-tree importances for feature selection | Unstable; may discard important features | Use random forest importances |
 | Forgetting to re-fit with new seed in stability test | All 20 runs produce the same result | Use `random_state=i` in the loop |
 | Reporting importances without error bars | False confidence | Always show std or confidence interval |
-
----
-
-> Next: [../4_tune_the_forest/lecture.md](../4_tune_the_forest/lecture.md)

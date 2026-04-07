@@ -152,7 +152,3 @@ LogisticRegression missed: 140 / 500 (28%)
 | Not checking class balance before modelling | Accuracy trap | Always call `value_counts()` first |
 | Using DummyClassifier as the final model | 0% attack detection rate | DummyClassifier is only a baseline, not a solution |
 | Forgetting `zero_division=0` in precision_score | ZeroDivisionWarning when precision=0 | Pass `zero_division=0` |
-
----
-
-> Next: [../2_confusion_matrix/lecture.md](../2_confusion_matrix/lecture.md)

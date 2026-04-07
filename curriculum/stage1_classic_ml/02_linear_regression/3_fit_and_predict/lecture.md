@@ -162,7 +162,3 @@ At 150 rps: predicted response time = 302.5 ms
 | Forgetting to fit before predict | `NotFittedError` | Always call `.fit()` before `.predict()` |
 | Fitting on test data | Data leakage — optimistic results | Fit on `X_train` only |
 | Interpreting slope without units | Meaningless number | Always include units in interpretation |
-
----
-
-> Next: [../4_evaluate_regression/lecture.md](../4_evaluate_regression/lecture.md)

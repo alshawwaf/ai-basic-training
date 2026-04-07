@@ -145,7 +145,3 @@ High-load proportion in test set:  ~50%
 | Forgetting `random_state` | Different split each run; irreproducible results | Always set `random_state=42` |
 | Reshaping X incorrectly | `ValueError: Expected 2D array` | Use `X.values.reshape(-1, 1)` |
 | Computing feature statistics on full dataset before splitting | Feature leakage | Split first, then compute statistics on train set only |
-
----
-
-> Next: [../3_fit_and_predict/lecture.md](../3_fit_and_predict/lecture.md)

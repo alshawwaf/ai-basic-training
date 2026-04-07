@@ -123,7 +123,3 @@ In this workshop you will build a logistic regression classifier that distinguis
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage1_classic_ml/03_logistic_regression/1_from_regression_to_classification/solution_logistic_regression.py
 ```
-
-## Next Lesson
-
-[Lesson 1.4 — Decision Trees](../../04_decision_trees/README.md)

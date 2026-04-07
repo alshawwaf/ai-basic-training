@@ -160,7 +160,3 @@ python stage3_neural_networks/01_first_neural_network/1_from_numpy_to_keras/solu
 - The first import of TensorFlow/Keras takes 5-10 seconds — this is normal
 - Keras prints verbose GPU/CPU info at startup — you can safely ignore it
 - Random weight initialisation means your exact accuracy numbers may differ by ±2%
-
-## After This Workshop
-
-Move to [Lesson 3.10 — Dropout and Regularisation](../../02_dropout_regularisation/README.md)

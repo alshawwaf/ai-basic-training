@@ -110,7 +110,3 @@ max_features | Accuracy
 | Using max_features=None | Trees are correlated — no diversity benefit | Use 'sqrt' or 'log2' |
 | Picking n_estimators based on training time alone | May sacrifice accuracy | Use the elbow of the accuracy curve |
 | Forgetting n_jobs=-1 for the timing test | Timing on 1 core; misleading for production | Use n_jobs=-1 consistently |
-
----
-
-> Back to [README.md](README.md) | Next: [Lesson 2.3 Clustering](../../03_clustering_anomaly/README.md)

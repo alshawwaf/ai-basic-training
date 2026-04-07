@@ -125,7 +125,3 @@ python stage3_neural_networks/04_hyperparameter_tuning/1_what_are_hyperparameter
 - Exercise 4 trains multiple models (up to 9) — it may take 2-5 minutes total
 - Use `verbose=0` in model.fit() inside loops to avoid cluttering the terminal
 - Results will vary slightly between runs due to random weight initialisation — this is expected
-
-## After This Workshop
-
-Move to [Stage 4 — Generative AI](../../../stage4_genai/01_how_llms_work/README.md)

@@ -97,14 +97,3 @@ Test with 3 security questions. Print ranked results with scores.
 
 ### Task 4 — Add threshold filtering (Bonus)
 Modify `search()` to accept `min_score`. Only return results above that threshold.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Workshop Complete
-
-Compare your code against the matching solution files, then move to:
-
-**[Lesson 4.3 — LLM API](../../03_llm_api/README.md)**

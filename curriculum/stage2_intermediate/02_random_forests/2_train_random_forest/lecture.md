@@ -125,7 +125,3 @@ Top 5 hard-to-detect malware (lowest P(malware)):
 | Forgetting `random_state` | Non-reproducible results | Always set `random_state=42` |
 | Confusing OOB score with training score | OOB is an out-of-sample estimate | OOB ≈ test score; training score ≈ 1.0 |
 | Using `max_features=None` (all features) | Trees become identical (no diversity) | Use 'sqrt' or 'log2' |
-
----
-
-> Next: [../3_feature_importance/lecture.md](../3_feature_importance/lecture.md)

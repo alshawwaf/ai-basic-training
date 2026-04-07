@@ -130,7 +130,3 @@ TASK 3 — Precision-recall vs threshold:
 | Optimising F1 when recall is what matters | Some attacks still slip through | Use F2 score or explicit recall threshold |
 | Reporting precision without recall | Misleading — high precision with low recall is still bad | Always report both |
 | Using `average='macro'` in precision_score for attack class | Gets average over both classes | Use `pos_label=1` or read the report |
-
----
-
-> Next: [../4_roc_and_auc/lecture.md](../4_roc_and_auc/lecture.md)

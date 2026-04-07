@@ -124,17 +124,3 @@ You forgot to reinitialise the model inside the loop — you're training the sam
 
 **`count_params()` returns 0**
 Call `model.count_params()` after `model.compile()`, not before building the model.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-
----
-
-## Workshop Complete
-
-You have now tuned the three most important hyperparameters: learning rate, batch size, and architecture. This knowledge applies to every neural network you train from this point forward.
-
-**[Stage 4 — Generative AI](../../../stage4_genai/01_how_llms_work/README.md)**

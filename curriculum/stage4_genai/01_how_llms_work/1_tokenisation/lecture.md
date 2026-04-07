@@ -99,12 +99,3 @@ Use `.get(word, 0)` instead of `vocab[word]` — the `.get()` with a default han
 
 **Decode produces wrong words**
 Make sure your reverse vocabulary (ID→word) matches your forward vocabulary exactly. Build it with `{v: k for k, v in vocab.items()}`.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../2_embeddings/lecture.md](../2_embeddings/lecture.md) — how token IDs become high-dimensional vectors and how similarity works.

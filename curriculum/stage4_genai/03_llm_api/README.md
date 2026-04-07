@@ -191,7 +191,3 @@ python stage4_genai/03_llm_api/1_first_api_call/solution_llm_api.py
 - The `llm_client.py` in the `stage4_genai/` folder handles provider selection automatically
 - If no API key is set, the script will print an error and exit cleanly
 - Each API call costs a small amount — keep `max_tokens` reasonable (200–600 for exercises)
-
-## After This Workshop
-
-Move to [Lesson 4.4 — RAG](../../04_rag/README.md)

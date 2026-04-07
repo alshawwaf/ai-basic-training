@@ -102,14 +102,3 @@ After the investigation, print the full conversation history in a readable forma
 
 ### Task 4 — Interactive mode (Bonus)
 Build a simple `while True` input loop that lets you type questions. Maintain the conversation history. Exit on "quit".
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Workshop Complete
-
-Compare your code against the matching solution files, then move to:
-
-**[Lesson 4.4 — RAG](../../04_rag/README.md)**

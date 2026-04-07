@@ -131,7 +131,3 @@ In this workshop you will build a linear regression model that predicts a server
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage1_classic_ml/02_linear_regression/1_understanding_regression/solution_linear_regression.py
 ```
-
-## Next Lesson
-
-[Lesson 1.3 — Logistic Regression](../../03_logistic_regression/README.md)

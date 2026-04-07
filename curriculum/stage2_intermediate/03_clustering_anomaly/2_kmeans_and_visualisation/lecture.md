@@ -102,7 +102,3 @@ Cluster | Dominant class | Purity
 | Running K-Means without scaling | bytes_sent (0-250000) dominates; clusters ignore other features | Always StandardScale before K-Means |
 | Using K-Means result as ground truth | K-Means clusters ≠ true classes (labels unknown) | Validate clusters with domain knowledge |
 | Expecting perfect purity | Real data overlaps; K-Means is approximate | Purity > 85% is good |
-
----
-
-> Next: [../3_choosing_k/lecture.md](../3_choosing_k/lecture.md)

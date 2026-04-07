@@ -98,12 +98,3 @@ Implement `cosine_sim(a, b)` and use it to compare:
 
 ### Task 4 — Find the most similar word (Bonus)
 For a given query word, compute cosine similarity against all vocabulary words and print the top 5 most similar.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../3_attention/lecture.md](../3_attention/lecture.md) — the attention mechanism: which words matter to which.

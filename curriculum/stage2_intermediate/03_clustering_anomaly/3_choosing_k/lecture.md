@@ -94,7 +94,3 @@ Recommended K: 4
 | Not scaling before computing silhouette | Score is meaningless | Scale first |
 | Choosing K based solely on elbow | Elbow can be ambiguous | Always also compute silhouette |
 | Expecting K to perfectly match true classes | K-Means may split or merge classes | Use domain knowledge to validate |
-
----
-
-> Next: [../4_anomaly_scoring/lecture.md](../4_anomaly_scoring/lecture.md)

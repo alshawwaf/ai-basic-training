@@ -118,14 +118,3 @@ Manually verify your values sum to 1.0 per row. If you compute from raw scores, 
 
 **Context vector shape wrong**
 Value vectors have shape `(embedding_dim,)`. Use `attention[2] @ values` for the weighted sum — this is the cleanest NumPy idiom.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Workshop Complete
-
-Compare your code against the matching solution files, then move to:
-
-**[Lesson 4.2 — HuggingFace Pre-trained Models](../../02_huggingface/README.md)**

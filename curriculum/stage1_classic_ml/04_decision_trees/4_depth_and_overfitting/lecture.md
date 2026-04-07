@@ -127,7 +127,3 @@ TASK 3 — Plot created.
 | Using `max_depth=None` (unlimited) | Severe overfitting | Always set a depth limit |
 | Picking the depth with the lowest gap | May choose a depth with poor accuracy | Pick the depth with the highest *test* accuracy |
 | Not re-fitting a new model for each depth | Reusing the same fitted model | Create a new `DecisionTreeClassifier` in each loop iteration |
-
----
-
-> Back to [README.md](README.md) | Next lesson: [Lesson 1.5 Model Evaluation](../../05_model_evaluation/README.md)

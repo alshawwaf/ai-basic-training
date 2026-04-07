@@ -128,7 +128,3 @@ F1        = 2*P*R/(P+R)            = 0.783
 | Confusing precision and recall | Wrong metric optimised | Precision = of what we flagged, how many were real; Recall = of all real attacks, how many we flagged |
 | Reading FP as missed attacks | FP are false alarms; FN are missed attacks | FN = actual attacks predicted as benign |
 | Ignoring TN count | TN also matters for specificity | Report specificity (TN rate) for completeness |
-
----
-
-> Next: [../3_precision_recall_f1/lecture.md](../3_precision_recall_f1/lecture.md)

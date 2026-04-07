@@ -103,7 +103,3 @@ It detects samples that don't belong to ANY cluster — true outliers.
 | Using raw X (not scaled) for transform | Distances are biased | Use X_scaled |
 | Expecting K-Means to catch all attacks | Many attacks form clusters themselves | K-Means detects isolation, not all attack types |
 | Setting threshold too low | Too many false alarms | Use 90th-95th percentile |
-
----
-
-> Back to [README.md](README.md) | Next: [Lesson 2.4 Overfitting](../../04_overfitting_crossval/README.md)

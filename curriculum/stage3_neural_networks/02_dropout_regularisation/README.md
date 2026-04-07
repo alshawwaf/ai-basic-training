@@ -147,7 +147,3 @@ python stage3_neural_networks/02_dropout_regularisation/1_demonstrate_overfittin
 - Training 50 epochs on a large network takes 5-15 seconds — be patient
 - Overfitting may not always be dramatic on this synthetic dataset — look for any increasing val_loss trend
 - Random seed is set for reproducibility but some variance in results is expected
-
-## After This Workshop
-
-Move to [Lesson 3.11 — Convolutional Networks](../../03_convolutional_networks/README.md)

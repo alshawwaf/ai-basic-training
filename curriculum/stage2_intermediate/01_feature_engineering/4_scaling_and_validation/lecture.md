@@ -140,7 +140,3 @@ TASK 4 (BONUS) — Pipeline accuracy: 0.875
 | Forgetting NaN handling before scaling | `ValueError: Input contains NaN` | Fill or drop NaN before scaling |
 | Including the target `y` in `X` | Perfect prediction (data leakage) | Never include target in feature matrix |
 | Scaling binary features (0/1) | No harm, but unnecessary | Skip scaling for already-bounded features |
-
----
-
-> Back to [README.md](README.md) | Next: [Lesson 2.2 Random Forests](../../02_random_forests/README.md)

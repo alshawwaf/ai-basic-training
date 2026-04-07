@@ -113,12 +113,3 @@ Your training set may not be exactly 1600. Use `len(X_train)` instead of a hardc
 
 **Training time looks backwards (small batch faster)**
 On CPU, very small batches have overhead per update. On GPU the relationship is more pronounced. Your machine may show different ratios — focus on the accuracy comparison, not the timing.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../4_architecture_search/lecture.md](../4_architecture_search/lecture.md) — manual grid search over network depth and width.

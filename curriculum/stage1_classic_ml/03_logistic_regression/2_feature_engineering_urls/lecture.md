@@ -150,7 +150,3 @@ num_subdomains   0.35
 | Treating binary columns as continuous for plotting | Box plots work; histograms look weird for 0/1 | Use `value_counts()` or bar plots for binary features |
 | Ignoring class imbalance | Model performance metrics are misleading | Always print `value_counts()` |
 | Using the full dataset stats before splitting | Feature leakage downstream | Split first, then analyse (or use EDA only for exploration, not for feature construction) |
-
----
-
-> Next: [../3_train_and_evaluate/lecture.md](../3_train_and_evaluate/lecture.md)

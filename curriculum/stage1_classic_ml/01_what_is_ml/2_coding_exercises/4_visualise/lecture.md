@@ -175,12 +175,3 @@ Compute the mean absolute difference between every pair of average images. The p
 
 **`savefig` gives a `FileNotFoundError`**
 The directory in the save path must already exist. Run from the repo root so the path resolves correctly.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../5_what_model_sees/lecture.md](../5_what_model_sees/lecture.md) — print raw number grids, understand which features matter, and connect digits to real security data.

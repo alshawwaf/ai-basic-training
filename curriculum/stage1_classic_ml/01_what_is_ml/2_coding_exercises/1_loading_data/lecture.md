@@ -31,15 +31,10 @@ The structure is always the same. Only the domain changes:
 
 No matter the domain, the code follows the same pattern:
 
-| Stage | What it does |
-|---|---|
-| **1. Raw Data** | logs, images, URLs, packets, sensor data — whatever you have |
-| ⬇ | |
-| **2. Extract Features (X) and Labels (y)** | turn raw data into numbers · identify what you're predicting |
-| ⬇ | |
-| **3. `model.fit(X, y)`** | the model finds the pattern |
-| ⬇ | |
-| **4. `model.predict(X_new)`** | apply the pattern to new data |
+1. **Raw Data** — logs, images, URLs, packets, sensor data — whatever you have
+2. **Extract Features (X) and Labels (y)** — turn raw data into numbers, identify what you're predicting
+3. **`model.fit(X, y)`** — the model finds the pattern
+4. **`model.predict(X_new)`** — apply the pattern to new data
 
 > **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
 
@@ -242,15 +237,3 @@ You accidentally included the `target` column when creating the DataFrame. Pass 
 
 **`KeyError: 'target'`**
 You haven't added the target column yet. The line `df["target"] = digits.target` must come after the DataFrame is created.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-
----
-
-## Next
-
-[../2_statistics/lecture.md](../2_statistics/lecture.md) — shape, value ranges, `.describe()`, and how to find useless features before you even start training.

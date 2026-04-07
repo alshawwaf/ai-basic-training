@@ -42,7 +42,3 @@ The techniques you learn on digits — loading data, checking class balance, fin
 - The class imbalance problem and the accuracy trap
 - How models see data — flat arrays of numbers, not images
 - Why every concept maps to a real security scenario
-
-## Next Lesson
-
-[Lesson 1.2 — Linear Regression](../02_linear_regression/README.md) — build your first trained model.

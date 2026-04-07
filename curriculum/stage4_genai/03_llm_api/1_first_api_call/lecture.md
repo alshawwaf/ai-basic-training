@@ -109,12 +109,3 @@ Send a log entry to the model and ask it to identify the threat. Print the respo
 
 ### Task 4 — Token limit experiment (Bonus)
 Make the same request with `max_tokens=50` and `max_tokens=400`. Observe how the response is truncated or complete.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../2_system_prompts/lecture.md](../2_system_prompts/lecture.md) — design system prompts for a security analyst persona.

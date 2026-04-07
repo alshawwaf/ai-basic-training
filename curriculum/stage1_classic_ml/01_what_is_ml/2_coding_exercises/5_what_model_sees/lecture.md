@@ -208,14 +208,3 @@ After completing all 5 exercises, you have done the full EDA cycle:
 5. **Understood the model's input** — a flat row of numbers, no magic
 
 This is not a one-time exercise. This is how every ML project begins — every single time. The specific dataset and domain change; the questions you ask do not.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Workshop Complete
-
-When all 5 exercises run cleanly, compare your code against the matching solution file for each exercise.
-
-**Next lesson:** [Lesson 1.2 — Linear Regression](../../../02_linear_regression/README.md) — build your first trained model.

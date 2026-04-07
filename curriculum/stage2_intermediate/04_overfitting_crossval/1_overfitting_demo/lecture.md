@@ -91,7 +91,3 @@ TASK 3 — Overfitting point: depth=5
 | Using test set to pick depth | Leakage — final evaluation is optimistic | Use validation set for hyperparameter tuning |
 | Overfitting to the validation set | Same problem, smaller scale | Use cross-validation (Exercise 3) |
 | Mistaking training curve plateau for "good" | Training always reaches 100% with enough depth | Focus on the validation curve |
-
----
-
-> Next: [../2_bias_variance/lecture.md](../2_bias_variance/lecture.md)

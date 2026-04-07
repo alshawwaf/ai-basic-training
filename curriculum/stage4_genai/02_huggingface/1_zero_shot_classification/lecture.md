@@ -116,12 +116,3 @@ Use the lighter model: `model="typeform/distilbart-mnli-12-1"` (~250MB vs ~550MB
 
 **Results seem wrong**
 Descriptive labels work better than generic ones. "malicious network activity" outperforms "bad". Try rephrasing.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../2_sentence_embeddings/lecture.md](../2_sentence_embeddings/lecture.md) — encode sentences as vectors and measure semantic similarity.

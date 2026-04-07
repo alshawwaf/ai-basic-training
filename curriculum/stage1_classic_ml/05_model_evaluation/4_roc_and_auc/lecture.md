@@ -151,7 +151,3 @@ DecisionTree          0.977     0.812    0.780  0.796  0.966
 | DummyClassifier has no predict_proba | AttributeError | Use `decision_function` or assign constant scores |
 | Confusing AUC of ROC with AUC of PR curve | Different metrics | Specify which AUC you mean |
 | Claiming a model is good based on AUC alone | Ignores threshold selection | AUC is a ranking metric; still need to pick a threshold for deployment |
-
----
-
-> Next: [../5_threshold_tuning/lecture.md](../5_threshold_tuning/lecture.md)

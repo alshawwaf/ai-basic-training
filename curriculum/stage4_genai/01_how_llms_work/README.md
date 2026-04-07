@@ -152,7 +152,3 @@ python stage4_genai/01_how_llms_work/1_tokenisation/solution_how_llms_work.py
 - No GPU or internet connection required — all exercises run on NumPy alone
 - The numbers you see are simplified toy examples, not real LLM weights
 - The goal is intuition, not production-grade code
-
-## After This Workshop
-
-Move to [Lesson 4.2 — HuggingFace Pre-trained Models](../../02_huggingface/README.md)

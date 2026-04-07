@@ -131,7 +131,3 @@ The 3 most important features retain 98.9% of the model's predictive power.
 | Fitting on test data when retraining | Data leakage | Always fit on X_train only |
 | Assuming importance = causation | Can lead to misleading conclusions | Feature importance shows what the model uses, not real-world cause |
 | Ignoring features with low importance | Some low-importance features interact with others | Check accuracy with/without them before discarding |
-
----
-
-> Next: [../4_depth_and_overfitting/lecture.md](../4_depth_and_overfitting/lecture.md)

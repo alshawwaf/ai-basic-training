@@ -70,7 +70,3 @@ depth=1  (UNDERFIT):  train=0.652, val=0.648, gap=0.004
 depth=5  (GOOD FIT):  train=0.990, val=0.969, gap=0.021
 depth=50 (OVERFIT):   train=1.000, val=0.941, gap=0.059
 ```
-
----
-
-> Next: [../3_kfold_crossval/lecture.md](../3_kfold_crossval/lecture.md)

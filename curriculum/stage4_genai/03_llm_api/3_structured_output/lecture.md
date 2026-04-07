@@ -119,12 +119,3 @@ Print all results as an aligned table: `severity | technique_id | confidence | s
 
 ### Task 4 — Error handling (Bonus)
 Wrap the JSON parsing in a try/except. If parsing fails, print the raw response and a warning. Test with a deliberately malformed request.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../4_conversation/lecture.md](../4_conversation/lecture.md) — maintain context across multiple turns.

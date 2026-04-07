@@ -93,7 +93,3 @@ Depth | CV Mean | CV Std
 | Not using stratify in CV | Folds may have different class ratios | Use `StratifiedKFold` (default in cross_val_score for classifiers) |
 | Using test set in CV loop | Leakage | CV uses only training data |
 | Reporting CV mean without std | Hides reliability concerns | Always report mean ± std |
-
----
-
-> Next: [../4_validation_curve/lecture.md](../4_validation_curve/lecture.md)

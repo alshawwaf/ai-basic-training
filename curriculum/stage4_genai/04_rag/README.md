@@ -160,9 +160,3 @@ python stage4_genai/04_rag/1_chunking/solution_rag.py
 - Exercises 1 and 2 require no API key — they use only local models
 - Exercise 3 requires an API key for the generation step
 - The same security knowledge base is used throughout all 3 exercises
-
-## After This Workshop
-
-**Congratulations — you have completed all 4 modules.**
-
-Review the [milestone project](../../project/security_assistant.py) to build a complete security analyst assistant.

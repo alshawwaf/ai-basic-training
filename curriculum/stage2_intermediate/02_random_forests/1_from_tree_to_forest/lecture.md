@@ -120,7 +120,3 @@ Difference:  0.002  ← OOB is a reliable proxy for test performance
 | Forgetting `replace=True` in bootstrap | Sampling without replacement = different dataset, not bootstrap | Use `np.random.choice(..., replace=True)` |
 | Comparing OOB to training accuracy | OOB should compare to TEST accuracy | OOB approximates test set performance |
 | Using too few trees (n_estimators=5) | High variance remains | Use at least 100; check learning curve in Exercise 4 |
-
----
-
-> Next: [../2_train_random_forest/lecture.md](../2_train_random_forest/lecture.md)

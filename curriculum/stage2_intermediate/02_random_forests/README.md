@@ -144,7 +144,3 @@ You will build a random forest classifier that distinguishes malware from benign
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage2_intermediate/02_random_forests/1_from_tree_to_forest/solution_random_forests.py
 ```
-
-## Next Lesson
-
-[Lesson 2.3 — Clustering and Anomaly Detection](../../03_clustering_anomaly/README.md)

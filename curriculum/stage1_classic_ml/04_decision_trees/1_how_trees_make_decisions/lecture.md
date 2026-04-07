@@ -160,7 +160,3 @@ Feature means by class:
 | Forgetting to weight child Ginis by sample count | Wrong information gain | Weight by n_child / n_parent |
 | Using information gain = parent - children (not weighted) | Incorrect | Use weighted average of child impurities |
 | Labelling target as string instead of int | Some sklearn functions require int labels | Use integer class codes |
-
----
-
-> Next: [../2_train_and_read_the_tree/lecture.md](../2_train_and_read_the_tree/lecture.md)

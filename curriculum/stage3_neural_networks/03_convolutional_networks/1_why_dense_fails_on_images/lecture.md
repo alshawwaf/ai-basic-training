@@ -70,13 +70,3 @@ Apply a random permutation to all pixels in all images (same permutation for tra
 
 - **Not reshaping the output correctly**: `model.evaluate()` returns a tuple `(loss, metric)` — unpack both or use `_` for the loss.
 - **Mixing X_train and X_train_flat**: Make sure the Dense model uses the flat version `(n, 784)` and the CNN uses the 4D version `(n, 28, 28, 1)`.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-
-## Next
-
-[../2_conv_and_pooling/lecture.md](../2_conv_and_pooling/lecture.md)

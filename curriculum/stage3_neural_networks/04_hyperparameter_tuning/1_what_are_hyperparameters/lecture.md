@@ -89,13 +89,3 @@ Train the same model twice without a seed — results differ slightly. Then trai
 
 - **Confusing "parameters" with "hyperparameters" in documentation**: Keras docs often use "params" to mean the learned weights. Hyperparameters are always specified by the user in the function call.
 - **Using `.weights` without calling `.get_weights()`**: `layer.weights` returns TensorFlow Variable objects, not numpy arrays. Use `layer.get_weights()[0]` to get a numpy array you can print and manipulate.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-
-## Next
-
-[../2_learning_rate_sensitivity/lecture.md](../2_learning_rate_sensitivity/lecture.md)

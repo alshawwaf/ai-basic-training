@@ -156,7 +156,3 @@ You will apply K-Means clustering to unlabelled network traffic to discover beha
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage2_intermediate/03_clustering_anomaly/1_unsupervised_framing/solution_clustering_anomaly.py
 ```
-
-## Next Lesson
-
-[Lesson 2.4 — Overfitting and Cross-Validation](../../04_overfitting_crossval/README.md)

@@ -138,7 +138,3 @@ Scenario B (high threshold = trusted alerts):
 | Choosing threshold on test data without holdout | Optimistic — overfits the threshold | Ideally use a validation set for threshold tuning |
 | Not documenting the chosen threshold | Model behaviour unclear in production | Always document threshold with justification |
 | Treating threshold as fixed forever | Attack patterns change | Plan for periodic recalibration |
-
----
-
-> Back to [README.md](README.md) | Next: [Stage 2 Feature Engineering](../../../stage2_intermediate/01_feature_engineering/README.md)

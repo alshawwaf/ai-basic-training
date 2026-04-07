@@ -152,7 +152,3 @@ You will deeply understand overfitting by watching a decision tree's train-vs-te
 cd "C:/Users/admin/Desktop/AI Basic Training"
 python stage2_intermediate/04_overfitting_crossval/1_overfitting_demo/solution_overfitting_crossval.py
 ```
-
-## Next Lesson
-
-[Stage 3 — Neural Networks](../../../stage3_neural_networks/01_first_neural_network/README.md)

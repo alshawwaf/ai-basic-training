@@ -100,14 +100,3 @@ Ask 3 security questions through the full RAG pipeline. For each, show which chu
 
 ### Task 4 — Out-of-scope question (Bonus)
 Ask a question whose answer is NOT in the knowledge base. Observe whether the model correctly says "I don't have that information" rather than hallucinating.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Workshop Complete
-
-You have built a complete RAG pipeline. Compare your code against the matching solution files.
-
-**You have now completed all 4 modules.** Review the [milestone project](../../project/security_assistant.py) to build a full security analyst assistant.

@@ -128,7 +128,3 @@ python stage4_genai/02_huggingface/1_zero_shot_classification/solution_huggingfa
 - First run downloads model weights (~200MB–500MB) — subsequent runs are instant (cached)
 - If internet is slow, use lighter models: `typeform/distilbart-mnli-12-1` for Exercise 1, `paraphrase-MiniLM-L3-v2` for Exercise 2
 - All exercises work on CPU — no GPU required
-
-## After This Workshop
-
-Move to [Lesson 4.3 — LLM API](../../03_llm_api/README.md)

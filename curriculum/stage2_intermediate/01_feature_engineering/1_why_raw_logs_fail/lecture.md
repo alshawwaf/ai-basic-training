@@ -136,7 +136,3 @@ TASK 3 — Transformation plan:
 | Converting IP to integer directly | "192.168.1.1" becomes a large number with misleading math | Extract subnet, public/private, etc. |
 | Including `action` as a feature | Label leakage — the model sees the answer | Drop the target variable from features |
 | Ignoring timestamp structure | Misses time-of-day patterns (attacks often happen at night) | Extract hour, day-of-week, etc. |
-
----
-
-> Next: [../2_numeric_feature_extraction/lecture.md](../2_numeric_feature_extraction/lecture.md)

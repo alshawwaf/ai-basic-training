@@ -134,7 +134,3 @@ port_risk_score=5 (RDP):                  ~15 connections
 | Using raw port numbers as features | Model treats 443 as "bigger" than 80 | Use port risk scores or one-hot encode top-N ports |
 | Including the target (`action`) as a feature | Label leakage | Drop target from feature matrix |
 | Not validating derived features | Silent bugs | Print `.describe()` and check ranges make sense |
-
----
-
-> Next: [../3_categorical_encoding/lecture.md](../3_categorical_encoding/lecture.md)

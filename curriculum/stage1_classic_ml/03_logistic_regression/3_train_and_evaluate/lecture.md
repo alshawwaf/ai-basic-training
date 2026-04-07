@@ -164,7 +164,3 @@ Unscaled model accuracy: 0.905  ← slightly worse; may show ConvergenceWarning
 | Low `max_iter` | `ConvergenceWarning`; model may be sub-optimal | Set `max_iter=1000` or higher |
 | Ignoring FN count | Missing phishing attacks seems acceptable until it isn't | Always check FN in security classifiers |
 | Reading confusion matrix rows as predicted | Rows are actual labels; columns are predicted | Remember: rows = actual, columns = predicted |
-
----
-
-> Next: [../4_threshold_tuning/lecture.md](../4_threshold_tuning/lecture.md)

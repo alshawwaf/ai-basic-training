@@ -90,12 +90,3 @@ For a query sentence, find and print the most similar entry in the set.
 
 ### Task 4 — Batch timing benchmark (Bonus)
 Compare `model.encode(texts)` vs `model.encode(texts, batch_size=1)` on 100 sentences. Batch encoding should be 5-10× faster.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../3_semantic_search/lecture.md](../3_semantic_search/lecture.md) — build a full semantic search engine over a security knowledge base.

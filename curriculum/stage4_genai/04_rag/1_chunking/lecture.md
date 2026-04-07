@@ -131,12 +131,3 @@ Implement `chunk_sentences(text, sentences_per_chunk=2)`. Print all chunks. Coun
 
 ### Task 4 — Compare strategies (Bonus)
 For a query "how to detect mimikatz", show which chunk from each strategy is most likely to be retrieved (highest keyword overlap). Print the best chunk from each method.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../2_retrieval/lecture.md](../2_retrieval/lecture.md) — encode chunks and retrieve the most relevant ones for a query.

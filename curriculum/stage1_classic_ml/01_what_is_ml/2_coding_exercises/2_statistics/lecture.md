@@ -184,12 +184,3 @@ You may have called `.describe()` on the wrong variable. Make sure you are descr
 
 **`AttributeError: 'DataFrame' object has no attribute 'min'` is not the issue — but `digits.data.min()` vs `df.min()` behave differently**
 `digits.data.min()` returns a single scalar (min across all values). `df.min()` returns a Series (min per column). Both are useful; make sure you are using the right one for each task.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-## Next
-
-[../3_class_balance/lecture.md](../3_class_balance/lecture.md) — the most dangerous problem in security ML: class imbalance and the naive accuracy trap.

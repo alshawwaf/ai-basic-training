@@ -135,7 +135,3 @@ Difference: 0.016  (OHE is better)
 | Forgetting `drop='first'` | Dummy variable trap — multicollinearity | Always drop one column |
 | Fitting the encoder on test data | Data leakage | Fit encoder on train set, transform both |
 | Applying get_dummies to full dataset before splitting | Leakage — test distribution affects encoder | Split first, encode separately |
-
----
-
-> Next: [../4_scaling_and_validation/lecture.md](../4_scaling_and_validation/lecture.md)

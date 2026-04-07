@@ -147,7 +147,3 @@ TASK 4 (BONUS) — Threshold sensitivity:
 | Computing σ on test residuals | σ is contaminated by test set; leakage | Always compute σ on training residuals only |
 | Reporting only R² | R² alone is misleading | Always report RMSE or MAE alongside R² |
 | Setting k too low (k=1) | 32% false alarm rate | Use k=2 or k=3 in production |
-
----
-
-> Back to [README.md](README.md) | Next lesson: [Lesson 1.3 Logistic Regression](../../03_logistic_regression/README.md)

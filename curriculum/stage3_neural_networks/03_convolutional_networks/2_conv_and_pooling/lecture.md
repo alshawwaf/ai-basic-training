@@ -122,13 +122,3 @@ Rebuild with a 5×5 kernel. Compare output shapes and parameter counts. Larger k
 
 - **Confusing filter count with parameter count**: 32 filters does NOT mean 32 parameters. Each filter has `kernel_h × kernel_w × channels` parameters, giving `320` total for Conv2D(32,(3,3)) on greyscale.
 - **Adding MaxPooling before Conv2D**: MaxPooling goes AFTER Conv2D. The Conv2D creates the feature maps; MaxPooling downsamples them.
-
----
-
-## Now Open the Lab
-
-[handson.md](handson.md)
-
-## Next
-
-[../3_build_and_train_cnn/lecture.md](../3_build_and_train_cnn/lecture.md)

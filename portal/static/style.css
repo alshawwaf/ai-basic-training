@@ -4647,6 +4647,68 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     opacity: 1; pointer-events: auto;
     transform: translate(-50%, -50%) scale(1);
 }
+
+/* Fullscreen — code modal goes edge-to-edge above the bottom nav row. */
+.code-modal.is-fullscreen {
+    top: 0; left: 0;
+    transform: none !important;
+    width: 100vw !important;
+    max-width: none;
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    border-radius: 0;
+}
+.code-modal.is-fullscreen.open { transform: none !important; }
+.code-modal.is-fullscreen .code-modal-body {
+    padding: 0;
+}
+.code-modal.is-fullscreen .code-modal-body pre {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Minimized — collapses the modal to a small floating chip at the
+   bottom-right of the viewport, just above the nav row. Click to restore. */
+.code-modal.is-minimized {
+    top: auto; left: auto; right: 24px; bottom: 84px;
+    transform: none !important;
+    width: auto !important; max-width: none;
+    height: auto; max-height: none;
+    border-radius: 999px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 1px rgba(6,214,224,0.45),
+        0 12px 32px rgba(0,0,0,0.55),
+        0 0 24px rgba(6,214,224,0.25);
+}
+.code-modal.is-minimized.open { transform: none !important; }
+.code-modal.is-minimized .code-modal-header,
+.code-modal.is-minimized .code-modal-body { display: none; }
+.code-modal.is-minimized .code-modal-mini-chip { display: inline-flex; }
+
+.code-modal-mini-chip {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: linear-gradient(135deg, rgba(6,214,224,0.18), rgba(168,85,247,0.10));
+    white-space: nowrap;
+}
+.code-modal-mini-chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(6,214,224,0.20);
+    border: 1px solid rgba(6,214,224,0.40);
+    font-size: 11px;
+}
 .code-modal-header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 14px 20px 14px 16px;

@@ -187,17 +187,35 @@
 
     <!-- ── Code Modal (Python) ────────────────────────────────────────────── -->
     <div class="code-modal-overlay" id="codeModalOverlay" onclick="closeCodeModal()"></div>
-    <div class="code-modal" id="codeModal">
+    <div class="code-modal" id="codeModal" onclick="restoreCodeModalIfMinimized(event)">
         <div class="code-modal-header">
             <div class="code-modal-filename" id="codeModalFilename"></div>
             <div style="display:flex; gap:8px; align-items:center;">
                 <button class="code-run-btn" id="codeRunBtn" onclick="runScript()" title="Run this script">&#9654; Run</button>
                 <button class="code-copy-btn" onclick="copyCode()" title="Copy to clipboard">&#128203; Copy</button>
+                <button class="code-copy-btn" onclick="downloadCode()" title="Download as .py">&#11015; Download</button>
+                <div class="drawer-window-controls">
+                    <button class="drawer-icon-btn" onclick="minimizeCodeModal()" title="Minimize" aria-label="Minimize">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="19"/></svg>
+                    </button>
+                    <button class="drawer-icon-btn" onclick="toggleCodeFullscreen()" title="Fullscreen" aria-label="Toggle fullscreen">
+                        <svg class="drawer-icon-fs-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"/></svg>
+                        <svg class="drawer-icon-fs-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"/></svg>
+                    </button>
+                    <button class="drawer-icon-btn" onclick="popOutCodeModal()" title="Open in new window" aria-label="Pop out">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>
+                    </button>
+                </div>
                 <button class="drawer-close" onclick="closeCodeModal()">&times;</button>
             </div>
         </div>
         <div class="code-modal-body">
             <pre class="line-numbers"><code class="language-python" id="codeModalContent"></code></pre>
+        </div>
+        <!-- Visible only when code modal is minimized — floating chip at bottom-right -->
+        <div class="code-modal-mini-chip" aria-hidden="true">
+            <span class="code-modal-mini-chip-icon">&#9654;</span>
+            <span id="codeModalMiniChipLabel">script.py</span>
         </div>
     </div>
 
@@ -738,14 +756,19 @@
 
         // ── Code Modal logic ──────────────────────────────────────────────
         var _currentScriptPath = '';
+        var _currentScriptRaw = '';
 
         function openCodeModal(path, title) {
             var modal = document.getElementById('codeModal');
             var overlay = document.getElementById('codeModalOverlay');
             var filename = path.split('/').pop();
             _currentScriptPath = path;
+            _currentScriptRaw = '';
             document.getElementById('codeModalFilename').textContent = filename;
             document.getElementById('codeModalContent').textContent = 'Loading...';
+            var chipLabel = document.getElementById('codeModalMiniChipLabel');
+            if (chipLabel) chipLabel.textContent = filename;
+            modal.classList.remove('is-minimized');
             closeRunModal();
             modal.classList.add('open');
             overlay.classList.add('open');
@@ -757,6 +780,7 @@
             fetch('/api/content?path=' + encodeURIComponent(path))
                 .then(r => r.json())
                 .then(data => {
+                    _currentScriptRaw = data.raw || '';
                     var codeEl = document.getElementById('codeModalContent');
                     codeEl.textContent = data.raw;
                     Prism.highlightElement(codeEl);
@@ -767,10 +791,90 @@
         }
 
         function closeCodeModal() {
-            document.getElementById('codeModal').classList.remove('open');
+            var modal = document.getElementById('codeModal');
+            modal.classList.remove('open');
+            modal.classList.remove('is-fullscreen');
+            modal.classList.remove('is-minimized');
             document.getElementById('codeModalOverlay').classList.remove('open');
             // Same as closeDrawer: keep the last visited phase active so the
             // Next button keeps walking forward through the flow.
+        }
+
+        // ── Code modal view modes (fullscreen / pop-out / minimize) ───────
+        function toggleCodeFullscreen() {
+            var modal = document.getElementById('codeModal');
+            if (modal.classList.contains('is-minimized')) {
+                modal.classList.remove('is-minimized');
+            }
+            modal.classList.toggle('is-fullscreen');
+        }
+
+        function minimizeCodeModal() {
+            var modal = document.getElementById('codeModal');
+            if (modal.classList.contains('is-fullscreen')) {
+                modal.classList.remove('is-fullscreen');
+            }
+            modal.classList.add('is-minimized');
+        }
+
+        function restoreCodeModalIfMinimized(event) {
+            var modal = document.getElementById('codeModal');
+            if (!modal.classList.contains('is-minimized')) return;
+            modal.classList.remove('is-minimized');
+            if (event) event.stopPropagation();
+        }
+
+        function downloadCode() {
+            var filename = (_currentScriptPath || 'script.py').split('/').pop();
+            var raw = _currentScriptRaw;
+            if (!raw) {
+                // Fall back to whatever's currently rendered in the <code> block.
+                raw = document.getElementById('codeModalContent').textContent || '';
+            }
+            if (!raw) { alert('Script source is still loading.'); return; }
+            var blob = new Blob([raw], { type: 'text/x-python;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function popOutCodeModal() {
+            var filename = (_currentScriptPath || 'script.py').split('/').pop();
+            var raw = _currentScriptRaw || document.getElementById('codeModalContent').textContent || '';
+            if (!raw) { alert('Script source is still loading.'); return; }
+            var origin = window.location.origin;
+            var win = window.open('', '_blank', 'noopener,width=1100,height=900');
+            if (!win) { alert('Pop-out blocked by the browser. Allow pop-ups for this site.'); return; }
+            // Escape the source for safe HTML embedding before Prism rehighlights it.
+            var escaped = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            var html = '<!DOCTYPE html><html lang="en"><head>' +
+                '<meta charset="UTF-8">' +
+                '<title>' + filename.replace(/[<>]/g, '') + '</title>' +
+                '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                '<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">' +
+                '<link rel="stylesheet" href="' + origin + '/static/style.css">' +
+                '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css">' +
+                '<style>body{margin:0;padding:32px 40px;background:#02030a;}' +
+                '.popout-shell{max-width:1400px;margin:0 auto;}' +
+                '.popout-filename{font-family:"Space Mono",monospace;font-size:14px;color:#06d6e0;margin-bottom:14px;font-weight:700;}' +
+                'pre[class*="language-"]{margin:0;border-radius:10px;}</style>' +
+                '</head><body class="lesson-page" data-theme="dark">' +
+                '<div class="popout-shell">' +
+                '<div class="popout-filename">' + filename + '</div>' +
+                '<pre class="line-numbers"><code class="language-python">' + escaped + '</code></pre>' +
+                '</div>' +
+                '<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"><\/script>' +
+                '<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"><\/script>' +
+                '<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"><\/script>' +
+                '</body></html>';
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
         }
 
         // ── Run Output Modal ──────────────────────────────────────────────

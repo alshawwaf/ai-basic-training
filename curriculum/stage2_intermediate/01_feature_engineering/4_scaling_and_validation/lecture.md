@@ -35,6 +35,11 @@
 - `StandardScaler` handles outliers better because it uses standard deviation
 - `MinMaxScaler` is sensitive to outliers: one extreme value compresses all others
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/fe_scaler_compare.png" alt="Three histograms of bytes_per_second from the lab raw_df. Left grey histogram shows the raw distribution dominated by a long tail with an extreme outlier near 138,800 B/s. Middle cyan histogram shows the StandardScaler z-score version: most mass between -0.2 and 1, outlier at +12; median = -0.15. Right orange histogram shows MinMaxScaler version: nearly all mass crushed at 0.00 to 0.04, outlier alone at 1.00; median = 0.001 — all the normal data has been squashed.">
+  <div class="vis-caption">Same column, three views. The single exfil-like outlier on the left forces MinMaxScaler to pin it at 1.0 and crush every normal value into [0, 0.04] — StandardScaler keeps the bulk of the data spread out.</div>
+</div>
+
 > **Want to go deeper?** [Standard score (Wikipedia)](https://en.wikipedia.org/wiki/Standard_score)
 
 ---
@@ -60,6 +65,11 @@ Calling `.fit()` on the test side leaks the test distribution into the scaler an
 
 If you fit the scaler on `X_test` or the full dataset, the test set's distribution leaks into the scaling parameters, giving optimistic performance estimates.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/fe_scaler_leakage.png" alt="Two-panel diagram. Left panel 'Correct: fit on TRAIN, transform BOTH' in green: X_train (green) and X_test (orange) both flow through a single scaler.fit box that learned mean and std only from X_train; both produce scaled outputs. Right panel 'Wrong: fit on EVERYTHING (data leakage)' in red: X_train and X_test both feed a scaler.fit on train+test box (red), which then scales both. Caption beneath right panel: test set leaks its mean and std into the scaler — optimistic scores.">
+  <div class="vis-caption">The scaler must learn its parameters from training data alone. Letting test rows enter <code>fit()</code> contaminates the evaluation and inflates every score downstream.</div>
+</div>
+
 **In a pipeline:**
 ```python
 from sklearn.pipeline import Pipeline
@@ -70,6 +80,11 @@ pipeline = Pipeline([
 pipeline.fit(X_train, y_train)      # scaler fits only on X_train inside the pipeline
 pipeline.score(X_test, y_test)      # scaler uses train statistics on X_test
 ```
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/fe_pipeline_flow.png" alt="Horizontal flow diagram. From left to right: green box raw X_train, arrow to cyan box scaler.fit_transform, arrow to violet box model.fit, arrow to dark trained pipeline box. Title above shows the literal sklearn code: Pipeline open bracket scaler StandardScaler comma model LogisticRegression close bracket. Caption: .fit() automatically learns the scaler from train, then .predict() applies transform-only to new data — leakage impossible.">
+  <div class="vis-caption">A two-stage <code>Pipeline</code> bakes the fit-on-train-transform-both rule into the API. There is no way to call <code>fit_transform</code> on the test side by accident.</div>
+</div>
 
 ---
 
@@ -106,28 +121,30 @@ Use sklearn `Pipeline` to combine scaler and LogisticRegression. Fit on training
 
 ```
 TASK 1 — Feature matrix:
-Shape: (200, 8)
+Shape: (200, 10)
 All dtypes: float64 or int64
 Missing values: 0
-Sample describe:
-  bytes_per_second: mean=3452, min=0, max=45200
-  packet_rate:      mean=8.1, max=180
-  port_risk_score:  mean=2.1, min=1, max=5
+Sample describe (mean / max):
+  bytes_per_second: mean=2236, max=138800
+  packet_rate:      mean=21.85, max=860
+  bytes_ratio:      mean=4.77, max=256.7
+  port_risk_score:  mean=1.76, min=1, max=5
 
 TASK 2 — Scaled training data:
-Column means (should all be ~0.00):
-  bytes_per_second: 0.000
-  packet_rate:      0.000
-  ...
-Column stds (should all be ~1.00):
-  bytes_per_second: 1.000
-  ...
+Column means (should all be ~0.00):    all 0.0000
+Column stds  (should all be ~1.00):    all 1.0000
 
 TASK 3 — StandardScaler vs MinMaxScaler on bytes_per_second:
-StandardScaler: mean=0.0, std=1.0, range=[-1.8, 4.2]  (handles outlier gracefully)
-MinMaxScaler:   mean=0.2, range=[0.0, 1.0]  (outlier pulls everything to bottom)
+StandardScaler: mean=0.000, std=1.000, range=[-0.17, 12.18]
+  -> outliers extend the range but most data stays near 0
+MinMaxScaler:   mean=0.014, range=[0.00, 1.00]
+  -> one extreme value pins max=1.0; normal values squashed near 0
+Median StandardScaler: -0.154
+Median MinMaxScaler:    0.001  <- almost zero!
 
-TASK 4 (BONUS) — Pipeline accuracy: 0.875
+TASK 4 (BONUS) — Pipeline:
+Pipeline training accuracy: 0.975
+Pipeline test accuracy:     0.975
 ```
 
 ---

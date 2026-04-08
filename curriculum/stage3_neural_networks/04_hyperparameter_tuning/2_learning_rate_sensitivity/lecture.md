@@ -38,6 +38,16 @@ lr=0.1     →  huge steps   →  often diverges (loss explodes or oscillates wi
 | `lr=0.001` | Just right | Loss decreases smoothly and reaches the minimum efficiently |
 | `lr=0.1` | Too large | Loss overshoots and oscillates (bounces) — may never converge |
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_lr_step_size.png" alt="Three side-by-side panels, each plotting the same parabolic loss curve in grey. Left panel 'lr = 0.0001 (too small)': red dots trace eight tiny steps that barely move from the starting point on the left side of the bowl. Middle panel 'lr = 0.001 (just right)': green dots trace eight smooth steps that descend cleanly to the bottom of the bowl. Right panel 'lr = 0.1 (too large)': orange dots zigzag wildly across the bowl, overshooting the minimum on every step.">
+  <div class="vis-caption">The learning rate is literally the step size on the loss landscape. Too small and the model crawls; too large and the model overshoots the minimum every step. The middle picture is the only one that converges.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_lr_loss_curves.png" alt="A line chart titled 'Real training loss — three Adam learning rates on the same data' with three curves over 30 epochs. Green 'lr = 0.001 (just right)' falls smoothly from ~0.65 toward ~0.15 and levels off. Orange 'lr = 0.1 (too large)' is erratic — bounces between 0.6 and 0.8 with no clear downward trend. Red 'lr = 0.00001 (too small)' is nearly flat at ~0.69, barely moving over the entire 30 epochs.">
+  <div class="vis-caption">Real numbers from this stage's lab. Same dataset, same architecture, same number of epochs — only the learning rate differs. The green curve reaches val_acc ≈ 0.94; the orange and red curves get stuck around 0.67-0.69 because their step size is wrong for the loss landscape.</div>
+</div>
+
 > **Want to go deeper?** [Learning rate (Wikipedia)](https://en.wikipedia.org/wiki/Learning_rate)
 
 ---
@@ -51,6 +61,11 @@ lr=0.1     →  huge steps   →  often diverges (loss explodes or oscillates wi
 | Loss decreases then spikes upward | lr too large | Decrease by 10× |
 | Loss immediately goes to NaN | lr way too large | Decrease by 100× |
 | Loss decreases smoothly and levels off | Goldilocks zone | Keep it |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_lr_diagnosis.png" alt="A diagnostic table with three columns: Symptom in loss curve, Diagnosis, and Fix. Five rows: 'Loss barely moves' / lr too small / red ↑10× pill; 'Slow then plateaus' / lr slightly small / orange ↑2-3× pill; 'Falls then spikes upward' / lr too large / orange ↓10× pill; 'Immediately NaN' / lr way too large / red ↓100× pill; 'Smooth, levels off' / Goldilocks zone / green 'keep it' pill.">
+  <div class="vis-caption">A field guide for diagnosing learning rate problems by glancing at the loss curve. The shape of the curve almost always tells you which direction to move the learning rate.</div>
+</div>
 
 ---
 

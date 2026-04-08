@@ -47,6 +47,16 @@ Training learns (parameters):
 
 You wire up the training process; the training process fills in the weights. Hyperparameter tuning means *systematically* trying different "you decide" combinations and measuring which one produces the best learned weights.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_params_vs_hyperparams.png" alt="Two side-by-side rounded boxes. Left orange-bordered box titled 'YOU set (hyperparameters)' with subtitle 'before model.fit() — define the training' lists six monospace lines: units=64, learning_rate=0.001, batch_size=32, epochs=20, activation='relu', dropout_rate=0.3. Right cyan-bordered box titled 'TRAINING learns (parameters)' with subtitle 'inside model.fit() — gradient descent' lists six monospace lines describing W1, b1, W2, b2, W3, b3 weight and bias shapes. A small italic caption between them reads 'you wire it up → training fills it in'.">
+  <div class="vis-caption">The two buckets in one picture. Everything on the left side is a knob you set. Everything on the right side is filled in automatically by gradient descent. Hyperparameter tuning is the practice of systematically searching the left side to find the combination that produces the best right side.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_weights_before_after.png" alt="Three heatmaps side by side, each showing the (20, 64) weight matrix of the first Dense layer using a red-blue diverging colormap. Left titled 'Layer 1 weights — BEFORE training' shows mostly small noisy values centred around zero. Middle titled 'AFTER 20 epochs' shows a clearly different pattern with stronger reds and blues in specific cells. Right titled 'Δ = AFTER − BEFORE (what was learned)' shows the difference — a structured pattern of changes concentrated on specific input features.">
+  <div class="vis-caption">Real weight snapshots from a 20-epoch training run. The left grid is what the layer started with (small random numbers). The middle grid is what training discovered. The right grid shows the difference — that pattern <em>is</em> what "learning" looks like at the parameter level.</div>
+</div>
+
 ---
 
 ## Concept: Complete Hyperparameter Inventory
@@ -64,6 +74,11 @@ You wire up the training process; the training process fills in the weights. Hyp
 | Training | epochs | 10-500 |
 
 Hyperparameter tuning = choosing the best combination from this space.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_inventory.png" alt="Three coloured columns side by side, each a category of hyperparameters. Cyan column 'Architecture' lists n_hidden_layers 1-5, units_per_layer 8-512, activation hidden relu/elu/tanh, activation out sigmoid/softmax. Violet column 'Regularisation' lists dropout_rate 0.1-0.5, L2 weight decay 0-0.01, early stopping patience 3-10, data augmentation yes/no. Orange column 'Optimiser & Training' lists optimizer Adam/SGD/RMSProp, learning_rate 1e-4 to 1e-1, batch_size 16-2048, epochs 10-500.">
+  <div class="vis-caption">The full hyperparameter inventory grouped into three categories. Architecture decides what the model looks like; Regularisation decides how it resists overfitting; Optimiser & Training decide how it learns. Tuning means walking through this space and measuring which combinations work best on validation data.</div>
+</div>
 
 > **Want to go deeper?** [Hyperparameter optimisation (Wikipedia)](https://en.wikipedia.org/wiki/Hyperparameter_optimization)
 

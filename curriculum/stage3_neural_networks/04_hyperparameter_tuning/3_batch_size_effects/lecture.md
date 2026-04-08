@@ -36,6 +36,11 @@ Each gradient update uses only the samples in that batch to compute the gradient
 
 With `batch_size=32` the model takes 50 small, slightly-wrong steps per epoch — the noise averages out across batches. With full-batch the model takes a single very accurate step that uses every sample at once.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_batch_updates.png" alt="Two side-by-side panels of the same parabolic loss bowl. Left panel 'batch_size = 32 → 50 small noisy steps per epoch': cyan dots trace a wandering noisy path with 50 steps from an orange start dot at top-left down to a green end dot near the bottom. Right panel 'batch_size = 1600 (full batch) → 1 big stable step': a single violet arrow goes straight from the orange start dot down to the green end dot at the bottom of the bowl.">
+  <div class="vis-caption">The same parabolic loss bowl, the same number of training samples seen — but two completely different update strategies. Small batches take many noisy steps; full batch takes one big accurate step. The noise on the left is what gives small-batch training its implicit regularisation effect.</div>
+</div>
+
 ---
 
 ## Concept: The Noise-Stability Tradeoff
@@ -68,6 +73,11 @@ Small-batch training converges to **flat minima** — the model stays near a low
 
 The noise injected by small batches makes it hard for SGD to *settle* into a sharp valley — it keeps getting bumped out, and only the wide flat regions are stable enough for it to stick.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_sharp_vs_flat.png" alt="A grey curve representing a 1D loss landscape across 'weight space'. The curve has two minima: a narrow deep spike on the right marked with a red dot labelled 'Sharp minimum (large-batch training) — poor generalisation', and a wide gentle bowl on the left marked with a green dot labelled 'Flat minimum (small-batch training) — robust to perturbation'. Both minima reach roughly the same loss value but the sharp one rises steeply on either side.">
+  <div class="vis-caption">Same loss value, two different shapes. The red sharp minimum is a knife-edge — a tiny shift in input distribution sends the loss soaring. The green flat minimum stays low across a wide region, so unseen test samples land in roughly the same area and the model still works. Small-batch training systematically prefers the flat one.</div>
+</div>
+
 ---
 
 ## Concept: Timing Training in Python
@@ -81,6 +91,11 @@ print(f"Training time: {elapsed:.1f}s")
 ```
 
 Use this to compare wall-clock time across batch sizes. Larger batches are often faster per epoch because modern hardware (GPUs especially) are optimised for large matrix operations.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_batch_results.png" alt="Two side-by-side bar charts. Left 'Final validation accuracy' shows three bars: cyan bs=32 at 0.935, violet bs=512 at 0.935, orange bs=1600 (full batch) at 0.888. Right 'Wall-clock training time (30 epochs)' shows three bars: cyan bs=32 at 9.0s, violet bs=512 at 5.4s, orange bs=1600 at 5.0s.">
+  <div class="vis-caption">Real numbers from this stage's lab on CPU. bs=32 and bs=512 reach the same final accuracy but bs=32 takes ~70% longer wall-clock. Full-batch training is the fastest per epoch but generalises noticeably worse — the textbook small-vs-large batch trade-off in three bars.</div>
+</div>
 
 ---
 

@@ -47,6 +47,16 @@ Total combinations: 3 × 3 = 9 models to train
 
 Each cell is one full training run; the value is `val_accuracy` at the end. The bold cell (`depth=2, units=64`) is the winning combination in this example — your numbers will differ on a re-run, but the pattern of "moderate depth + moderate width is usually best" is typical.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_grid_heatmap.png" alt="A 3×3 grid heatmap with rows depth=1, depth=2, depth=3 and columns units=32, units=64, units=128, coloured with a yellow-to-blue colormap. Each cell shows two numbers: a val_accuracy and a parameter count. Top row depth=1: 0.9425/705, 0.9400/1409, 0.9450/2817. Middle row depth=2: 0.9475/1761 (highlighted with a thick gold border), 0.9400/5569, 0.9425/19329. Bottom row depth=3: 0.9275/2817, 0.9150/9729, 0.9275/35841. A title above reads 'Grid search — every cell is one trained model. winner: units=32, depth=2, val_acc=0.9475'.">
+  <div class="vis-caption">Real grid search numbers from this stage's lab. The gold-bordered cell is the winner — and it's the smallest two-layer model with only 1,761 parameters. The bottom row (depth=3) is consistently worse despite having far more parameters: more capacity does not automatically mean more accuracy.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/hp_grid_ranking.png" alt="A horizontal bar chart titled 'Architecture grid sorted by val_accuracy — winner highlighted in gold'. Nine bars sorted top-down by accuracy: gold bar at top 'u=32, d=2' at 0.9475 (1,761 params), then cyan bars 'u=128, d=1' 0.9450 (2,817), 'u=32, d=1' 0.9425 (705), 'u=128, d=2' 0.9425 (19,329), 'u=64, d=1' 0.9400 (1,409), 'u=64, d=2' 0.9400 (5,569), 'u=32, d=3' 0.9275 (2,817), 'u=128, d=3' 0.9275 (35,841), 'u=64, d=3' 0.9150 (9,729) at the bottom.">
+  <div class="vis-caption">Same 9 results, sorted by accuracy. The winner uses 1,761 parameters; the bottom config uses 9,729 parameters and is meaningfully worse. When more parameters doesn't help, prefer the smaller model — it's faster to train, faster to inference, and less likely to overfit on harder data.</div>
+</div>
+
 For each combination:
 1. Build the model
 2. Train it

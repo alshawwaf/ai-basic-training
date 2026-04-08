@@ -2,7 +2,7 @@
 {% block content %}
 <div class="card">
     <h3>Compare two digit prototypes</h3>
-    <p>Each image below is the <em>average</em> of all samples for that digit. The difference heatmap shows where they diverge. Pairs with high similarity will confuse a model.</p>
+    <p>Each image is the <em>average</em> of all samples for that digit. <strong>The Difference panel is the one that matters</strong> &mdash; it shows the pixels where the two digits disagree, and those are the <em>only</em> places a model can look to tell them apart. The fewer bright cells, the harder the job.</p>
 
     <div class="controls">
         <label>Digit A:
@@ -21,11 +21,19 @@
     </div>
 
     <!-- Quick preset buttons -->
-    <div class="btn-group">
-        <button class="btn btn-sm" onclick="setPair(3,8)">Most similar (3 vs 8)</button>
-        <button class="btn btn-sm" onclick="setPair(0,1)">Least similar (0 vs 1)</button>
-        <button class="btn btn-sm" onclick="setPair(4,9)">Tricky (4 vs 9)</button>
-        <button class="btn btn-sm" onclick="setPair(1,7)">Easy (1 vs 7)</button>
+    <div class="btn-group preset-row">
+        <button class="btn btn-sm btn-preset preset-hard" data-pair="3,8" onclick="setPair(3,8)">
+            <span class="preset-dot"></span>Most similar <span class="preset-meta">(3 vs 8)</span>
+        </button>
+        <button class="btn btn-sm btn-preset preset-extreme" data-pair="0,1" onclick="setPair(0,1)">
+            <span class="preset-dot"></span>Least similar <span class="preset-meta">(0 vs 1)</span>
+        </button>
+        <button class="btn btn-sm btn-preset preset-mid" data-pair="4,9" onclick="setPair(4,9)">
+            <span class="preset-dot"></span>Tricky <span class="preset-meta">(4 vs 9)</span>
+        </button>
+        <button class="btn btn-sm btn-preset preset-easy" data-pair="1,7" onclick="setPair(1,7)">
+            <span class="preset-dot"></span>Easy <span class="preset-meta">(1 vs 7)</span>
+        </button>
     </div>
 
     <div class="grids-row">
@@ -37,13 +45,15 @@
             <div class="label" id="label-b">Average 8</div>
             <div class="digit-grid medium" id="grid-b"></div>
         </div>
-        <div class="grid-container">
-            <div class="label">Difference</div>
+        <div class="grid-container diff-highlight">
+            <div class="label">Difference <span class="diff-badge">model&#39;s tells</span></div>
             <div class="digit-grid medium" id="grid-diff"></div>
+            <div class="grid-caption">Brighter cell = bigger gap between A and B at that pixel.<br>These are the only signals the model can use.</div>
         </div>
     </div>
 
     <div class="sim-meter" id="sim-meter"></div>
+    <div class="verdict-card" id="verdict-card"></div>
 </div>
 {% endblock %}
 
@@ -73,6 +83,61 @@
         renderGrid('grid-b', imgB);
         renderGrid('grid-diff', diff, {colorFn: hotColor, textFn: hotText});
         updateSimMeter('sim-meter', sim);
+        updateVerdict(a, b, diff, sim);
+        highlightPreset(a, b);
+    }
+
+    function highlightPreset(a, b) {
+        // Light up a preset button only when its pair matches the current
+        // selection (in either order). Otherwise no preset is "selected".
+        document.querySelectorAll('.btn-preset').forEach(btn => {
+            const [pa, pb] = btn.dataset.pair.split(',').map(Number);
+            const matches = (pa === a && pb === b) || (pa === b && pb === a);
+            btn.classList.toggle('selected', matches);
+        });
+    }
+
+    function updateVerdict(a, b, diff, sim) {
+        // Count pixels with a meaningful intensity gap (>3 out of 16) — these
+        // are the "tells" the model can latch onto. Total disagreement is the
+        // raw signal budget the model has to work with.
+        let strongCells = 0;
+        let totalDelta = 0;
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                totalDelta += diff[i][j];
+                if (diff[i][j] > 3) strongCells++;
+            }
+        }
+        const simPct = Math.round(sim * 100);
+
+        let color, tag, headline, body;
+        if (sim > 0.85) {
+            color = 'var(--red)';
+            tag = 'Hard pair';
+            headline = `${a} and ${b} share ${simPct}% of their shape — only ${strongCells} of 64 pixels stand out.`;
+            body = `A simple classifier will mix these up frequently. Expect <strong>${a}↔${b}</strong> to be one of the brightest cells in the model&#39;s confusion matrix.`;
+        } else if (sim > 0.7) {
+            color = 'var(--orange)';
+            tag = 'Moderate pair';
+            headline = `${a} and ${b} overlap ${simPct}% — ${strongCells} of 64 pixels carry a clear signal.`;
+            body = `Enough discriminating pixels exist to separate these most of the time, but errors will still appear on noisy or unusual handwriting.`;
+        } else {
+            color = 'var(--green)';
+            tag = 'Easy pair';
+            headline = `${a} and ${b} only overlap ${simPct}% — ${strongCells} of 64 pixels diverge sharply.`;
+            body = `Plenty of signal for the model to keep these apart. Confusion between <strong>${a}</strong> and <strong>${b}</strong> will be rare.`;
+        }
+
+        document.getElementById('verdict-card').innerHTML = `
+            <div class="verdict-strip" style="background:${color}"></div>
+            <div class="verdict-body">
+                <div class="verdict-title" style="color:${color}">Why the difference matters &middot; ${tag}</div>
+                <div class="verdict-headline">${headline}</div>
+                <div class="verdict-text">${body}</div>
+            </div>
+        `;
+        document.getElementById('verdict-card').style.borderColor = color;
     }
 
     function setPair(a, b) {

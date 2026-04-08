@@ -27,24 +27,10 @@ For each epoch:
     Print epoch summary
 ```
 
-**One mini-batch iteration (forward + backward):**
-
-**Forward pass** (left to right):
-
-| Step | Component | Shape / Detail |
-|------|-----------|---------------|
-| 1 | Batch input | 32 x 10 |
-| 2 | Dense(64), relu | Hidden layer activation |
-| 3 | Dense(1), sigmoid | Output probability |
-| 4 | Loss function | Compare prediction vs label |
-
-**Backward pass** (right to left):
-
-| Step | Component | What happens |
-|------|-----------|-------------|
-| 4 → 3 | Gradients layer 2 | Compute error signal |
-| 3 → 2 | Gradients layer 1 | Propagate gradients back |
-| 2 → 1 | Weights updated | `w = w - learning_rate x gradient` |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_training_loop.png" alt="Two-row diagram of a single training step. Top row labelled 'FORWARD PASS — predict → compute loss': four cyan and red boxes connected by left-to-right arrows: Batch input (32 × 10), Dense(64) relu, Dense(1) sigmoid, Loss (BCE). A vertical arrow drops from the loss box down to the bottom row. Bottom row labelled 'BACKWARD PASS — propagate gradients → update weights': four orange and violet boxes connected by right-to-left arrows: ∂L/∂output, Grad W2, Grad W1, Update W1. A green box on the right reads 'one batch × one epoch'.">
+  <div class="vis-caption">One mini-batch step inside <code>model.fit()</code>. The forward pass computes a prediction and a loss; the backward pass propagates gradients back through every layer and updates the weights. Repeat for every batch in every epoch.</div>
+</div>
 
 One **epoch** = one complete pass through all training data.
 One **batch** = `batch_size` samples processed before updating weights.
@@ -81,11 +67,10 @@ The length of each list equals the number of epochs trained.
 
 A healthy run shows two curves climbing together — `accuracy` (on training data) and `val_accuracy` (on the validation portion) — both rising sharply at first and then flattening as the model runs out of new things to learn:
 
-| Epoch range | What `accuracy` does | What `val_accuracy` does | What it means |
-|---|---|---|---|
-| 1 – 5   | jumps from ~0.6 to ~0.85 | tracks training closely | **rapid learning** — picking up obvious patterns |
-| 5 – 15  | rises slowly to ~0.95   | rises slowly, then plateaus | **fine-tuning** — learning subtler patterns |
-| 15 +    | keeps creeping up to ~1.0 | flat or starts dropping | **overfitting risk** — training on noise specific to the train set |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_training_curves.png" alt="Two side-by-side line charts showing 100 epochs of training history. Left panel: 'Loss curves — both fall together' with cyan train loss and red val loss both decreasing rapidly in the first 10 epochs and then flattening. Right panel: 'Accuracy curves — train climbs slightly above val' with cyan train accuracy reaching about 0.99 and red val accuracy reaching about 0.94, with a green dashed vertical line marking 'Peak val @ epoch 18'.">
+  <div class="vis-caption">Real <code>model.fit()</code> output for the lab dataset. Both losses fall together, both accuracies climb together, and the validation accuracy peaks around epoch 18 then plateaus — the train curve continues climbing slightly, opening a small generalisation gap.</div>
+</div>
 
 The single most important signal: when `val_loss` starts **rising** while `loss` keeps **falling**, stop. The model has begun memorising the training data.
 
@@ -95,16 +80,10 @@ The single most important signal: when `val_loss` starts **rising** while `loss`
 
 `validation_split=0.2` reserves the **last 20% of your training data** for validation.
 
-```
-X_train (1600 samples after split)
-  |__ Training portion (1280):  used for gradient updates
-  |__ Validation portion (320): used to measure performance each epoch
-
-X_test (400 samples — never seen during training or validation)
-  |__ Used ONLY for final evaluation in Exercise 4
-```
-
-**Data layout when you call `fit(..., validation_split=0.2)`**
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_validation_split.png" alt="Horizontal stacked bar chart of 2000 samples split into three coloured segments. Cyan 'Training portion (1280)' on the left labelled 'weights actually update here'. Orange 'Validation (320)' in the middle labelled 'per-epoch monitoring (no updates)'. Red 'Test (400)' on the right labelled 'sealed until the very end'. A grey bracket above the first two segments marks 'X_train (1600 — fed to model.fit)' and a separate bracket above the third segment marks 'X_test (untouched)'.">
+  <div class="vis-caption">Where <code>validation_split=0.2</code> carves the data inside <code>model.fit()</code>. The training portion is the only part where weights change; the validation portion is monitored each epoch; the test set is sealed until Exercise 4.</div>
+</div>
 
 | Subset | Size | Source | What it is used for |
 |---|---:|---|---|

@@ -41,14 +41,10 @@ The sigmoid output is a probability, not a class label. You apply a threshold to
 y_pred = (model.predict(X_test).flatten() > 0.5).astype(int)
 ```
 
-**Prediction pipeline: raw probability → threshold → class label**
-
-| Sample | `model.predict()` (prob) | `> 0.5`? | Predicted label | Meaning |
-|---:|---:|:---:|---:|---|
-| 0 | 0.92 | yes | 1 | attack |
-| 1 | 0.14 | no  | 0 | benign |
-| 2 | 0.67 | yes | 1 | attack |
-| 3 | 0.03 | no  | 0 | benign |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_threshold_pipeline.png" alt="Three-column flow diagram for four samples. Left column 'sigmoid output': cyan rounded boxes containing 0.92, 0.14, 0.67, 0.03. Middle column '> 0.5 ?': green check marks for the two boxes whose value is above 0.5 and grey crosses for the two below. Right column 'predicted label': red rounded boxes labelled '1 — attack' for the rows that passed the threshold and cyan rounded boxes labelled '0 — benign' for the rows that failed.">
+  <div class="vis-caption">Threshold conversion is just a comparison: probabilities above 0.5 become attack (label 1), below 0.5 become benign (label 0). Lower the threshold to catch more attacks at the cost of more false positives.</div>
+</div>
 
 `predict()` returns shape `(n, 1)` for a binary model — call `.flatten()` to drop the trailing dimension to `(n,)` so it lines up with `y_test` and sklearn's metric helpers.
 
@@ -83,6 +79,11 @@ On this dataset, results will be very close. Neural networks excel when:
 - Input is high-dimensional (images, text, sequences)
 
 On small structured datasets with good features, logistic regression often matches or beats neural networks. The lesson here: **always benchmark against a simple baseline**.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_nn_vs_lr_auc.png" alt="Bar chart titled 'AUC: simple baseline vs neural networks on the same test set'. Three bars from left to right: grey 'Logistic Regression' at 0.825, cyan '2-layer NN' at 0.945, violet '3-layer NN' at 0.941. A grey dashed horizontal line marks AUC=0.5 labelled 'random'.">
+  <div class="vis-caption">Real lab numbers from the lecture-4 dataset. The 2-layer neural network beats the logistic regression baseline by ≈0.12 AUC; adding a third hidden layer does not improve things — deeper isn't always better on simple tabular data.</div>
+</div>
 
 ---
 

@@ -15,19 +15,14 @@
 
 Activation functions determine what kind of signal flows through the network.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_activation_functions.png" alt="Three side-by-side panels. Left: ReLU plotted in cyan from x=-6 to 6, flat at zero for negative input then a straight 45-degree ramp upward; annotations 'off for negative input' and 'linear ramp for positive'. Middle: Sigmoid plotted in red, an S-curve from 0 at left to 1 at right with the 0.5 midpoint at x=0; annotation 'P(positive class) ∈ [0, 1]'. Right: Softmax shown as three coloured bars (violet 0.66, orange 0.24, cyan 0.10) labelled class A, B, C; caption 'sums to 1.00'.">
+  <div class="vis-caption">ReLU is the default for hidden layers (cheap and gradient-friendly). Sigmoid squashes one number to a [0,1] probability — use it for binary output. Softmax turns a vector of N scores into N probabilities that sum to 1.0 — use it for N-class output.</div>
+</div>
+
 ### ReLU (Rectified Linear Unit) — for hidden layers
 
-`relu(x) = max(0, x)`
-
-| Input `x` | Output `relu(x)` | Behaviour |
-|---:|---:|---|
-| −5 | 0 | clamped — neuron is "off" |
-| −1 | 0 | clamped |
-|  0 | 0 | exactly zero |
-|  1 | 1 | passes through unchanged |
-|  5 | 5 | passes through unchanged |
-
-The shape is a flat floor at zero for any negative input, then a straight 45° ramp upward for positive input — no saturation at the top, no expensive `exp()`.
+`relu(x) = max(0, x)` — flat at zero for any negative input, then a straight 45° ramp upward for positive input. No saturation at the top, no expensive `exp()`.
 
 Why ReLU for hidden layers?
 - Computationally cheap
@@ -36,21 +31,11 @@ Why ReLU for hidden layers?
 
 ### Sigmoid — for binary output
 
-```
-sigmoid(x) = 1 / (1 + e^-x)
-```
-
-| x value | sigmoid(x) | Behaviour |
-|---------|-----------|-----------|
-| Very negative | Near 0.0 | Suppressed |
-| 0 | 0.5 | Midpoint |
-| Very positive | Near 1.0 | Saturated |
-
-Maps any real number to [0, 1]. Interpret as probability of the positive class.
+`sigmoid(x) = 1 / (1 + e^-x)` — maps any real number to [0, 1]. Interpret as probability of the positive class.
 
 ### Softmax — for multi-class output
 
-Softmax takes a vector of raw scores and converts them to probabilities that sum to 1.0.
+Softmax takes a vector of raw scores and converts them to probabilities that sum to 1.0:
 
 ```python
 softmax([2.0, 1.0, 0.1]) → [0.66, 0.24, 0.10]  # sums to 1.0
@@ -72,17 +57,18 @@ Use when your problem has 3+ mutually exclusive classes.
 
 The number of output units must match the number of classes in your problem.
 
-**Same hidden layer, two different output layers**
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/nn_output_heads.png" alt="Two side-by-side network diagrams sharing the same cyan hidden layer of three neurons labelled Dense(64, relu). Left panel labelled 'Binary classification': hidden layer connects to a single red sigmoid neuron labelled Dense(1, sigmoid), with output box showing '0.82' and caption 'P(attack)'; below it 'loss: binary_crossentropy'. Right panel labelled 'Multi-class (3 classes)': hidden layer connects to three coloured neurons (violet, orange, cyan) labelled Dense(3, softmax), with output box showing 0.66, 0.24, 0.10 and caption 'sums to 1.00'; below it 'loss: sparse_categorical_crossentropy'.">
+  <div class="vis-caption">Same hidden network, two different output heads. Pick the head and loss to match the number of mutually exclusive classes in your problem — one sigmoid neuron for binary, N softmax neurons for N-class.</div>
+</div>
 
-|  | Binary classification | Multi-class (3 classes) |
+| | Binary classification | Multi-class (3 classes) |
 |---|---|---|
 | Hidden layer | `Dense(64, relu)` | `Dense(64, relu)` |
 | Output layer | `Dense(1, sigmoid)` | `Dense(3, softmax)` |
 | Output shape | `(batch, 1)` | `(batch, 3)` |
 | Example output for one sample | `0.82` (probability of attack) | `[0.66, 0.24, 0.10]` (sums to 1.0) |
 | Loss function | `binary_crossentropy` | `sparse_categorical_crossentropy` |
-
-Same hidden network, different head: choose the head and loss to match the *number of mutually exclusive classes* in your problem.
 
 ---
 

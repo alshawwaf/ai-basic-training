@@ -15,20 +15,23 @@
 
 **Model capacity** = how many distinct functions the model can represent. A network with more parameters has higher capacity — it can fit more complex patterns.
 
-With 3 x Dense(256) layers and 10 input features, this model has ~133,000 parameters being trained on 1,600 samples. That's 83 parameters per training sample. The model has enough capacity to memorise every training example, including the random noise in the data.
+With 3 × Dense(256) layers and 15 input features, this model has ~138,000 trainable parameters but only ~5,440 training samples to learn from. That's roughly 25 parameters per training sample — enough capacity to memorise every training example, including its random noise.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_capacity_vs_data.png" alt="Side-by-side blocks. Left: a large red block containing the number 137,729 labelled 'trainable parameters (3 × Dense(256))'. Right: a smaller cyan block containing the number 5,440 labelled 'training samples'. Below both: a banner reading 'approximately 25 parameters per training sample — far too much capacity'.">
+  <div class="vis-caption">The 3 × Dense(256) network has roughly 25 trainable parameters for every training sample. With that much capacity it can simply memorise the noise in the training set instead of learning the real attack pattern.</div>
+</div>
 
 **The overfit architecture:**
 
 | Layer | Size | Activation | Parameters |
 |-------|------|-----------|------------|
-| Input | 10 | — | — |
-| Dense | 256 | relu | 10 x 256 + 256 = 2,816 |
-| Dense | 256 | relu | 256 x 256 + 256 = 65,792 |
-| Dense | 256 | relu | 256 x 256 + 256 = 65,792 |
-| Output | 1 | sigmoid | 256 x 1 + 1 = 257 |
-| **Total** | | | **~134,657 params** |
-
-> With only 1,600 training samples, that is **84 parameters per sample** — far too much capacity.
+| Input | 15 | — | — |
+| Dense | 256 | relu | 15 × 256 + 256 = 4,096 |
+| Dense | 256 | relu | 256 × 256 + 256 = 65,792 |
+| Dense | 256 | relu | 256 × 256 + 256 = 65,792 |
+| Output | 1 | sigmoid | 256 × 1 + 1 = 257 |
+| **Total** | | | **~135,937 params** |
 
 ```
 Too much capacity:
@@ -44,11 +47,12 @@ Result:
 
 ## Concept: The Diverging Loss Signature
 
-In a healthy training run, train loss and val loss both decrease and track each other:
+In a healthy training run, train loss and val loss both decrease and track each other. With too much capacity, they pull apart:
 
-**Healthy training:** Both train and val loss decrease together and converge toward the same low value.
-
-**Overfitting signature:** Val loss stops falling (around epoch 20-30), then starts rising, while train loss continues decreasing.
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_overfit_curves.png" alt="Two side-by-side line charts of 50 training epochs for the 3 × Dense(256) baseline. Left panel 'Loss — train falls forever, val turns upward': cyan train loss decreases monotonically toward zero, red val loss falls to a minimum around epoch 5 then rises steadily for the rest of training; a green dashed vertical line marks 'val min @ ep 5'. Right panel 'Accuracy — gap = 0.035 at epoch 50': cyan train accuracy reaches 1.0 by epoch 10 while red val accuracy plateaus around 0.965, leaving a clear gap.">
+  <div class="vis-caption">Real lab numbers from <code>solution_demonstrate_overfitting.py</code>. Train loss falls forever; val loss reaches its minimum within the first few epochs and then drifts upward — the textbook overfitting signature.</div>
+</div>
 
 | Epoch range | Train loss | Val loss | What's happening |
 |-------------|-----------|----------|-----------------|

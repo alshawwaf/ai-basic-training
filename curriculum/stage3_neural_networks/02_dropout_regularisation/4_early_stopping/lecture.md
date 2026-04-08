@@ -34,31 +34,12 @@ keras.callbacks.EarlyStopping(
 
 Timeline example with `patience=5`:
 
-```
-Epoch 15: val_loss = 0.168  ← new best, reset counter
-Epoch 16: val_loss = 0.171  (counter = 1)
-Epoch 17: val_loss = 0.173  (counter = 2)
-Epoch 18: val_loss = 0.169  ← improvement! reset counter
-Epoch 19: val_loss = 0.174  (counter = 1)
-Epoch 20: val_loss = 0.177  (counter = 2)
-Epoch 21: val_loss = 0.179  (counter = 3)
-Epoch 22: val_loss = 0.181  (counter = 4)
-Epoch 23: val_loss = 0.184  (counter = 5) ← STOP, restore epoch 18 weights
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_patience_timeline.png" alt="Six rounded boxes in a horizontal row, each representing one epoch. Box 1 (green) labelled 'Epoch 15, val_loss = 0.170, ↓ best'. Boxes 2-5 (orange) labelled 'Epoch 16-19, val_loss = 0.172-0.180, count = 1-4'. Box 6 (red) labelled 'Epoch 20, val_loss = 0.182, STOP — restore epoch 15'. A gold curved arrow loops from the last box back to the first, with a label below 'restore_best_weights=True → rewind to epoch 15'.">
+  <div class="vis-caption">Patience walkthrough. Each non-improving epoch increments a counter; when it reaches <code>patience=5</code>, training halts and <code>restore_best_weights=True</code> rewinds the model back to the epoch with the lowest val_loss.</div>
+</div>
 
-The model that gets restored is from epoch 18 (val_loss = 0.169) — the best it ever achieved.
-
-**Early Stopping with patience=5:**
-
-| Epoch | val_loss | Patience counter | Event |
-|-------|---------|-----------------|-------|
-| 15–17 | Decreasing | — | Still improving |
-| **18** | **0.170 (best)** | **Reset to 0** | New best — weights saved here |
-| 19 | 0.172 | 1 | Worse than best |
-| 20 | 0.175 | 2 | Still worse |
-| 21 | 0.178 | 3 | Still worse |
-| 22 | 0.180 | 4 | Still worse |
-| **23** | 0.182 | **5 — STOP** | Patience exhausted — restore weights from epoch 18 |
+The model that gets restored is from epoch 15 (val_loss = 0.170) — the best it ever achieved.
 
 ---
 
@@ -81,6 +62,11 @@ With `restore_best_weights=True`:
 | Final `val_loss` | 0.184 | **0.169** |
 
 The "stop epoch" and the "best epoch" are different things. `restore_best_weights=True` gives you the best model for free — there's almost no reason to leave it off.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_early_stopping_curves.png" alt="Line chart of train and val loss over the epochs of a real EarlyStopping run. Cyan train loss falls smoothly. Red val loss falls then begins to climb. A large gold dot marks the best val_loss point. A grey dashed vertical line marks where training was actually halted, with an orange shaded region between the best epoch and the stop epoch labelled '5 non-improving epochs'.">
+  <div class="vis-caption">Real lab run from <code>solution_early_stopping.py</code>. The gold dot is where the model is rewound to; the dashed line is where training actually halts after 5 consecutive non-improving epochs. Without early stopping the run would have wasted ~190 more epochs.</div>
+</div>
 
 Always use `restore_best_weights=True` unless you have a specific reason not to.
 

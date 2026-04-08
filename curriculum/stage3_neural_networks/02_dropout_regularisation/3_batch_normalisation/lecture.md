@@ -39,13 +39,10 @@ For each mini-batch, this layer:
 
 The result: each layer always receives inputs with approximately mean=0 and std=1, regardless of what happened in earlier layers.
 
-**BatchNorm transformation, per feature, within one mini-batch**
-
-| Stage | Distribution mean | Distribution std | Notes |
-|---|---:|---:|---|
-| Before BatchNorm (layer input) | 2.1 | 3.8 | drifts as earlier layers train |
-| After step 1 (centre + rescale) | 0.0 | 1.0 | mean and variance computed across the batch |
-| After step 2 (`γ·z + β`) | β | γ | learned scale `γ` and shift `β` give the layer freedom to undo BN if it's actually unhelpful |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_batchnorm_distribution.png" alt="Three side-by-side histograms of the same 4000 activations. Left 'Before BN — drifted' (grey): a wide bell shape stretching from -10 to 14, mean ≈ 2.1, std ≈ 3.8 with a red dashed line at the mean. Middle 'Centred + scaled' (cyan): a tighter bell from -4 to 4, mean ≈ 0, std ≈ 1, red dashed line at zero. Right 'After learned γ·z + β' (green): a similar tight bell shifted slightly so mean ≈ 0.3, std ≈ 0.8.">
+  <div class="vis-caption">What BatchNorm does to one feature inside a mini-batch. Step 1 centres and scales the activations to mean ≈ 0, std ≈ 1. Step 2 reshapes them with the learned <code>γ</code> and <code>β</code>, which gives the layer the freedom to undo BN if it's unhelpful.</div>
+</div>
 
 The key effect: every later layer receives inputs whose statistics are pinned to a stable target instead of drifting around as training progresses, which is exactly what cures internal covariate shift.
 
@@ -59,6 +56,11 @@ The key effect: every later layer receives inputs whose statistics are pinned to
 | Slow convergence | Faster convergence |
 | Must use small learning rate | Can use larger learning rate |
 | Sensitive to weight initialisation | More robust |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_batchnorm_smoothing.png" alt="Two side-by-side line charts. Left 'Training loss — BN smooths the curve': grey baseline curve falls fast then wobbles, cyan With-BatchNorm curve falls smoothly to the same low value with much less noise. Right 'Validation loss — same trend, less wobble': grey baseline rises and oscillates after the initial drop, cyan With-BatchNorm curve stays much flatter and tighter.">
+  <div class="vis-caption">Real lab numbers. Both networks reach the same final accuracy, but the BatchNorm version's loss curves are visibly smoother — easier to read and easier to spot overfitting against.</div>
+</div>
 
 The smoothing effect makes it much easier to spot overfitting — the val_loss trend is cleaner.
 
@@ -86,13 +88,10 @@ In practice the difference is small for most problems. Use the first (simpler) p
 The standard order is: `Dense → BatchNorm → Dropout → next Dense`
 BatchNorm comes before Dropout because Dropout changes the scale of inputs.
 
-**Recommended layer stack — one block, repeated**
-
-| Order | Layer | Role |
-|---:|---|---|
-| 1 | `Dense(256, activation='relu')` | compute activations |
-| 2 | `BatchNormalization()` | normalise to mean ≈ 0, std ≈ 1 |
-| 3 | `Dropout(0.3)` | randomly zero 30% of neurons (training only) |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_combined_block.png" alt="Horizontal flow diagram of four boxes connected by left-to-right arrows. Cyan box 'Dense(256, relu)' with caption 'compute activations'. Orange box 'BatchNormalization()' with caption 'stabilise mean ≈ 0, std ≈ 1'. Violet box 'Dropout(0.3)' with caption 'zero 30% of neurons'. Grey box '→ next block' with caption 'or final Dense head'.">
+  <div class="vis-caption">The recommended block: <code>Dense → BatchNorm → Dropout</code>. Stack two or three of these back-to-back and finish with the output layer. BatchNorm goes before Dropout because Dropout would otherwise distort the statistics BN measures.</div>
+</div>
 
 Stack two or three of these blocks back-to-back, then finish with `Dense(1, sigmoid)` (or `Dense(N, softmax)`). The final output layer gets neither BatchNorm nor Dropout — its job is to produce the actual prediction distribution, and both regularisers would distort it.
 

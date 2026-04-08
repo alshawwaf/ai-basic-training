@@ -24,33 +24,10 @@ For each sample in a training batch, this layer:
 
 With `rate=0.3`: 30% of neurons are zeroed each batch. Different neurons are zeroed each batch.
 
-```
-Dropout(0.3) in action — training vs prediction:
-
-TRAINING (batch 1):             TRAINING (batch 2):
- o  active                       o  active
- X  DROPPED (zeroed)             o  active
- o  active                       X  DROPPED
- o  active                       o  active
- X  DROPPED                      o  active
- o  active                       X  DROPPED
- o  active                       o  active
- X  DROPPED                      o  active
-
- 30% off (random)                30% off (different random set)
-
-PREDICTION (always):
- o  active
- o  active       ← ALL neurons active
- o  active          no dropout applied
- o  active          outputs unchanged
- o  active
- o  active
- o  active
- o  active
-```
-
-**Training vs Prediction behaviour:**
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_dropout_concept.png" alt="Three side-by-side panels each showing a small grid of 8 circular neurons. Left panel labelled 'TRAINING — batch 1, Dropout(0.3) zeroes 3/8 randomly': five cyan filled circles and three faded circles with red Xs through them. Middle panel labelled 'TRAINING — batch 2, different random set zeroed': again five active and three crossed-out, but at different positions than batch 1. Right panel labelled 'PREDICTION (model.predict), all neurons active': all eight neurons cyan and active.">
+  <div class="vis-caption">During training, <code>Dropout(0.3)</code> zeroes a random 30% of neurons in every mini-batch — and a different random set each time. During <code>model.predict()</code>, no neurons are dropped: the full network runs at inference time.</div>
+</div>
 
 | Phase | Dropout active? | Effect |
 |-------|----------------|--------|
@@ -82,6 +59,16 @@ This ensemble effect is what makes Dropout so effective. A model with Dropout(0.
 | 0.2–0.3 | Standard | Default starting point for most networks |
 | 0.4–0.5 | Strong | Large networks with significant overfitting |
 | >0.5 | Aggressive | Rarely useful — often causes underfitting |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_dropout_rates.png" alt="Bar chart titled 'Choosing the dropout rate — too little leaks, too much underfits' with three bars labelled rate = 0.1, rate = 0.3, rate = 0.5. The bars are very close in height (around 0.965 to 0.970 final validation accuracy), with rate = 0.5 highlighted as the best by a thicker green border.">
+  <div class="vis-caption">Real lab numbers from <code>solution_add_dropout.py</code>. On this dataset all three rates land within ~0.005 of each other — 0.3 is the safest default but 0.5 squeezes out a tiny extra fraction without underfitting yet.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dr_dropout_vs_baseline.png" alt="Two side-by-side line charts. Left 'Val loss — Dropout flattens the upward drift': grey baseline curve climbs steadily upward after the first few epochs while the cyan Dropout(0.3) curve stays low and flat. Right 'Val accuracy — Dropout reaches and holds the peak': grey baseline rises and then wobbles down, cyan Dropout(0.3) climbs higher and holds the plateau.">
+  <div class="vis-caption">Real lab numbers: <code>Dropout(0.3)</code> reduces the final validation loss by more than half — from ~0.52 down to ~0.21 — and keeps the val curve flat instead of drifting upward.</div>
+</div>
 
 The original Dropout paper (Srivastava et al.) recommended 0.5 for fully connected layers. In practice, 0.2–0.3 is the most common starting point.
 

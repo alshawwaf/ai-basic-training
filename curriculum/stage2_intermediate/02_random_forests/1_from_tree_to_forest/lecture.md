@@ -15,12 +15,10 @@
 
 A single `DecisionTreeClassifier` with `max_depth=None` will grow until every training sample is perfectly classified — memorising noise, outliers, and peculiarities of the training set. On new data, those memorised patterns don't generalise.
 
-**Visualising the problem:**
-```
-Single tree (no limit):
-  Training accuracy: 1.000   (perfect — but suspicious!)
-  Test accuracy:     0.891   (gap of 0.109 = overfitting)
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_overfit_gap.png" alt="Bar chart with two bars. Left green bar 'Training accuracy' reaches 1.000 with the value labelled. Right red bar 'Test accuracy' reaches 0.867 with the value labelled. An orange double-headed arrow between the two bar tops marks the overfit gap = 0.133. Title: Single DecisionTree with no depth limit memorises the training set.">
+  <div class="vis-caption">Real lab numbers from <code>DecisionTreeClassifier(max_depth=None)</code> on the PE feature dataset. Training accuracy of 1.000 is the smoking gun — the tree has memorised noise, not learned a rule.</div>
+</div>
 
 > **Want to go deeper?** [Decision tree learning (Wikipedia)](https://en.wikipedia.org/wiki/Decision_tree_learning)
 
@@ -34,30 +32,19 @@ Bagging creates diversity among trees:
 3. Repeat K times → K different trees, each slightly different
 4. **Aggregate** predictions: majority vote (classification) or average (regression)
 
-```
-How bagging works — step by step:
-
-  Training data (N rows)
-       |
-       | draw bootstrap samples (with replacement)
-       |
-  +-----------+-----------+-----------+-- ... --+-----------+
-  | Sample 1  | Sample 2  | Sample 3  |         | Sample K  |
-  | (N rows)  | (N rows)  | (N rows)  |         | (N rows)  |
-  +-----------+-----------+-----------+-- ... --+-----------+
-       |            |           |                     |
-     Tree 1      Tree 2      Tree 3     ...        Tree K
-       |            |           |                     |
-    pred = 1    pred = 0    pred = 1              pred = 1
-       |            |           |                     |
-       +------------+-----------+--------- ... -------+
-                          |
-                   Majority vote --> final prediction = 1
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_bagging_flow.png" alt="Top-down bagging flow diagram. A grey 'Training data (N rows)' box at the top. Four arrows point down to four cyan bootstrap sample boxes labelled Sample 1 to Sample K. Each bootstrap sample feeds a violet tree box (Tree 1 to Tree K). Each tree outputs a circle showing its individual prediction (1, 0, 1, 1) coloured green or red. Arrows from all four predictions converge on a black box at the bottom labelled 'Majority vote → final prediction = 1'.">
+  <div class="vis-caption">The full bagging pipeline. K different bootstrap samples create K different trees; their majority vote becomes the ensemble's answer.</div>
+</div>
 
 Because each tree sees a different random subset, no single noisy point can dominate all trees. The ensemble averages out errors.
 
 **Out-of-Bag (OOB) samples:** In each bootstrap sample, ~37% of training rows are *not* sampled. These "out-of-bag" samples can be used as a free validation set, giving an unbiased estimate of test performance without a separate hold-out set.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_oob_concept.png" alt="Strip of 30 cells representing training rows. About two-thirds of the cells are coloured cyan (rows that landed in this tree's bootstrap sample) and one-third are orange (out-of-bag rows). A two-row legend explains the colours. A bottom caption reads: oob_score on the lab forest = 0.930, test = 0.940 — OOB tracks the held-out test score for free.">
+  <div class="vis-caption">Each bootstrap leaves ≈ 37 % of rows untouched. Sklearn re-uses those orange rows as a free validation set — no separate hold-out needed.</div>
+</div>
 
 > **Want to go deeper?** [Random forest (Wikipedia)](https://en.wikipedia.org/wiki/Random_forest)
 
@@ -70,6 +57,11 @@ If each tree makes an error with variance σ², but errors are independent:
 - Standard deviation √(σ²/N) = σ/√N
 
 With 100 trees, the standard deviation of predictions is 10× smaller than a single tree. Random forests get the benefit of reduced variance while keeping the bias of individual trees similar.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_variance_reduction.png" alt="Scatter plot with 20 points per series across the x-axis (run index 0 to 19). Red dots show single-tree test accuracy bouncing around 0.86 with visible spread. Cyan dots show random-forest test accuracy clustered tightly at 0.94. Two horizontal dashed lines mark the means. Top-left annotation: σ ratio — single tree is roughly 2x more variable.">
+  <div class="vis-caption">Re-train 20 times with different seeds. Single trees scatter; the forests cluster near the same accuracy. That tight cluster <em>is</em> the variance reduction the math predicted.</div>
+</div>
 
 ---
 
@@ -94,20 +86,23 @@ Train a `RandomForestClassifier(oob_score=True)`. Print `model.oob_score_` and c
 ```
 TASK 1 — Single unlimited tree:
 Training accuracy: 1.000
-Test accuracy:     0.891
-Overfit gap:       0.109
+Test accuracy:     0.867
+Overfit gap:       0.133
 
 TASK 2 — Manual bagging (10 trees):
-Test accuracy: 0.931  ← better than single tree!
+Manual bagging test accuracy: 0.917  <- better than single tree!
+Single tree test accuracy:    0.867
+Improvement from bagging:    +0.050
 
 TASK 3 — Variance comparison:
-20 single trees:  mean=0.888, std=0.031  ← high variance!
-20 random forests: mean=0.943, std=0.005 ← much more stable
+20 single trees:   mean=0.865, std=0.007  <- baseline
+20 random forests: mean=0.940, std=0.003  <- much more stable
+Variance ratio: 2.3x higher for single trees
 
 TASK 4 (BONUS) — OOB score:
-OOB score:   0.941
-Test score:  0.943
-Difference:  0.002  ← OOB is a reliable proxy for test performance
+OOB score:    0.930
+Test score:   0.940
+Difference:   0.010  <- OOB is a reliable proxy for test performance
 ```
 
 ---

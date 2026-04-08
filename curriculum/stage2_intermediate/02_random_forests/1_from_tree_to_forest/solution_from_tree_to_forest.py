@@ -59,8 +59,15 @@ benign_df['label']  = 0
 df = pd.concat([malware_df, benign_df], ignore_index=True).sample(frac=1, random_state=42)
 
 feature_cols = [c for c in df.columns if c != 'label']
-X = df[feature_cols]
+X = df[feature_cols].astype(float)
 y = df['label']
+
+# The synthetic malware/benign distributions are too cleanly separable
+# (every classifier scores 1.000). Add per-feature Gaussian noise so the
+# classes overlap the way real PE features do — this gives us a single-tree
+# overfit gap and a meaningful forest improvement to teach with.
+rng = np.random.default_rng(13)
+X = X + rng.normal(0, X.std(axis=0).values * 1.4, X.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y

@@ -57,17 +57,27 @@ The trees end up splitting on **different** features even when one feature (here
 
 For 7 features: √7 ≈ 2.6 → 2 or 3 features considered at each node. This is small enough to create diversity but large enough to use the good features most of the time.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_feature_subsampling.png" alt="Diagram showing the full pool of 7 PE features in a row of grey cards across the top. Beneath, three rows labelled Tree 1, Tree 2, Tree 3 each show the same seven cards but only three are highlighted (cyan/violet/orange respectively), the rest greyed out. Tree 1 highlights file_entropy, packer_detected, code_section_size; Tree 2 highlights virtual_size_ratio, num_imports, num_sections; Tree 3 highlights file_entropy, suspicious_strings, num_imports. To the right of each row a coloured arrow points to the chosen split feature.">
+  <div class="vis-caption">Three trees, three random feature subsets at the same node. Even when one feature is genuinely strong, different trees pick different splits — that diversity is the forest's variance reducer.</div>
+</div>
+
 ---
 
 ## Concept: Single Tree vs Forest
 
 | Property | Single Tree | Random Forest |
 |---------|------------|---------------|
-| Training accuracy | ~100% (overfits) | ~99% (also overfits, but ensemble averages it out) |
-| Test accuracy | ~89% | ~94% |
+| Training accuracy | ~100% (overfits) | ~100% (also overfits, but ensemble averages it out) |
+| Test accuracy | ~87% | ~94% |
 | Interpretability | High — readable rules | Low — cannot read 100 trees |
 | Stability | Low — different seeds → very different trees | High — ensemble is stable |
 | Feature importance | Unstable (single tree dependent) | Stable (averaged over 100 trees) |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_tree_vs_forest.png" alt="Grouped bar chart comparing Single Tree (red) and Random Forest (cyan) on two metrics: Train accuracy and Test accuracy. Both Single Tree and Random Forest reach 1.000 on Train. On Test the Single Tree drops to 0.867 while the Random Forest holds 0.940. A dotted line marks the OOB score of 0.930. Title: Both fit the train set — only the forest holds up on test.">
+  <div class="vis-caption">Same data, same hyperparameters apart from <code>n_estimators</code>. Both fit the train set perfectly, but only the forest survives the jump to test.</div>
+</div>
 
 ---
 
@@ -91,20 +101,20 @@ Use `predict_proba()` to get P(malware) for each test sample. Print the 5 sample
 
 ```
 TASK 1 — Random forest:
-Training accuracy: 0.999
-Test accuracy:     0.943
-OOB score:         0.941
+Training accuracy: 1.000
+Test accuracy:     0.940
+OOB score:         0.930
 
 TASK 2 — Comparison:
 Model               Train Acc  Test Acc   OOB
-Single Tree (none)    1.000     0.891     N/A
-Random Forest (100)   0.999     0.943     0.941
+Single Tree (none)    1.000     0.867     N/A
+Random Forest (100)   1.000     0.940     0.930
 
 TASK 3 — Classification report:
               precision  recall  f1-score  support
-benign          0.948     0.941     0.944      200
-malware         0.939     0.945     0.942      200
-accuracy                            0.943      400
+benign           0.94      0.94     0.94      300
+malware          0.94      0.94     0.94      300
+accuracy                            0.94      600
 
 TASK 4 (BONUS):
 Top 5 false positives (benign files most like malware):

@@ -23,21 +23,10 @@ Adding trees always reduces variance — but the improvement shrinks quickly:
 | 100 → 500 | +0.1% | High |
 | 500 → 1000 | < 0.05% | Very high |
 
-```
-Test Accuracy vs n_estimators (conceptual shape):
-
-  n_estimators =   1  -->  ~0.89  (steep improvement zone starts here)
-                   5  -->  ~0.92
-                  10  -->  ~0.93
-                  25  -->  ~0.94
-                  50  -->  ~0.94+
-                 100  -->  ~0.95   <-- elbow (accuracy plateaus here)
-                 200  -->  ~0.95
-                 500  -->  ~0.95
-
-  Steep gains from 1-50 trees, then diminishing returns.
-  Elbow at ~100 trees: beyond this, you pay CPU time for tiny gains.
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_learning_curve.png" alt="Line chart of test accuracy versus n_estimators on a log x-axis with markers at 1, 5, 10, 25, 50, 100, 200, 500. The line jumps steeply from 0.823 at n=1 to 0.918 at n=10, climbs more slowly to 0.940 at n=100, then plateaus around 0.94 through n=500. A vertical orange dashed line marks the elbow at n=100.">
+  <div class="vis-caption">Real lab learning curve. The first 50 trees do almost all the work; everything past the elbow at <code>n_estimators=100</code> is paying CPU for hundredths of a percent.</div>
+</div>
 
 The "elbow" of the learning curve — where accuracy plateaus — is usually around 100–200 trees. Beyond that, you are paying CPU time for tiny gains.
 
@@ -55,6 +44,16 @@ The "elbow" of the learning curve — where accuracy plateaus — is usually aro
 | `0.5` | 50% of features | More diversity for high-dimensional data |
 
 For PE file features (7 features), `max_features='sqrt'` → 2-3 features per split. Increasing to `max_features=5` makes trees more powerful individually but more correlated with each other — reducing the ensemble benefit.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_max_features.png" alt="Bar chart of test accuracy for max_features in {1, 2, 3, 4, 5, sqrt, log2}. The 'sqrt' bar is highlighted in cyan; the others are grey. All bars sit between 0.935 and 0.943. The bars at 2 and 4 are slightly higher, but the differences are within a single percentage point.">
+  <div class="vis-caption">Real lab numbers. Across 7 sensible <code>max_features</code> choices the spread is under one percentage point — the default <code>sqrt</code> sits comfortably in the top group.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/rf_time_vs_accuracy.png" alt="Scatter plot with training time (seconds) on the x-axis and test accuracy on the y-axis. Eight cyan dots, each annotated with its n_estimators (1, 5, 10, 25, 50, 100, 200, 500). The leftmost dots cluster on the left at high accuracy; the n=500 dot is to the far right (1.9 seconds) at the same accuracy as n=100. Title: Sweet spot — cheapest training time at the accuracy plateau.">
+  <div class="vis-caption">The same data plotted as cost vs benefit. The sweet spot is the lowest-time dot already at the plateau — for this dataset, <code>n_estimators=100</code>.</div>
+</div>
 
 ---
 
@@ -79,25 +78,28 @@ Create a 2D scatter plot with training time on x-axis and test accuracy on y-axi
 ```
 TASK 1 — Learning curve:
 n_estimators | Test Acc | Train Time (s)
-           1 |   0.891  |   0.01
-           5 |   0.921  |   0.04
-          10 |   0.933  |   0.08
-          25 |   0.940  |   0.18
-          50 |   0.942  |   0.35
-         100 |   0.943  |   0.65
-         200 |   0.944  |   1.28
-         500 |   0.944  |   3.15
+           1 |   0.823  |   0.02
+           5 |   0.903  |   0.04
+          10 |   0.918  |   0.06
+          25 |   0.930  |   0.11
+          50 |   0.933  |   0.21
+         100 |   0.940  |   0.41
+         200 |   0.938  |   0.77
+         500 |   0.942  |   1.92
 
 TASK 2 — Elbow:
 Recommended minimum n_estimators: 100
 (Beyond 100, accuracy improvement < 0.1%)
 
-TASK 3 — max_features comparison:
+TASK 3 — max_features comparison (n_estimators=100):
 max_features | Accuracy
-        sqrt |  0.943   ← default, best
-        log2 |  0.941
-           3 |  0.941
-           4 |  0.939
+           2 |  0.943
+           4 |  0.942
+           3 |  0.940
+        sqrt |  0.940  <- default
+        log2 |  0.940
+           5 |  0.937
+           1 |  0.935
 ```
 
 ---

@@ -20,6 +20,16 @@ In supervised learning (Lessons 1.2–2.2), every training sample has a label. I
 
 Unsupervised learning finds structure without labels. K-Means groups samples by similarity. The insight: normal traffic is **repetitive and predictable** — same devices, same services, same ports, day after day. This repetition creates dense clusters. Attacks are **unusual** — different traffic patterns, unexpected ports, abnormal volumes — and appear far from the dense normal clusters.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_no_labels.png" alt="Scatter plot of 3000 connections in 2D PCA space, all points coloured grey. No legend, no class labels. A small annotation in the top-left reads 'No colours. No classes. Just shape.'">
+  <div class="vis-caption">What an analyst actually sees on day one — 3 000 connections and zero labels. No prebuilt categories to lean on, just the shape of the data.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_truth_revealed.png" alt="Same PCA scatter as the previous figure, but now coloured by hidden true class. Cyan benign, orange port_scan, green exfil, red DoS. Four visibly distinct regions appear in the cloud.">
+  <div class="vis-caption">Truth revealed: behind the grey blob are four regions. The four traffic types occupy different corners of the feature space — exactly what makes clustering work.</div>
+</div>
+
 > **Want to go deeper?** [Anomaly detection (Wikipedia)](https://en.wikipedia.org/wiki/Anomaly_detection)
 
 ---
@@ -41,6 +51,11 @@ Imagine monitoring a corporate network:
 | **D — DNS** | a steady stream of tiny lookups | moderate | **tiny** (a few hundred bytes) |
 
 Each behaviour occupies a **different corner** of the feature plane, so K-Means can pull them into separate clusters without ever being told what "DoS" or "exfil" means. Anything that lands far from all four corners is the interesting part — the candidate anomaly.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_attack_signatures.png" alt="Four small histograms side by side, one per traffic class. Each panel highlights one feature in colour and dims the rest in light grey: benign on bytes_sent, port_scan on unique_dest_ports, exfil on bytes_sent (log scale), DoS on connection_rate. The coloured class clearly separates from the dimmed background in every panel.">
+  <div class="vis-caption">Each attack type has a different "tell" — port scans by destination port count, exfil by bytes sent, DoS by connection rate. K-Means doesn't need to know which feature matters; the distance metric finds it for free.</div>
+</div>
 
 These patterns are stable and reproducible. Any connection that doesn't fit any of these known patterns is suspicious.
 

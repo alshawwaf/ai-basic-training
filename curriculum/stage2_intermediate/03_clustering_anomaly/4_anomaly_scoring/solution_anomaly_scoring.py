@@ -64,6 +64,11 @@ true_labels = df_full['true_label'].values
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
+# Add Gaussian noise to scaled features so the four traffic classes overlap;
+# without this every cluster is 100% pure and the anomaly story collapses.
+rng = np.random.default_rng(13)
+X_scaled = X_scaled + rng.normal(0, 0.8, X_scaled.shape)
+
 kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
 cluster_labels = kmeans.fit_predict(X_scaled)
 

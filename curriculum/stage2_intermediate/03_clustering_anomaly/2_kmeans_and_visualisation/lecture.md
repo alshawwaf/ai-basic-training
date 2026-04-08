@@ -19,24 +19,12 @@ K-Means iteratively:
 3. Recompute centroids as the mean of their assigned samples
 4. Repeat until centroids stop moving
 
-```
-Step 1: Random centroids    Step 2: Assign nearest    Step 3: Recompute centroids
-                                                        (repeat until stable)
-
-    ·  ·                        ·  ·                        ·  ·
-  ·  ★  ·  ·                  · [★] ·  ·                  ·  ★  ·  ·
-    ·  ·                        ·  ·                        ·  ·
-                ·                        ·                          ·
-         ·  ·                     ·  ·                       ·  ·
-   ·      ★    ·  ·         ·     [★]   ·  ·           ·      ★   ·  ·
-         ·  ·                     ·  ·                       ·  ·
-
-  ★ = centroid               [★] = centroid              ★ = centroid (moved)
-  · = data point              ·  = assigned to             · = re-assigned
-                                   nearest ★                    to new nearest ★
-```
-
 The result: K clusters, each with a centroid. Distance from centroid = "how typical" a sample is for its cluster. High distance = anomalous.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_kmeans_iterations.png" alt="Four side-by-side scatter panels labelled Iteration 0 through Iteration 3 showing the same 240 toy points coloured by cluster assignment. Black X markers show centroid positions. The centroids start in poor positions and migrate to the centre of each colour group across iterations.">
+  <div class="vis-caption">K-Means in action on a four-blob toy dataset. Centroids (black X) start in deliberately bad positions and converge in three iterations: assign → recompute → assign → done.</div>
+</div>
 
 > **Want to go deeper?** [k-means clustering (Wikipedia)](https://en.wikipedia.org/wiki/K-means_clustering)
 
@@ -52,6 +40,16 @@ pca = PCA(n_components=2)
 X_2d = pca.fit_transform(X_scaled)
 # X_2d.shape = (3000, 2)
 ```
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_kmeans_pca.png" alt="2D PCA scatter plot of 3000 connections coloured by K-Means cluster. Four overlapping but distinct clusters in cyan, orange, green, and red. Four black X markers mark the centroids in PCA space.">
+  <div class="vis-caption">Real lab K-Means run with K=4 on the 6-D scaled features, projected to 2-D with PCA. Four clusters, four centroids — and they roughly correspond to the four traffic types.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_purity_grid.png" alt="4x4 heatmap showing how K-Means clusters split into true classes. Rows are clusters C0 to C3 each labelled with their dominant class; columns are benign, port_scan, exfil, DoS. The diagonal cells are dark blue and contain values around 700; off-diagonal cells are pale and contain small numbers.">
+  <div class="vis-caption">Cluster vs true-class confusion grid. The dark diagonal means each cluster is dominated by one traffic type — purities range from 91% to 98% on the real lab data.</div>
+</div>
 
 ---
 
@@ -75,22 +73,22 @@ For each cluster, count how many samples of each true class it contains. Compute
 
 ```
 TASK 1 — K-Means clustering:
-Cluster sizes: [~752, ~749, ~751, ~748]  (roughly equal — good sign)
+Cluster sizes: [781, 723, 720, 776]  (roughly equal — good sign)
 
 TASK 2 — PCA cluster plot created.
 
 TASK 3 — True labels revealed:
-Cluster 0 → mostly 'benign'    (purity ~91%)
-Cluster 1 → mostly 'DoS'       (purity ~95%)
-Cluster 2 → mostly 'exfil'     (purity ~89%)
-Cluster 3 → mostly 'port_scan' (purity ~87%)
+Cluster 0 → mostly 'benign'    (purity 91.4%)
+Cluster 1 → mostly 'exfil'     (purity 96.4%)
+Cluster 2 → mostly 'port_scan' (purity 98.2%)
+Cluster 3 → mostly 'DoS'       (purity 92.7%)
 
 TASK 4 (BONUS) — Cluster purity:
 Cluster | Dominant class | Purity
-      0 | benign         | 91.2%
-      1 | DoS            | 95.3%
-      2 | exfil          | 89.1%
-      3 | port_scan      | 87.4%
+      0 | benign         | 91.4%
+      1 | exfil          | 96.4%
+      2 | port_scan      | 98.2%
+      3 | DoS            | 92.7%
 ```
 
 ---

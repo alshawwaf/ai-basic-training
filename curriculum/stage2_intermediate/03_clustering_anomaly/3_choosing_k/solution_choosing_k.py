@@ -63,6 +63,11 @@ true_labels = df_full['true_label'].values
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
+# Add Gaussian noise to scaled features so the four traffic classes overlap.
+# Without this, every K=4 cluster has 100% purity and the elbow is artificially sharp.
+rng = np.random.default_rng(13)
+X_scaled = X_scaled + rng.normal(0, 0.8, X_scaled.shape)
+
 # ============================================================
 # TASK 1 — Elbow method (inertia vs K)
 # ============================================================

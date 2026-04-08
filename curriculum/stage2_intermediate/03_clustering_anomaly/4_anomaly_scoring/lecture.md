@@ -33,6 +33,11 @@ distances = np.min(kmeans.transform(X_scaled), axis=1)
 
 The reasoning is purely geometric: K-Means already pulled the dense, repetitive behaviours into tight balls around their centroids, so anything that lives in the empty space *between* the balls is by definition far from any known pattern — a candidate to investigate.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_distance_concept.png" alt="2D scatter plot showing two cyan and violet point clouds, each with a black X marker labelled centroid A and centroid B. A green circular point near centroid A is connected to it with a short solid green line labelled 'normal — short distance'. A red star far from both centroids has a long dashed red line connecting it to centroid A labelled 'anomaly — far from every centroid'.">
+  <div class="vis-caption">The geometric intuition. Normal points hug a centroid; anomalies sit in empty space between them. The score is just "how far is your nearest centroid?".</div>
+</div>
+
 `kmeans.transform(X_scaled)` returns an (n, K) matrix of distances from each sample to each centroid. `np.min(..., axis=1)` gives the distance to the nearest centroid.
 
 > **Want to go deeper?** [Anomaly detection (Wikipedia)](https://en.wikipedia.org/wiki/Anomaly_detection)
@@ -45,17 +50,25 @@ Choose a percentile threshold:
 - Top 5% of distances are flagged as anomalous
 - This is calibrated to your false-positive budget
 
-**Anomaly score distribution at a glance**
+**Anomaly score distribution at a glance (real lab numbers)**
 
 | Score range | Share of samples | Status |
 |---|---:|---|
-| 0.0 – 1.5 | majority of the dataset | obvious normals — sit right on top of a centroid |
-| 1.5 – 3.87 | the long right tail of the bell | grey zone — far-ish but inside the threshold |
-| **> 3.87 (95th percentile)** | **top 5%** | **flagged as anomalies** |
+| 0.0 – 2.0 | majority of the dataset | obvious normals — sit right on top of a centroid |
+| 2.0 – 3.09 | the long right tail of the bell | grey zone — far-ish but inside the threshold |
+| **> 3.09 (95th percentile)** | **top 5%** | **flagged as anomalies** |
 
-The threshold (`3.87` here) is the 95th-percentile of the score distribution. Sliding it left raises the alert volume; sliding it right is more conservative. A purely statistical alternative is `mean + 2σ`, which assumes a roughly Gaussian tail.
+The threshold (`3.09` here) is the 95th-percentile of the score distribution. Sliding it left raises the alert volume; sliding it right is more conservative. A purely statistical alternative is `mean + 2σ`, which assumes a roughly Gaussian tail.
 
-Or use a statistical approach: mean + 2σ of distances.
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_anomaly_histogram.png" alt="Histogram of anomaly scores for 3000 connections. Cyan bars on the left form a roughly Gaussian bell, red bars on the right show the top 5% flagged anomalies. A black dashed vertical line marks the 95th percentile threshold at 3.09. An annotation box reports flagged 150/3000, true positives 123, precision 82%, recall 5.5%.">
+  <div class="vis-caption">Real lab anomaly score distribution. The red tail past the threshold contains 150 connections — 123 of them are real attacks, the rest are unusual but legitimate.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cluster_pr_recall_tradeoff.png" alt="Line chart with threshold percentile from 80 to 99 on the x-axis. A cyan line labelled Precision rises from about 0.6 to 0.95. An orange line labelled Recall falls from about 0.20 down to 0.02. A black dashed vertical line at the 95th percentile marks the default threshold.">
+  <div class="vis-caption">Sweep the threshold and you trade alert volume for purity. Recall stays painfully low at every setting — the takeaway is that K-Means anomaly scoring catches outliers, not whole attack clusters.</div>
+</div>
 
 ---
 
@@ -79,15 +92,15 @@ Plot a histogram of anomaly scores. Mark the threshold. Shade flagged anomalies 
 
 ```
 TASK 1 — Anomaly scores:
-mean: 1.82, std: 0.94, max: 8.21
+mean: 2.03, std: 0.61, max: 5.12
 
-TASK 2 — Threshold at 95th percentile: 3.87
+TASK 2 — Threshold at 95th percentile: 3.09
 Flagged anomalies: 150 / 3000 (5.0%)
 
 TASK 3 — Verification:
-Of 150 flagged: 118 are true attacks
-Precision (anomalies that are attacks): 78.7%
-Recall  (attacks that were flagged):    5.2%
+Of 150 flagged: 123 are true attacks
+Precision (anomalies that are attacks): 82.0%
+Recall  (attacks that were flagged):    5.5%
 
 Note: K-Means anomaly scoring has low recall because attacks form their OWN
 dense clusters (e.g., DoS has many samples → forms its own cluster).

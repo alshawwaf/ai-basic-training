@@ -75,6 +75,11 @@ print("=" * 60)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
+# Add Gaussian noise to scaled features so the four traffic classes overlap.
+# Without this, every cluster has 100% purity and there is no teaching story.
+rng = np.random.default_rng(13)
+X_scaled = X_scaled + rng.normal(0, 0.8, X_scaled.shape)
+
 kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
 cluster_labels = kmeans.fit_predict(X_scaled)
 

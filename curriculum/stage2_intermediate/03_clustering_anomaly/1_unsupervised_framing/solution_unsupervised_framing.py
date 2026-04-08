@@ -9,60 +9,57 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 
 # ── Generate network traffic dataset (self-contained) ────────────────────────
-# Three types of normal traffic + anomalies (data exfiltration).
+# Four traffic types: benign, port_scan, exfil, DoS — 750 samples each.
 # The true labels exist for evaluation but are NOT used in clustering.
-n_normal  = 2000
-n_anomaly = 60   # small fraction hidden in the data
+n_per = 750
 
-# Normal traffic forms three distinct behavioural groups
-web_browsing = pd.DataFrame({
-    'bytes_sent':   np.random.lognormal(7, 0.8, n_normal // 3),
-    'bytes_recv':   np.random.lognormal(9, 1.0, n_normal // 3),
-    'duration_s':   np.random.exponential(20, n_normal // 3).clip(1, 120),
-    'packets':      np.random.poisson(40, n_normal // 3).clip(5, 200),
-    'dest_port':    np.random.choice([80, 443], n_normal // 3),
-})
-ssh_sessions = pd.DataFrame({
-    'bytes_sent':   np.random.lognormal(8, 1.2, n_normal // 3),
-    'bytes_recv':   np.random.lognormal(8, 1.2, n_normal // 3),
-    'duration_s':   np.random.normal(600, 300, n_normal // 3).clip(30, 3600),
-    'packets':      np.random.poisson(200, n_normal // 3).clip(10, 1000),
-    'dest_port':    np.full(n_normal // 3, 22),
-})
-dns_queries = pd.DataFrame({
-    'bytes_sent':   np.random.normal(80, 20, n_normal // 3).clip(20, 200),
-    'bytes_recv':   np.random.normal(120, 40, n_normal // 3).clip(30, 400),
-    'duration_s':   np.random.exponential(0.1, n_normal // 3).clip(0.01, 1),
-    'packets':      np.random.poisson(2, n_normal // 3).clip(1, 6),
-    'dest_port':    np.full(n_normal // 3, 53),
-})
+def make_full_dataset():
+    benign = pd.DataFrame({
+        'connection_rate': np.random.normal(10, 3, n_per).clip(1, 25),
+        'bytes_sent': np.random.normal(5000, 1500, n_per).clip(100, 15000),
+        'bytes_received': np.random.normal(8000, 2000, n_per).clip(100, 20000),
+        'unique_dest_ports': np.random.poisson(3, n_per).clip(1, 10),
+        'duration_seconds': np.random.normal(30, 10, n_per).clip(1, 120),
+        'failed_connections': np.random.poisson(0.5, n_per),
+        'true_label': 0, 'true_class': 'benign'})
+    port_scan = pd.DataFrame({
+        'connection_rate': np.random.normal(25, 8, n_per).clip(5, 60),
+        'bytes_sent': np.random.normal(500, 200, n_per).clip(50, 2000),
+        'bytes_received': np.random.normal(300, 100, n_per).clip(0, 1000),
+        'unique_dest_ports': np.random.normal(45, 10, n_per).clip(20, 100).astype(int),
+        'duration_seconds': np.random.normal(5, 2, n_per).clip(1, 20),
+        'failed_connections': np.random.poisson(8, n_per),
+        'true_label': 1, 'true_class': 'port_scan'})
+    exfil = pd.DataFrame({
+        'connection_rate': np.random.normal(8, 2, n_per).clip(1, 20),
+        'bytes_sent': np.random.normal(80000, 25000, n_per).clip(20000, 250000),
+        'bytes_received': np.random.normal(1000, 300, n_per).clip(100, 5000),
+        'unique_dest_ports': np.random.poisson(2, n_per).clip(1, 5),
+        'duration_seconds': np.random.normal(180, 60, n_per).clip(60, 600),
+        'failed_connections': np.random.poisson(0.2, n_per),
+        'true_label': 2, 'true_class': 'exfil'})
+    dos = pd.DataFrame({
+        'connection_rate': np.random.normal(200, 40, n_per).clip(80, 500),
+        'bytes_sent': np.random.normal(200, 80, n_per).clip(40, 600),
+        'bytes_received': np.random.normal(100, 40, n_per).clip(0, 400),
+        'unique_dest_ports': np.random.poisson(2, n_per).clip(1, 5),
+        'duration_seconds': np.random.normal(0.5, 0.2, n_per).clip(0.1, 2),
+        'failed_connections': np.random.poisson(3, n_per),
+        'true_label': 3, 'true_class': 'DoS'})
+    return pd.concat([benign, port_scan, exfil, dos],
+                     ignore_index=True).sample(frac=1, random_state=42)
 
-# Anomalies: data exfiltration — very large uploads on unusual ports
-anomalies = pd.DataFrame({
-    'bytes_sent':   np.random.lognormal(13, 0.5, n_anomaly),
-    'bytes_recv':   np.random.lognormal(5, 0.5, n_anomaly),
-    'duration_s':   np.random.normal(1800, 600, n_anomaly).clip(600, 7200),
-    'packets':      np.random.poisson(1500, n_anomaly).clip(500, 5000),
-    'dest_port':    np.random.randint(10000, 60000, n_anomaly),
-})
+df_full = make_full_dataset()
 
-normal_df = pd.concat([web_browsing, ssh_sessions, dns_queries], ignore_index=True)
-normal_df['true_label'] = 0   # for evaluation only
-
-anomalies['true_label'] = 1
-
-all_data = pd.concat([normal_df, anomalies], ignore_index=True).sample(
-    frac=1, random_state=42
-).reset_index(drop=True)
-
-feature_cols = ['bytes_sent', 'bytes_recv', 'duration_s', 'packets', 'dest_port']
-X_raw  = all_data[feature_cols].values
-y_true = all_data['true_label'].values   # hidden — only for final evaluation
+FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
+            'unique_dest_ports', 'duration_seconds', 'failed_connections']
+X       = df_full[FEATURES]
+y_true  = df_full['true_label'].values    # hidden — for final evaluation only
+classes = df_full['true_class'].values    # hidden — for final evaluation only
 
 # ============================================================
 # TASK 1 — Load the dataset (no labels)
@@ -73,12 +70,12 @@ print("=" * 60)
 print("TASK 1 — Dataset (no labels used)")
 print("=" * 60)
 
-print(f"Shape: {X_raw.shape}")
-print(f"Features: {feature_cols}")
-print(f"\nTotal connections: {len(all_data)}")
-print(f"(Hidden anomalies: {y_true.sum()} — but we pretend we don't know this)")
+print(f"Shape: {X.shape}")
+print(f"Features: {FEATURES}")
+print(f"\nTotal connections: {len(df_full)}")
+print(f"(Hidden attacks: {(y_true != 0).sum()} — but we pretend we don't know this)")
 print(f"\nDescriptive statistics (what an analyst would see):")
-print(all_data[feature_cols].describe().round(1).to_string())
+print(X.describe().round(1).to_string())
 
 # ============================================================
 # TASK 2 — Show that "no labels" is realistic
@@ -90,78 +87,77 @@ print("TASK 2 — Feature distributions (can you spot anomalies?)")
 print("=" * 60)
 
 print("Distribution of bytes_sent:")
-print(f"  25th percentile: {np.percentile(X_raw[:, 0], 25):.0f}")
-print(f"  50th percentile: {np.percentile(X_raw[:, 0], 50):.0f}")
-print(f"  75th percentile: {np.percentile(X_raw[:, 0], 75):.0f}")
-print(f"  95th percentile: {np.percentile(X_raw[:, 0], 95):.0f}")
-print(f"  max:             {X_raw[:, 0].max():.0f}")
-print("\nThe max is much larger than the 95th percentile — possible outliers,")
-print("but from raw stats alone you can't tell if they're attacks or just")
-print("large legitimate transfers.")
+print(f"  25th percentile: {np.percentile(X['bytes_sent'], 25):.0f}")
+print(f"  50th percentile: {np.percentile(X['bytes_sent'], 50):.0f}")
+print(f"  75th percentile: {np.percentile(X['bytes_sent'], 75):.0f}")
+print(f"  95th percentile: {np.percentile(X['bytes_sent'], 95):.0f}")
+print(f"  max:             {X['bytes_sent'].max():.0f}")
+print("\nThe right tail is much larger than the 75th percentile — possible")
+print("outliers, but from raw stats alone you can't tell if they're attacks")
+print("or just large legitimate transfers.")
 
-print("\nDistribution of dest_port:")
-port_counts = pd.Series(X_raw[:, 4]).value_counts().head(5)
-print(port_counts.to_string())
-print("\nMost traffic goes to well-known ports (443, 80, 22, 53).")
-print("The unusual high-numbered ports are spread across many values.")
+print("\nDistribution of connection_rate:")
+print(f"  25th percentile: {np.percentile(X['connection_rate'], 25):.1f}")
+print(f"  50th percentile: {np.percentile(X['connection_rate'], 50):.1f}")
+print(f"  75th percentile: {np.percentile(X['connection_rate'], 75):.1f}")
+print(f"  95th percentile: {np.percentile(X['connection_rate'], 95):.1f}")
+print(f"  max:             {X['connection_rate'].max():.1f}")
+print("\nMost connections are slow, but a long tail of very fast connections")
+print("hints at automated traffic — could be a scan, could be a benign cron job.")
 
 # ============================================================
 # TASK 3 — Hypothesis: normal flows form clusters
 # ============================================================
-# Diagnostic scatter plot: reveal true labels to confirm that normal
-# and anomalous traffic occupy different regions of feature space.
+# Diagnostic scatter plot: reveal true labels to confirm that traffic types
+# occupy different regions of feature space.
 # (In practice you'd only do this if you had labelled data for evaluation.)
 print("\n" + "=" * 60)
 print("TASK 3 — Diagnostic scatter plot (revealing true labels)")
 print("=" * 60)
 
+class_colours = {'benign': 'steelblue', 'port_scan': 'orange',
+                 'exfil': 'green', 'DoS': 'red'}
+
 fig, ax = plt.subplots(figsize=(8, 6))
-
-normal_mask  = y_true == 0
-anomaly_mask = y_true == 1
-
-ax.scatter(all_data.loc[normal_mask, 'bytes_sent'],
-           all_data.loc[normal_mask, 'duration_s'],
-           alpha=0.3, s=10, color='steelblue', label='Normal')
-ax.scatter(all_data.loc[anomaly_mask, 'bytes_sent'],
-           all_data.loc[anomaly_mask, 'duration_s'],
-           alpha=0.8, s=40, color='crimson', marker='x', label='Anomaly (true)')
+for cls in ['benign', 'port_scan', 'exfil', 'DoS']:
+    mask = classes == cls
+    ax.scatter(X.loc[mask, 'bytes_sent'],
+               X.loc[mask, 'connection_rate'],
+               alpha=0.4, s=12, color=class_colours[cls], label=cls)
 ax.set_xlabel('bytes_sent')
-ax.set_ylabel('duration_s')
-ax.set_title('Diagnostic: Normal vs Anomaly (true labels revealed)')
+ax.set_ylabel('connection_rate')
+ax.set_xscale('log')
+ax.set_title('Diagnostic: Traffic types by bytes vs connection rate')
 ax.legend()
 plt.tight_layout()
 plt.savefig('stage2_intermediate/lesson3_unsupervised_framing.png')
 plt.close()
 print("Diagnostic plot saved.")
-print("Anomalies (red X) appear far from the dense normal clusters.")
-print("Normal traffic forms 3 visible groups: web, SSH, DNS.")
+print("Each traffic type occupies a different region of feature space —")
+print("that natural separation is exactly what K-Means will exploit.")
 
 # ============================================================
 # TASK 4 (BONUS) — Describe expected cluster patterns
 # ============================================================
-# What would different attack types look like as cluster outliers?
+# What does each traffic type look like in feature space?
 print("\n" + "=" * 60)
-print("TASK 4 (BONUS) — Expected cluster patterns by attack type")
+print("TASK 4 (BONUS) — Expected cluster patterns by traffic type")
 print("=" * 60)
 
-# DoS attacks: extremely high packet rate, very short duration, low bytes per packet
-print("1. DoS attack pattern:")
-print("   - Very high packets (thousands), very short duration (< 1s)")
-print("   - Would appear far from all normal clusters because no normal")
-print("     traffic has that packet-to-duration ratio")
+print("1. Benign:")
+print("   - Moderate connection_rate, moderate bytes, few failed connections")
+print("   - The largest, densest cluster")
 
-# Port scans: many unique destination ports, tiny packets, rapid connections
-print("\n2. Port scan pattern:")
-print("   - Low bytes_sent, low duration, many unique dest_ports")
-print("   - Would NOT cluster with web (port 443) or SSH (port 22)")
-print("   - Appears as scattered points across many port values")
+print("\n2. Port scan:")
+print("   - Moderate connection_rate, very low bytes, MANY unique dest_ports")
+print("   - High failed_connections (closed ports)")
 
-# Data exfiltration: very large bytes_sent, long duration, unusual ports
-print("\n3. Data exfiltration pattern (what our dataset simulates):")
-print("   - Very high bytes_sent (orders of magnitude above normal)")
-print("   - Long duration (sustained transfer)")
-print("   - Unusual dest_port (not 80/443/22/53)")
-print("   - Appears far from all three normal clusters")
+print("\n3. Data exfiltration:")
+print("   - Low connection_rate, VERY high bytes_sent, sustained duration")
+print("   - Stands out on bytes_sent alone")
+
+print("\n4. DoS:")
+print("   - Very high connection_rate, low bytes per connection, sub-second")
+print("   - Stands out on connection_rate alone")
 
 print("\n--- Exercise 1 complete. Move to ../2_kmeans_and_visualisation/solution.py ---")

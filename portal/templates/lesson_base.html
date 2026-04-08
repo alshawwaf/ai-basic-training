@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="lesson-page"{% if lesson_id is defined and lesson_id %} data-stage="{{ lesson_id[:2] }}"{% endif %}>
-    {% from "icons.html" import brand_logo %}
+    {% from "icons.html" import brand_logo, quiz_icon %}
     <nav class="top-nav">
         <a href="/" class="nav-brand" title="Back to portal">{{ brand_logo(38) }}</a>
         <div class="top-controls">
@@ -35,13 +35,21 @@
 
         <ul>
             {% for s in steps %}
-            <li class="{{ 'active' if s.id == current else '' }}" data-step="{{ s.id }}">
+            <li class="{{ 'active' if s.id == current and not is_quiz else '' }}" data-step="{{ s.id }}">
                 <a href="{{ url_prefix }}/step/{{ s.id }}">
                     <span class="step-num">{{ s.id }}</span>
                     <span>{{ s.title }}</span>
                 </a>
             </li>
             {% endfor %}
+            {% if quiz_count and quiz_count > 0 %}
+            <li class="sidebar-quiz {{ 'active' if is_quiz else '' }}" data-step="quiz">
+                <a href="{{ url_prefix }}/quiz">
+                    <span class="step-num quiz-num">{{ quiz_icon(14) }}</span>
+                    <span>Quiz <span class="quiz-count-badge">{{ quiz_count }}</span></span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
         <div class="sidebar-back-wrap">
             <a href="/" class="sidebar-back">
@@ -54,14 +62,17 @@
     <main>
         <!-- Progress bar -->
         <div class="progress-wrap">
-            <div class="progress-fill" style="width: {{ ((current + 1) / (steps | length) * 100) | round(0) }}%"></div>
+            <div class="progress-fill" style="width: {% if is_quiz %}100{% else %}{{ ((current + 1) / (steps | length) * 100) | round(0) }}{% endif %}%"></div>
         </div>
 
+        {% if not is_quiz %}
         <div class="step-header">
             <h1>Step {{ current }}: {{ steps[current].title }}</h1>
             <p>{{ steps[current].sub }}</p>
         </div>
+        {% endif %}
 
+        {% if not is_quiz %}
         <!-- Learning path toolbar -->
         <div class="learning-path">
             <div class="lp-step lp-active lp-clickable" id="lpExplore" data-lp="explore" onclick="returnToExplore()" title="Back to interactive content">
@@ -98,6 +109,7 @@
                 <span class="lp-text"><span class="lp-label">Reflect</span><span class="lp-hint">Think deeper</span></span>
             </div>
         </div>
+        {% endif %}
 
         <div class="content-layout">
             <!-- Left: main step content -->
@@ -106,6 +118,7 @@
             </div>
         </div>
 
+        {% if not is_quiz %}
         <!-- Hint modal (challenge + security) -->
         <div class="hint-modal-overlay" id="hintOverlay" onclick="closeHintModal()"></div>
         <div class="hint-modal" id="hintModal">
@@ -124,13 +137,16 @@
                 {% block security %}{% endblock %}
             </div>
         </div>
+        {% endif %}
 
+        {% if not is_quiz %}
         <!-- Nav -->
         <div class="nav-buttons">
             <a id="prevPhaseBtn" href="#" onclick="goToPreviousPhase(event)">&#8592; Previous</a>
             <span class="kbd-hint"><span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> to navigate</span>
             <a id="nextPhaseBtn" href="#" onclick="goToNextPhase(event)">Next &#8594;</a>
         </div>
+        {% endif %}
     </main>
 
     <!-- ── Content Drawer (markdown) ──────────────────────────────────────── -->
@@ -269,9 +285,24 @@
             markStepVisited(step);
         }
 
+        {% if not is_quiz %}
         markStepVisitedPortal({{ current }});
         applyVisitedSteps();
+        {% else %}
+        // On the quiz page we still want the "last visited" marker so that
+        // the home page's "Continue" handle points back here, but we don't
+        // mark a step number as visited (the quiz isn't a step).
+        try {
+            localStorage.setItem('portalLastVisited', JSON.stringify({
+                lessonId: lessonId,
+                step: 'quiz',
+                title: '{{ lesson_title }}',
+                ts: Date.now()
+            }));
+        } catch(e) {}
+        {% endif %}
 
+        {% if not is_quiz %}
         // ── Phase-aware navigation ────────────────────────────────────────
         // The "Next" button advances through Explore → Read → Build → Compare
         // → Challenge before moving to the next step. Same for left/right
@@ -390,6 +421,7 @@
                 goToNextPhase();
             }
         });
+        {% endif %}
 
         // ── Drawer resize logic ────────────────────────────────────────────
         (function() {

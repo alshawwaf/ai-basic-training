@@ -1,0 +1,249 @@
+{% extends "lesson_base.html" %}
+{% from "icons.html" import quiz_icon %}
+{% block title %}Quiz — {{ lesson_title }}{% endblock %}
+
+{% block content %}
+{# ── Quiz header ─────────────────────────────────────────────────────── #}
+<div class="quiz-header">
+    <div class="quiz-header-icon">{{ quiz_icon(36) }}</div>
+    <div class="quiz-header-text">
+        <h1>End-of-lesson Quiz</h1>
+        <p class="quiz-subtitle">{{ quiz_count }} questions &middot; {{ lesson_title }}</p>
+    </div>
+    <div class="quiz-header-meta">
+        <div class="quiz-progress-pill">
+            <span id="quizAnsweredCount">0</span>/<span id="quizTotalCount">{{ quiz_count }}</span> answered
+        </div>
+    </div>
+</div>
+
+{# ── Question cards ─────────────────────────────────────────────────── #}
+<div class="quiz-container" id="quizContainer">
+    {% for q in quiz %}
+    {% set qIdx = loop.index0 %}
+    {% set qNum = loop.index %}
+    <div class="quiz-card" id="qcard-{{ qIdx }}" data-qidx="{{ qIdx }}">
+        <div class="quiz-card-head">
+            <span class="quiz-q-num">{{ qNum }}</span>
+            <span class="quiz-q-of">of {{ quiz_count }}</span>
+            <span class="quiz-q-state" id="qstate-{{ qIdx }}"></span>
+        </div>
+        <div class="quiz-q-text">{{ q.q | safe }}</div>
+        <div class="quiz-options" id="qopts-{{ qIdx }}">
+            {% for opt in q.options %}
+            <button type="button"
+                    class="quiz-option"
+                    data-qidx="{{ qIdx }}"
+                    data-oidx="{{ loop.index0 }}"
+                    onclick="quizSelectOption({{ qIdx }}, this)">
+                <span class="quiz-opt-letter">{{ "ABCDEFGH"[loop.index0] }}</span>
+                <span class="quiz-opt-text">{{ opt | safe }}</span>
+                <span class="quiz-opt-mark" aria-hidden="true"></span>
+            </button>
+            {% endfor %}
+        </div>
+        <div class="quiz-card-foot">
+            <button type="button" class="btn btn-sm quiz-reveal-btn" onclick="quizRevealAnswer({{ qIdx }})">Show answer</button>
+            <span class="quiz-explain" id="qexplain-{{ qIdx }}">{{ q.explanation | safe }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{# ── Final results card ─────────────────────────────────────────────── #}
+<div class="quiz-results" id="quizResults" hidden>
+    <div class="quiz-results-icon">{{ quiz_icon(48) }}</div>
+    <h2 class="quiz-results-title">Quiz complete</h2>
+    <div class="quiz-score-row">
+        <div class="quiz-score">
+            <span class="quiz-score-num" id="quizScoreNum">0</span>
+            <span class="quiz-score-of">/ {{ quiz_count }}</span>
+        </div>
+        <div class="quiz-score-meta">
+            <div class="quiz-score-pct" id="quizScorePct">0%</div>
+            <div class="quiz-score-label" id="quizScoreLabel">correct</div>
+        </div>
+    </div>
+    <div class="quiz-results-bar">
+        <div class="quiz-results-fill" id="quizResultsFill"></div>
+    </div>
+    <ul class="quiz-results-breakdown" id="quizResultsBreakdown"></ul>
+    <div class="quiz-results-actions">
+        <button type="button" class="btn quiz-retry-btn" onclick="quizReset()">Retake quiz</button>
+        <a href="{{ url_prefix }}/" class="btn btn-ghost">Back to lesson</a>
+        <a href="/" class="btn btn-ghost">Back to portal</a>
+    </div>
+</div>
+
+{# ── Bottom nav ─────────────────────────────────────────────────────── #}
+<div class="quiz-nav-buttons">
+    <a href="{{ url_prefix }}/step/{{ steps | length - 1 }}" class="quiz-nav-prev">&larr; Last step</a>
+    <a href="/" class="quiz-nav-home">Back to portal &rarr;</a>
+</div>
+
+{# ── Quiz state ─────────────────────────────────────────────────────── #}
+<script id="quizData" type="application/json">{{ quiz | tojson }}</script>
+<script>
+(function() {
+    const quizData = JSON.parse(document.getElementById('quizData').textContent);
+    const lessonId = '{{ lesson_id }}';
+    const stateKey = 'quizState_' + lessonId;
+
+    // state shape:
+    //   { answers: { [qIdx]: { picked: int, correct: bool, revealed: bool } } }
+    let state = { answers: {} };
+    try {
+        const saved = localStorage.getItem(stateKey);
+        if (saved) state = JSON.parse(saved);
+        if (!state.answers) state.answers = {};
+    } catch (e) { state = { answers: {} }; }
+
+    function persist() {
+        try { localStorage.setItem(stateKey, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function answeredCount() {
+        return Object.keys(state.answers).filter(k => state.answers[k] && (state.answers[k].picked != null || state.answers[k].revealed)).length;
+    }
+
+    function correctCount() {
+        return Object.values(state.answers).filter(a => a && a.correct).length;
+    }
+
+    function refreshHeader() {
+        const el = document.getElementById('quizAnsweredCount');
+        if (el) el.textContent = answeredCount();
+    }
+
+    function paintCard(qIdx) {
+        const ans = state.answers[qIdx];
+        const card = document.getElementById('qcard-' + qIdx);
+        const stateEl = document.getElementById('qstate-' + qIdx);
+        const explainEl = document.getElementById('qexplain-' + qIdx);
+        const opts = card.querySelectorAll('.quiz-option');
+        const correctIdx = quizData[qIdx].answer;
+
+        // Reset all option classes
+        opts.forEach(o => o.classList.remove('picked', 'correct', 'wrong', 'revealed'));
+        card.classList.remove('answered', 'correct', 'wrong', 'revealed');
+        if (stateEl) stateEl.textContent = '';
+        if (explainEl) explainEl.classList.remove('shown');
+
+        if (!ans) return;
+
+        if (ans.picked != null) {
+            opts[ans.picked].classList.add('picked');
+            opts[ans.picked].classList.add(ans.correct ? 'correct' : 'wrong');
+            opts[correctIdx].classList.add('correct');
+            card.classList.add('answered', ans.correct ? 'correct' : 'wrong');
+            if (stateEl) stateEl.textContent = ans.correct ? '\u2713 Correct' : '\u2717 Incorrect';
+            if (explainEl) explainEl.classList.add('shown');
+        } else if (ans.revealed) {
+            opts[correctIdx].classList.add('correct', 'revealed');
+            card.classList.add('answered', 'revealed');
+            if (stateEl) stateEl.textContent = 'Revealed';
+            if (explainEl) explainEl.classList.add('shown');
+        }
+    }
+
+    function paintAll() {
+        for (let i = 0; i < quizData.length; i++) paintCard(i);
+        refreshHeader();
+        if (answeredCount() === quizData.length) renderResults();
+    }
+
+    function renderResults() {
+        const total = quizData.length;
+        const correct = correctCount();
+        const pct = total > 0 ? Math.round(100 * correct / total) : 0;
+        const results = document.getElementById('quizResults');
+        document.getElementById('quizScoreNum').textContent = correct;
+        document.getElementById('quizScorePct').textContent = pct + '%';
+        const fill = document.getElementById('quizResultsFill');
+        if (fill) fill.style.width = pct + '%';
+
+        // Tone of voice
+        let label = 'correct';
+        if (pct === 100) label = 'Perfect score!';
+        else if (pct >= 80) label = 'Strong work';
+        else if (pct >= 60) label = 'Solid pass';
+        else if (pct >= 40) label = 'Worth a retake';
+        else label = 'Review the lesson and try again';
+        document.getElementById('quizScoreLabel').textContent = label;
+
+        // Per-question breakdown
+        const list = document.getElementById('quizResultsBreakdown');
+        list.innerHTML = '';
+        quizData.forEach((q, i) => {
+            const ans = state.answers[i] || {};
+            let icon, cls;
+            if (ans.picked != null && ans.correct) { icon = '\u2713'; cls = 'ok'; }
+            else if (ans.picked != null) { icon = '\u2717'; cls = 'no'; }
+            else if (ans.revealed) { icon = '!'; cls = 'rev'; }
+            else { icon = '\u2014'; cls = 'skip'; }
+            const li = document.createElement('li');
+            li.className = 'quiz-result-row ' + cls;
+            li.innerHTML = '<span class="quiz-result-icon">' + icon + '</span>' +
+                           '<span class="quiz-result-num">Q' + (i + 1) + '</span>' +
+                           '<span class="quiz-result-text">' + q.q + '</span>';
+            list.appendChild(li);
+        });
+        results.hidden = false;
+        // Smooth-scroll once when results first appear
+        if (!results.dataset.scrolled) {
+            results.dataset.scrolled = '1';
+            setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+        }
+    }
+
+    // Public handlers — exposed on window so the inline onclick="" can find them
+    window.quizSelectOption = function(qIdx, btn) {
+        // If revealed or answered, ignore further clicks
+        const existing = state.answers[qIdx];
+        if (existing && (existing.picked != null || existing.revealed)) return;
+        const opts = document.getElementById('qcard-' + qIdx).querySelectorAll('.quiz-option');
+        const oidx = Array.from(opts).indexOf(btn);
+        const correctIdx = quizData[qIdx].answer;
+        state.answers[qIdx] = {
+            picked: oidx,
+            correct: oidx === correctIdx,
+            revealed: false,
+        };
+        persist();
+        paintCard(qIdx);
+        refreshHeader();
+        if (answeredCount() === quizData.length) renderResults();
+    };
+
+    window.quizRevealAnswer = function(qIdx) {
+        const existing = state.answers[qIdx];
+        if (existing && existing.picked != null) {
+            // Already answered — just make sure the explanation stays visible
+            paintCard(qIdx);
+            return;
+        }
+        state.answers[qIdx] = { picked: null, correct: false, revealed: true };
+        persist();
+        paintCard(qIdx);
+        refreshHeader();
+        if (answeredCount() === quizData.length) renderResults();
+    };
+
+    window.quizReset = function() {
+        if (!confirm('Clear your answers and retake the quiz?')) return;
+        state = { answers: {} };
+        persist();
+        // Hide results, repaint, scroll up
+        const results = document.getElementById('quizResults');
+        results.hidden = true;
+        delete results.dataset.scrolled;
+        paintAll();
+        const first = document.getElementById('qcard-0');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // Initial paint
+    paintAll();
+})();
+</script>
+{% endblock %}

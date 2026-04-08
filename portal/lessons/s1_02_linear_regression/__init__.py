@@ -34,6 +34,76 @@ STEPS = [
      "icon": "metrics-gauge"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+# Multiple-choice questions covering the lesson's key concepts. Each entry:
+#   q          : the question
+#   options    : list of choices
+#   answer     : 0-based index of the correct choice
+#   explanation: shown after the user reveals or answers the question
+#
+# The quiz is rendered by the shared portal/templates/quiz.html template via
+# the /quiz route below. State is persisted to localStorage per-lesson so
+# learners can come back, see what they got right, and retake.
+
+QUIZ = [
+    {
+        "q": "Linear regression is best suited for predicting which kind of value?",
+        "options": [
+            "A category, like spam vs. not-spam",
+            "A continuous number, like response time in milliseconds",
+            "A cluster assignment for unlabeled data",
+            "A probability between 0 and 1 only",
+        ],
+        "answer": 1,
+        "explanation": "Linear regression outputs a real number with no upper bound. Categories are the job of <strong>logistic regression</strong> or trees; bounded probabilities are <strong>logistic</strong>; clusters come from unsupervised methods like K-means.",
+    },
+    {
+        "q": "In <code>y = w·x + b</code>, what are <code>w</code> and <code>b</code> after training?",
+        "options": [
+            "Hyperparameters you tune by hand",
+            "Random initialisation values",
+            "The slope and intercept &mdash; the entire model",
+            "Two pointers into the training data",
+        ],
+        "answer": 2,
+        "explanation": "For one-feature linear regression, the model <em>is</em> those two numbers. Once fit, you can throw the training data away and ship just <code>w</code> and <code>b</code>. That's the whole point of step 1: <strong>a model is two numbers</strong>.",
+    },
+    {
+        "q": "Why do we split data into a train set and a test set?",
+        "options": [
+            "It makes training faster",
+            "scikit-learn refuses to fit otherwise",
+            "To detect overfitting and estimate real-world performance",
+            "To save memory during fitting",
+        ],
+        "answer": 2,
+        "explanation": "The test set simulates data the model has never seen. If train R&sup2; is much higher than test R&sup2;, the model has memorised the training rows and will fail in production &mdash; classic <strong>overfitting</strong>.",
+    },
+    {
+        "q": "Your response-time model reports <strong>RMSE = 15 ms</strong>. What does that mean?",
+        "options": [
+            "The model is wrong 15% of the time",
+            "Predictions are off by roughly 15 ms on average",
+            "There are 15 outliers in the dataset",
+            "Training took 15 milliseconds",
+        ],
+        "answer": 1,
+        "explanation": "RMSE is in the <em>same units</em> as the target. ~15 ms is the typical magnitude of prediction error &mdash; useful because you can compare it directly to the response times you're predicting.",
+    },
+    {
+        "q": "You're using <code>k&sigma;</code> residual thresholding to flag slow responses. What does the choice of <code>k</code> trade off?",
+        "options": [
+            "Training time vs. inference time",
+            "Linear vs. polynomial features",
+            "Detection rate vs. false alarms (and analyst fatigue)",
+            "Memory usage vs. CPU usage",
+        ],
+        "answer": 2,
+        "explanation": "Lower <code>k</code> (e.g. 2&sigma;) catches more anomalies but also fires on more benign noise. Higher <code>k</code> (e.g. 3&sigma;) is conservative but misses subtle attacks. This is the classic <strong>alert fatigue</strong> tradeoff every SOC faces.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Change the data range from 0\u2013200 rps to 0\u20132000 rps. Does the scatter plot still look linear? What does that tell you about the model's assumptions?",
@@ -89,6 +159,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -107,3 +179,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s1_02/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,  # keep last step "complete" in progress bar
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

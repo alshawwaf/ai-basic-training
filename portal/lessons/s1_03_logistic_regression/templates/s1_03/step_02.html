@@ -17,7 +17,7 @@ X_test_scaled  = scaler.transform(X_test)         # transform only!</code></pre>
     <pre><code class="language-python">from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix
 
-model = LogisticRegression(random_state=42)
+model = LogisticRegression(random_state=42)   # 42 keeps the run reproducible (see Lesson 1.2)
 model.fit(X_train_scaled, y_train)
 
 y_pred = model.predict(X_test_scaled)

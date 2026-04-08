@@ -15,12 +15,12 @@ Create a new file called `04_depth_and_overfitting.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+from sklearn.tree import DecisionTreeClassifier         # the tree algorithm
+from sklearn.model_selection import train_test_split    # holdout-set helper
+from sklearn.metrics import classification_report       # precision/recall/F1 per class
 ```
 
 ---
@@ -76,10 +76,10 @@ df = make_traffic()
 FEATURES    = ['connection_rate', 'bytes_sent', 'bytes_received',
                'unique_dest_ports', 'duration_seconds', 'failed_connections']
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
-X = df[FEATURES]
-y = df['label']
+X = df[FEATURES]                              # 6 numeric features
+y = df['label']                                # 0..3 attack class
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+    X, y, test_size=0.2, random_state=42, stratify=y     # stratified 80/20 split
 )
 ```
 
@@ -95,17 +95,18 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Depth sweep (max_depth 1 to 15)")
 print("=" * 60)
-depths = range(1, 16)
-train_accs, test_accs = [], []
+depths = range(1, 16)                         # 15 different tree complexities
+train_accs, test_accs = [], []                # collect both metrics for plotting later
 print(f"{'Depth':>5} | {'Train Acc':>9} | {'Test Acc':>8} | {'Gap':>6}")
 print("-" * 40)
 for d in depths:
     m = DecisionTreeClassifier(max_depth=d, random_state=42)
     m.fit(X_train, y_train)
-    tr = m.score(X_train, y_train)
-    te = m.score(X_test,  y_test)
+    tr = m.score(X_train, y_train)            # how well it fits seen data
+    te = m.score(X_test,  y_test)             # how well it generalises
     train_accs.append(tr)
     test_accs.append(te)
+    # Gap = train - test → grows as the tree memorises training noise (overfitting)
     print(f"{d:>5} | {tr:>9.3f} | {te:>8.3f} | {tr-te:>6.3f}")
 ```
 
@@ -131,7 +132,8 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 2 — Find the optimal depth")
 print("=" * 60)
-best_test_depth = depths[np.argmax(test_accs)]   # need to run Task 1 first
+# np.argmax → index of the highest test score; depths[index] → the matching depth value
+best_test_depth = depths[np.argmax(test_accs)]
 best_test_acc   = max(test_accs)
 print(f"Best test accuracy: {best_test_acc:.3f} at depth={best_test_depth}")
 print(f"Recommended max_depth: {best_test_depth}")
@@ -157,14 +159,16 @@ print("TASK 3 — Train vs test accuracy plot")
 print("=" * 60)
 print("Depth sweep plot created.")
 fig, ax = plt.subplots(figsize=(10, 6))
+# Solid blue line = training, dashed red = test — the gap between them is what matters
 ax.plot(list(depths), train_accs, 'b-o', label='Training accuracy', markersize=4)
 ax.plot(list(depths), test_accs,  'r--o', label='Test accuracy', markersize=4)
+# Vertical green line marks the best depth — visual sweet spot
 ax.axvline(x=best_test_depth, color='green', linestyle=':', label=f'Sweet spot (depth={best_test_depth})')
 ax.set_xlabel('max_depth')
 ax.set_ylabel('Accuracy')
 ax.set_title('Decision Tree: Depth vs Accuracy (Overfitting Diagnostic)')
 ax.legend()
-ax.grid(True, alpha=0.3)
+ax.grid(True, alpha=0.3)                      # subtle gridlines for readability
 plt.tight_layout()
 plt.show()
 ```
@@ -181,11 +185,13 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Underfit vs good fit vs overfit")
 print("=" * 60)
+# Three depths chosen to show the U-shape: too shallow, just right, too deep
 for depth, label in [(1, "Underfit"), (5, "Good fit"), (15, "Overfit")]:
     m = DecisionTreeClassifier(max_depth=depth, random_state=42)
     m.fit(X_train, y_train)
     y_pred = m.predict(X_test)
     print(f"\n--- depth={depth} ({label}) ---")
+    # Per-class metrics highlight WHICH classes suffer at each depth
     print(classification_report(y_test, y_pred, target_names=CLASS_NAMES))
 ```
 

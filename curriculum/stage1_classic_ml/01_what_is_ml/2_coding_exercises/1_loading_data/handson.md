@@ -53,9 +53,9 @@ Create a new file called `01_loading_data.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-from sklearn.datasets import load_digits
+import numpy as np                          # NumPy: fast numeric arrays — the foundation under sklearn
+import pandas as pd                         # pandas: tabular data with labels — Excel for Python
+from sklearn.datasets import load_digits    # built-in toy dataset of 8x8 handwritten digits
 ```
 
 ---
@@ -65,11 +65,11 @@ from sklearn.datasets import load_digits
 `load_digits()` returns a `Bunch` object — a container with named fields. Add this to your file:
 
 ```python
-digits = load_digits()
+digits = load_digits()                       # returns a Bunch — sklearn's dict-like container
 
 print("Dataset loaded.")
-print(f"Type: {type(digits)}")
-print(f"Fields available: {list(digits.keys())}")
+print(f"Type: {type(digits)}")               # confirms we got a Bunch object back
+print(f"Fields available: {list(digits.keys())}")  # data, target, images, DESCR, ...
 ```
 
 Run your file. You should see:
@@ -102,8 +102,8 @@ They are stored as two separate arrays that line up by row — row 0 of X pairs 
 `.shape` tells you the dimensions. Add this to your file:
 
 ```python
-print(f"Features (X) shape: {digits.data.shape}")
-print(f"Labels   (y) shape: {digits.target.shape}")
+print(f"Features (X) shape: {digits.data.shape}")    # (rows, cols) → (1797, 64) = samples x features
+print(f"Labels   (y) shape: {digits.target.shape}")  # (1797,)       = one label per sample
 ```
 
 Run your file. You should see:
@@ -123,8 +123,9 @@ So far the data lives in a NumPy array — just rows of numbers with no column n
 Add this to your file:
 
 ```python
+# Wrap the raw NumPy array in a DataFrame and name each column pixel_0 ... pixel_63
 df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
-df["target"] = digits.target
+df["target"] = digits.target                 # add the label column so features + label live together
 ```
 
 This creates a table with 64 columns named `pixel_0` through `pixel_63` (one per pixel in the 8x8 image) plus a `target` column holding the digit label (0–9).
@@ -132,10 +133,11 @@ This creates a table with 64 columns named `pixel_0` through `pixel_63` (one per
 Printing all 65 columns would flood the terminal, so we pick a few to preview. Add this to your file:
 
 ```python
+# Pick a few "interesting" middle pixels — printing all 65 columns would flood the terminal
 preview_cols = ["pixel_21", "pixel_28", "pixel_36", "pixel_43", "target"]
 print("\nFirst 5 rows (selected columns):")
-print(df[preview_cols].head().to_string())
-print(f"\nFull DataFrame shape: {df.shape}")
+print(df[preview_cols].head().to_string())   # .head() = first 5 rows; .to_string() = no truncation
+print(f"\nFull DataFrame shape: {df.shape}") # (rows, cols) for the whole table
 print(f"Columns: pixel_0 ... pixel_63, target  ({df.shape[1]} total)")
 ```
 
@@ -175,8 +177,8 @@ Notice how each digit has a different pattern of pixel intensities — that is e
 Print the label and first 10 pixel values of the very first row. Add this to your file:
 
 ```python
-print(f"\nFirst sample — label: {digits.target[0]}")
-print(f"First 10 pixel values: {digits.data[0, :10]}")
+print(f"\nFirst sample — label: {digits.target[0]}")          # the digit this image represents
+print(f"First 10 pixel values: {digits.data[0, :10]}")        # row 0, columns 0..9 — NumPy slicing
 ```
 
 Run your file. You should see:

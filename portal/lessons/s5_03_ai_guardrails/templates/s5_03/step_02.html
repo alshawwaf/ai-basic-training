@@ -1,53 +1,99 @@
 {% extends "lesson_base.html" %}
 {% block content %}
+
 <div class="card">
     <h3>Lab: Lakera-Demo</h3>
-    <p>A web-based testing platform with 24+ documented attack vectors across 9 categories.</p>
-    <pre><code class="language-python">git clone https://github.com/alshawwaf/Lakera-Demo.git
+    <p>A web-based testing platform with 24+ documented attack vectors across 9 categories. You'll attack a real LLM through Lakera's input/output scanners and watch which payloads slip through.</p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <a class="btn btn-primary btn-cta-pulse" href="https://github.com/alshawwaf/Lakera-Demo" target="_blank" rel="noopener">
+            <span aria-hidden="true">&#9883;</span> Open repo on GitHub
+        </a>
+        <button class="btn" onclick="copyClone('https://github.com/alshawwaf/Lakera-Demo.git', this)">
+            <span aria-hidden="true">&#128203;</span> Copy clone command
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Lab Guide (PDF)</h3>
+    <p>The Playground guide is your map for this entire step. Keep it open in a second tab while you work through the exercises.</p>
+    <div class="guide-grid">
+        <div class="guide-card-pdf">
+            <div class="guide-icon">&#128737;</div>
+            <div class="guide-title">Lakera Playground Guide</div>
+            <div class="guide-sub">Walkthrough of the split-screen Playground, the attack library, and the multi-vendor benchmark (Lakera vs Azure vs LLM Guard).</div>
+            <div class="guide-actions">
+                <a class="guide-btn guide-btn-primary" href="/api/pdf-guide/lakera-playground" target="_blank" rel="noopener">Open</a>
+                <a class="guide-btn guide-btn-secondary" href="/api/pdf-guide/lakera-playground?download=1">Download</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>One-shot setup</h3>
+    <p>Run these from your terminal:</p>
+    <pre><code class="language-bash">git clone https://github.com/alshawwaf/Lakera-Demo.git
 cd Lakera-Demo
 python -m venv venv
 # Windows: venv\Scripts\activate
+# macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env — add your LAKERA_API_KEY and LLM provider key
+# Edit .env -- add your LAKERA_API_KEY and LLM provider key
 python app.py</code></pre>
-    <p>Access at <code>http://127.0.0.1:9000</code></p>
+    <p>Open <code>http://127.0.0.1:9000</code> in your browser. The Playground guide PDF (above) walks you through the UI panel by panel.</p>
 </div>
 
 <div class="card">
-    <h3>Exercise 1: Test the Attack Library (20 min)</h3>
-    <p>Open the Playground and test at least 5 attacks from different categories:</p>
+    <h3>Exercise 1 &mdash; Test the attack library (20 min)</h3>
+    <p>Open the Playground and run at least <strong>five</strong> built-in attacks from <strong>different categories</strong>:</p>
     <ul>
         <li>Jailbreak (role-play bypass)</li>
         <li>Prompt injection (instruction override)</li>
-        <li>Data extraction (system prompt leak)</li>
+        <li>Data extraction (system-prompt leak)</li>
         <li>PII extraction</li>
         <li>Toxic content generation</li>
     </ul>
-    <p>For each: note whether it was caught, the category assigned, and the confidence score.</p>
+    <p>For each attack, record three things in your notes: <strong>caught? (y/n)</strong>, <strong>category Lakera assigned</strong>, and <strong>confidence score</strong>. You'll need this table for Exercise 3.</p>
 </div>
 
 <div class="card">
-    <h3>Exercise 2: Craft a Novel Attack (15 min)</h3>
-    <p>Write your own attack prompt that is NOT in the built-in library. Try:</p>
+    <h3>Exercise 2 &mdash; Craft a novel attack (15 min)</h3>
+    <p>Write your own attack prompt that is <strong>not</strong> in the built-in library. Pick at least one technique:</p>
     <ul>
-        <li>Encoding the attack in a different language</li>
-        <li>Splitting the malicious instruction across multiple turns</li>
-        <li>Embedding the attack in a "summarise this document" request</li>
+        <li>Encode the payload in a non-English language</li>
+        <li>Split the malicious instruction across multiple turns</li>
+        <li>Embed the attack inside a "summarise this document" request (indirect injection)</li>
+        <li>Rewrite a known jailbreak using synonyms / paraphrase</li>
     </ul>
-    <p>Did the guardrails catch your custom attack? Why or why not?</p>
+    <p>Did the guardrails catch it? <strong>Why or why not?</strong> If it slipped through, the guide PDF's <em>Detection Methods</em> section explains which scanner type would have caught it.</p>
 </div>
 
 <div class="card">
-    <h3>Exercise 3: Benchmark (10 min)</h3>
-    <p>Use the benchmarking feature to compare detection rates. Which attack categories have the highest detection rate? The lowest? If building multi-layered defense, which providers would you combine?</p>
+    <h3>Exercise 3 &mdash; Benchmark and stack (10 min)</h3>
+    <p>Open the Benchmark view in the Playground (Lakera vs Azure Content Safety vs LLM Guard). Answer:</p>
+    <ol>
+        <li>Which attack category has the <strong>highest</strong> detection rate across all three? The <strong>lowest</strong>?</li>
+        <li>If you could only deploy <strong>two</strong> of the three vendors, which combination maximises coverage? Why?</li>
+        <li>What would you scan on the <strong>output</strong> side that input scanners can't catch?</li>
+    </ol>
 </div>
+
+<script>
+function copyClone(url, btn) {
+    var cmd = 'git clone ' + url;
+    navigator.clipboard.writeText(cmd).then(function() {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<span aria-hidden="true">&#10003;</span> Copied!';
+        setTimeout(function(){ btn.innerHTML = orig; }, 1500);
+    });
+}
+</script>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Key insight:</strong> You just attacked an LLM application. Some attacks got through. This is normal &mdash;
-    no single defense layer is perfect. The goal is to make attacks <strong>significantly harder</strong>, not impossible.
-    Layer multiple detection methods, scan both input AND output, and log everything for audit.
+    <strong>Key insight:</strong> You just attacked an LLM application. Some attacks got through. This is normal &mdash; no single defense layer is perfect. The goal is to make attacks <strong>significantly harder</strong>, not impossible. Layer multiple detection methods, scan both input AND output, and log everything for audit.
 </div>
 {% endblock %}

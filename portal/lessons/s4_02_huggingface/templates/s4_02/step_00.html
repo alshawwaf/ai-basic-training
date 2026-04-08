@@ -29,6 +29,7 @@
 
 <div class="card">
     <h3>The HuggingFace Pipeline API</h3>
+    <p style="margin-bottom:10px;"><strong>About that model name:</strong> HuggingFace model IDs follow the pattern <code>org/name</code>. <code>facebook/bart-large-mnli</code> means <em>Facebook AI's BART architecture, the "large" size variant (~400M parameters), fine-tuned on the MNLI dataset</em> &mdash; which is exactly what makes it work for zero-shot classification (the NLI training is what powers the entailment scoring shown in the table above). You'll learn to pick models for your own use cases in the workshop.</p>
     <pre><code class="language-python">from transformers import pipeline
 
 # Load the zero-shot classification pipeline

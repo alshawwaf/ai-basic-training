@@ -31,6 +31,67 @@ STEPS = [
      "icon": "dial-tuning"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What is the core idea of a Random Forest, and why does it work better than a single tree?",
+        "options": [
+            "It uses larger trees that can memorise more data",
+            "It trains many trees on bootstrap samples and averages them &mdash; bagging cancels out individual trees' overfitting noise",
+            "It uses gradient descent instead of splits",
+            "It runs the same tree many times for redundancy",
+        ],
+        "answer": 1,
+        "explanation": "A Random Forest is <strong>bagging</strong>: train N trees on N different bootstrap samples, then average their votes. Each individual tree overfits its sample, but their errors are uncorrelated, so averaging them produces a model that <em>generalises</em> much better than any single tree.",
+    },
+    {
+        "q": "You set <code>oob_score=True</code> and get OOB accuracy = 0.94. Your test set accuracy is 0.95. What does this tell you?",
+        "options": [
+            "OOB and test scores should never match",
+            "The model is generalising well &mdash; OOB acts as built-in cross-validation, and the close match confirms no overfitting",
+            "The model is overfitting",
+            "OOB is broken when it matches the test score",
+        ],
+        "answer": 1,
+        "explanation": "Each tree in the forest never sees ~37% of the data (those are its <strong>out-of-bag samples</strong>). Predicting on those gives a free, built-in validation estimate. When OOB closely matches your held-out test score, you have strong evidence the model will perform similarly in production.",
+    },
+    {
+        "q": "Why should you be cautious about <strong>publishing</strong> a Random Forest's feature importances when it's used for security?",
+        "options": [
+            "They are usually wrong",
+            "Once attackers know which features the model relies on, they can craft inputs that manipulate those exact features &mdash; adversarial evasion",
+            "They reveal trade secrets about scikit-learn",
+            "They violate GDPR",
+        ],
+        "answer": 1,
+        "explanation": "If your malware classifier puts most weight on <code>file_entropy</code>, an attacker can <strong>pad the binary</strong> to lower entropy and bypass detection. Feature importances are useful internally for debugging, but they're an attack surface when exposed externally.",
+    },
+    {
+        "q": "You sweep <code>n_estimators</code> from 10 to 500 and find accuracy plateaus at 100 trees but training time keeps climbing. What do you recommend?",
+        "options": [
+            "Use 500 trees &mdash; more is always better",
+            "Use 100 trees &mdash; that's the elbow of the learning curve; extra trees add cost without improving accuracy",
+            "Use 10 trees &mdash; fastest is best",
+            "It doesn't matter",
+        ],
+        "answer": 1,
+        "explanation": "Pick the <strong>elbow</strong> of the curve. Beyond 100 trees you're paying CPU and memory for less than 0.1% accuracy gain &mdash; in a security pipeline processing millions of events/day, that 5x slowdown matters and the accuracy gain doesn't.",
+    },
+    {
+        "q": "A single deep decision tree gets 100% training accuracy on a malware dataset. Should you ship it?",
+        "options": [
+            "Yes &mdash; 100% accuracy is the best you can do",
+            "No &mdash; 100% on training is a red flag for overfitting; it has memorised the training samples and will fail on novel malware",
+            "Yes, but only if test accuracy is also 100%",
+            "Only after retraining 5 more times",
+        ],
+        "answer": 1,
+        "explanation": "100% training accuracy with an unbounded tree means it has <strong>memorised</strong> every sample, including noise. The test accuracy will be much lower, and the production accuracy on new malware variants will be lower still. This is precisely the gap a Random Forest is designed to close.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "A single decision tree with no depth limit reaches 100% training accuracy on your malware dataset. Is that good news?",
@@ -81,6 +142,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -99,3 +162,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s2_02/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

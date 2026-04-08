@@ -15,9 +15,10 @@ Create a new file called `01_from_regression_to_classification.py` in this folde
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np                          # NumPy: array math + random sampling
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+# Two algorithms side-by-side: linear (regression) vs logistic (classification)
 from sklearn.linear_model import LinearRegression, LogisticRegression
 ```
 
@@ -28,11 +29,13 @@ from sklearn.linear_model import LinearRegression, LogisticRegression
 This code creates the data for this exercise. Add it after the imports:
 
 ```python
-np.random.seed(42)
+np.random.seed(42)                                                     # reproducible RNG
+# Legit URLs: shorter, mean ~40 chars, clipped to [10, 80]
 url_lengths_legit   = np.random.normal(40, 10, 50).clip(10, 80)
+# Phishing URLs: longer, mean ~90 chars, clipped to [40, 250]
 url_lengths_phish   = np.random.normal(90, 20, 50).clip(40, 250)
-url_lengths = np.concatenate([url_lengths_legit, url_lengths_phish])
-labels = np.array([0]*50 + [1]*50)   # 0=legitimate, 1=phishing
+url_lengths = np.concatenate([url_lengths_legit, url_lengths_phish])   # stack both groups
+labels = np.array([0]*50 + [1]*50)                                     # 0=legitimate, 1=phishing
 demo_df = pd.DataFrame({"url_length": url_lengths, "is_phishing": labels})
 ```
 
@@ -48,12 +51,12 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Linear regression gives invalid probabilities")
 print("=" * 60)
-X_demo = demo_df[['url_length']]
-y_demo  = demo_df['is_phishing']
-lin_model = LinearRegression().fit(X_demo, y_demo)
-for length in [5, 500]:
-    pred = lin_model.predict([[length]])[0]
-    valid = "valid" if 0 <= pred <= 1 else "INVALID — outside [0,1]!"
+X_demo = demo_df[['url_length']]                                        # 2D feature matrix
+y_demo  = demo_df['is_phishing']                                        # 1D label vector (0/1)
+lin_model = LinearRegression().fit(X_demo, y_demo)                      # fit a STRAIGHT LINE to 0/1 data
+for length in [5, 500]:                                                  # try a very short and very long URL
+    pred = lin_model.predict([[length]])[0]                              # the line keeps going forever — no clip
+    valid = "valid" if 0 <= pred <= 1 else "INVALID — outside [0,1]!"   # probabilities must live in [0,1]
     print(f"url_length={length:4d}: prediction={pred:.3f}  ← {valid}")
 ```
 
@@ -95,10 +98,12 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 3 — Logistic regression probabilities")
 print("=" * 60)
+# LogisticRegression wraps a sigmoid around the linear fit → outputs valid probabilities
 log_model = LogisticRegression().fit(demo_df[['url_length']], demo_df['is_phishing'])
 for length in [20, 50, 80, 120, 200]:
+    # predict_proba returns [[P(class 0), P(class 1)]] — [0, 1] picks P(phishing)
     prob = log_model.predict_proba([[length]])[0, 1]
-    label = "phishing" if prob >= 0.5 else "legitimate"
+    label = "phishing" if prob >= 0.5 else "legitimate"   # default 0.5 threshold
     print(f"url_length={length:4d}: P(phishing)={prob:.2f} → {label}")
 ```
 
@@ -123,8 +128,9 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Decision boundary")
 print("=" * 60)
-coef      = log_model.coef_[0][0]
-intercept = log_model.intercept_[0]
+coef      = log_model.coef_[0][0]            # how much P(phishing) changes per char (in log-odds)
+intercept = log_model.intercept_[0]          # the bias term
+# At the 0.5 boundary, sigmoid input z = 0  →  coef*x + intercept = 0  →  x = -intercept / coef
 boundary  = -intercept / coef
 print(f"Decision boundary: url_length = {boundary:.1f} characters")
 print("URLs longer than this are classified as phishing by the model.")

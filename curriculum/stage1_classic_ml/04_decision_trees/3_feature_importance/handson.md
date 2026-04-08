@@ -15,11 +15,11 @@ Create a new file called `03_feature_importance.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+from sklearn.tree import DecisionTreeClassifier         # the tree algorithm
+from sklearn.model_selection import train_test_split    # holdout-set helper
 ```
 
 ---
@@ -78,10 +78,10 @@ CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
 X = df[FEATURES]
 y = df['label']
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+    X, y, test_size=0.2, random_state=42, stratify=y     # stratified 80/20 split
 )
 model = DecisionTreeClassifier(max_depth=4, random_state=42)
-model.fit(X_train, y_train)
+model.fit(X_train, y_train)                  # exact same model as the previous lab
 ```
 
 ---
@@ -96,11 +96,13 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Feature importances (sorted)")
 print("=" * 60)
+# .feature_importances_ = total impurity reduction each feature contributed across all splits
 importances = model.feature_importances_
 imp_df = pd.DataFrame({'feature': FEATURES, 'importance': importances})
-imp_df = imp_df.sort_values('importance', ascending=False)
+imp_df = imp_df.sort_values('importance', ascending=False)   # most useful feature first
 print(imp_df.to_string(index=False))
 total = importances.sum()
+# Sklearn normalises importances so they always sum to exactly 1.0
 print(f"\nSum of importances: {total:.3f} {'✓' if abs(total-1.0)<0.001 else '✗'}")
 ```
 
@@ -129,9 +131,11 @@ print("\n" + "=" * 60)
 print("TASK 2 — Feature importance bar chart")
 print("=" * 60)
 print("Bar chart created.")
-sorted_df = imp_df.sort_values('importance', ascending=True)  # ascending for horizontal
+# Ascending sort → barh draws longest bar on TOP (matplotlib quirk)
+sorted_df = imp_df.sort_values('importance', ascending=True)
 fig, ax = plt.subplots(figsize=(8, 5))
 bars = ax.barh(sorted_df['feature'], sorted_df['importance'], color='steelblue')
+# Add the numeric value at the end of each bar so you don't have to eyeball lengths
 for bar, val in zip(bars, sorted_df['importance']):
     ax.text(bar.get_width() + 0.005, bar.get_y() + bar.get_height()/2,
             f'{val:.3f}', va='center')
@@ -153,14 +157,16 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 3 — Top-3 feature model vs full model")
 print("=" * 60)
+# Pull the names of the 3 highest-importance features
 top3 = imp_df.nlargest(3, 'importance')['feature'].tolist()
 print(f"Top-3 features: {top3}")
 model_top3 = DecisionTreeClassifier(max_depth=4, random_state=42)
-model_top3.fit(X_train[top3], y_train)
-acc_full = model.score(X_test, y_test)
-acc_top3 = model_top3.score(X_test[top3], y_test)
+model_top3.fit(X_train[top3], y_train)        # train using only the 3 most useful columns
+acc_full = model.score(X_test, y_test)        # full 6-feature model
+acc_top3 = model_top3.score(X_test[top3], y_test)   # 3-feature model
 print(f"Full model accuracy:  {acc_full:.3f}")
 print(f"Top-3 model accuracy: {acc_top3:.3f}")
+# Small drop = the other 3 features were redundant; large drop = they mattered
 print(f"Accuracy drop:        {acc_full - acc_top3:.3f}")
 ```
 

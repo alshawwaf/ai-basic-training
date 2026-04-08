@@ -21,6 +21,67 @@ STEPS = [
     {"id": 3, "title": "Malware Visualisation Context",   "sub": "Binary-to-image for malware families",   "icon": "binary-image"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "Why does a Dense (fully-connected) network struggle with images compared to a CNN?",
+        "options": [
+            "Dense networks can't handle large datasets",
+            "Dense flattens images into a 1D vector and treats every pixel as independent &mdash; it has no concept of spatial structure (which pixels are next to which)",
+            "Dense doesn't support GPUs",
+            "Dense networks always overfit",
+        ],
+        "answer": 1,
+        "explanation": "Flattening a 28&times;28 image gives 784 numbers with no preserved geometry. The Dense layer treats them as 784 independent features. <strong>CNNs use small filters that look at local pixel neighbourhoods</strong>, learning edges, curves, and textures that depend on adjacency.",
+    },
+    {
+        "q": "If you randomly shuffle every pixel in an MNIST image, Dense accuracy barely changes. What does that prove?",
+        "options": [
+            "Dense is robust to noise",
+            "Dense has zero spatial awareness &mdash; it sees the same statistical distribution regardless of pixel positions; a CNN would collapse to random because its filters depend on adjacency",
+            "Pixel shuffling is a security feature",
+            "MNIST is too easy",
+        ],
+        "answer": 1,
+        "explanation": "If shuffling pixels doesn't break a model, that model never used spatial structure to begin with. CNNs <em>would</em> collapse on shuffled inputs because their 3&times;3 filters need adjacent pixels to detect edges. This is why CNNs win on images.",
+    },
+    {
+        "q": "A <code>Conv2D(32, (3,3))</code> layer on a 28&times;28&times;1 input has only ~320 parameters, while a Dense(676) layer on the same input has ~530,000. Why so few?",
+        "options": [
+            "Conv layers are slower so they need fewer params",
+            "<strong>Weight sharing</strong> &mdash; each filter (3&times;3 = 9 weights + 1 bias) is reused at every position in the image instead of having unique weights per pixel",
+            "Conv layers have a bug",
+            "Conv layers can only have 32 parameters",
+        ],
+        "answer": 1,
+        "explanation": "A CNN learns one small filter and slides it across the entire image. This <strong>weight sharing</strong> is why CNNs have far fewer parameters than Dense networks &mdash; and why they generalise so well to images: a 'curve detector' is useful no matter where in the image the curve appears.",
+    },
+    {
+        "q": "A malware analyst asks: <em>'Why not just use file hashes?'</em> What's the fundamental advantage of CNN-based malware visualisation?",
+        "options": [
+            "Hashes are too slow to compute",
+            "Hashes are exact-match only &mdash; change one byte and the hash changes completely; CNNs detect <em>structural similarity</em> between malware family variants",
+            "CNNs are easier to compute",
+            "Hashes can't be stored",
+        ],
+        "answer": 1,
+        "explanation": "Malware authors evade hash detection by recompiling, packing, or flipping a single byte. A CNN trained on byte-as-image representations learns the <strong>visual signature</strong> of a malware family &mdash; code section layouts, data patterns &mdash; which survives minor mutations.",
+    },
+    {
+        "q": "What does a <strong>MaxPooling</strong> layer do, and why is it useful?",
+        "options": [
+            "It adds more parameters to the network",
+            "It downsamples the feature maps by keeping only the maximum value in each small window &mdash; reducing spatial size, computation, and overfitting while keeping the strongest signals",
+            "It encrypts the feature maps",
+            "It adds randomness to the model",
+        ],
+        "answer": 1,
+        "explanation": "MaxPooling shrinks the feature maps (e.g. 26&times;26 &rarr; 13&times;13 with 2&times;2 pooling), keeping only the strongest activation per window. This <strong>cuts computation</strong>, gives the network a small amount of <em>translation invariance</em>, and reduces the parameter count of subsequent layers.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "You shuffle every pixel in an MNIST image randomly. Dense accuracy barely changes. Why does this prove Dense ignores spatial structure?",
@@ -67,6 +128,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -83,3 +146,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s3_03/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

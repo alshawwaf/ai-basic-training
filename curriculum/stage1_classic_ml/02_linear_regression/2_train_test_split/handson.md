@@ -15,21 +15,21 @@ Create a new file called `02_train_test_split.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+import numpy as np                          # NumPy: array math + random sampling
+import pandas as pd                         # pandas: tabular data
+from sklearn.linear_model import LinearRegression       # the linear regression algorithm
+from sklearn.model_selection import train_test_split    # holdout-set helper
 
-np.random.seed(42)
+np.random.seed(42)                           # fix the RNG for reproducible results
 n = 500
-requests_per_second = np.random.uniform(5, 200, n)
-response_time_ms = 1.8 * requests_per_second + 30 + np.random.normal(0, 15, n)
+requests_per_second = np.random.uniform(5, 200, n)               # synthetic load values
+response_time_ms = 1.8 * requests_per_second + 30 + np.random.normal(0, 15, n)  # noisy linear truth
 df = pd.DataFrame({
     "requests_per_second": requests_per_second,
     "response_time_ms": response_time_ms
 })
-X = df[["requests_per_second"]]
-y = df["response_time_ms"]
+X = df[["requests_per_second"]]              # double brackets → 2D DataFrame (sklearn expects 2D X)
+y = df["response_time_ms"]                   # single brackets → 1D Series of labels
 ```
 
 ---
@@ -43,9 +43,9 @@ print("=" * 60)
 print("TASK 1 — Evaluating on training data (WRONG)")
 print("=" * 60)
 
-model = LinearRegression()
-model.fit(X, y)
-r2 = model.score(X, y)
+model = LinearRegression()                   # create an empty linear regression model
+model.fit(X, y)                              # fit on ALL the data (the mistake we're showing)
+r2 = model.score(X, y)                       # score on the SAME data → inflated R²
 print(f"R² on full dataset (train=test): {r2:.3f}")
 ```
 
@@ -65,11 +65,12 @@ print("\n" + "=" * 60)
 print("TASK 2 — Train/test split shapes")
 print("=" * 60)
 
+# test_size=0.2 → hold out 20% (100 rows) for testing; random_state=42 fixes the shuffle order
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print(f"X_train: {X_train.shape}   y_train: {y_train.shape}")
-print(f"X_test:  {X_test.shape}    y_test:  {y_test.shape}")
+print(f"X_train: {X_train.shape}   y_train: {y_train.shape}")    # 80% of rows
+print(f"X_test:  {X_test.shape}    y_test:  {y_test.shape}")     # 20% held out
 total = len(X_train) + len(X_test)
-print(f"Total rows: {total} {'✓' if total == 500 else '✗'}")
+print(f"Total rows: {total} {'✓' if total == 500 else '✗'}")     # sanity check: nothing lost
 ```
 
 Run your file. You should see:
@@ -90,12 +91,13 @@ print("\n" + "=" * 60)
 print("TASK 3 — Train vs Test R²")
 print("=" * 60)
 
-model2 = LinearRegression()
-model2.fit(X_train, y_train)
-train_r2 = model2.score(X_train, y_train)
-test_r2  = model2.score(X_test,  y_test)
+model2 = LinearRegression()                  # fresh model — never seen the test rows
+model2.fit(X_train, y_train)                 # fit ONLY on the training half
+train_r2 = model2.score(X_train, y_train)    # how well it fits data it has seen
+test_r2  = model2.score(X_test,  y_test)     # how well it generalises to unseen data
 print(f"Training R²: {train_r2:.3f}")
 print(f"Test R²:     {test_r2:.3f}")
+# Big gap between train and test = overfitting; small gap = healthy generalisation
 print(f"Gap (overfit indicator): {abs(train_r2 - test_r2):.3f}")
 ```
 

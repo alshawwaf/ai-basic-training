@@ -31,6 +31,67 @@ STEPS = [
      "icon": "validation-curve"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "Your intrusion detector scores <strong>100% on training data and 74% on validation</strong>. The security team says 'the model works.' What's actually happening?",
+        "options": [
+            "The model is well-tuned",
+            "Severe overfitting &mdash; the model has memorised training attacks and will miss novel variants in production",
+            "The validation set is wrong",
+            "100% training accuracy is normal",
+        ],
+        "answer": 1,
+        "explanation": "A 26-point train/test gap is a textbook <strong>overfitting</strong> signal. The model has memorised training patterns including noise. In production it will miss novel attacks because it never learned the underlying generalisable patterns. Fix: reduce model complexity until the gap shrinks to 2-3 points.",
+    },
+    {
+        "q": "A depth-1 tree and a depth-50 tree both fail in production. Why?",
+        "options": [
+            "Both are too deep",
+            "Depth-1 is too simple (high bias &mdash; misses most patterns); depth-50 is too complex (high variance &mdash; memorises noise instead of generalising)",
+            "Both have the same problem",
+            "Trees always fail in production",
+        ],
+        "answer": 1,
+        "explanation": "This is the <strong>bias-variance tradeoff</strong>. Too simple (high bias) underfits both training and test data. Too complex (high variance) overfits training and fails on test. The sweet spot lies in the middle &mdash; complex enough to learn real patterns, simple enough to generalise.",
+    },
+    {
+        "q": "Why is K-Fold Cross-Validation more reliable than a single train/test split?",
+        "options": [
+            "It trains the model faster",
+            "It evaluates the model on K different splits and reports the average &mdash; you get a more reliable estimate plus a sense of variance",
+            "It uses more data for training",
+            "It eliminates overfitting entirely",
+        ],
+        "answer": 1,
+        "explanation": "A single split could be lucky (or unlucky). K-Fold CV trains <em>K</em> times on different splits, so you get K performance estimates. The mean is more reliable than any one split, and the standard deviation tells you how stable the model is across different data slices.",
+    },
+    {
+        "q": "You get 5-fold CV scores of <code>[0.98, 0.71, 0.95, 0.96, 0.94]</code>. What should you do?",
+        "options": [
+            "Average them (~0.91) and ship the model",
+            "Investigate the 0.71 fold &mdash; that drop signals a subset of data the model can't handle (possibly an entire attack category)",
+            "Drop that fold and report 0.95",
+            "Report only the highest score",
+        ],
+        "answer": 1,
+        "explanation": "One fold dropping 27 points below the others is a <strong>red flag</strong>, not noise. There's something distinctive about that subset &mdash; maybe a class imbalance, a unique attack family, or a data quality issue. A single train/test split would never have caught this.",
+    },
+    {
+        "q": "A validation curve shows accuracy peaks at <code>max_depth=5</code> and drops off after that. Your manager wants <code>max_depth=15</code> 'because more is better.' What's your response?",
+        "options": [
+            "Defer to your manager",
+            "Show them the validation curve &mdash; depth 15 is past the peak; training accuracy keeps climbing but validation accuracy drops because the tree is memorising noise",
+            "Use depth=20 to compromise",
+            "Disable validation",
+        ],
+        "answer": 1,
+        "explanation": "The validation curve is your <strong>evidence</strong>. Past the peak, the training curve keeps climbing toward 100% but the validation curve drops &mdash; the model is memorising noise. In a security context, this means more false positives on benign traffic and missed novel attacks. Data beats opinions.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Your intrusion detector scores 100% on training data and 74% on validation data. The security team says 'the model works.' What do you tell them?",
@@ -81,6 +142,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -99,3 +162,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s2_04/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

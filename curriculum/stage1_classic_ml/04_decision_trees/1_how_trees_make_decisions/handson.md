@@ -15,8 +15,8 @@ Create a new file called `01_how_trees_make_decisions.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
 ```
 
 ---
@@ -26,8 +26,9 @@ import pandas as pd
 This code creates the data for this exercise. Add it after the imports:
 
 ```python
-np.random.seed(42)
-n_per_class = 500
+np.random.seed(42)                                                       # reproducible RNG
+n_per_class = 500                                                        # 500 samples per attack type
+# Benign baseline: moderate connection rate, normal byte volumes, few failed connections
 benign = pd.DataFrame({
     'connection_rate':    np.random.normal(10, 3, n_per_class).clip(1, 25),
     'bytes_sent':         np.random.normal(5000, 1500, n_per_class).clip(100, 15000),
@@ -37,6 +38,7 @@ benign = pd.DataFrame({
     'failed_connections': np.random.poisson(0.5, n_per_class),
     'label': 0
 })
+# Port scan signature: many destination ports, short sessions, frequent failed connections
 port_scan = pd.DataFrame({
     'connection_rate':    np.random.normal(25, 8, n_per_class).clip(5, 60),
     'bytes_sent':         np.random.normal(500, 200, n_per_class).clip(50, 2000),
@@ -46,6 +48,7 @@ port_scan = pd.DataFrame({
     'failed_connections': np.random.poisson(8, n_per_class),
     'label': 1
 })
+# Data exfiltration: HUGE bytes_sent, long sessions, very low fail rate (looks "normal" otherwise)
 exfil = pd.DataFrame({
     'connection_rate':    np.random.normal(8, 2, n_per_class).clip(1, 20),
     'bytes_sent':         np.random.normal(80000, 25000, n_per_class).clip(20000, 250000),
@@ -55,6 +58,7 @@ exfil = pd.DataFrame({
     'failed_connections': np.random.poisson(0.2, n_per_class),
     'label': 2
 })
+# Denial-of-service flood: extreme connection rate, tiny payloads, sub-second sessions
 dos = pd.DataFrame({
     'connection_rate':    np.random.normal(200, 40, n_per_class).clip(80, 500),
     'bytes_sent':         np.random.normal(200, 80, n_per_class).clip(40, 600),
@@ -64,12 +68,13 @@ dos = pd.DataFrame({
     'failed_connections': np.random.poisson(3, n_per_class),
     'label': 3
 })
+# Concatenate then shuffle so the labels aren't ordered 0,0,0,...,1,1,1...
 df = pd.concat([benign, port_scan, exfil, dos], ignore_index=True).sample(
     frac=1, random_state=42
 )
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
-CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
+CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']                    # human-readable label names
 ```
 
 ---
@@ -84,15 +89,15 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Gini impurity calculations")
 print("=" * 60)
-counts_a = np.array([40, 30, 20, 10])
+counts_a = np.array([40, 30, 20, 10])         # mixed node — 4 classes present
 total_a  = counts_a.sum()
-probs_a  = counts_a / total_a
-gini_a   = 1 - np.sum(probs_a ** 2)
+probs_a  = counts_a / total_a                  # convert counts to probabilities
+gini_a   = 1 - np.sum(probs_a ** 2)            # Gini formula: 1 - sum(p_i^2); higher = messier
 print(f"Mixed node: Gini = {gini_a:.3f}")
 #
-counts_b = np.array([100, 0, 0, 0])
+counts_b = np.array([100, 0, 0, 0])            # pure node — only one class present
 probs_b  = counts_b / counts_b.sum()
-gini_b   = 1 - np.sum(probs_b ** 2)
+gini_b   = 1 - np.sum(probs_b ** 2)            # pure node → Gini = 0 (the goal of every split)
 print(f"Pure node:  Gini = {gini_b:.3f}")
 ```
 
@@ -114,17 +119,17 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 2 — Information gain for a split")
 print("=" * 60)
-def gini(counts):
+def gini(counts):                             # reusable Gini helper
     counts = np.array(counts)
     p = counts / counts.sum()
     return 1 - np.sum(p**2)
 #
-g_parent = gini([60, 40])
-g_left   = gini([58, 2])
-g_right  = gini([2, 38])
-w_left, w_right = 60/100, 40/100
+g_parent = gini([60, 40])                     # parent: 60 benign, 40 DoS
+g_left   = gini([58, 2])                      # left child after splitting on connection_rate <= 50
+g_right  = gini([2, 38])                      # right child (rate > 50) — almost all DoS
+w_left, w_right = 60/100, 40/100              # weight by how many samples landed in each child
 weighted_avg = w_left * g_left + w_right * g_right
-gain = g_parent - weighted_avg
+gain = g_parent - weighted_avg                # information gain = drop in impurity (the tree picks the highest)
 print(f"Parent Gini:         {g_parent:.3f}")
 print(f"Left child Gini:     {g_left:.3f}  (weight={w_left:.2f})")
 print(f"Right child Gini:    {g_right:.3f}  (weight={w_right:.2f})")
@@ -153,11 +158,13 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 3 — Dataset inspection")
 print("=" * 60)
-print(f"Shape: {df.shape}")
-counts = df['label'].value_counts().sort_index()
+print(f"Shape: {df.shape}")                       # (rows, cols)
+counts = df['label'].value_counts().sort_index()  # sort by label number 0..3
 for label, count in counts.items():
+    # Pretty-print the human-readable class name and percentage
     print(f"  {CLASS_NAMES[label]:10s}: {count} ({count/len(df)*100:.1f}%)")
 print("\nFeature means by class:")
+# .groupby('label').mean() — one row per class showing the typical feature values
 print(df.groupby('label')[FEATURES].mean().round(1).to_string())
 ```
 
@@ -180,6 +187,7 @@ Using these rules (from a simplified tree): If connection_rate > 100: DoS Else i
 Add this to your file:
 
 ```python
+# Three test connections with hand-picked feature values
 connections = [
     {"name": "A", "connection_rate": 80,  "unique_dest_ports": 25, "bytes_sent": 1000},
     {"name": "B", "connection_rate": 20,  "unique_dest_ports": 3,  "bytes_sent": 200},

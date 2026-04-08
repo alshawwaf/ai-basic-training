@@ -15,14 +15,14 @@ Create a new file called `05_what_model_sees.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_digits
+import numpy as np                          # NumPy: fast numeric arrays
+import pandas as pd                         # pandas: tabular data with labels
+import matplotlib.pyplot as plt             # matplotlib: standard Python plotting library
+from sklearn.datasets import load_digits    # built-in 8x8 handwritten digits dataset
 
-digits = load_digits()
-df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])
-df["target"] = digits.target
+digits = load_digits()                       # Bunch with .data, .target, .images, ...
+df = pd.DataFrame(digits.data, columns=[f"pixel_{i}" for i in range(64)])  # 1797 x 64 table
+df["target"] = digits.target                 # add the label column (digit 0..9)
 ```
 
 ---
@@ -32,9 +32,10 @@ df["target"] = digits.target
 The model never sees a picture — it sees a flat row of numbers. `f"{v:2d}"` formats an integer as exactly 2 characters wide so columns align. Add this to your file:
 
 ```python
-image = digits.images[0].astype(int)
+image = digits.images[0].astype(int)         # cast 0..16 floats to ints for clean printing
 print(f"Image index 0 — label: {digits.target[0]}")
-for row in image:
+for row in image:                             # each row is one of the 8 horizontal scanlines
+    # f"{v:2d}" pads each integer to 2 chars wide so columns line up vertically
     print("  ".join(f"{v:2d}" for v in row))
 ```
 
@@ -59,10 +60,11 @@ These two digits are often confused. Printing them side by side reveals where th
 
 ```python
 for digit in [1, 7]:
+    # Boolean mask: keep only images of this class, then take the first one
     example = digits.images[digits.target == digit][0].astype(int)
     print(f"\n--- Digit {digit} ---")
     for row in example:
-        print("  ".join(f"{v:2d}" for v in row))
+        print("  ".join(f"{v:2d}" for v in row))    # same 2-char-wide formatting as before
 ```
 
 Run your file and look for which rows differ between 1 and 7.
@@ -74,9 +76,11 @@ Run your file and look for which rows differ between 1 and 7.
 Features with higher absolute correlation to the target carry more predictive information. Add this to your file:
 
 ```python
+# .corr() = pairwise correlations between every column; ["target"] = just the label column;
+# .abs() flips negatives so strong positive AND negative correlations both rank high
 correlations = df.corr()["target"].abs().drop("target").sort_values(ascending=False)
 print("\nTop 10 pixels most correlated with digit label:")
-print(correlations.head(10).round(2))
+print(correlations.head(10).round(2))         # the 10 most predictive pixels in the image
 ```
 
 Run your file. You should see something like:

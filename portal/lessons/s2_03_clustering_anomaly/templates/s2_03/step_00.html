@@ -52,6 +52,11 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # 2. Cluster into K groups
+#    n_clusters=4 — we picked 4 to match the four behaviour types in the table above.
+#                   In real projects you'd use the elbow method or silhouette score to choose K.
+#    n_init=10    — run k-means 10 times with different starting points and keep the best result
+#                   (k-means is sensitive to where it starts, so multiple restarts help).
+#    random_state=42 — reproducible runs (see Lesson 1.2).
 km = KMeans(n_clusters=4, random_state=42, n_init=10)
 km.fit(X_scaled)
 

@@ -21,6 +21,67 @@ STEPS = [
     {"id": 3, "title": "Architecture Search",           "sub": "Systematic search over width and depth",   "icon": "arch-search"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What is the difference between a <strong>parameter</strong> and a <strong>hyperparameter</strong>?",
+        "options": [
+            "There is no difference",
+            "Parameters (weights, biases) are <em>learned</em> by gradient descent during training; hyperparameters (learning rate, batch size, depth) are <em>set by the engineer</em> before training",
+            "Hyperparameters are bigger numbers",
+            "Parameters live in the cloud, hyperparameters live locally",
+        ],
+        "answer": 1,
+        "explanation": "The model <strong>learns</strong> weights and biases. The engineer <strong>chooses</strong> hyperparameters. This distinction matters for reproducibility &mdash; hyperparameters must be version-controlled because the same training script with different hyperparameters produces a different model.",
+    },
+    {
+        "q": "You train with <code>lr=0.1</code> and the loss oscillates wildly. You switch to <code>lr=0.0001</code> and the loss barely moves after 50 epochs. What should you try next?",
+        "options": [
+            "Give up on neural networks",
+            "<code>lr=0.001</code> &mdash; the Adam default. 0.1 overshoots the minimum (steps too big), 0.0001 takes steps too small to make progress; the middle ground balances stability and speed",
+            "Use lr=10 to be safe",
+            "Use lr=0",
+        ],
+        "answer": 1,
+        "explanation": "Learning rate is the <strong>most important hyperparameter</strong>. Too high = oscillation/divergence; too low = slow or no progress. <code>1e-3</code> is the Adam default for a reason &mdash; it's a sane starting point for most problems.",
+    },
+    {
+        "q": "You train a phishing detector with <code>batch_size=1024</code> on 10,000 samples (~10 updates per epoch). What's the likely problem?",
+        "options": [
+            "Nothing &mdash; bigger batches always help",
+            "Very smooth gradients that may converge to a sharp minimum that generalises poorly; few updates per epoch reduces variety; try batch_size=32 or 64 for noisier gradients that escape sharp minima",
+            "The model will train too slowly",
+            "scikit-learn won't allow it",
+        ],
+        "answer": 1,
+        "explanation": "Tiny batch counts per epoch produce very smooth gradients that find <em>sharp minima</em> &mdash; areas of low training loss but poor generalisation. Smaller batches add gradient noise that helps the model escape sharp minima and find <strong>flatter, better-generalising</strong> ones.",
+    },
+    {
+        "q": "Your grid search tests <strong>3 widths &times; 3 depths &times; 3 learning rates &times; 3 batch sizes = 81 models</strong>, each taking 2 minutes. What's a faster alternative that often finds equally good hyperparameters?",
+        "options": [
+            "Run the grid search twice for redundancy",
+            "<strong>Random search</strong> &mdash; sample 20-30 random combinations; Bergstra &amp; Bengio (2012) showed it finds good hyperparameters in fewer trials than grid search",
+            "Skip tuning entirely",
+            "Use only the default values",
+        ],
+        "answer": 1,
+        "explanation": "Random search wins because grid search wastes effort on unimportant dimensions (e.g. testing 3 batch sizes when only learning rate matters). Random search explores <strong>more unique values per dimension</strong> in the same number of trials &mdash; usually finding better configurations faster.",
+    },
+    {
+        "q": "Why must you document and version-control your hyperparameters?",
+        "options": [
+            "It's a legal requirement",
+            "Reproducibility &mdash; if a security model's detection rate changes after a retrain, you need to know exactly which hyperparameters changed to debug what happened",
+            "It speeds up training",
+            "It improves accuracy directly",
+        ],
+        "answer": 1,
+        "explanation": "Hyperparameters are part of the model's identity. If your IDS recall drops from 92% to 78% after a retrain, the first question is <em>'what did we change?'</em>. Without versioned hyperparameters, you can't answer that &mdash; and you can't roll back.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Your colleague says 'the model learned a learning rate of 0.001.' Why is this statement wrong, and why does the distinction matter for reproducible security ML?",
@@ -67,6 +128,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -83,3 +146,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s3_04/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

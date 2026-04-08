@@ -31,6 +31,67 @@ STEPS = [
      "icon": "threshold-slider"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "Why can't we just use linear regression for a yes/no problem like 'is this URL phishing?'",
+        "options": [
+            "Linear regression is too slow",
+            "Linear regression outputs unbounded numbers, not probabilities between 0 and 1",
+            "scikit-learn doesn't allow it",
+            "Linear regression can't handle text",
+        ],
+        "answer": 1,
+        "explanation": "A linear model can output -3.7 or 12.4 &mdash; meaningless as a probability. The <strong>sigmoid function</strong> in logistic regression squashes any real number into the [0, 1] range, so the output can be interpreted as <em>P(phishing)</em>.",
+    },
+    {
+        "q": "What does the sigmoid function output when its input <code>z</code> is exactly 0?",
+        "options": [
+            "0",
+            "0.5",
+            "1",
+            "-1",
+        ],
+        "answer": 1,
+        "explanation": "&sigma;(0) = 0.5 &mdash; the model is on the fence. This is the <strong>decision boundary</strong>: when the weighted features sum to zero, the model has no preference between the two classes.",
+    },
+    {
+        "q": "A phishing URL uses HTTPS and has a valid certificate. Does <code>uses_https = 1</code> alone make it safe?",
+        "options": [
+            "Yes &mdash; HTTPS guarantees safety",
+            "No &mdash; most modern phishing sites use HTTPS; you need multiple features (length, @ symbol, IPs, hyphens)",
+            "Yes, as long as the cert is valid",
+            "Only if the domain is .com",
+        ],
+        "answer": 1,
+        "explanation": "Most phishing sites now use free Let's Encrypt certificates. A single feature is rarely enough &mdash; that's why ML uses <em>many</em> features at once. <code>has_at_symbol</code>, <code>has_ip_address</code>, <code>num_hyphens</code>, and <code>url_length</code> would all still flag a phishing URL even when HTTPS is on.",
+    },
+    {
+        "q": "Your boss is excited about a model with <strong>95% accuracy and 60% recall</strong> on phishing. Why are you not?",
+        "options": [
+            "95% accuracy isn't high enough",
+            "60% recall means 40% of phishing URLs reach users &mdash; the model is missing 4 in 10 attacks",
+            "Recall and accuracy can't both be reported",
+            "Phishing should always have 100% accuracy",
+        ],
+        "answer": 1,
+        "explanation": "<strong>Recall is the metric that matters</strong> when missing a positive is dangerous. 60% recall on phishing means 40% slip through to inboxes &mdash; potentially thousands of users exposed to credential theft per day. Accuracy is misleading when classes are imbalanced.",
+    },
+    {
+        "q": "You lower the classification threshold from 0.5 to 0.3. What happens?",
+        "options": [
+            "Both precision and recall go up",
+            "Both precision and recall go down",
+            "Recall goes up (more catches) but precision goes down (more false alarms)",
+            "Nothing &mdash; threshold doesn't matter",
+        ],
+        "answer": 2,
+        "explanation": "Lowering the threshold means the model says 'phishing' more often. You catch more true phishing (<strong>recall up</strong>) but also flag more legitimate URLs (<strong>precision down</strong>). This is the <em>precision-recall tradeoff</em> &mdash; you tune the threshold to match your operational capacity.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Feed a z-value of 0 into the sigmoid. What probability do you get? What does this mean for a URL with perfectly balanced evidence?",
@@ -81,6 +142,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -99,3 +162,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s1_03/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

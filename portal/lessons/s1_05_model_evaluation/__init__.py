@@ -34,6 +34,67 @@ STEPS = [
      "icon": "threshold-slider"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "Your malware detector reports <strong>99.95% accuracy</strong> on a feed where 0.05% of events are malicious. What can you conclude?",
+        "options": [
+            "The model is excellent",
+            "Almost nothing &mdash; a model that always predicts 'benign' would also score 99.95% and catch zero malware",
+            "The model has memorised the training data",
+            "The dataset is corrupted",
+        ],
+        "answer": 1,
+        "explanation": "When the positive class is 0.05%, accuracy is dominated by the majority class. You must check <strong>recall</strong> &mdash; what fraction of actual malware was flagged? Without that number, the accuracy figure is meaningless.",
+    },
+    {
+        "q": "Your IDS produces: <strong>TP=45, FP=300, FN=5, TN=9650</strong>. What is the precision?",
+        "options": [
+            "13%",
+            "90%",
+            "45%",
+            "95%",
+        ],
+        "answer": 0,
+        "explanation": "Precision = TP / (TP + FP) = 45 / (45 + 300) = <strong>13%</strong>. Of every 8 alerts, only 1 is real. The recall is 90% (it catches most attacks), but the precision is poor &mdash; analysts will burn most of their time on false alarms.",
+    },
+    {
+        "q": "Two models for the same job: Model A has precision=0.95, recall=0.60. Model B has precision=0.70, recall=0.95. Which one would you deploy for <strong>scanning incoming email for phishing</strong>?",
+        "options": [
+            "Model A &mdash; high precision is always better",
+            "Model B &mdash; missing a phishing email leads to credential theft, so recall matters more here",
+            "Neither &mdash; both are unacceptable",
+            "It doesn't matter",
+        ],
+        "answer": 1,
+        "explanation": "For email scanning, the cost of a <strong>false negative</strong> (missed phishing &rarr; credential theft &rarr; lateral movement) is much higher than the cost of a <strong>false positive</strong> (a legit email goes to quarantine for review). Pick the model that maximises recall.",
+    },
+    {
+        "q": "Model X has AUC = 0.92. Model Y has AUC = 0.95. Should you always pick Y?",
+        "options": [
+            "Yes &mdash; AUC is the only number that matters",
+            "Not necessarily &mdash; AUC averages across all thresholds, but you only operate at one; check the ROC curve in the region you care about",
+            "No &mdash; lower AUC is better",
+            "Yes &mdash; AUC=0.95 means 95% accuracy",
+        ],
+        "answer": 1,
+        "explanation": "AUC summarises performance across <em>every</em> threshold. But in production you operate at <strong>one</strong> threshold &mdash; usually in the low-FPR region. Model X might dominate Y in that specific region. Always plot the ROC curve, not just the single AUC number.",
+    },
+    {
+        "q": "Your SOC team can handle 50 alerts/day. At threshold 0.3 the model produces 200 alerts; at 0.6 it produces 30 but misses 60% of attacks. What's the right move?",
+        "options": [
+            "Pick 0.6 &mdash; it's under capacity",
+            "Pick 0.3 and accept the 200 alerts",
+            "Find a middle threshold (~0.45) that balances capacity and recall, or add auto-triage to handle volume at 0.3",
+            "Ignore the threshold entirely",
+        ],
+        "answer": 2,
+        "explanation": "Threshold tuning is an <strong>operational</strong> decision, not just a math problem. 0.6 hits the capacity number but loses 60% of attacks &mdash; unacceptable. Either find a balanced threshold or invest in <em>auto-triage</em> so analysts only see the alerts that matter most.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Your malware detector has 99.9% accuracy on enterprise telemetry where 0.05% of events are malicious. How many real threats does it catch?",
@@ -91,6 +152,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -109,3 +172,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s1_05/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

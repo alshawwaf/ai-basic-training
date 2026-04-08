@@ -15,13 +15,14 @@ Create a new file called `03_train_and_evaluate.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+import seaborn as sns                       # seaborn: prettier statistical plots (heatmaps)
+from sklearn.linear_model import LogisticRegression       # the classifier
+from sklearn.preprocessing import StandardScaler          # zero-mean, unit-variance scaling
+from sklearn.model_selection import train_test_split      # holdout-set helper
+# classification_report = precision/recall/F1 table; confusion_matrix = TN/FP/FN/TP grid
 from sklearn.metrics import classification_report, confusion_matrix
 ```
 
@@ -61,8 +62,9 @@ def make_urls(n_legit, n_phish):
 df = make_urls(half, half)
 FEATURES = ['url_length', 'num_dots', 'has_at_symbol', 'uses_https',
             'num_subdomains', 'has_ip_address', 'num_hyphens', 'path_length']
-X = df[FEATURES]
-y = df['is_phishing']
+X = df[FEATURES]                              # 2D feature matrix (8 columns)
+y = df['is_phishing']                          # 1D label vector (0/1)
+# stratify=y keeps the same class proportions in train and test (50/50 here)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -80,14 +82,15 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Feature scaling")
 print("=" * 60)
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled  = scaler.transform(X_test)          # NOTE: transform only, no fit!
+scaler = StandardScaler()                          # learns mean + std from training data
+X_train_scaled = scaler.fit_transform(X_train)     # fit AND transform on training set
+X_test_scaled  = scaler.transform(X_test)          # NOTE: transform only — never fit on test!
 #
-# Compare raw vs scaled url_length
+# Compare raw vs scaled url_length to confirm the transformation worked
 raw_col   = X_train['url_length']
-scaled_col = X_train_scaled[:, 0]   # url_length is first column
+scaled_col = X_train_scaled[:, 0]                  # url_length is first column in FEATURES
 print(f"Raw url_length:    mean={raw_col.mean():.1f}, std={raw_col.std():.1f}")
+# After scaling: mean ≈ 0, std ≈ 1 (the whole point of StandardScaler)
 print(f"Scaled url_length: mean={scaled_col.mean():.2f}, std={scaled_col.std():.2f}")
 ```
 
@@ -109,12 +112,13 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 2 — Model coefficients")
 print("=" * 60)
+# max_iter=1000 → give the optimiser enough steps to converge; random_state pins the result
 model = LogisticRegression(max_iter=1000, random_state=42)
-model.fit(X_train_scaled, y_train)
+model.fit(X_train_scaled, y_train)             # learns one coefficient per feature
 coef_df = pd.DataFrame({
     'feature': FEATURES,
-    'coefficient': model.coef_[0]
-}).sort_values('coefficient', key=abs, ascending=False)
+    'coefficient': model.coef_[0]               # .coef_ has shape (1, n_features) for binary classification
+}).sort_values('coefficient', key=abs, ascending=False)   # rank by magnitude, sign-agnostic
 print(coef_df.to_string(index=False))
 ```
 
@@ -140,17 +144,19 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 3 — Evaluation: classification report + confusion matrix")
 print("=" * 60)
-y_pred = model.predict(X_test_scaled)
+y_pred = model.predict(X_test_scaled)              # 0/1 predictions on the held-out 200 rows
+# precision, recall, F1, support per class — all in one formatted table
 print(classification_report(y_test, y_pred,
                              target_names=['legitimate', 'phishing']))
 #
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred)              # 2x2: rows=actual, cols=predicted
 print("\nConfusion matrix:")
 print("                Predicted Legit  Predicted Phishing")
+# TN=true negative, FP=false positive (false alarm), FN=false negative (missed attack), TP=true positive
 print(f"Actual Legit       {cm[0,0]:3d} (TN)         {cm[0,1]:3d} (FP)")
 print(f"Actual Phish       {cm[1,0]:3d} (FN)         {cm[1,1]:3d} (TP)")
 #
-# Optional: seaborn heatmap
+# Optional: seaborn heatmap (uncomment to visualise the confusion matrix as colour)
 # sns.heatmap(cm, annot=True, fmt='d', xticklabels=['Legit','Phish'],
 #             yticklabels=['Legit','Phish'])
 # plt.show()
@@ -177,10 +183,12 @@ print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Scaled vs unscaled comparison")
 print("=" * 60)
 import warnings
+# Capture any ConvergenceWarning so we can show it instead of letting it spam stderr
 with warnings.catch_warnings(record=True) as w:
     warnings.simplefilter("always")
+    # max_iter=100 deliberately too low → unscaled features will fail to converge
     model_unscaled = LogisticRegression(max_iter=100, random_state=42)
-    model_unscaled.fit(X_train, y_train)
+    model_unscaled.fit(X_train, y_train)        # raw features — no scaling
     if w:
         print(f"Warning: {w[-1].message}")
 acc_scaled   = model.score(X_test_scaled, y_test)

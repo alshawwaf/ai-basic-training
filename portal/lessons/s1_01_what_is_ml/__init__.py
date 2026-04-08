@@ -120,6 +120,69 @@ STEPS = [
     {"id": 9, "title": "Model's Eye View",    "sub": "Just numbers in a row",              "icon": "model-eye-view"},    # rows of monospace numbers
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+# Five multiple-choice questions covering the lesson's key takeaways. Rendered
+# by portal/templates/quiz.html via the /quiz route below.
+
+QUIZ = [
+    {
+        "q": "What does a machine learning model actually 'see' when it looks at an 8&times;8 digit image?",
+        "options": [
+            "A picture file (like a PNG)",
+            "A flat array of 64 numbers, one per pixel",
+            "The original handwriting strokes",
+            "A 28&times;28 grayscale grid",
+        ],
+        "answer": 1,
+        "explanation": "The model never sees an image &mdash; it sees a <strong>flat array of 64 numbers</strong> (the pixel intensities). The 8&times;8 grid is just for humans. This is why <em>feature engineering</em> matters: presenting data so the patterns are easy for the algorithm to find.",
+    },
+    {
+        "q": "Your malware detector reports <strong>99% accuracy</strong> on a dataset where 1% of files are malicious. Why is this almost certainly worthless?",
+        "options": [
+            "Because 99% is mathematically impossible",
+            "A model that always predicts 'benign' would also score 99% &mdash; and catch zero malware",
+            "Because accuracy can never be that high in security",
+            "Because the model overfits at exactly 99%",
+        ],
+        "answer": 1,
+        "explanation": "This is the <strong>accuracy trap</strong>. With 1% positives, predicting 'benign' for everything yields 99% accuracy and 0% recall. Always check <em>recall</em> when classes are imbalanced &mdash; what fraction of real threats did you actually catch?",
+    },
+    {
+        "q": "In the digits dataset, the <strong>corner pixels</strong> are almost always zero. What does this tell you about them as features?",
+        "options": [
+            "They are the most important features",
+            "They have near-zero variance and carry no signal &mdash; they could be dropped",
+            "They prevent overfitting",
+            "They are required for image reconstruction",
+        ],
+        "answer": 1,
+        "explanation": "Features with <strong>zero variance</strong> never change between samples, so they cannot help the model distinguish classes. Dropping them is a basic form of <em>feature selection</em> &mdash; fewer features means faster training and less noise.",
+    },
+    {
+        "q": "When you average all the '3' digits and all the '8' digits and look at the prototypes side by side, they look very similar. What does this predict about the model?",
+        "options": [
+            "The model will perfectly distinguish 3s from 8s",
+            "3s and 8s will be a frequent source of confusion in the confusion matrix",
+            "The model will refuse to predict either class",
+            "Accuracy will be exactly 50% for those two classes",
+        ],
+        "answer": 1,
+        "explanation": "When prototypes <strong>overlap visually</strong>, the decision boundary between those classes is thin and error-prone. You will see this exact pattern as confused cells in the model's confusion matrix &mdash; 3s mistaken for 8s and vice versa.",
+    },
+    {
+        "q": "You want to know which features matter most for predicting digit class. Which technique gives you the answer fastest?",
+        "options": [
+            "Train a giant neural network and hope",
+            "Compute the correlation between each pixel and the target label",
+            "Manually inspect every single sample",
+            "Drop all the features and see what happens",
+        ],
+        "answer": 1,
+        "explanation": "<strong>Feature&ndash;target correlation</strong> is a quick, model-free way to rank features by signal. High correlation means the pixel value tracks the label (predictive); low correlation means it is noise. In security ML this is how you decide which fields in a log are worth feeding to the model.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Run 'New digit' 10 times. Do you ever get one that's hard to recognize even as a human?",
@@ -220,6 +283,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -231,6 +296,21 @@ def index():
                            steps=STEPS, lesson_id=LESSON_ID,
                            lesson_title=LESSON_TITLE,
                            url_prefix=f"/lesson/{LESSON_ID}")
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )
 
 
 @bp.route("/step/<int:n>")

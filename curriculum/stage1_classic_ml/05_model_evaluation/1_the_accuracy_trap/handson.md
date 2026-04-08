@@ -15,13 +15,13 @@ Create a new file called `01_the_accuracy_trap.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-from sklearn.dummy import DummyClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, recall_score
-from sklearn.preprocessing import StandardScaler
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+from sklearn.dummy import DummyClassifier               # always-predicts-the-majority baseline
+from sklearn.linear_model import LogisticRegression     # the real classifier we'll compare against
+from sklearn.model_selection import train_test_split    # holdout-set helper
+from sklearn.metrics import classification_report, recall_score   # the metrics that matter
+from sklearn.preprocessing import StandardScaler        # zero-mean, unit-variance scaling
 ```
 
 ---
@@ -31,26 +31,28 @@ from sklearn.preprocessing import StandardScaler
 This code creates the data for this exercise. Add it after the imports:
 
 ```python
-np.random.seed(42)
+np.random.seed(42)                            # reproducible RNG
 n_total  = 10_000
-n_attack = 500      # 5% attack rate
+n_attack = 500                                 # 5% attack rate — realistic for security data
 n_benign = n_total - n_attack
+# 3 fake features for benign traffic: low connection rate, normal bytes, few ports
 benign_data = np.column_stack([
     np.random.normal(10, 3, n_benign),
     np.random.normal(5000, 1500, n_benign),
     np.random.poisson(3, n_benign)
 ])
+# Same 3 features for attacks: high rate, low bytes (probing), many ports
 attack_data = np.column_stack([
     np.random.normal(80, 30, n_attack),
     np.random.normal(500, 300, n_attack),
     np.random.poisson(30, n_attack)
 ])
-X = np.vstack([benign_data, attack_data])
-y = np.array([0]*n_benign + [1]*n_attack)
-idx = np.random.permutation(len(y))
+X = np.vstack([benign_data, attack_data])      # stack benign rows on top of attack rows
+y = np.array([0]*n_benign + [1]*n_attack)      # matching labels (0=benign, 1=attack)
+idx = np.random.permutation(len(y))            # shuffle so attacks aren't all at the bottom
 X, y = X[idx], y[idx]
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+    X, y, test_size=0.2, random_state=42, stratify=y     # stratified to keep 5% attack rate in both
 )
 ```
 

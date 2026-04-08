@@ -11,6 +11,11 @@
             <tr><td>Test</td><td>20%</td><td>Final evaluation ONLY &mdash; never touched during tuning</td></tr>
         </tbody>
     </table>
+    <p style="margin-bottom:10px;">Two parameters used below:
+        <code>random_state=42</code> makes the split reproducible (covered in Lesson 1.2),
+        and <code>stratify=y</code> tells sklearn to keep the class proportions equal in both halves
+        &mdash; if your data is 90% benign / 10% attack, both train and test will also be 90/10
+        instead of randomly drifting. This is critical for imbalanced security datasets.</p>
     <pre><code class="language-python">from sklearn.model_selection import train_test_split
 
 # First split: separate test set

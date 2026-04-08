@@ -21,6 +21,67 @@ STEPS = [
     {"id": 3, "title": "Early Stopping",            "sub": "Stop training at the right moment",              "icon": "early-stop"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "A neural network has <strong>134,000 parameters</strong> trained on <strong>1,600 samples</strong>. Why is this dangerous for a security model?",
+        "options": [
+            "More parameters always help",
+            "84 parameters per sample &mdash; the network can memorise every training example, including noise; the IDS will recognise exact training attacks but miss novel variants",
+            "Training will be too slow",
+            "scikit-learn won't allow it",
+        ],
+        "answer": 1,
+        "explanation": "When parameters &gt;&gt; samples, the network has so much capacity it memorises individual examples instead of learning the underlying patterns (e.g. 'high connection rate + many failed logins = brute force'). It looks great in training, fails on novel attacks. This is exactly when you need <strong>regularisation</strong>.",
+    },
+    {
+        "q": "How does Dropout actually regularise a network during training?",
+        "options": [
+            "It permanently removes neurons",
+            "On each training step, it randomly zeros out a fraction of neurons &mdash; forcing the network to not rely on any single neuron and learn redundant representations",
+            "It speeds up training",
+            "It increases the loss",
+        ],
+        "answer": 1,
+        "explanation": "Dropout randomly silences (e.g.) 50% of neurons each training step. The network can't rely on any specific neuron because it might be dropped on the next batch, so it learns <strong>redundant, distributed</strong> representations. Result: better generalisation.",
+    },
+    {
+        "q": "You deploy a model with <code>Dropout(0.5)</code>. During inference on live traffic, are neurons still being dropped?",
+        "options": [
+            "Yes &mdash; that's what makes Dropout work",
+            "No &mdash; Dropout is automatically disabled at inference; if it weren't, the same packet could get different predictions every time",
+            "Only on Tuesdays",
+            "Only if you call .train() first",
+        ],
+        "answer": 1,
+        "explanation": "Dropout is a <strong>training-only</strong> regulariser. At inference, all neurons are active and their outputs are scaled to compensate. Keras handles this via the <code>training</code> flag automatically. If neurons were still dropped during inference, predictions would be random and inconsistent &mdash; unacceptable for a SOC alerting pipeline.",
+    },
+    {
+        "q": "Without Batch Normalisation, layer 2's input distribution shifts during training (mean=0.5 at epoch 1, mean=2.1 at epoch 10). What's the practical cost?",
+        "options": [
+            "Nothing &mdash; this is normal",
+            "<strong>Internal covariate shift</strong> &mdash; layer 2 must constantly re-adapt to a moving target, slowing convergence and forcing a lower learning rate",
+            "The model becomes too accurate",
+            "Memory usage doubles",
+        ],
+        "answer": 1,
+        "explanation": "When upstream layers change their output distribution, downstream layers chase a moving target. <strong>BatchNorm</strong> renormalises each layer's inputs to mean 0 / variance 1, fixing the distribution and allowing higher learning rates and faster, more stable training.",
+    },
+    {
+        "q": "You set <code>patience=5</code> on early stopping. Best validation loss was at epoch 25; training stopped at epoch 30. With <code>restore_best_weights=True</code>, which epoch's weights does the deployed model use?",
+        "options": [
+            "Epoch 30 (the last one)",
+            "Epoch 25 (the best one)",
+            "An average of epochs 25-30",
+            "Epoch 1",
+        ],
+        "answer": 1,
+        "explanation": "<code>restore_best_weights=True</code> rolls the model back to the epoch with the best validation metric &mdash; epoch 25 here. Without it, you'd ship the epoch 30 weights, which are <em>worse</em> than what you had 5 epochs ago. Always pair early stopping with restore_best_weights.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "A network has 134,000 parameters but only 1,600 training samples. What ratio does that give, and why is it a problem for a security ML model?",
@@ -67,6 +128,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -83,3 +146,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s3_02/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

@@ -104,30 +104,35 @@
 {% block body %}
 <div class="portal-home">
     <div class="portal-hero">
-        <div class="hero-glow"></div>
+        {# Background — soft aurora + masked dot grid #}
+        <div class="hero-bg" aria-hidden="true">
+            <div class="hero-bg-grid"></div>
+            <div class="hero-bg-aurora"></div>
+        </div>
+
         <button class="hero-reset-btn"
                 onclick="resetAllProgressFromHome(event)"
                 title="Reset progress for the entire program"
                 aria-label="Reset progress for the entire program">&#8634;</button>
-        <h1>AI Ninja Program</h1>
-        <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
-        <div class="hero-stats">
-            <div class="hero-stat">
-                <span class="hero-stat-val">21</span>
-                <span class="hero-stat-label">Lessons</span>
-            </div>
-            <div class="hero-stat-sep"></div>
-            <div class="hero-stat">
-                <span class="hero-stat-val">5</span>
-                <span class="hero-stat-label">Stages</span>
-            </div>
-            <div class="hero-stat-sep"></div>
-            <div class="hero-stat">
-                <span class="hero-stat-val">3</span>
-                <span class="hero-stat-label">Tiers</span>
-            </div>
+
+        <h1 class="hero-title">
+            AI <em class="hero-title-italic">Ninja</em> Program
+        </h1>
+
+        <div class="hero-rule" aria-hidden="true">
+            <span class="hero-rule-line"></span>
+            <span class="hero-rule-dot"></span>
+            <span class="hero-rule-line"></span>
         </div>
 
+        <p class="tagline">
+            <span class="tagline-from">Security Engineers</span>
+            <span class="tagline-arrow" aria-hidden="true">
+                <span class="tagline-arrow-line"></span>
+                <span class="tagline-arrow-head">&rsaquo;</span>
+            </span>
+            <span class="tagline-to">AI-Powered Security Experts</span>
+        </p>
     </div>
 
     {% if view == 'neuron' %}

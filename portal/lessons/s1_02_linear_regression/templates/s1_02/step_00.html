@@ -30,11 +30,12 @@
 
 <div class="card">
     <h3>Key Code Pattern</h3>
+    <p style="margin-bottom:10px;"><strong>One thing you'll see in nearly every ML script:</strong> <code>np.random.seed(42)</code>. The number 42 is arbitrary &mdash; any integer works. Setting a seed locks NumPy's random number generator so every run produces the exact same "random" data. This is called <em>reproducibility</em>: it lets a teammate re-run your code and get identical results, which is essential for debugging, peer review, and audit trails. You'll see <code>random_state=42</code> on sklearn objects later for the same reason.</p>
     <pre><code class="language-python">import numpy as np
 import pandas as pd
 
 # Generate synthetic data with a known relationship
-np.random.seed(42)
+np.random.seed(42)   # lock the random number generator so every run produces identical data
 n_samples = 500
 requests_per_second = np.random.uniform(10, 200, n_samples)
 response_time_ms = 1.8 * requests_per_second + 30 + np.random.normal(0, 15, n_samples)

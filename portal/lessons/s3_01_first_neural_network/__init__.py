@@ -139,6 +139,67 @@ STEPS = [
     {"id": 7, "title": "When to Go Deep",       "sub": "The right tool for the job",               "icon": "depth-stack"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What does a single neuron actually compute?",
+        "options": [
+            "A random number",
+            "A weighted sum of its inputs, plus a bias, passed through an activation function",
+            "The mean of its inputs",
+            "An if/else rule",
+        ],
+        "answer": 1,
+        "explanation": "A neuron is just <code>activation(w&sdot;x + b)</code> &mdash; multiply each input by a weight, add them up, add a bias, then squash through an activation. That's it. A whole network is just thousands of these stacked together.",
+    },
+    {
+        "q": "Why does <strong>ReLU</strong> sometimes 'die' during training, getting stuck outputting 0 forever?",
+        "options": [
+            "It's a bug in scikit-learn",
+            "If a neuron's weights cause it to always receive negative inputs, ReLU outputs 0, and the gradient is also 0 &mdash; so the weights never update",
+            "ReLU only works on small datasets",
+            "It happens when accuracy is too high",
+        ],
+        "answer": 1,
+        "explanation": "<strong>Dying ReLU</strong>: ReLU is <code>max(0, x)</code>. If <code>x</code> is always negative, the output is always 0 and the gradient is 0. With no gradient, the weights can't update, so the neuron stays dead permanently. Solutions: better initialisation or LeakyReLU (small slope for negatives).",
+    },
+    {
+        "q": "Your network has <strong>44,000 parameters but only 2,000 training samples</strong>. What's most likely to happen?",
+        "options": [
+            "The model will train faster",
+            "Severe overfitting &mdash; the network has way more capacity than data, so it will memorise the training set instead of learning patterns",
+            "Nothing &mdash; more parameters always help",
+            "scikit-learn will throw an error",
+        ],
+        "answer": 1,
+        "explanation": "Rule of thumb: keep parameters well <strong>below ~10x your training samples</strong>. With 22 parameters per sample, the network can essentially memorise every example. Either use a smaller architecture or get more data.",
+    },
+    {
+        "q": "During training, the loss curve sometimes <strong>goes up</strong> for a few batches. Is this a problem?",
+        "options": [
+            "Yes &mdash; training is broken, restart immediately",
+            "Not necessarily &mdash; individual batches can spike from random batch noise. The overall <em>trend</em> matters; only worry if the long-term trend is upward",
+            "Yes &mdash; lower the learning rate to 0",
+            "No &mdash; loss should always be flat",
+        ],
+        "answer": 1,
+        "explanation": "Stochastic gradient descent samples random batches, so individual updates can briefly increase loss. The downward <strong>trend</strong> over many batches is what matters. If the trend itself is upward, the learning rate is too high.",
+    },
+    {
+        "q": "Your neural network and a logistic regression baseline both have AUC ~0.92 on the same security task. Which should you ship?",
+        "options": [
+            "The neural network &mdash; it's deeper, so it must be better",
+            "The logistic regression &mdash; same performance, but simpler: faster inference, easier to explain, fewer things to break",
+            "Train a bigger network",
+            "Ship both and average them",
+        ],
+        "answer": 1,
+        "explanation": "If a simpler model matches the deeper one, <strong>ship the simpler one</strong>. It's faster, more interpretable, easier to maintain, and easier to debug when something goes wrong in production. Only reach for neural networks when they <em>clearly</em> outperform the baseline.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Set all weights to 0. What does the neuron output for any input? Why is this a problem?",
@@ -214,6 +275,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -225,6 +288,21 @@ def index():
                            steps=STEPS, lesson_id=LESSON_ID,
                            lesson_title=LESSON_TITLE,
                            url_prefix=f"/lesson/{LESSON_ID}")
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )
 
 
 @bp.route("/step/<int:n>")

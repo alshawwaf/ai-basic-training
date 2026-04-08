@@ -31,6 +31,67 @@ STEPS = [
      "icon": "chat-bubbles"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What does the <code>max_tokens</code> parameter actually control on an LLM API call?",
+        "options": [
+            "The maximum size of the input prompt",
+            "The maximum number of tokens the model is allowed to generate in its response &mdash; a hard cost and latency lever",
+            "The total tokens in the model's vocabulary",
+            "The number of API retries",
+        ],
+        "answer": 1,
+        "explanation": "<code>max_tokens</code> caps the <strong>output length</strong>. Set it too low and answers get truncated mid-sentence; set it too high and you pay for unused capacity. In a security pipeline processing thousands of alerts/hour, this is a primary <strong>cost and latency control</strong>.",
+    },
+    {
+        "q": "What is the purpose of the <strong>system prompt</strong>?",
+        "options": [
+            "It's the same as the user prompt",
+            "It sets the model's persona, role, and behavioural rules &mdash; the most powerful control you have over LLM output without retraining",
+            "It logs API errors",
+            "It chooses which model to call",
+        ],
+        "answer": 1,
+        "explanation": "The system prompt tells the model <strong>who it is and how it should respond</strong>. The same log entry will get a step-by-step technical reply for a 'junior SOC analyst' persona and a high-level risk briefing for a 'CISO' persona &mdash; same model, same input, completely different output.",
+    },
+    {
+        "q": "You ask the LLM for JSON output and feed it garbage input. What's the most dangerous thing the model is likely to do?",
+        "options": [
+            "Crash the API",
+            "Return well-formed JSON with hallucinated, plausible-looking field values &mdash; downstream automation will trust it because it parses correctly",
+            "Refuse to respond entirely",
+            "Return an explicit error",
+        ],
+        "answer": 1,
+        "explanation": "LLMs almost always return <em>something</em>, even for nonsensical input. The output may be valid JSON but contain fabricated data. <strong>Always validate field values</strong>, not just JSON structure, before passing model output to automation. Never trust raw LLM output blindly.",
+    },
+    {
+        "q": "How does an LLM API maintain a 'multi-turn conversation' if every API call is stateless?",
+        "options": [
+            "The API server stores each user's history",
+            "<strong>You</strong> send the entire conversation history with every request &mdash; the model has no memory between calls; each call is fresh",
+            "It uses cookies",
+            "It's not actually possible",
+        ],
+        "answer": 1,
+        "explanation": "LLM APIs are <strong>stateless</strong>. To create the illusion of conversation, you append the user's new message to a list of all prior messages and send the whole list every turn. This is why long conversations get expensive &mdash; you're paying for the full history on every call.",
+    },
+    {
+        "q": "Why is the conversation history itself an <strong>attack surface</strong>?",
+        "options": [
+            "It uses too much memory",
+            "If an attacker can inject text into earlier messages, they can rewrite the model's understanding of context &mdash; a form of prompt injection that bypasses input filtering on the latest message",
+            "It can be hashed to reveal secrets",
+            "It always contains personal data",
+        ],
+        "answer": 1,
+        "explanation": "If the model sees the full conversation every turn and you only filter the <em>latest</em> user message, an attacker can inject malicious instructions into earlier turns (via tool outputs, RAG context, or compromised history) and bypass your filters. <strong>Treat the entire context window as untrusted input.</strong>",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Make an API call with max_tokens=10, then the same prompt with max_tokens=500. How does the response change? What happens to the cost?",

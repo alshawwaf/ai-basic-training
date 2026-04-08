@@ -389,6 +389,88 @@ def api_pdf():
     )
 
 
+# ── Lab guide PDFs (Stage 5) ────────────────────────────────────────────────
+
+# Authoritative location for the Stage 5 lab guides. Lives outside the repo
+# so the user can iterate on the source PDFs without polluting git history.
+# Set AI_GUIDES_DIR to override (handy for other machines / CI).
+AI_GUIDES_DIR = os.environ.get(
+    "AI_GUIDES_DIR",
+    r"C:\Users\admin\Documents\AI-Guides",
+)
+
+# Whitelist of guide files we are willing to serve. Keys are the URL slugs
+# the lesson templates request; values are (filename_on_disk, display_label).
+# Adding a new PDF means adding one entry here — no path strings in URLs,
+# no traversal surface.
+PDF_GUIDES = {
+    "cp-create-your-agents": (
+        "CheckPoint-Create-Your-Agents.pdf",
+        "Check Point — Create Your Agents",
+    ),
+    "cp-quantum-management-mcp": (
+        "CheckPoint-Quantum-Management-MCP-Guide.pdf",
+        "Check Point — Quantum Management MCP",
+    ),
+    "cp-reputation-service-mcp": (
+        "CheckPoint-Reputation-Service-MCP-Guide.pdf",
+        "Check Point — Reputation Service MCP",
+    ),
+    "lakera-playground": (
+        "Lakera-Playground-Guide-lightmode.pdf",
+        "Lakera Playground Guide",
+    ),
+}
+
+
+@app.route("/api/pdf-guide/<slug>")
+def api_pdf_guide(slug):
+    """Serve a whitelisted lab guide PDF from AI_GUIDES_DIR.
+
+    Defaults to inline so the browser's PDF viewer opens it in a new tab.
+    Pass ?download=1 to force a download instead.
+    """
+    entry = PDF_GUIDES.get(slug)
+    if not entry:
+        abort(404, "Unknown guide")
+    filename, display = entry
+
+    full = os.path.join(AI_GUIDES_DIR, filename)
+    if not os.path.isfile(full):
+        return jsonify({
+            "error": f"Guide not found on disk: {filename}",
+            "expected_path": full,
+            "hint": "Set AI_GUIDES_DIR to point at the folder containing this PDF.",
+        }), 404
+
+    as_attachment = request.args.get("download") == "1"
+    return send_from_directory(
+        AI_GUIDES_DIR, filename,
+        mimetype="application/pdf",
+        as_attachment=as_attachment,
+        download_name=filename,
+    )
+
+
+@app.route("/api/pdf-guides")
+def api_pdf_guides():
+    """List the registered PDF guides + which files are present on disk.
+
+    Used by the admin console (and handy for debugging from the browser
+    bar). Doesn't expose the absolute path of the guides directory.
+    """
+    out = []
+    for slug, (filename, display) in PDF_GUIDES.items():
+        on_disk = os.path.isfile(os.path.join(AI_GUIDES_DIR, filename))
+        out.append({
+            "slug": slug,
+            "filename": filename,
+            "display": display,
+            "available": on_disk,
+        })
+    return jsonify({"guides": out})
+
+
 # ── Script execution API ─────────────────────────────────────────────────────
 
 @app.route("/api/run", methods=["POST"])

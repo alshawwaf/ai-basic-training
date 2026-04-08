@@ -2,15 +2,15 @@
 {% block content %}
 <div class="card">
     <h3>The If/Else Tree</h3>
-    <p>A decision tree is a flowchart of yes/no questions. Each node asks about one feature; each branch is an answer; each leaf is a prediction.</p>
-    <pre><code>Is connection_rate > 50?
-├── YES → Is unique_dest_ports > 20?
-│          ├── YES → port_scan
-│          └── NO  → Is bytes_sent > 100000?
-│                     ├── YES → exfiltration
-│                     └── NO  → benign
-└── NO  → benign</code></pre>
-    <p>The model learns <em>which</em> questions to ask and <em>which</em> thresholds to use by finding splits that best separate the classes.</p>
+    <p>A decision tree is a flowchart of yes/no questions. Each node asks about one <span class="tree-question">feature</span>; each branch is a <span class="tree-yes">YES</span> or <span class="tree-no">NO</span> answer; each leaf is a <span class="tree-leaf-safe">prediction</span>.</p>
+<div class="decision-tree"><span class="tree-question">Is connection_rate &gt; 50?</span>
+<span class="tree-connector">├──</span> <span class="tree-yes">YES</span> <span class="tree-arrow">→</span> <span class="tree-question">Is unique_dest_ports &gt; 20?</span>
+<span class="tree-connector">│          ├──</span> <span class="tree-yes">YES</span> <span class="tree-arrow">→</span> <span class="tree-leaf-warn">port_scan</span>
+<span class="tree-connector">│          └──</span> <span class="tree-no">NO </span> <span class="tree-arrow">→</span> <span class="tree-question">Is bytes_sent &gt; 100000?</span>
+<span class="tree-connector">│                     ├──</span> <span class="tree-yes">YES</span> <span class="tree-arrow">→</span> <span class="tree-leaf-danger">exfiltration</span>
+<span class="tree-connector">│                     └──</span> <span class="tree-no">NO </span> <span class="tree-arrow">→</span> <span class="tree-leaf-safe">benign</span>
+<span class="tree-connector">└──</span> <span class="tree-no">NO </span> <span class="tree-arrow">→</span> <span class="tree-leaf-safe">benign</span></div>
+    <p>The model learns <em>which</em> questions to ask and <em>which</em> thresholds to use by finding splits that best separate the classes. Each <span style="color:var(--cyan); font-weight:700;">cyan question</span> is a learned (feature, threshold) pair; each coloured leaf is a final prediction.</p>
 </div>
 
 <div class="card">
@@ -30,15 +30,19 @@
 
 <div class="card">
     <h3>Key Code Pattern</h3>
+    <p style="margin-bottom:10px;">Two parameters in the snippet below are worth flagging now so you don't get hung up on them: <code>max_depth=4</code> caps how many yes/no questions the tree can ask in a row &mdash; we'll explore <em>why</em> this matters in <strong>Step 3: Depth and Overfitting</strong>. <code>random_state=42</code> and <code>np.random.seed(42)</code> are reproducibility seeds (covered in Lesson 1.2): they lock the randomness so every run produces identical results. The number 42 itself is arbitrary.</p>
     <pre><code class="language-python">from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 
 # Synthetic network traffic dataset
-np.random.seed(42)
+np.random.seed(42)                # reproducible random data (see Lesson 1.2)
 # Features: connection_rate, bytes_sent, unique_dest_ports, ...
 # Labels: 'benign', 'port_scan', 'exfiltration'
 
-model = DecisionTreeClassifier(max_depth=4, random_state=42)
+model = DecisionTreeClassifier(
+    max_depth=4,                  # limit tree depth — explained in Step 3
+    random_state=42,              # reproducible training
+)
 model.fit(X_train, y_train)
 
 # Classify a new connection

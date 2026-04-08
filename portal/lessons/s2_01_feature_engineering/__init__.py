@@ -219,6 +219,67 @@ STEPS = [
     {"id": 7, "title": "The Full Pipeline",      "sub": "Raw log → ML-ready features",             "icon": "pipeline-flow"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "A SOC analyst says <em>'just dump the firewall logs into the model.'</em> Why is this a bad idea?",
+        "options": [
+            "Models work fine with raw logs &mdash; the analyst is right",
+            "Models can't read IP addresses, protocol names, timestamps, or duration strings &mdash; you must engineer numeric features that encode security knowledge",
+            "Logs are too small for ML",
+            "It would violate compliance",
+        ],
+        "answer": 1,
+        "explanation": "Models only understand numbers. Strings like <code>'TCP'</code>, <code>'2.34s'</code>, or <code>'192.168.1.5'</code> need to be parsed, encoded, or transformed into numeric features. <strong>Feature engineering is where the real intelligence lives</strong> &mdash; it's how you teach the model what 'suspicious' looks like.",
+    },
+    {
+        "q": "In a firewall log dataset where you're predicting <code>action = ALLOW/BLOCK</code>, which column should you <strong>never</strong> use as a feature?",
+        "options": [
+            "bytes_sent",
+            "dst_port",
+            "action (the label itself)",
+            "duration",
+        ],
+        "answer": 2,
+        "explanation": "Using the label as a feature is called <strong>data leakage</strong> &mdash; the model gets the answer as input and gets 100% accuracy in training, then fails completely in production where the label is unknown. Always remove the target column from your feature set.",
+    },
+    {
+        "q": "Two connections both transferred 50,000 bytes. Connection A took 0.5 seconds, Connection B took 50 seconds. The raw <code>bytes_sent</code> is identical &mdash; what feature would expose the suspicious one?",
+        "options": [
+            "bytes_recv",
+            "bytes_per_second (a derived feature)",
+            "dst_ip",
+            "protocol",
+        ],
+        "answer": 1,
+        "explanation": "Connection A is moving 100,000 B/s &mdash; possibly <strong>data exfiltration</strong>. Connection B is just 1,000 B/s &mdash; normal browsing. The raw byte count can't tell them apart, but the <em>derived feature</em> <code>bytes_per_second</code> immediately exposes the difference. This is why feature engineering matters.",
+    },
+    {
+        "q": "You label-encode protocols as <code>ICMP=0, TCP=1, UDP=2</code>. What hidden problem does this create for a linear model?",
+        "options": [
+            "Nothing &mdash; it's a clean encoding",
+            "It implies UDP is 'twice' TCP and 'between' ICMP and UDP &mdash; a meaningless ordering for nominal categories",
+            "It uses too much memory",
+            "It only works for two classes",
+        ],
+        "answer": 1,
+        "explanation": "A linear model multiplies features by weights, so it interprets <code>2</code> (UDP) as twice <code>1</code> (TCP). For nominal categories there is <strong>no real ordering</strong>. Use <strong>one-hot encoding</strong> instead, which gives each category its own independent column.",
+    },
+    {
+        "q": "Your dataset has one extreme outlier: a single connection with bytes_per_second = 10,000,000 while everything else is under 5,000. What happens if you scale with <code>MinMaxScaler</code>?",
+        "options": [
+            "MinMax handles outliers gracefully",
+            "The outlier becomes 1.0 and all normal traffic gets compressed into 0.000&ndash;0.0005 &mdash; the model can barely distinguish normal points",
+            "MinMax will throw an error",
+            "The outlier is automatically removed",
+        ],
+        "answer": 1,
+        "explanation": "MinMax maps min&rarr;0 and max&rarr;1 linearly. One huge outlier crushes the entire normal range to near-zero. <strong>StandardScaler</strong> (z-scores) handles this much better &mdash; the outlier gets a high z-score, but normal data stays spread around 0.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Look at the 'duration_str' column. What would happen if you passed '2.34s' to a multiplication operation?",
@@ -296,10 +357,27 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
 # ── Routes ────────────────────────────────────────────────────────────────
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )
+
 
 @bp.route("/")
 def index():

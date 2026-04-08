@@ -15,11 +15,12 @@ Create a new file called `02_train_and_read_the_tree.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+# DecisionTreeClassifier = the algorithm; export_text = ASCII rules; plot_tree = visual diagram
 from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split    # holdout-set helper
 ```
 
 ---
@@ -74,9 +75,10 @@ def make_traffic():
 df = make_traffic()
 FEATURES    = ['connection_rate', 'bytes_sent', 'bytes_received',
                'unique_dest_ports', 'duration_seconds', 'failed_connections']
-CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']
-X = df[FEATURES]
-y = df['label']
+CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']                    # 4 attack types
+X = df[FEATURES]                              # 6-column feature matrix
+y = df['label']                                # 0..3 class labels
+# stratify=y keeps each class at 25% in both train and test
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -94,10 +96,11 @@ Add this to your file:
 print("=" * 60)
 print("TASK 1 — Train the decision tree")
 print("=" * 60)
+# max_depth=4 limits the tree to 4 levels — keeps it readable AND prevents overfitting
 model = DecisionTreeClassifier(max_depth=4, random_state=42)
-model.fit(X_train, y_train)
-train_acc = model.score(X_train, y_train)
-test_acc  = model.score(X_test,  y_test)
+model.fit(X_train, y_train)                  # learns the splits that maximise information gain
+train_acc = model.score(X_train, y_train)    # how well it fits the training data
+test_acc  = model.score(X_test,  y_test)     # how well it generalises (the honest number)
 print(f"Training accuracy: {train_acc:.3f}")
 print(f"Test accuracy:     {test_acc:.3f}")
 ```
@@ -120,13 +123,14 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 2 — Tree rules (first 40 lines)")
 print("=" * 60)
+# export_text turns the trained tree into human-readable if/else rules
 rules = export_text(model, feature_names=FEATURES)
 lines = rules.split('\n')
-for line in lines[:40]:
+for line in lines[:40]:                       # first 40 lines = enough to see the top of the tree
     print(line)
-# The root is the first line that contains '<='
+# The root is the first line that contains '<=' (i.e. the very first split)
 root_line = [l for l in lines if '<=' in l][0].strip()
-print(f"\nRoot split: {root_line}")
+print(f"\nRoot split: {root_line}")           # the most important question the tree asks
 ```
 
 Run your file. You should see:
@@ -150,12 +154,12 @@ print("\n" + "=" * 60)
 print("TASK 3 — Tree visualisation")
 print("=" * 60)
 print("Tree visualisation created.")
-plt.figure(figsize=(20, 10))
+plt.figure(figsize=(20, 10))                  # large canvas — trees get wide fast
 plot_tree(model,
-          feature_names=FEATURES,
-          class_names=CLASS_NAMES,
-          filled=True,
-          rounded=True,
+          feature_names=FEATURES,             # show real column names instead of "X[3]"
+          class_names=CLASS_NAMES,            # show "DoS" instead of "3"
+          filled=True,                        # colour boxes by predicted class
+          rounded=True,                       # rounded corners — easier to read
           fontsize=10)
 plt.title("Decision Tree: Network Traffic Classifier (max_depth=4)")
 plt.tight_layout()
@@ -176,11 +180,12 @@ Add this to your file:
 print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Trace a sample through the tree")
 print("=" * 60)
+# .iloc[[0]] (double brackets) keeps the result as a 1-row DataFrame, which sklearn expects
 sample = X_test.iloc[[0]]
 print("Sample features:")
 print(sample.to_string())
-pred_class = model.predict(sample)[0]
-pred_proba = model.predict_proba(sample)[0]
+pred_class = model.predict(sample)[0]                  # single class label
+pred_proba = model.predict_proba(sample)[0]            # vector of class probabilities
 print(f"\nPredicted class: {CLASS_NAMES[pred_class]} ({pred_class})")
 print("Class probabilities:")
 for name, p in zip(CLASS_NAMES, pred_proba):

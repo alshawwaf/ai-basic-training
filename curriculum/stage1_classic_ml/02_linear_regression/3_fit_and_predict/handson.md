@@ -15,13 +15,13 @@ Create a new file called `03_fit_and_predict.py` in this folder.
 Add these imports to the top of your file:
 
 ```python
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+import numpy as np                          # NumPy: array math
+import pandas as pd                         # pandas: tabular data
+import matplotlib.pyplot as plt             # matplotlib: plotting
+from sklearn.linear_model import LinearRegression       # the linear regression algorithm
+from sklearn.model_selection import train_test_split    # holdout-set helper
 
-np.random.seed(42)
+np.random.seed(42)                           # fix the RNG for reproducibility
 n = 500
 requests_per_second = np.random.uniform(5, 200, n)
 response_time_ms = 1.8 * requests_per_second + 30 + np.random.normal(0, 15, n)
@@ -29,10 +29,10 @@ df = pd.DataFrame({
     "requests_per_second": requests_per_second,
     "response_time_ms": response_time_ms
 })
-X = df[["requests_per_second"]]
-y = df["response_time_ms"]
+X = df[["requests_per_second"]]              # feature matrix (2D)
+y = df["response_time_ms"]                   # label vector (1D)
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y, test_size=0.2, random_state=42     # 80% train, 20% test, deterministic split
 )
 ```
 
@@ -47,10 +47,10 @@ print("=" * 60)
 print("TASK 1 — Fit the model, inspect slope and intercept")
 print("=" * 60)
 
-model = LinearRegression()
-model.fit(X_train, y_train)
-slope     = model.coef_[0]
-intercept = model.intercept_
+model = LinearRegression()                   # empty model — no parameters yet
+model.fit(X_train, y_train)                  # learn slope + intercept from training data
+slope     = model.coef_[0]                   # .coef_ holds one slope per feature; we have 1 feature
+intercept = model.intercept_                 # the y-value when x = 0 (baseline)
 print(f"Slope (coef):  {slope:.2f} ms per request/second")
 print(f"Intercept:     {intercept:.2f} ms (baseline overhead)")
 ```
@@ -72,11 +72,11 @@ print("\n" + "=" * 60)
 print("TASK 2 — Predictions vs actuals (first 5 rows)")
 print("=" * 60)
 
-y_pred = model.predict(X_test)
+y_pred = model.predict(X_test)               # apply slope*x + intercept to every test row
 results = pd.DataFrame({
-    'actual':    y_test.values,
-    'predicted': y_pred,
-    'residual':  y_test.values - y_pred
+    'actual':    y_test.values,              # ground truth (what really happened)
+    'predicted': y_pred,                     # what the model said
+    'residual':  y_test.values - y_pred      # error per row — should be small + balanced
 })
 print(results.head().round(1).to_string(index=False))
 ```
@@ -94,8 +94,9 @@ print("\n" + "=" * 60)
 print("TASK 3 — Predictions at specific load values")
 print("=" * 60)
 
+# sklearn always wants 2D input for X — even one prediction needs shape (n_samples, n_features)
 load_values = np.array([[50], [100], [150]])
-predictions = model.predict(load_values)
+predictions = model.predict(load_values)     # one ms estimate per load value
 for rps, ms in zip([50, 100, 150], predictions):
     print(f"At {rps:3d} rps: predicted response time = {ms:.1f} ms")
 ```
@@ -118,16 +119,17 @@ print("\n" + "=" * 60)
 print("TASK 4 (BONUS) — Regression line visualisation")
 print("=" * 60)
 
+# 200 evenly-spaced x-values across the data range, reshaped to 2D for predict()
 x_line = np.linspace(X.min().values[0], X.max().values[0], 200).reshape(-1, 1)
-y_line = model.predict(x_line)
+y_line = model.predict(x_line)               # the straight line the model learned
 
 plt.figure(figsize=(8, 5))
-plt.scatter(X_test, y_test, alpha=0.4, label="Actual (test set)")
-plt.plot(x_line, y_line, color="red", linewidth=2, label="Model prediction")
+plt.scatter(X_test, y_test, alpha=0.4, label="Actual (test set)")        # the real points
+plt.plot(x_line, y_line, color="red", linewidth=2, label="Model prediction")  # the line
 plt.xlabel("Requests per Second")
 plt.ylabel("Response Time (ms)")
 plt.title("Server Load vs Response Time — Regression Line")
-plt.legend()
+plt.legend()                                  # show which colour means what
 plt.tight_layout()
 plt.show()
 ```

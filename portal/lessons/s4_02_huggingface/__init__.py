@@ -28,6 +28,67 @@ STEPS = [
      "icon": "semantic-search"},
 ]
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What's the killer feature of <strong>zero-shot classification</strong> for security teams?",
+        "options": [
+            "It's faster than supervised learning",
+            "You can classify text against any set of labels you invent &mdash; without training a model or labelling a single example",
+            "It always achieves 100% accuracy",
+            "It runs on the CPU",
+        ],
+        "answer": 1,
+        "explanation": "Zero-shot classification uses a pre-trained NLI model that already understands semantic similarity. You give it text and a list of candidate labels (e.g. 'phishing', 'C2 traffic', 'normal'), and it picks the best fit. <strong>No training data needed</strong> &mdash; perfect for new threat categories where you have zero labels.",
+    },
+    {
+        "q": "What does a <strong>sentence embedding</strong> capture about a sentence?",
+        "options": [
+            "Its spelling and punctuation",
+            "Its semantic meaning compressed into a fixed-length vector, so semantically similar sentences have similar vectors",
+            "The length of the sentence",
+            "Its language",
+        ],
+        "answer": 1,
+        "explanation": "A sentence embedding turns 'User logged in from VPN' and 'Employee accessed system remotely via VPN' into similar vectors despite using different words. This is the foundation of semantic search &mdash; <strong>matching by meaning rather than keywords</strong>.",
+    },
+    {
+        "q": "Why does semantic search beat traditional keyword search for a SOC knowledge base?",
+        "options": [
+            "Semantic search uses fewer servers",
+            "It matches paraphrases and synonyms; a query for 'how to detect credential dumping' will surface chunks about Mimikatz and LSASS even if those exact words aren't in the query",
+            "Keyword search is illegal",
+            "Semantic search runs on the GPU only",
+        ],
+        "answer": 1,
+        "explanation": "Keyword search misses paraphrases. Semantic search converts both query and documents to vectors, then matches by meaning &mdash; a SOC analyst typing 'lateral movement detection' will find chunks about pass-the-hash, RDP brute-force, and SMB enumeration even if none use the words 'lateral movement'.",
+    },
+    {
+        "q": "An attacker who knows your zero-shot labels could use that knowledge to evade detection. How?",
+        "options": [
+            "By guessing the model's password",
+            "By crafting log entries phrased to push classification toward 'normal activity' or away from threat labels &mdash; an adversarial NLI evasion",
+            "By overloading the API",
+            "By renaming files",
+        ],
+        "answer": 1,
+        "explanation": "<strong>Label design controls model output</strong>. If your candidate labels are public, an attacker can phrase malicious activity in language that your NLI classifier scores as 'normal'. Defense: keep label sets internal, add ensemble checks, and combine with other detection layers.",
+    },
+    {
+        "q": "Cosine similarity between 'User logged in from VPN' and 'Employee accessed system remotely via VPN' is around <strong>0.85</strong>. What does this number mean?",
+        "options": [
+            "85% accuracy",
+            "Vectors point in nearly the same direction in embedding space &mdash; the sentences mean roughly the same thing",
+            "85 of 100 words match",
+            "The first sentence is 85% as long",
+        ],
+        "answer": 1,
+        "explanation": "<strong>Cosine similarity</strong> measures the angle between two vectors. 1.0 means they point the same way (same meaning), 0 means perpendicular (unrelated), -1 means opposite. ~0.85 between two paraphrases is exactly what you want from a good embedding model.",
+    },
+]
+
+
 CHALLENGES = {
     0: {
         "q": "Classify 'DNS query to known C2 domain at 3 AM from accounting workstation' using candidate labels: data exfiltration, lateral movement, C2 communication, normal activity. Which label wins? Now add 'scheduled backup' as a fifth label -- does the ranking change?",
@@ -71,6 +132,8 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
@@ -89,3 +152,18 @@ def step(n):
     if n < 0 or n >= len(STEPS):
         return "Step not found", 404
     return render_template(f"s4_02/step_{n:02d}.html", **base_ctx(n))
+
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )

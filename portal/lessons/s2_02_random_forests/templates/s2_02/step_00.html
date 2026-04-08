@@ -35,6 +35,8 @@
 from sklearn.model_selection import train_test_split
 
 # Train a single tree with no depth limit
+# max_depth=None lets the tree grow until every leaf is pure (the overfitting trap from Lesson 1.4 Step 3)
+# random_state=42 makes the run reproducible (see Lesson 1.2)
 tree = DecisionTreeClassifier(max_depth=None, random_state=42)
 tree.fit(X_train, y_train)
 

@@ -42,7 +42,7 @@
     <pre><code class="language-python">from tensorflow import keras
 import numpy as np
 
-np.random.seed(42)
+np.random.seed(42)   # seeds the initial random weights — see "Why reproducibility matters" card below
 
 model = keras.Sequential([
     keras.layers.Dense(64, activation='relu', input_shape=(10,)),
@@ -67,13 +67,14 @@ print(f"Weight change   - mean shift: {(w_after - w_before).mean():.4f}")</code>
 <div class="card">
     <h3>Why reproducibility matters</h3>
     <p>Random seeds control the initial parameter values. Hyperparameters must be recorded for reproducibility:</p>
+    <p><strong>Why two seeds?</strong> NumPy and TensorFlow have <em>independent</em> random number generators. Keras uses both: NumPy for things like train/test shuffling, TensorFlow for weight initialisation and dropout masks. You must seed each one separately to get a fully reproducible run.</p>
 
     <pre><code class="language-python">import numpy as np
 import tensorflow as tf
 
 # Set seeds for reproducible results
-np.random.seed(42)
-tf.random.set_seed(42)
+np.random.seed(42)        # seeds NumPy's RNG (used by sklearn, data shuffling, etc.)
+tf.random.set_seed(42)    # seeds TensorFlow's RNG (used by weight init, dropout)
 
 # Document your hyperparameters
 config = {

@@ -40,6 +40,9 @@ print(f"Lower   (0.3): {(probs >= 0.3).sum()} flagged")</code></pre>
     </table>
     <pre><code class="language-python">from sklearn.metrics import precision_recall_curve
 
+# precision_recall_curve sweeps every threshold from 0 to 1 and reports
+# the precision and recall you'd get at each one — perfect for finding
+# the trade-off point that matches your operational priorities.
 precisions, recalls, thresholds = precision_recall_curve(y_test, probs)
 
 # Find threshold that maximises F1

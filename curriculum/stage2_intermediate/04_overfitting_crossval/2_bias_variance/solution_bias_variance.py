@@ -41,8 +41,12 @@ df = pd.concat([benign, attack], ignore_index=True).sample(frac=1, random_state=
 
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
-X = df[FEATURES]
-y = df['label']
+X = df[FEATURES].astype(float).values
+y = df['label'].values
+
+# Inject Gaussian noise so the bias/variance regimes are actually visible.
+rng = np.random.default_rng(13)
+X = X + rng.normal(0, X.std(axis=0) * 1.5, X.shape)
 
 X_temp, X_test, y_temp, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y)

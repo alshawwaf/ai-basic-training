@@ -40,8 +40,12 @@ df = pd.concat([benign, attack], ignore_index=True).sample(frac=1, random_state=
 
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
-X = df[FEATURES]
-y = df['label']
+X = df[FEATURES].astype(float).values
+y = df['label'].values
+
+# Inject Gaussian noise so cross-validation has something interesting to measure.
+rng = np.random.default_rng(13)
+X = X + rng.normal(0, X.std(axis=0) * 1.5, X.shape)
 
 X_train_all, X_test, y_train_all, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y)
@@ -143,7 +147,7 @@ print(f"Overall attack rate: {y_train_all.mean():.3f}")
 print(f"\nFold | Attack rate")
 print("-" * 22)
 for i, (train_idx, val_idx) in enumerate(skf.split(X_train_all, y_train_all)):
-    fold_rate = y_train_all.iloc[val_idx].mean()
+    fold_rate = y_train_all[val_idx].mean()
     print(f"   {i + 1} | {fold_rate:.3f}")
 
 print("\n--- Exercise 3 complete. Move to ../4_validation_curve/solution.py ---")

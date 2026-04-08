@@ -21,6 +21,11 @@ When tuning hyperparameters (like tree depth), you cannot use the test set — t
 
 This three-way split ensures the test set truly measures generalisation to unseen data.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cv_three_way_split.png" alt="Horizontal stacked bar chart split into three coloured segments. Cyan train segment 1200 samples labelled 'fit the model'; orange validation segment 400 samples labelled 'tune hyperparameters'; red test segment 400 samples labelled 'final evaluation only'. Title: Three-way split: train / validation / test.">
+  <div class="vis-caption">Each slice has exactly one job. The test set is sealed in an envelope until the very end — touch it during tuning and you no longer know how the model will behave on new data.</div>
+</div>
+
 > **Want to go deeper?** [Overfitting (Wikipedia)](https://en.wikipedia.org/wiki/Overfitting)
 
 ---
@@ -28,21 +33,13 @@ This three-way split ensures the test set truly measures generalisation to unsee
 ## Concept: Reading the Divergence
 
 The diagnostic plot shows:
-- Training accuracy (solid blue): rises monotonically with depth
-- Validation accuracy (dashed red): rises to a peak, then plateaus or drops
+- Training accuracy (solid cyan): rises monotonically with depth
+- Validation accuracy (red): rises to a peak, then plateaus or drops
 
-```
-Accuracy vs max_depth (conceptual shape):
-
-  Training accuracy:   starts ~0.65 at depth=1, rises quickly, reaches 1.00 by depth ~7,
-                       stays at 1.00 for all deeper trees.
-
-  Validation accuracy: starts ~0.65 at depth=1, rises to a peak ~0.97 at depth=5
-                       (sweet spot), then gradually drops to ~0.94 by depth=20.
-
-  The growing gap between the two curves = overfitting.
-  Sweet spot: depth=5 (validation accuracy highest, gap still small).
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cv_overfit_curve.png" alt="Line chart of accuracy versus max_depth from 1 to 20. The cyan training-accuracy line rises from 0.73 at depth 1 to 1.0 by depth 12 and stays flat. The red validation-accuracy line rises to a peak around 0.84 at depth 6 and stays roughly flat afterwards. A green dashed vertical line marks the sweet spot at depth 6. An orange double-headed arrow at depth 20 labels the train-val gap as 0.18.">
+  <div class="vis-caption">Real lab numbers from <code>solution_overfitting_demo.py</code>. Train climbs to 1.000 by depth 12, validation peaks at depth 6 and never recovers. The widening gap on the right is overfitting in plain sight.</div>
+</div>
 
 The **overfitting point** is where the gap between training and validation becomes "too large" — typically where validation accuracy starts to decline or plateau while training continues to rise.
 
@@ -68,18 +65,19 @@ Print the train-val gap at depths 1, 5 (sweet spot), 10, and 20. Show how the ga
 
 ```
 TASK 1 — Three-way split:
-Train size:      2400 (60%)
-Validation size:  800 (20%)
-Test size:        800 (20%)
+Train size:      1200 (60%)
+Validation size:  400 (20%)
+Test size:        400 (20%)
 
 TASK 2 — Depth sweep:
 Depth | Train Acc | Val Acc | Gap
-    1 |   0.652   |  0.648  | 0.004
-    5 |   0.990   |  0.969  | 0.021  ← best val
-   10 |   1.000   |  0.958  | 0.042
-   20 |   1.000   |  0.941  | 0.059
+    1 |   0.728   |  0.743  | -0.015
+    5 |   0.897   |  0.825  |  0.072
+    6 |   0.917   |  0.845  |  0.072  ← best val
+   10 |   0.991   |  0.820  |  0.171
+   20 |   1.000   |  0.818  |  0.182
 
-TASK 3 — Overfitting point: depth=5
+TASK 3 — Overfitting point: depth=6
 ```
 
 ---

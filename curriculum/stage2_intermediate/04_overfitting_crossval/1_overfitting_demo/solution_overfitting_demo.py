@@ -40,8 +40,14 @@ df = pd.concat([benign, attack], ignore_index=True).sample(frac=1, random_state=
 
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
-X = df[FEATURES]
-y = df['label']
+X = df[FEATURES].astype(float).values
+y = df['label'].values
+
+# Add per-feature Gaussian noise so the two classes overlap. Without this
+# the synthetic distributions are too clean — depth=1 already scores 99.8 %
+# and there is no overfitting story to teach.
+rng = np.random.default_rng(13)
+X = X + rng.normal(0, X.std(axis=0) * 1.5, X.shape)
 
 # ============================================================
 # TASK 1 — Three-way split

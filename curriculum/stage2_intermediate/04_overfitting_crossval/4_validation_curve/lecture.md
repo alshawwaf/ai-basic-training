@@ -35,6 +35,11 @@ train_scores, val_scores = validation_curve(
 
 The result shapes are both `(n_param_values, n_cv_folds)`. Take `.mean(axis=1)` and `.std(axis=1)` for summary statistics.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cv_validation_curve.png" alt="Line chart of accuracy versus max_depth from 1 to 20 produced by validation_curve with 5-fold CV. Cyan train line with shaded ±1 std band rises from about 0.73 to 1.0 by depth 12. Red validation line with shaded ±1 std band rises to a peak of 0.83 around depth 8 and stays flat. A green dashed vertical line marks the best depth at 8.">
+  <div class="vis-caption">Real lab <code>validation_curve()</code> output. Train converges to 1.000; validation peaks at depth 8 and never recovers. The shaded bands are the ±1σ across the 5 CV folds — narrow band = trustworthy estimate.</div>
+</div>
+
 > **Want to go deeper?** [Cross-validation (Wikipedia)](https://en.wikipedia.org/wiki/Cross-validation_(statistics))
 
 ---
@@ -57,6 +62,11 @@ As `max_depth` increases, train and validation scores tell different stories:
 
 The gap between train and val score at any point shows how much the model is overfitting. A large gap means the model learned noise that does not generalise.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cv_three_regions.png" alt="The same train and validation curves as above, with the background shaded into three regions. Red shading on the left labelled UNDERFIT (high bias) covers depths 1-2. Green shading in the middle labelled SWEET SPOT covers depths 3-9. Orange shading on the right labelled OVERFIT (high variance) covers depths 10-20.">
+  <div class="vis-caption">Same curves with the three regions made explicit. The left red zone is bias-limited; the middle green zone is the sweet spot; the right orange zone is where the tree starts memorising noise.</div>
+</div>
+
 ---
 
 ## Concept: std Bands Tell You About Stability
@@ -78,6 +88,11 @@ RandomForests are resistant to this because averaging many trees cancels out ind
 - Score improving at small n_estimators values
 - Score plateauing — adding more trees stops helping after a point
 - Score never dropping significantly
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cv_rf_validation_curve.png" alt="Line chart of accuracy versus n_estimators from 5 to 300 for a RandomForestClassifier. Cyan train line near 1.0 throughout. Red validation line climbs from about 0.86 at n=5 to 0.88 by n=50 and stays flat through n=300. A green dotted horizontal line marks the plateau value.">
+  <div class="vis-caption">Real lab Random Forest sweep on the same training data. Validation climbs to a plateau and never drops — RFs essentially trade tuning effort for compute.</div>
+</div>
 
 This is why Random Forests are often described as "easier to tune" than single trees.
 

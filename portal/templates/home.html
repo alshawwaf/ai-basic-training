@@ -1,6 +1,6 @@
 {% extends "portal_base.html" %}
 {% block title %}AI Ninja Program — Training Portal{% endblock %}
-{% from "icons.html" import brand_logo, stage_icon_s1, stage_icon_s2, stage_icon_s3, stage_icon_s4, stage_icon_s5 %}
+{% from "icons.html" import brand_logo, stage_icon_s1, stage_icon_s2, stage_icon_s3, stage_icon_s4, stage_icon_s5, lesson_icon %}
 
 {% macro fmt_time(mins) %}{% if mins >= 60 %}~{{ (mins / 60) | round(1) }} hrs{% else %}~{{ mins }} min{% endif %}{% endmacro %}
 
@@ -33,6 +33,9 @@
                 <div class="title">{{ lesson.title }}</div>
                 <div class="desc">{{ lesson.desc }}</div>
             </div>
+            {% if lesson.icon %}
+            <div class="lesson-card-icon {{ stage.id }}">{{ lesson_icon(lesson.icon, 30) }}</div>
+            {% endif %}
             {% if lesson.id in registered %}
             <span class="lesson-badge" id="badge-{{ lesson.id }}"></span>
             {% else %}

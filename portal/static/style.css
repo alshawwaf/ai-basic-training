@@ -3783,10 +3783,34 @@ select option:hover {
 [data-theme="dark"] .lesson-card.active .lesson-num.s4 { box-shadow: 0 0 12px rgba(244,63,94,0.45); }
 [data-theme="dark"] .lesson-card.active .lesson-num.s5 { box-shadow: 0 0 12px rgba(34,211,160,0.45); }
 
+.lesson-card .lesson-info { flex: 1 1 auto; min-width: 0; }
 .lesson-card .lesson-info .title { font-weight: 600; font-size: 14px; color: var(--text); }
 .lesson-card .lesson-info .desc { font-size: 12px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
-.lesson-card .lesson-badge { margin-left: auto; font-size: 11px; color: var(--green); font-weight: 600; white-space: nowrap; }
-.lesson-lock { margin-left: auto; font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+.lesson-card .lesson-badge { font-size: 11px; color: var(--green); font-weight: 600; white-space: nowrap; }
+.lesson-lock { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+/* ── Lesson card right-side icon ─────────────────────────────────────────
+   Each lesson card on the home page renders a small literal icon (regression
+   line, sigmoid, decision tree, …) tinted with the stage colour. Icons fade
+   on gated cards so the "Soon" label still reads as the dominant signal. */
+.lesson-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    color: var(--text-dim);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.lesson-card-icon svg { display: block; width: 100%; height: 100%; }
+.lesson-card.active.s1 .lesson-card-icon { color: var(--violet); }
+.lesson-card.active.s2 .lesson-card-icon { color: var(--accent); }
+.lesson-card.active.s3 .lesson-card-icon { color: var(--orange); }
+.lesson-card.active.s4 .lesson-card-icon { color: var(--red); }
+.lesson-card.active.s5 .lesson-card-icon { color: var(--green); }
+.lesson-card.gated .lesson-card-icon  { opacity: 0.55; }
+.lesson-card.active:hover .lesson-card-icon { transform: scale(1.12); }
 
 /* ── Stage detail page ─────────────────────────────────────────────────── */
 .stage-detail {

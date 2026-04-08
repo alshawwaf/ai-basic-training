@@ -1612,6 +1612,342 @@
 {% endmacro %}
 
 
+{# ── Home page lesson icons ─────────────────────────────────────────────
+   One small (~28px) icon per lesson, used as a right-aligned glyph on the
+   home page lesson cards. Same "literal depiction" rule as step_icon: each
+   icon draws the actual concept (regression line, sigmoid curve, decision
+   tree, k-fold strips, perceptron, attention arrows, shield, etc.) in
+   currentColor so the parent CSS picks the stage hue.
+   Usage: {{ lesson_icon("lesson-linreg") }} #}
+{% macro lesson_icon(name, size=28) %}
+{% if name == "lesson-what-is-ml" %}
+{# 3x3 pixel grid — the digits dataset that lesson 1.1 explores #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <rect x="10" y="10" width="13" height="13" opacity="0.45"/>
+    <rect x="25" y="10" width="13" height="13" opacity="0.95"/>
+    <rect x="40" y="10" width="13" height="13" opacity="0.65"/>
+    <rect x="10" y="25" width="13" height="13" opacity="0.75"/>
+    <rect x="25" y="25" width="13" height="13" opacity="0.30"/>
+    <rect x="40" y="25" width="13" height="13" opacity="0.90"/>
+    <rect x="10" y="40" width="13" height="13" opacity="0.55"/>
+    <rect x="25" y="40" width="13" height="13" opacity="0.95"/>
+    <rect x="40" y="40" width="13" height="13" opacity="0.40"/>
+  </g>
+</svg>
+{% elif name == "lesson-linreg" %}
+{# Diagonal best-fit line through 5 scattered points #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <line x1="8" y1="56" x2="56" y2="8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <g fill="currentColor">
+    <circle cx="14" cy="48" r="3"/>
+    <circle cx="24" cy="42" r="3"/>
+    <circle cx="32" cy="32" r="3"/>
+    <circle cx="40" cy="22" r="3"/>
+    <circle cx="50" cy="16" r="3"/>
+  </g>
+</svg>
+{% elif name == "lesson-logreg" %}
+{# Sigmoid S-curve over axes #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <line x1="8" y1="56" x2="58" y2="56" stroke="currentColor" stroke-width="1.6" opacity="0.45"/>
+  <line x1="8" y1="56" x2="8" y2="6" stroke="currentColor" stroke-width="1.6" opacity="0.45"/>
+  <path d="M10 50 Q26 50 32 32 Q38 14 56 14" stroke="currentColor" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+</svg>
+{% elif name == "lesson-tree" %}
+{# Branching binary decision tree: root + 2 + 4 #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <line x1="32" y1="14" x2="16" y2="32"/>
+    <line x1="32" y1="14" x2="48" y2="32"/>
+    <line x1="16" y1="32" x2="8"  y2="50"/>
+    <line x1="16" y1="32" x2="24" y2="50"/>
+    <line x1="48" y1="32" x2="40" y2="50"/>
+    <line x1="48" y1="32" x2="56" y2="50"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="32" cy="14" r="5"/>
+    <circle cx="16" cy="32" r="4"/>
+    <circle cx="48" cy="32" r="4"/>
+    <circle cx="8"  cy="50" r="3.5"/>
+    <circle cx="24" cy="50" r="3.5"/>
+    <circle cx="40" cy="50" r="3.5"/>
+    <circle cx="56" cy="50" r="3.5"/>
+  </g>
+</svg>
+{% elif name == "lesson-eval" %}
+{# 2x2 confusion matrix: bright diagonal (correct), dim off-diagonal (errors) #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="10" y="10" width="20" height="20" fill="currentColor" opacity="0.92"/>
+  <rect x="34" y="10" width="20" height="20" fill="currentColor" opacity="0.22"/>
+  <rect x="10" y="34" width="20" height="20" fill="currentColor" opacity="0.22"/>
+  <rect x="34" y="34" width="20" height="20" fill="currentColor" opacity="0.92"/>
+  <rect x="8" y="8" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" rx="2"/>
+</svg>
+{% elif name == "lesson-features" %}
+{# Raw rows on left → arrow → structured feature boxes on right #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+    <line x1="6"  y1="20" x2="20" y2="20"/>
+    <line x1="6"  y1="32" x2="20" y2="32"/>
+    <line x1="6"  y1="44" x2="20" y2="44"/>
+  </g>
+  <path d="M26 32 L40 32 M34 24 L42 32 L34 40" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="currentColor">
+    <rect x="46" y="14" width="12" height="12" rx="2"/>
+    <rect x="46" y="28" width="12" height="12" rx="2"/>
+    <rect x="46" y="42" width="12" height="12" rx="2"/>
+  </g>
+</svg>
+{% elif name == "lesson-forest" %}
+{# Three little fir trees side by side — random forest = many trees #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <path d="M14 18 L6 34 L22 34 Z"/>
+    <path d="M14 26 L8 42 L20 42 Z" opacity="0.75"/>
+    <rect x="12" y="42" width="4" height="8"/>
+    <path d="M32 10 L22 30 L42 30 Z"/>
+    <path d="M32 22 L22 42 L42 42 Z" opacity="0.75"/>
+    <rect x="30" y="42" width="4" height="10"/>
+    <path d="M50 18 L42 34 L58 34 Z"/>
+    <path d="M50 26 L44 42 L56 42 Z" opacity="0.75"/>
+    <rect x="48" y="42" width="4" height="8"/>
+  </g>
+</svg>
+{% elif name == "lesson-cluster" %}
+{# Two tight clusters of dots + one circled outlier (anomaly) #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <circle cx="14" cy="20" r="3"/>
+    <circle cx="20" cy="14" r="3"/>
+    <circle cx="22" cy="22" r="3"/>
+    <circle cx="14" cy="28" r="3"/>
+    <circle cx="38" cy="40" r="3"/>
+    <circle cx="44" cy="36" r="3"/>
+    <circle cx="46" cy="44" r="3"/>
+    <circle cx="38" cy="48" r="3"/>
+    <circle cx="52" cy="14" r="3"/>
+  </g>
+  <circle cx="52" cy="14" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+</svg>
+{% elif name == "lesson-overfit" %}
+{# k-fold cross-validation strips: 4 rows, each with one filled test fold #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="1.6">
+    <rect x="6"  y="12" width="12" height="9" fill="currentColor" opacity="0.92"/>
+    <rect x="18" y="12" width="38" height="9" fill="none"/>
+    <rect x="6"  y="24" width="12" height="9" fill="none"/>
+    <rect x="18" y="24" width="14" height="9" fill="currentColor" opacity="0.92"/>
+    <rect x="32" y="24" width="24" height="9" fill="none"/>
+    <rect x="6"  y="36" width="26" height="9" fill="none"/>
+    <rect x="32" y="36" width="14" height="9" fill="currentColor" opacity="0.92"/>
+    <rect x="46" y="36" width="10" height="9" fill="none"/>
+    <rect x="6"  y="48" width="38" height="9" fill="none"/>
+    <rect x="44" y="48" width="12" height="9" fill="currentColor" opacity="0.92"/>
+  </g>
+</svg>
+{% elif name == "lesson-perceptron" %}
+{# Classic 3-input → hidden → 1-output perceptron diagram #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="1.8">
+    <line x1="14" y1="14" x2="32" y2="32"/>
+    <line x1="14" y1="32" x2="32" y2="32"/>
+    <line x1="14" y1="50" x2="32" y2="32"/>
+    <line x1="32" y1="32" x2="50" y2="32"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="14" cy="14" r="4"/>
+    <circle cx="14" cy="32" r="4"/>
+    <circle cx="14" cy="50" r="4"/>
+    <circle cx="32" cy="32" r="5.5"/>
+    <circle cx="50" cy="32" r="4"/>
+  </g>
+</svg>
+{% elif name == "lesson-dropout" %}
+{# Small fully-connected net with two hidden nodes "dropped" (X-marked) #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="1.3" opacity="0.55">
+    <line x1="14" y1="14" x2="32" y2="14"/>
+    <line x1="14" y1="14" x2="32" y2="32"/>
+    <line x1="14" y1="14" x2="32" y2="50"/>
+    <line x1="14" y1="32" x2="32" y2="14"/>
+    <line x1="14" y1="32" x2="32" y2="32"/>
+    <line x1="14" y1="32" x2="32" y2="50"/>
+    <line x1="14" y1="50" x2="32" y2="14"/>
+    <line x1="14" y1="50" x2="32" y2="32"/>
+    <line x1="14" y1="50" x2="32" y2="50"/>
+    <line x1="32" y1="14" x2="50" y2="32"/>
+    <line x1="32" y1="32" x2="50" y2="32"/>
+    <line x1="32" y1="50" x2="50" y2="32"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="14" cy="14" r="3.5"/>
+    <circle cx="14" cy="32" r="3.5"/>
+    <circle cx="14" cy="50" r="3.5"/>
+    <circle cx="32" cy="14" r="3.5" opacity="0.22"/>
+    <circle cx="32" cy="32" r="3.5"/>
+    <circle cx="32" cy="50" r="3.5" opacity="0.22"/>
+    <circle cx="50" cy="32" r="3.5"/>
+  </g>
+  <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <line x1="29" y1="11" x2="35" y2="17"/>
+    <line x1="35" y1="11" x2="29" y2="17"/>
+    <line x1="29" y1="47" x2="35" y2="53"/>
+    <line x1="35" y1="47" x2="29" y2="53"/>
+  </g>
+</svg>
+{% elif name == "lesson-cnn" %}
+{# 4x4 image grid with a 2x2 convolution kernel highlighted on it #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="1.2" opacity="0.55">
+    <rect x="8"  y="8"  width="11" height="11" fill="none"/>
+    <rect x="20" y="8"  width="11" height="11" fill="none"/>
+    <rect x="32" y="8"  width="11" height="11" fill="none"/>
+    <rect x="44" y="8"  width="11" height="11" fill="none"/>
+    <rect x="8"  y="20" width="11" height="11" fill="none"/>
+    <rect x="32" y="20" width="11" height="11" fill="none"/>
+    <rect x="44" y="20" width="11" height="11" fill="none"/>
+    <rect x="8"  y="32" width="11" height="11" fill="none"/>
+    <rect x="20" y="32" width="11" height="11" fill="none"/>
+    <rect x="32" y="32" width="11" height="11" fill="none"/>
+    <rect x="44" y="32" width="11" height="11" fill="none"/>
+    <rect x="8"  y="44" width="11" height="11" fill="none"/>
+    <rect x="20" y="44" width="11" height="11" fill="none"/>
+    <rect x="32" y="44" width="11" height="11" fill="none"/>
+    <rect x="44" y="44" width="11" height="11" fill="none"/>
+  </g>
+  <rect x="19" y="19" width="25" height="25" stroke="currentColor" stroke-width="2.6" fill="currentColor" fill-opacity="0.20"/>
+</svg>
+{% elif name == "lesson-tuning" %}
+{# Three horizontal sliders with knobs at different positions #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <line x1="10" y1="18" x2="54" y2="18"/>
+    <line x1="10" y1="32" x2="54" y2="32"/>
+    <line x1="10" y1="46" x2="54" y2="46"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="20" cy="18" r="4.5"/>
+    <circle cx="40" cy="32" r="4.5"/>
+    <circle cx="48" cy="46" r="4.5"/>
+  </g>
+</svg>
+{% elif name == "lesson-transformer" %}
+{# Token boxes with attention arrows curving to the next layer #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <rect x="6"  y="44" width="11" height="14" rx="2" opacity="0.85"/>
+    <rect x="19" y="44" width="11" height="14" rx="2" opacity="0.85"/>
+    <rect x="32" y="44" width="11" height="14" rx="2" opacity="0.85"/>
+    <rect x="45" y="44" width="11" height="14" rx="2" opacity="0.85"/>
+  </g>
+  <g stroke="currentColor" stroke-width="1.6" fill="none" opacity="0.7">
+    <path d="M11 44 Q11 28 24 18"/>
+    <path d="M24 44 Q24 28 37 18"/>
+    <path d="M37 44 Q37 28 50 18"/>
+    <path d="M50 44 Q50 28 37 18"/>
+  </g>
+  <g fill="currentColor">
+    <rect x="19" y="6" width="11" height="14" rx="2"/>
+    <rect x="32" y="6" width="11" height="14" rx="2"/>
+    <rect x="45" y="6" width="11" height="14" rx="2"/>
+  </g>
+</svg>
+{% elif name == "lesson-hf" %}
+{# Stack of three model "cards" (a model hub) — each with a dot + label line #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.15">
+    <rect x="10" y="10" width="44" height="14" rx="2"/>
+    <rect x="10" y="26" width="44" height="14" rx="2"/>
+    <rect x="10" y="42" width="44" height="14" rx="2"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="18" cy="17" r="2.4"/>
+    <circle cx="18" cy="33" r="2.4"/>
+    <circle cx="18" cy="49" r="2.4"/>
+  </g>
+  <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+    <line x1="26" y1="17" x2="48" y2="17"/>
+    <line x1="26" y1="33" x2="48" y2="33"/>
+    <line x1="26" y1="49" x2="48" y2="49"/>
+  </g>
+</svg>
+{% elif name == "lesson-api" %}
+{# JSON-style curly braces with three dots between (request/response payload) #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M22 10 Q12 10 12 22 L12 28 Q12 32 6 32 Q12 32 12 36 L12 42 Q12 54 22 54" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 10 Q52 10 52 22 L52 28 Q52 32 58 32 Q52 32 52 36 L52 42 Q52 54 42 54" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="currentColor">
+    <circle cx="24" cy="32" r="2.6"/>
+    <circle cx="32" cy="32" r="2.6"/>
+    <circle cx="40" cy="32" r="2.6"/>
+  </g>
+</svg>
+{% elif name == "lesson-rag" %}
+{# Document on left + database cylinder on right + retrieval arrow underneath #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M8 8 L22 8 L28 14 L28 38 L8 38 Z" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.15"/>
+  <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+    <line x1="12" y1="16" x2="24" y2="16"/>
+    <line x1="12" y1="22" x2="24" y2="22"/>
+    <line x1="12" y1="28" x2="20" y2="28"/>
+  </g>
+  <g stroke="currentColor" stroke-width="2" fill="none">
+    <ellipse cx="46" cy="16" rx="10" ry="3.6"/>
+    <path d="M36 16 L36 36 Q36 39.6 46 39.6 Q56 39.6 56 36 L56 16"/>
+    <path d="M36 26 Q36 29.6 46 29.6 Q56 29.6 56 26" opacity="0.55"/>
+  </g>
+  <path d="M14 50 L48 50 M44 46 L48 50 L44 54" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+{% elif name == "lesson-workforce" %}
+{# Person silhouette on the left, defensive shield on the right #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <circle cx="20" cy="18" r="6"/>
+    <path d="M8 44 Q8 28 20 28 Q32 28 32 44 L32 52 L8 52 Z"/>
+  </g>
+  <path d="M46 12 L58 16 L58 32 Q58 44 46 50 Q34 44 34 32 L34 16 Z" stroke="currentColor" stroke-width="2.4" fill="currentColor" fill-opacity="0.18" stroke-linejoin="round"/>
+</svg>
+{% elif name == "lesson-agent" %}
+{# Robot face (autonomous agent) on the left + shield on the right #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="currentColor">
+    <rect x="10" y="20" width="24" height="22" rx="3"/>
+    <rect x="18" y="14" width="8" height="6" rx="1" opacity="0.7"/>
+    <circle cx="22" cy="22" r="1.8" fill="var(--bg, #0f172a)"/>
+    <rect x="8"  y="24" width="3" height="14" rx="1"/>
+    <rect x="33" y="24" width="3" height="14" rx="1"/>
+  </g>
+  <g fill="var(--bg, #0f172a)">
+    <circle cx="17" cy="29" r="2"/>
+    <circle cx="27" cy="29" r="2"/>
+    <rect x="17" y="35" width="10" height="2"/>
+  </g>
+  <path d="M48 14 L58 18 L58 32 Q58 44 48 50 Q38 44 38 32 L38 18 Z" stroke="currentColor" stroke-width="2.4" fill="currentColor" fill-opacity="0.18" stroke-linejoin="round"/>
+</svg>
+{% elif name == "lesson-guardrails" %}
+{# Two vertical rails with crossbars and an arrow flowing through (guided output) #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g stroke="currentColor" stroke-linecap="round">
+    <line x1="14" y1="8"  x2="14" y2="56" stroke-width="3"/>
+    <line x1="50" y1="8"  x2="50" y2="56" stroke-width="3"/>
+    <line x1="10" y1="18" x2="54" y2="18" stroke-width="2"/>
+    <line x1="10" y1="46" x2="54" y2="46" stroke-width="2"/>
+  </g>
+  <path d="M22 32 L42 32 M36 26 L42 32 L36 38" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+{% elif name == "lesson-positioning" %}
+{# Briefcase — sales / customer engagement / positioning #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="8" y="20" width="48" height="34" rx="3" stroke="currentColor" stroke-width="2.4" fill="currentColor" fill-opacity="0.15"/>
+  <path d="M22 20 L22 14 Q22 10 26 10 L38 10 Q42 10 42 14 L42 20" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="8" y1="34" x2="56" y2="34" stroke="currentColor" stroke-width="2.4"/>
+  <rect x="28" y="30" width="8" height="8" rx="1.2" fill="currentColor"/>
+</svg>
+{% endif %}
+{% endmacro %}
+
+
 {# ── Stage 5: Shield with embedded shuriken ────────────────────────── #}
 {% macro stage_icon_s5(size=44) %}
 <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="stage-icon">

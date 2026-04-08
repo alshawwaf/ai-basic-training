@@ -30,7 +30,12 @@ This is called **overfitting to the training set** and is one of the most common
 
 ## Concept: Train/Test Split
 
-The fix is to hold out a portion of your data *before* training and never touch it until final evaluation.
+The fix is to hold out a portion of your data *before* training and never touch it until final evaluation. Here is what an 80/20 split actually looks like on the server dataset — 400 cyan training points + 100 orange test points, randomly interleaved across the same x-range:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_train_test_split.png" alt="Scatter plot of 500 server data points coloured by split: 400 small cyan points for the training set and 100 larger orange points for the test set, spread across the same range">
+  <div class="vis-caption">Real <code>train_test_split(test_size=0.2, random_state=42)</code> on the lab dataset. Test points are LOCKED — the model never sees them during fit.</div>
+</div>
 
 **Splitting a 500-row dataset 80/20**
 
@@ -83,6 +88,13 @@ Data leakage means information from the test set "leaks" into the training proce
 | Label leakage | Features derived from the target | Audit feature construction |
 
 In a security context, data leakage can make a model look 99% accurate on your benchmark but fail completely on live traffic.
+
+The visual difference between fitting on the full dataset (wrong — peeks at test rows) and fitting on training only (right) is subtle on this clean linear data, but it is real:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_data_leakage.png" alt="Two side-by-side scatter plots of the server data: left titled WRONG fit on FULL dataset with a red fitted line that has seen the orange test points, right titled RIGHT fit on TRAIN only with a green fitted line that ignored the test points">
+  <div class="vis-caption">Same data, two pipelines. The left line was trained on every point including the orange ones — the right one only saw the cyan training rows. On real, noisier data the leakage gap is much wider.</div>
+</div>
 
 **Data leakage — what NOT to do**
 

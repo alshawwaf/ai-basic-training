@@ -17,43 +17,12 @@
 
 > **Want to go deeper?** [Supervised Learning — Wikipedia](https://en.wikipedia.org/wiki/Supervised_learning)
 
-This is the most important conceptual shift in all of machine learning.
+This is the most important conceptual shift in all of machine learning. The same digit looks completely different to a human, to the underlying numpy array, and to the model itself:
 
-A human sees this:
-
-```
-    ████
-   █  █
-   █  █
-   ████
-```
-
-A model sees this:
-
-```
-0  0  5 13  9  1  0  0
-0  0 13 15 10 15  5  0
-0  3 15  2  0 11  8  0
-0  4 12  0  0  8  8  0
-0  5  8  0  0  9  8  0
-0  4 11  0  1 12  7  0
-0  2 14  5 10 12  0  0
-0  0  6 13 10  0  0  0
-```
-
-And it is actually fed this — a flat, single row:
-
-```
-[0, 0, 5, 13, 9, 1, 0, 0, 0, 0, 13, 15, 10, 15, 5, 0, 0, 3, 15, 2, ...]
-```
-
-**How the 8x8 image becomes a flat input row:**
-
-| Stage | Shape | What it looks like |
-|-------|-------|--------------------|
-| **8x8 grid** | `(8, 8)` | 8 rows of 8 pixel values — the image as humans see it |
-| **Flatten** | row 0 ++ row 1 ++ row 2 ++ ... | Concatenate all rows into a single sequence |
-| **Model input** | `(64,)` | `[0, 0, 5, 13, 9, 1, 0, 0, 0, 0, 13, 15, ...]` — one row = one sample |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/model_sees_pipeline.png" alt="Three panels: a rendered greyscale digit 0 on the left, the same digit as an 8x8 grid of cyan numbers in the middle, and a flat horizontal strip of 64 numbers on the right">
+  <div class="vis-caption">Real <code>digits.images[0]</code> in three forms. Only the rightmost — the flat row of 64 numbers — is what the model actually receives.</div>
+</div>
 
 64 numbers. That is the complete input. No concept of "up", "down", "left", "right." No idea that these are pixels. No visual intuition of any kind.
 
@@ -63,14 +32,14 @@ The model learns to map these 64 numbers to the correct digit label purely throu
 
 ## Concept: The Security Equivalent
 
-In a network intrusion detection dataset, one connection looks like this to the model:
+In a network intrusion detection dataset, one connection looks like this to the model — a flat row of numbers, exactly the same shape as a digit row, only the meaning of each column is different:
 
-```python
-[1048576,  443,   2.4,   14,   0,   3,   1,   0.87,  2048, ...]
-# bytes    port  secs  pkts  rst  syn  fin  entropy  pkt_size
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/model_sees_security_parallel.png" alt="Two side by side strips of numbers: the digits row 0 0 5 13 9 1 0 0 0 0 with label 0, and the security row 1048576 443 2.4 14 0 3 1 0.87 2048 with label malicious">
+  <div class="vis-caption">Two completely different domains, identical input shape: a flat row of numbers + a label.</div>
+</div>
 
-A flat row of numbers. One per feature. The model never "sees" a packet — it sees numbers.
+The model never "sees" a packet — it sees numbers.
 
 The table below maps the digits domain to the security domain:
 
@@ -106,14 +75,12 @@ df.corr()["target"]
 
 This computes the Pearson correlation between every column and the `target` column. Values range from -1 (perfect inverse relationship) to +1 (perfect positive relationship). We take the absolute value because either direction is useful.
 
-```
-pixel_43    0.55   <- this pixel is highly predictive
-pixel_34    0.53
-pixel_26    0.52
-...
-pixel_0     0.00   <- this pixel predicts nothing (always 0)
-pixel_63    0.00
-```
+Reshaping the 64 correlation values back into the 8×8 grid shows you spatially **which pixels carry the most signal** — and where they sit on a real digit:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/model_sees_correlation.png" alt="Left: an 8x8 hot colourmap heatmap of absolute correlation values with the target, lit up across the middle and dim at the corners. Right: a real digit 3 with the top three predictive pixels boxed in cyan">
+  <div class="vis-caption">Real <code>df.corrwith(df['target']).abs()</code>. Bright cells = predictive pixels. The corners are dark — they never get inked.</div>
+</div>
 
 **Caveat:** Correlation only measures linear relationships. A feature can be highly useful for the model while having low linear correlation (if the relationship is non-linear). This is a useful fast filter, not a definitive answer. Feature importance from the trained model (Lesson 1.4) is a more reliable measure.
 
@@ -134,7 +101,14 @@ row = 43 // 8 = 5
 col = 43 % 8  = 3
 ```
 
-That is row 5, column 3 — slightly right of centre, near the bottom. This makes intuitive sense: centre pixels vary more between digits (they carry ink from the actual strokes) while corner pixels are almost always blank background.
+That is row 5, column 3 — slightly right of centre, near the bottom. The full 8×8 mapping makes the pattern obvious:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/model_sees_index_grid.png" alt="An 8x8 grid where every cell shows its flat index from 0 to 63, with cell number 43 boxed in red">
+  <div class="vis-caption">Every flat index laid back onto the 8×8 grid. <code>pixel_43</code> is in row 5, col 3 — exactly where stroke ink lands often.</div>
+</div>
+
+This makes intuitive sense: centre pixels vary more between digits (they carry ink from the actual strokes) while corner pixels are almost always blank background.
 
 ---
 

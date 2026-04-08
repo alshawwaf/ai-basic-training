@@ -25,6 +25,9 @@ attack_data = np.column_stack([
 ])
 X = np.vstack([benign_data, attack_data])
 y = np.array([0]*n_benign + [1]*n_attack)
+# Add per-feature Gaussian noise so classes overlap the way real captures do.
+rng = np.random.default_rng(7)
+X = X + rng.normal(0, X.std(axis=0) * 1.9, X.shape)
 idx = np.random.permutation(len(y))
 X, y = X[idx], y[idx]
 X_train, X_test, y_train, y_test = train_test_split(

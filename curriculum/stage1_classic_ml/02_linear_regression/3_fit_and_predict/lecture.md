@@ -25,6 +25,11 @@ y_predicted = slope * x + intercept
 
 **What `.fit()` is doing.** Imagine the scatter plot from the previous exercise. `.fit()` slides a straight line around the cloud, looking for the unique line where the **vertical gaps** between each point and the line — the **residuals** — are as small as possible overall. Concretely it minimises the sum of those gaps *squared*, so a few large misses are penalised much more than many small ones.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_fit_residuals.png" alt="Scatter plot of 30 actual server data points with a red regression line; thin grey vertical lines connect each point to the line showing the residuals">
+  <div class="vis-caption">Real fitted line on a 30-row sample. Each grey line is a residual — <code>.fit()</code> finds the slope and intercept that minimise the sum of all those (squared) lengths.</div>
+</div>
+
 Mathematically, sklearn solves:
 
 ```
@@ -50,20 +55,25 @@ response_time_ms = slope * requests_per_second + intercept
 | `intercept` | b | Baseline response time when the server handles 0 requests/second (overhead, processing time) |
 | `slope` | m | Additional milliseconds added per extra request per second |
 
-**Example interpretation:** If slope = 1.82 and intercept = 29.5, the model says:
-- At 0 rps the server needs ~30 ms of overhead (network stack, etc.)
+**Example interpretation:** On the lab dataset the fit produces slope ≈ 1.82 and intercept ≈ 28.1, so the model says:
+- At 0 rps the server needs ~28 ms of overhead (network stack, etc.)
 - Each additional request per second adds ~1.82 ms
-- At 100 rps: 1.82 × 100 + 29.5 = 211.5 ms predicted
+- At 100 rps: 1.82 × 100 + 28.1 ≈ 210 ms predicted
 
-**Reading the equation `response_time = 1.82 * requests_per_second + 29.5` as points on a line:**
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_slope_intercept.png" alt="Fitted regression line in red with a violet dot at x=0 marking the intercept (28.1 ms) and a cyan rise/run triangle from 100 to 150 rps showing the slope of 1.82 ms per rps">
+  <div class="vis-caption">Real fitted line. Violet = where the line crosses x=0 (intercept). Cyan triangle = rise/run, showing every +50 rps adds ≈ +91 ms.</div>
+</div>
+
+**Reading the equation `response_time ≈ 1.82 * requests_per_second + 28.1` as points on a line:**
 
 | Requests/sec | Predicted response (ms) | What it represents |
 |---:|---:|---|
-| **0** | **29.5** | the **intercept** — baseline overhead with no traffic |
-| 25 | 75.0 | |
-| 50 | 120.5 | |
-| 100 | 211.5 | |
-| 150 | 302.5 | |
+| **0** | **28.1** | the **intercept** — baseline overhead with no traffic |
+| 25 | 73.6 | |
+| 50 | 119.0 | |
+| 100 | 209.9 | |
+| 150 | 300.8 | |
 
 The gap between consecutive rows is exactly `25 × 1.82 ≈ 45.5 ms` — that constant gap *is* the **slope**. Every extra request per second adds `1.82 ms` to the predicted response time, no matter where on the line you stand.
 
@@ -90,9 +100,14 @@ y_pred = model.predict(X_test)    # returns an array of predictions
 
 | Stage | Input | Learned equation | Output |
 |---|---|---|---|
-| Single value | `[[150]]` | `1.82 * 150 + 29.5` | `302.5 ms` |
+| Single value | `[[150]]` | `1.82 * 150 + 28.1` | `≈ 300.8 ms` |
 
-The model carries the learned `slope` and `intercept` inside `.coef_` / `.intercept_`, and `predict()` is just plugging the new `X` into that equation row by row.
+The model carries the learned `slope` and `intercept` inside `.coef_` / `.intercept_`, and `predict()` is just plugging the new `X` into that equation row by row. Visually, calling `predict()` for `50`, `100`, and `150` rps just means dropping a finger onto the line at each x-value:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_predict_points.png" alt="Fitted regression line with three cyan dots at x=50 119 ms, x=100 209.9 ms, and x=150 300.8 ms; dashed lines drop down to the x-axis and across to the y-axis">
+  <div class="vis-caption">Three real <code>model.predict([[x]])</code> calls. Each dashed line shows how the prediction is read off the fitted line.</div>
+</div>
 
 The predictions are point estimates — no uncertainty bounds. Later you will learn about prediction intervals.
 

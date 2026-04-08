@@ -48,20 +48,31 @@ In a large enterprise SOC with hundreds of analysts, a high false-positive rate 
 | False negatives  | few attacks missed              | more attacks missed           |
 | False positives  | many false alarms               | few false alarms              |
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_scenario_compare.png" alt="Two side-by-side bar charts comparing operating points. Left panel 'Scenario A · catch every attack' at threshold 0.04: 235 total alerts, 96 attacks caught, 139 false alarms, 4 attacks missed. Right panel 'Scenario B · trusted alerts only' at threshold 0.92: 62 total alerts, 59 attacks caught, 3 false alarms, 41 attacks missed">
+  <div class="vis-caption">Real lab numbers for the two extreme operating points. Scenario A floods the SOC with alerts but misses almost nothing; Scenario B sends only confident alerts but lets 4-in-10 attacks slip through.</div>
+</div>
+
 ---
 
 ## Concept: Threshold Selection Table
 
 A useful deliverable for stakeholders is a table showing what they get at each threshold:
 
-| Threshold | Alerts/day | True attacks caught | False alarms | Analyst hours |
-|-----------|------------|---------------------|--------------|---------------|
-| 0.20 | 248 | 98 | 150 | 4.1 hrs |
-| 0.30 | 212 | 97 | 115 | 2.9 hrs |
-| 0.50 | 144 | 91 | 53 | 1.5 hrs |
-| 0.70 | 85 | 75 | 10 | 0.6 hrs |
+| Threshold | Alerts (test set) | True attacks caught | False alarms | Recall |
+|-----------|------------------:|--------------------:|-------------:|------:|
+| 0.20 | 139 | 89 | 50 | 0.89 |
+| 0.30 | 117 | 84 | 33 | 0.84 |
+| 0.50 | 101 | 83 | 18 | 0.83 |
+| 0.70 |  79 | 72 |  7 | 0.72 |
+| 0.90 |  66 | 62 |  4 | 0.62 |
 
-This makes the tradeoff concrete: "Do we want 4 hours of review with 98% catch rate, or 36 minutes with 75% catch rate?"
+This makes the tradeoff concrete: "Do we want 139 alerts/day with 89% catch rate, or 66 alerts/day with 62% catch rate?"
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_threshold_table.png" alt="Grouped bar chart at five thresholds (0.20, 0.30, 0.50, 0.70, 0.90). For each threshold three bars: total alerts (grey), true attacks caught (green) and false alarms (orange). Bars shrink from left to right: at 0.20 the alerts bar is highest, at 0.90 it is lowest. A red dashed horizontal line marks the 100 actual attacks in the test set">
+  <div class="vis-caption">Sliding the threshold reshapes the SOC's daily alert load. The grey bars (total alerts) shrink as threshold rises; the orange (false alarms) shrinks faster, but green (caught attacks) shrinks too.</div>
+</div>
 
 ---
 
@@ -98,34 +109,41 @@ For both thresholds (Scenario A and B), print a human-readable paragraph describ
 ```
 TASK 1 — Threshold table:
 Thresh  Precision  Recall    F1    Alerts
-  0.10     0.741    0.990  0.848    267
-  0.20     0.784    0.980  0.871    250
-  0.30     0.838    0.960  0.895    229
-  ...
-  0.50     0.930    0.910  0.920    196   ← max F1
-  ...
-  0.90     0.992    0.700  0.819    141
+  0.05     0.435    0.940  0.595    216
+  0.10     0.544    0.920  0.684    169
+  0.20     0.640    0.890  0.745    139
+  0.30     0.718    0.840  0.774    117
+  0.40     0.764    0.840  0.800    110
+  0.50     0.822    0.830  0.826    101   ← max F1
+  0.60     0.844    0.760  0.800     90
+  0.70     0.911    0.720  0.804     79
+  0.80     0.932    0.690  0.793     74
+  0.90     0.939    0.620  0.747     66
 
 TASK 2 — Scenario A (recall >= 0.95):
-Threshold: 0.20
-Recall:    0.980, Precision: 0.784
-Daily alerts: 250 (of which ~196 are true attacks, ~54 are false alarms)
+Threshold: 0.04
+Recall:    0.960, Precision: 0.409
+Test alerts: 235 / 2000 (Daily ≈ 1175)
 
 TASK 3 — Scenario B (precision >= 0.95):
-Threshold: 0.68
-Precision: 0.951, Recall: 0.760
-Daily alerts: 80 (of which ~76 are true attacks, ~4 are false alarms)
+Threshold: 0.92
+Precision: 0.952, Recall: 0.590
+Test alerts: 62 / 2000 (Daily ≈ 310)
 
 TASK 4 (BONUS) — Stakeholder report:
-Scenario A (low threshold = catch-all):
-  We catch 490 of 500 daily attacks (98% detection rate).
-  We generate 54 false alarms per 500 benign events reviewed.
-  Analyst time: ~4.2 hours/day reviewing 250 total alerts.
+Scenario A (Catch All) — threshold 0.04:
+  Attacks caught per day:    480 / 500
+  Attacks missed per day:     20
+  False alarms per day:      695
+  Total reviews/day:        1175
+  Estimated analyst time:    ~98 hours/day
 
-Scenario B (high threshold = trusted alerts):
-  We catch 380 of 500 daily attacks (76% detection rate).
-  We generate only 4 false alarms per 500 benign events.
-  Analyst time: ~0.7 hours/day reviewing 80 total alerts.
+Scenario B (Trusted Alerts) — threshold 0.92:
+  Attacks caught per day:    295 / 500
+  Attacks missed per day:    205
+  False alarms per day:       15
+  Total reviews/day:         310
+  Estimated analyst time:   ~25 hours/day
 ```
 
 ---

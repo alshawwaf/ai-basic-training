@@ -50,6 +50,11 @@ Where `p_i` is the proportion of samples belonging to class i.
 
 The tree always chooses the split that **minimises the weighted average Gini** of the resulting child nodes.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_gini_intuition.png" alt="Three side-by-side bar charts showing class composition for different node states. Left: 100 benign only, Gini = 0.000. Middle: 60 benign and 40 DoS, Gini = 0.480. Right: 25 of each of four classes, Gini = 0.750">
+  <div class="vis-caption">Three nodes side by side. Each chart shows the class composition; the title prints the Gini value. A pure node has impurity 0; a perfectly mixed 4-class node hits the maximum at 0.75.</div>
+</div>
+
 ---
 
 ## Concept: Information Gain
@@ -71,6 +76,11 @@ A high information gain means the split dramatically reduces uncertainty. The tr
 | Right child (`rate > 55`) | 40 (40%) | 2 benign, 38 DoS | 0.095 | almost pure DoS |
 
 The weighted child impurity is `0.6 × 0.065 + 0.4 × 0.095 = 0.077`, so the **information gain** is `0.480 − 0.077 = 0.403`. A near-half drop in impurity is a great split — the tree's split-search routine would happily pick this one over any competing feature.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_information_gain.png" alt="Three bar charts showing the information gain split. Parent: 60 benign and 40 DoS, Gini=0.480. Left child (rate ≤ 55): 58 benign and 2 DoS, Gini=0.064. Right child (rate > 55): 2 benign and 38 DoS, Gini=0.095. Title: gain = 0.480 - 0.077 = 0.403">
+  <div class="vis-caption">Real worked example. Splitting the parent on <code>connection_rate ≤ 55</code> drops the weighted child Gini from 0.480 to 0.077 — an information gain of 0.403.</div>
+</div>
 
 **Security intuition:** The feature `connection_rate` splits benign (low rate) from DoS (very high rate) cleanly → high Gini gain. The feature `src_port` is more uniformly distributed → low gain.
 
@@ -95,6 +105,11 @@ The dataset simulates 4 traffic classes with 6 features:
 | 1 | port_scan | High unique_dest_ports, low bytes, many failures |
 | 2 | exfil | High bytes_sent, low ports, long duration |
 | 3 | DoS | Very high connection_rate, low bytes, short duration |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_class_scatter.png" alt="Scatter plot of all 2000 connections on log-log axes. connection_rate on x-axis, bytes_sent on y-axis. Four coloured clusters: cyan benign in the middle-left, violet port_scan slightly higher-left, green exfil in the top-left, red DoS in the far right">
+  <div class="vis-caption">Real <code>plt.scatter</code> on the lab dataset, coloured by class. Each cluster sits in its own corner — that is exactly the kind of structure a decision tree exploits with simple axis-aligned splits.</div>
+</div>
 
 ---
 

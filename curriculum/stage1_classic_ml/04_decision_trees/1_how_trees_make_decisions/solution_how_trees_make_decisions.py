@@ -48,7 +48,13 @@ dos = pd.DataFrame({
 # Combine all classes and shuffle so the model doesn't see them in order
 df = pd.concat([benign, port_scan, exfil, dos], ignore_index=True).sample(
     frac=1, random_state=42
-)
+).reset_index(drop=True)
+# Inject 10% label noise — real network captures always have mislabelled flows.
+# Without this the four classes are too cleanly separable and the depth sweep
+# in Exercise 4 shows no overfitting at all.
+rng = np.random.default_rng(7)
+noise_mask = rng.random(len(df)) < 0.10
+df.loc[noise_mask, 'label'] = rng.integers(0, 4, noise_mask.sum())
 FEATURES = ['connection_rate', 'bytes_sent', 'bytes_received',
             'unique_dest_ports', 'duration_seconds', 'failed_connections']
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']

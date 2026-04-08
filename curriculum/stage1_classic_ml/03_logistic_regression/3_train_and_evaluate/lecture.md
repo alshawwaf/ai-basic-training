@@ -97,6 +97,11 @@ A good phishing detector **minimises FN** (missed phishing) even at the cost of 
 
 Read the rows as *what really happened* and the columns as *what the model said*. The diagonal (TN, TP) is the "got it right" cells. The off-diagonal cells are where the costs live — and in a security context, the FN cell is almost always the most expensive.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_confusion_matrix.png" alt="2x2 confusion matrix heatmap from the trained logistic regression model: top-left dark blue TN=99, top-right light FP=1, bottom-left light FN=3 highlighted in red, bottom-right dark blue TP=97. Title shows acc=0.98 recall=0.97 precision=0.99">
+  <div class="vis-caption">Real <code>confusion_matrix(y_test, model.predict(X_test_scaled))</code> on the held-out test set. The FN cell (3 missed phishing URLs) is highlighted in red — that is the cell to push toward zero in security work.</div>
+</div>
+
 ---
 
 ## Concept: Model Coefficients
@@ -104,6 +109,11 @@ Read the rows as *what really happened* and the columns as *what the model said*
 After fitting, `model.coef_[0]` contains a weight for each feature. Positive weights push the model toward phishing, negative toward legitimate. Larger absolute values indicate stronger influence.
 
 This interpretability is one reason logistic regression is valued in security: you can explain to a stakeholder *why* a URL was flagged ("the model flagged it primarily due to url_length=184 and has_at_symbol=1").
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_coefficients.png" alt="Horizontal bar chart of the eight coefficients from the trained logistic regression model. Red bars (positive, push toward phishing) for url_length, path_length, num_hyphens, num_subdomains, num_dots, has_at_symbol, has_ip_address. One cyan bar (negative, push toward legitimate) for uses_https">
+  <div class="vis-caption">Real <code>model.coef_[0]</code> from the fitted lab model. <code>url_length</code> dominates; <code>uses_https</code> is the only feature that pushes toward "legitimate". This is the readout that lets you explain a flag to a stakeholder.</div>
+</div>
 
 ---
 

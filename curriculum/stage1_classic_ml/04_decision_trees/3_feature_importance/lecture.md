@@ -27,13 +27,20 @@ feature_importances_ = [0.52, 0.28, 0.09, 0.07, 0.03, 0.01]
 
 | Feature | Importance | Share of total |
 |---|---:|---|
-| `connection_rate`   | **0.524** | dominant — over half the tree's gain comes from this one feature |
-| `bytes_sent`        | 0.283 | strong secondary signal |
-| `unique_dest_ports` | 0.107 | moderate |
-| `duration_seconds`  | 0.052 | minor |
-| `failed_connections`| 0.024 | minor |
-| `bytes_received`    | 0.010 | barely used |
+| `duration_seconds`  | **0.338** | dominant — splits exfil (long-lived) from everything else |
+| `connection_rate`   | 0.337 | almost tied — splits DoS (very high) from everything else |
+| `unique_dest_ports` | 0.317 | almost tied — splits port_scan from benign |
+| `failed_connections`| 0.004 | barely used |
+| `bytes_sent`        | 0.002 | barely used |
+| `bytes_received`    | 0.002 | barely used |
 | **Sum**             | **1.000** | importances are normalised |
+
+Notice the structure: three features carry **99% of the tree's predictive power** and the remaining three are essentially decoration. That is a real and useful discovery — feature engineering often produces a dataset where a small subset of features does almost all the work.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_feature_importance.png" alt="Horizontal bar chart of decision tree feature_importances_. Three large red bars at the top: duration_seconds 0.338, connection_rate 0.337, unique_dest_ports 0.317. Three tiny cyan bars at the bottom: failed_connections 0.004, bytes_sent 0.002, bytes_received 0.002">
+  <div class="vis-caption">Real <code>model.feature_importances_</code> from the trained lab tree. Three features account for ~99% of the tree's gain — the other three barely register.</div>
+</div>
 
 This is also called the **Mean Decrease in Impurity (MDI)**. A feature that appears near the root (where it improves the split most) accumulates more importance.
 
@@ -48,11 +55,11 @@ This is also called the **Mean Decrease in Impurity (MDI)**. A feature that appe
 
 | Feature | Expected importance | Reason |
 |:---|:---|:---|
+| `duration_seconds` | Very high | Exfil sessions last minutes; DoS connections are extremely brief |
 | `connection_rate` | Very high | DoS is characterised by extreme rate; benign and scans are much lower |
 | `unique_dest_ports` | High | Port scanning contacts many ports; benign and exfil use very few |
-| `bytes_sent` | High | Exfiltration sends massive amounts; port scans send almost nothing |
-| `duration_seconds` | Medium | Exfil is long-lived; DoS connections are extremely brief |
-| `failed_connections` | Medium | Port scans produce many failures (closed ports) |
+| `bytes_sent` | Low | Highly correlated with the three features above; tree never needs it |
+| `failed_connections` | Low | Mostly redundant with `unique_dest_ports` for port-scan detection |
 | `bytes_received` | Low | Less discriminative; most classes receive some data |
 
 This ranking is consistent with real-world network intrusion detection research. Features that model *behavioural patterns* (rate, direction asymmetry) tend to outperform raw packet fields.
@@ -76,10 +83,15 @@ If the accuracy drop is small (< 2%), the simpler model is often preferred in pr
 
 | Model | Features kept | Accuracy | Notes |
 |---|---|---:|---|
-| Full | all 6 | **96.2%** | baseline |
-| Top-3 | `connection_rate`, `bytes_sent`, `unique_dest_ports` | 95.1% | only 1.1 pp lower |
+| Full | all 6 | **91.0%** | baseline |
+| Top-3 | `duration_seconds`, `connection_rate`, `unique_dest_ports` | 90.5% | only 0.5 pp lower |
 
-For a production sensor running on limited hardware, the simpler model is almost always preferred — losing 1.1 percentage points of accuracy is a fair trade for halving the feature pipeline.
+For a production sensor running on limited hardware, the simpler model is almost always preferred — losing half a percentage point of accuracy is a fair trade for halving the feature pipeline.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_top3_comparison.png" alt="Two-bar comparison of test accuracy. Cyan bar 'Full (6 features)' at 0.910 and red bar 'Top-3 (duration_seconds, connection_rate, unique_dest_ports)' at 0.905. Title: dropping 3 features costs only 0.5 pp">
+  <div class="vis-caption">Same train/test split, two models. Dropping the three barely-used features costs 0.5 pp of test accuracy — a clear win for production.</div>
+</div>
 
 ---
 
@@ -103,22 +115,22 @@ Look at the importances and the feature descriptions. Write a comment for each f
 
 ```
 TASK 1 — Feature importances:
-feature                 importance
-connection_rate           0.524
-bytes_sent                0.283
-unique_dest_ports         0.107
-duration_seconds          0.052
-failed_connections        0.024
-bytes_received            0.010
+           feature  importance
+  duration_seconds    0.338
+   connection_rate    0.337
+ unique_dest_ports    0.317
+failed_connections    0.004
+        bytes_sent    0.002
+    bytes_received    0.002
 
 Sum of importances: 1.000 ✓
 
 TASK 2 — Bar chart created (horizontal, sorted).
 
-TASK 3 — Top-3 features: ['connection_rate', 'bytes_sent', 'unique_dest_ports']
-Full model accuracy:   0.962
-Top-3 model accuracy:  0.951  (drop of 1.1%)
-The 3 most important features retain 98.9% of the model's predictive power.
+TASK 3 — Top-3 features: ['duration_seconds', 'connection_rate', 'unique_dest_ports']
+Full model accuracy:   0.910
+Top-3 model accuracy:  0.905  (drop of 0.5%)
+The 3 most important features retain 99.5% of the model's predictive power.
 ```
 
 ---

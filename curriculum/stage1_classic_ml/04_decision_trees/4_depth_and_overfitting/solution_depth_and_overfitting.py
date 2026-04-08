@@ -48,8 +48,14 @@ def make_traffic():
     })
     return pd.concat([benign, port_scan, exfil, dos], ignore_index=True).sample(
         frac=1, random_state=42
-    )
+    ).reset_index(drop=True)
 df = make_traffic()
+# Inject 10% label noise — real captures always have mislabelled flows.
+# Without it the four classes are perfectly separable at depth 3 and the
+# depth sweep below shows no overfitting whatsoever.
+rng = np.random.default_rng(7)
+noise_mask = rng.random(len(df)) < 0.10
+df.loc[noise_mask, 'label'] = rng.integers(0, 4, noise_mask.sum())
 FEATURES    = ['connection_rate', 'bytes_sent', 'bytes_received',
                'unique_dest_ports', 'duration_seconds', 'failed_connections']
 CLASS_NAMES = ['benign', 'port_scan', 'exfil', 'DoS']

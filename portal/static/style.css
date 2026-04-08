@@ -2192,6 +2192,141 @@ select option:hover {
     text-align: right;
 }
 
+/* ── Step 2: emphasise the Difference panel + verdict card ─────────────── */
+.grid-container.diff-highlight {
+    padding: 10px 10px 8px;
+    border: 1px dashed rgba(6, 214, 224, 0.55);
+    border-radius: var(--radius);
+    background: rgba(6, 214, 224, 0.05);
+}
+.grid-container.diff-highlight .label {
+    color: var(--accent);
+}
+.diff-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--accent);
+    background: rgba(6, 214, 224, 0.12);
+    border: 1px solid rgba(6, 214, 224, 0.45);
+    border-radius: 999px;
+    vertical-align: middle;
+}
+.grid-caption {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--text-dim);
+    max-width: 220px;
+}
+.verdict-card {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    margin: 12px 0 0;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+.verdict-card .verdict-strip {
+    width: 6px;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+}
+.verdict-card .verdict-body {
+    padding: 12px 16px;
+    flex: 1;
+}
+.verdict-card .verdict-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+.verdict-card .verdict-headline {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+.verdict-card .verdict-text {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+
+/* Step 2: preset pair buttons — distinct colours + selected state.
+   Each preset class sets --btn-color, and the rules below tint border,
+   background, dot, hover glow, and the .selected glow from that one var. */
+.preset-hard    { --btn-color: var(--red); }
+.preset-mid     { --btn-color: var(--orange); }
+.preset-easy    { --btn-color: var(--green); }
+.preset-extreme { --btn-color: #8b5cf6; } /* violet — visually distinct from green */
+
+.btn-group .btn-preset {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--btn-color) 55%, transparent);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--btn-color) 14%, transparent) 0%,
+        color-mix(in srgb, var(--btn-color)  4%, transparent) 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--btn-color) 8%, transparent) inset,
+        0 1px 0 rgba(255,255,255,0.04) inset;
+    transition: transform 0.15s ease, box-shadow 0.2s ease,
+                background 0.2s ease, border-color 0.2s ease;
+}
+.btn-group .btn-preset .preset-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: var(--btn-color);
+    box-shadow: 0 0 6px var(--btn-color);
+    flex-shrink: 0;
+}
+.btn-group .btn-preset .preset-meta {
+    margin-left: 4px;
+    opacity: 0.65;
+    font-weight: 500;
+}
+.btn-group .btn-preset:hover {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--btn-color) 90%, transparent);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--btn-color) 22%, transparent) 0%,
+        color-mix(in srgb, var(--btn-color)  8%, transparent) 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--btn-color) 18%, transparent) inset,
+        0 0 14px color-mix(in srgb, var(--btn-color) 35%, transparent);
+    transform: translateY(-1px);
+}
+.btn-group .btn-preset.selected {
+    color: #ffffff;
+    border-color: var(--btn-color);
+    background: linear-gradient(180deg,
+        color-mix(in srgb, var(--btn-color) 38%, transparent) 0%,
+        color-mix(in srgb, var(--btn-color) 18%, transparent) 100%);
+    box-shadow:
+        0 0 0 2px var(--btn-color) inset,
+        0 0 18px color-mix(in srgb, var(--btn-color) 55%, transparent);
+    transform: translateY(-1px);
+}
+.btn-group .btn-preset.selected .preset-dot {
+    box-shadow: 0 0 12px var(--btn-color), 0 0 4px #ffffff inset;
+}
+.btn-group .btn-preset.selected .preset-meta {
+    opacity: 0.85;
+}
+
 /* ── Prototypes overview grid (Step 7) ──────────────────────────────────── */
 .proto-grid {
     display: grid;
@@ -5162,6 +5297,98 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .md-content p { margin: 8px 0 12px; }
 .md-content ul { margin: 8px 0 12px; padding-left: 24px; }
 .md-content ul li { margin: 4px 0; }
+
+/* Lecture visuals — concept-first illustrations rendered inside .md-content
+   drawer panels. Used to introduce a function with a small mental-model
+   diagram BEFORE the code call. Author them with raw HTML inside the
+   markdown source. Two patterns are supported:
+     • Image:  <div class="lecture-visual"><img src="..."><div class="vis-caption">…</div></div>
+     • Diagram: <div class="lecture-visual"><div class="vis-stack">…</div></div> */
+.md-content .lecture-visual {
+    margin: 14px auto 18px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, rgba(6,214,224,0.05), rgba(168,85,247,0.04));
+    border: 1px solid rgba(6,214,224,0.20);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    max-width: 620px;
+    text-align: center;
+}
+.md-content .lecture-visual img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+/* Side-by-side image pair (e.g. tight_layout off vs on) */
+.md-content .lecture-visual-pair {
+    max-width: 820px;
+}
+.md-content .lecture-visual-pair img {
+    display: inline-block;
+    max-width: 48%;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+.md-content .lecture-visual .vis-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.md-content .lecture-visual .vis-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+.md-content .lecture-visual .vis-num-cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+.md-content .lecture-visual .vis-px-cell {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.md-content .lecture-visual .vis-arrow {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 6px 0 2px;
+}
+.md-content .lecture-visual .vis-caption {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.5;
+}
+.md-content .lecture-visual .vis-caption code {
+    background: rgba(6,214,224,0.12);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-style: normal;
+}
 
 /* Numbered ordered lists in the markdown drawer render as a brand-tinted
    pipeline — circular gradient number badge, accent left border, hover

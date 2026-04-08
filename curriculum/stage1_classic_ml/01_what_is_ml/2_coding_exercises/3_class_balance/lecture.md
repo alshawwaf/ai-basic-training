@@ -30,18 +30,19 @@ This is the rule in security ML, not the exception:
 
 You will almost never encounter a naturally balanced security dataset in the real world. You must always check.
 
-```
-  Balanced dataset (digits)       Imbalanced dataset (intrusion)
+The digits dataset we use in this lesson is **balanced** — every digit class has roughly the same count, so accuracy is a fair measure of model quality:
 
-  Class 0: ████████  178          Normal:  ████████████████████  9900
-  Class 1: ████████  178          Attack:  █  100
-  Class 2: ████████  177
-  ...                             ratio = 99 : 1
-  Class 9: ████████  180
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/class_balance_digits.png" alt="Bar chart of the digits dataset showing all ten digit classes with roughly 178 samples each">
+  <div class="vis-caption">Real <code>value_counts()</code> output for <code>digits.target</code> — all ten classes within a few samples of each other (ratio ≈ 1.0 : 1).</div>
+</div>
 
-  ratio ≈ 1 : 1                  The model can "cheat" by always
-                                 predicting normal → 99% accuracy
-```
+A real security dataset looks nothing like this. Here is the same chart for a typical intrusion-detection corpus where attacks are rare:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/class_balance_security.png" alt="Bar chart with a tall blue Normal bar at 9500 and a tiny red Attack bar at 500">
+  <div class="vis-caption">95% / 5% split — the model can "cheat" by always predicting Normal and still hit 95% accuracy.</div>
+</div>
 
 ---
 
@@ -56,7 +57,12 @@ def predict(connection):
 
 It has learned nothing. It does not look at a single feature. It simply predicts the majority class every time.
 
-If 95% of your data is labelled "normal," this strategy scores 95% — and catches **zero attacks**.
+If 95% of your data is labelled "normal," this strategy scores 95% — and catches **zero attacks**. The confusion matrix makes the failure obvious:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/class_balance_trap.png" alt="Confusion matrix where TN=9500, FP=0, FN=500, TP=0; title says always predict Normal, accuracy 95 percent, recall 0 percent">
+  <div class="vis-caption">Every actual attack falls into the FN cell — caught by nothing. Accuracy still reads 95% because the 9,500 normals dominate the count.</div>
+</div>
 
 This is called the **naive baseline** — the score an unintelligent model achieves by always predicting the majority class. Any model you train must score meaningfully higher than this to be worth using.
 

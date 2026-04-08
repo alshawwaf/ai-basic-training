@@ -44,24 +44,14 @@ No matter the domain, the code follows the same pattern:
 
 We use the UCI Optical Recognition of Handwritten Digits dataset — a classic benchmark that ships inside scikit-learn. No download required.
 
-Each sample is an 8×8 greyscale image of a handwritten digit. Each cell is a pixel brightness from 0 (white) to 16 (full ink):
+Each sample is an 8×8 greyscale image of a handwritten digit. Each cell is a pixel brightness from 0 (white) to 16 (full ink). On the left are the raw numbers, on the right is what those same numbers look like when painted as pixels:
 
-```
- Raw pixel values              Ink level — same data, visualised
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/loading_digit_sample.png" alt="The 8x8 numpy array of pixel values for the first digit sample on the left, and the same array rendered as a greyscale handwritten 0 on the right">
+  <div class="vis-caption">Real output of <code>digits.images[0]</code>. The hollow centre of the 0 is visible in both views — the right column rows 3–6 are 0 (white background).</div>
+</div>
 
-  0  0  5 13  9  1  0  0      ·  ·  ▒  █  ▓  ░  ·  ·
-  0  0 13 15 10 15  5  0      ·  ·  █  █  ▓  █  ▒  ·
-  0  3 15  2  0 11  8  0      ·  ░  █  ░  ·  ▓  ▒  ·
-  0  4 12  0  0  8  8  0      ·  ░  ▓  ·  ·  ▒  ▒  ·   ← the digit "0"
-  0  5  8  0  0  9  8  0      ·  ▒  ▒  ·  ·  ▓  ▒  ·
-  0  4 11  0  1 12  7  0      ·  ░  ▓  ·  ░  ▓  ▒  ·
-  0  2 14  5 10 12  0  0      ·  ░  █  ▒  ▓  ▓  ·  ·
-  0  0  6 13 10  0  0  0      ·  ·  ▒  █  ▓  ·  ·  ·
-
-  Key:  · = 0 (empty)   ░ = 1–4   ▒ = 5–8   ▓ = 9–12   █ = 13–16 (full ink)
-```
-
-The hollow centre of the 0 is visible in the right column — rows 3–6 have `·` in the middle. The image is then flattened to a single row of 64 numbers before the model receives it.
+The image is then flattened to a single row of 64 numbers before the model receives it.
 
 The full dataset: **1,797 images**, **10 classes** (digits 0–9), **64 features** per image.
 
@@ -86,7 +76,12 @@ Each returns a `Bunch` with the same `.data`, `.target`, and `.DESCR` fields —
 
 > **Want to go deeper?** [scikit-learn toy datasets — official docs](https://scikit-learn.org/stable/datasets/toy_dataset.html)
 
-That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access.
+That bundle is called a `Bunch` — a container object that works like a Python dictionary with dot-notation access. Calling `load_digits()` once gives you the four fields you actually need:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/loading_bunch_structure.png" alt="Diagram showing load_digits() at the top with arrows pointing down to four child boxes labelled .data, .target, .images, and .DESCR with their shapes and roles">
+  <div class="vis-caption">A Bunch is a dictionary you can also access with dot notation — <code>digits.data</code> and <code>digits["data"]</code> return the same array.</div>
+</div>
 
 Most of the fields inside are **ndarray** objects. An `ndarray` (short for *n-dimensional array*) is NumPy's core data type — a grid of numbers that can have any number of dimensions. A 1D ndarray is a list of numbers, a 2D ndarray is a table (rows and columns), and a 3D ndarray is a stack of tables. All ML data flows through ndarrays because they are fast and memory-efficient.
 
@@ -130,17 +125,10 @@ df[df["target"] == 3]
 
 Read this from the inside out. `df["target"]` grabs the target column. `== 3` compares every value to 3 and produces a column of `True`/`False`. Wrapping that back in `df[...]` keeps only the rows where the result is `True`:
 
-```
-df["target"]      == 3       df[df["target"] == 3]
-
-  0                False
-  1                False     (skipped)
-  2                False     (skipped)
-  3        -->     True   -->  row kept
-  4                False     (skipped)
-  3                True   -->  row kept
-  ...                        ...
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/loading_mask_filter.png" alt="Three panels: target column with values 5 3 7 3 1 8 3 0; the same column after == 3 with green True boxes for the threes and red False boxes for the rest; the filtered result showing only the three 3s">
+  <div class="vis-caption">Boolean-mask filtering — <code>== 3</code> turns the target column into True/False, then <code>df[mask]</code> keeps only the True rows.</div>
+</div>
 
 This is how you slice a dataset down to a single class — useful when you want to inspect or plot just the "3" digits, for example.
 
@@ -166,14 +154,12 @@ df["target"] = digits.target
 | `digits.data` | `(1797, 64)` — 64 pixel values per row | 64 columns named `pixel_0` … `pixel_63` |
 | `digits.target` | `(1797,)` — one label per row | 1 column named `target` |
 
-**One DataFrame comes out** — `df` with shape `(1797, 65)`:
+**One DataFrame comes out** — `df` with shape `(1797, 65)`. Here are the first six rows of the real DataFrame, with a few representative pixel columns and the target column highlighted in yellow:
 
-| pixel_0 | pixel_21 | … | pixel_63 | target |
-|---:|---:|:---:|---:|:---:|
-| 0.0 | 11.0 | … | 0.0 | 0 |
-| 0.0 |  6.0 | … | 0.0 | 1 |
-| 0.0 | 16.0 | … | 0.0 | 2 |
-| … | … | … | … | … |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/loading_dataframe_preview.png" alt="Pandas DataFrame head with cyan header row showing pixel_0 pixel_1 pixel_21 pixel_32 pixel_43 pixel_63 target columns and six rows of integer values">
+  <div class="vis-caption">Real output of <code>df.head(6)</code> after wrapping <code>digits.data</code>. 64 feature columns + 1 target column = shape <code>(1797, 65)</code>.</div>
+</div>
 
 `columns=` gave each of the 64 data columns a name (`pixel_0` … `pixel_63`). `df["target"] =` added a 65th column with the labels — so the final shape is **64 feature columns + 1 target column**.
 

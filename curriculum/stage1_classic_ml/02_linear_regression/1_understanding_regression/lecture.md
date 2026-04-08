@@ -35,11 +35,10 @@ Machine learning problems divide into two broad types depending on what you are 
 
 The rule of thumb: if you can put your output on a number line and care about *how far off* you are, use regression. If you only care about *which bucket* the output falls into, use classification.
 
-|  | **Regression** | **Classification** |
-|---|---|---|
-| Output type   | continuous number on a line (e.g. *0 ms → 300 ms*) | one of a fixed set of buckets (e.g. *"attack"* or *"benign"*) |
-| Example prediction | predicted: **145.2 ms**, actual: **148.0 ms** | predicted: **"attack"** |
-| Error means | distance from the truth (here: 2.8 ms) | right bucket or wrong bucket — no notion of "how far off" |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/regression_vs_classification.png" alt="Left panel showing a number-line from 0 to 300 ms with predicted 145.2 and actual 148.0 marked, error of 2.8 ms; right panel showing two big bucket boxes labelled BENIGN and ATTACK with a prediction arrow landing in ATTACK">
+  <div class="vis-caption">Regression error has a magnitude in the same units as the target. Classification error is just "wrong bucket" — no distance, no in-between.</div>
+</div>
 
 ---
 
@@ -81,7 +80,12 @@ A scatter plot of `requests_per_second` (x-axis) vs `response_time_ms` (y-axis) 
 - **No pattern** — suggests the features are not predictive
 - **Outliers** — individual points far from the main cloud; investigate before trusting them
 
-For our server data you should see a clear positive trend with some Gaussian noise around a straight line — points start near `(0 rps, ~50 ms)` and rise steadily toward `(150 rps, ~280 ms)`, scattered loosely around an imaginary diagonal. The cloud is tight enough that you can mentally draw the best-fit line with a ruler, which is exactly what `LinearRegression` will do for you in the next exercise.
+For our server data you should see a clear positive trend with some Gaussian noise around a straight line. The cloud is tight enough that you can mentally draw the best-fit line with a ruler — which is exactly what `LinearRegression` will do for you in the next exercise:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_scatter_raw.png" alt="Scatter plot of 500 cyan points showing requests_per_second on the x-axis and response_time_ms on the y-axis with a clear upward linear trend">
+  <div class="vis-caption">Real output of <code>plt.scatter(df['requests_per_second'], df['response_time_ms'])</code> on the lab's synthetic dataset. The straight-line shape tells you linear regression is the right tool.</div>
+</div>
 
 ---
 

@@ -25,6 +25,11 @@ threshold = 0.3
 y_pred_custom = (probs >= threshold).astype(int)
 ```
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_proba_hist.png" alt="Histogram of predict_proba output split by true class. Cyan bars (actual legitimate) cluster near 0; red bars (actual phishing) cluster near 1; a black dashed line at 0.5 marks the default threshold">
+  <div class="vis-caption">Real <code>model.predict_proba(X_test_scaled)[:, 1]</code> on the held-out test set, coloured by the true label. Most points sit in the corners — the few in the middle are the close calls the threshold actually decides.</div>
+</div>
+
 ---
 
 ## Concept: The Precision-Recall Tradeoff
@@ -73,6 +78,16 @@ A useful operational tool is a table that shows how metrics change across thresh
 | 0.7 | 0.97 | 0.82 | 0.89 | 85 |
 
 You present this to stakeholders and they decide what to optimise for.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_threshold_sweep.png" alt="Line plot of precision (cyan), recall (red), and F1 (violet) against threshold from 0.05 to 0.95, with a vertical dashed line at 0.5 marking the default. As threshold rises, precision climbs and recall falls">
+  <div class="vis-caption">Real precision/recall/F1 swept across 19 threshold settings on the lab model. Slide the threshold left to chase recall, right to chase precision.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_pr_curve.png" alt="Precision-recall curve from sklearn precision_recall_curve drawn in cyan with the area shaded; a red dot annotated 'threshold = 0.5' marks the default operating point in the upper-right corner">
+  <div class="vis-caption">Real <code>precision_recall_curve(y_test, probs)</code>. Each point on the curve is one threshold setting — picking a threshold means picking a point on this curve.</div>
+</div>
 
 ---
 

@@ -73,6 +73,11 @@ If one class is much rarer (e.g., 5% positive), the model can achieve high accur
 
 For this dataset we use a 50/50 split so the model is not tempted to cheat. In practice, phishing datasets are often imbalanced.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_class_balance.png" alt="Bar chart of the synthetic phishing dataset showing two equal cyan and red bars labelled legitimate and phishing, both at 500 rows">
+  <div class="vis-caption">Real <code>df['is_phishing'].value_counts()</code> on the lab dataset. Exactly 500 / 500 — the model cannot get a high score by always predicting one class.</div>
+</div>
+
 ---
 
 ## Concept: Feature Distribution Analysis
@@ -93,6 +98,11 @@ A quick technique: `df.groupby('is_phishing').mean()` shows the average feature 
 | `uses_https` | mostly `1` | mostly `1` (phishing increasingly uses HTTPS) | **weak** — distributions sit on top of each other |
 
 A feature is useful when the two class distributions sit in **different places**. When the peaks overlap heavily, no single threshold can separate the classes — the feature can still help in combination with others, but on its own it carries little signal.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_feature_distributions.png" alt="Four small histograms in a 2x2 grid showing url_length, num_dots, num_subdomains, and path_length. Each panel overlays the legitimate distribution in cyan with the phishing distribution in red. url_length and path_length are clearly separated, num_dots and num_subdomains overlap more">
+  <div class="vis-caption">Real per-feature histograms split by class. Cyan = legitimate, red = phishing. Where the colours sit apart, the feature is predictive on its own; where they overlap, the model needs to combine it with others.</div>
+</div>
 
 ---
 

@@ -29,23 +29,10 @@ At every possible threshold, you get one (FPR, TPR) point. Connecting all those 
 
 A good classifier's curve bulges toward the upper-left corner.
 
-```
-ROC curve — what it looks like (conceptual shape):
-
-  Axes: x = FPR (False Positive Rate), y = TPR (Recall)
-
-  Perfect classifier (AUC = 1.0):  goes straight up from (0,0) to (0,1),
-                                    then right to (1,1) — a right angle
-                                    hugging the upper-left corner.
-
-  Good model (AUC = 0.95):         curves upward steeply from (0,0),
-                                    bulging toward the upper-left corner.
-
-  Random classifier (AUC = 0.5):   follows the diagonal from (0,0) to (1,1).
-
-  Key point (0,1) = all attacks caught, zero false alarms.
-  The closer the curve hugs the upper-left corner, the better the model.
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_roc_single.png" alt="ROC curve for the trained LogisticRegression. Cyan curve hugs the upper-left corner from (0,0) up to near (0,1) then across to (1,1). Diagonal grey dashed line shows the random baseline AUC=0.5. A red dot on the curve marks the threshold=0.5 operating point. Shaded area under the curve is the AUC of 0.986">
+  <div class="vis-caption">Real ROC curve from the lab LogisticRegression. The red dot is the default threshold; sliding it moves the operating point along the curve. Area under the curve = AUC = 0.986.</div>
+</div>
 
 ---
 
@@ -73,18 +60,10 @@ AUC evaluates the model across **all possible thresholds**, not just the default
 
 AUC is threshold-independent, making it useful for comparing models before you have decided on an operational threshold.
 
-```
-  Why AUC beats accuracy for imbalanced data
-
-  Model A (DummyClassifier):       Model B (LogisticRegression):
-  Always predicts "benign"         Learns real patterns
-
-  Accuracy: 0.95  ← misleading    Accuracy: 0.98
-  AUC:      0.50  ← exposes it    AUC:      0.98  ← genuine skill
-
-  AUC = 0.5 means "no better than random"
-  regardless of class imbalance
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_roc_compare.png" alt="ROC curves for three models on the same axes. DummyClassifier follows the diagonal (AUC=0.500). DecisionTree (violet) bulges into the upper-left with AUC=0.953. LogisticRegression (cyan) bulges further with AUC=0.986. Diagonal black dashed line marks random">
+  <div class="vis-caption">Three lab models on one ROC plot. DummyClassifier hugs the random diagonal; LogisticRegression hugs the upper-left corner. AUC ranks them objectively, regardless of threshold.</div>
+</div>
 
 ---
 
@@ -122,23 +101,23 @@ Print a formatted summary table of all three models' accuracy, precision, recall
 
 ```
 TASK 1 — AUC:
-LogisticRegression AUC: 0.983
+LogisticRegression AUC: 0.986
 
 TASK 2 — Model comparison:
 DummyClassifier    AUC: 0.500  (random)
-LogisticRegression AUC: 0.983
-DecisionTree       AUC: 0.966
+LogisticRegression AUC: 0.986
+DecisionTree       AUC: 0.953
 Winner: LogisticRegression
 
 TASK 3 — Optimal threshold:
-Optimal threshold (closest to top-left): 0.37
-At this threshold: TPR=0.860, FPR=0.012
+Optimal threshold (closest to top-left): 0.077
+At this threshold: TPR=0.940, FPR=0.047
 
 TASK 4 (BONUS) — Full evaluation scorecard:
 Model               Accuracy  Precision  Recall    F1   AUC
 DummyClassifier       0.950     0.000    0.000  0.000  0.500
-LogisticRegression    0.980     0.857    0.720  0.783  0.983
-DecisionTree          0.977     0.812    0.780  0.796  0.966
+LogisticRegression    0.983     0.822    0.830  0.826  0.986
+DecisionTree          0.978     0.804    0.740  0.771  0.953
 ```
 
 ---

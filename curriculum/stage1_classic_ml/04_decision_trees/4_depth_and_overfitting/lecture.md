@@ -30,13 +30,18 @@ Every additional level in a decision tree allows the model to create finer and f
 
 An unlimited decision tree will achieve ~100% training accuracy by creating a separate leaf for every unique combination of feature values in the training set. But when tested on new data, those hyper-specific rules generalise poorly.
 
-**Underfit vs good fit vs overfit**
+**Underfit vs good fit vs overfit (real lab numbers)**
 
 | Depth | Behaviour | Train accuracy | Test accuracy | Gap | Verdict |
 |---:|---|---:|---:|---:|---|
-|  1 | one split only — too simple to capture the patterns | 65% | 65% | 0 pp | **underfit** |
-|  5 | captures the real patterns, ignores most noise | 99% | 97% | 2 pp | **good fit** |
-| 15 | memorises individual training samples | 100% | 94% | 6 pp | **overfit** |
+|  1 | one split only — too simple to capture the patterns | 49% | 48% | 1 pp | **underfit** |
+|  3 | captures the real patterns, ignores most noise | 94% | 92% | 2 pp | **good fit** |
+| 15 | memorises individual training samples | 100% | 84% | 16 pp | **overfit** |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_overfit_compare.png" alt="Three side-by-side decision-region plots on the connection_rate vs bytes_sent slice. Left: max_depth=1 with two huge regions, train=0.487 test=0.475. Middle: max_depth=3 with a few clean rectangles, train=0.937 test=0.918. Right: max_depth=15 with dozens of jagged tiny regions, train=0.992 test=0.870">
+  <div class="vis-caption">Same data, three depths. As <code>max_depth</code> grows the boundary turns from rough rectangles into a jagged patchwork carved around individual training points — that is overfitting in pictures.</div>
+</div>
 
 The diagnostic is the **gap** between train and test accuracy. A small gap with low scores means underfitting; a small gap with high scores means a good model; a large gap means the model has memorised the training set instead of learning generalisable rules.
 
@@ -58,11 +63,16 @@ By training models at every depth from 1 to 15 and plotting both accuracies, you
 
 | Depth range | Training curve | Test curve | What's happening |
 |---|---|---|---|
-| 1 – 3 | climbing | climbing alongside it | both **underfit** — model still gaining real signal |
-| 4 – 6 | nearly flat near the top | reaches its peak, then plateaus | **sweet spot** — pick the depth where the test curve first plateaus |
-| 7 + | pinned at ~1.0 | flat or declining | **overfitting** — train keeps gaining, test does not |
+| 1 – 2 | climbing fast | climbing alongside it | both **underfit** — model still gaining real signal |
+| 3 | jumps to ~94% | jumps with it to ~92% (peak) | **sweet spot** — pick the first depth where the test curve plateaus |
+| 4 + | keeps inching up to 100% | drifts downward to ~84% | **overfitting** — train keeps gaining, test loses ground |
 
 The "elbow" of the test curve — the point where adding depth stops helping — is the recommended depth. Any deeper and you are paying complexity for memorisation, not generalisation.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_depth_sweep.png" alt="Line plot of train accuracy (cyan solid) and test accuracy (red dashed) against max_depth from 1 to 15. Both rise together to depth 3, then train continues climbing toward 1.0 while test decays from 0.92 to 0.84. A vertical violet dotted line marks the sweet spot at depth=3. The widening gap between the curves is shaded in red">
+  <div class="vis-caption">Real depth sweep on the lab dataset. The two curves move together until depth 3, then split — the widening red band is the overfit gap. The recommended <code>max_depth</code> is the point just before they diverge.</div>
+</div>
 
 ---
 
@@ -74,7 +84,7 @@ Two common approaches:
 
 2. **Cross-validation** (more robust): Use `cross_val_score()` to evaluate each depth on multiple train/test folds and pick the depth with highest mean CV score. (Covered in Lesson 2.4.)
 
-For this dataset the sweet spot is typically around depth 5–7, where test accuracy is highest before overfitting sets in.
+For this dataset the sweet spot is **depth 3**, where test accuracy peaks at ~92% before overfitting sets in.
 
 ---
 
@@ -98,21 +108,21 @@ Train three models: depth=1 (underfit), depth=sweet_spot (good), depth=15 (overf
 
 ```
 TASK 1 — Depth sweep:
-Depth | Train Acc | Test Acc | Gap
-  1   |   0.652   |  0.648   | 0.004
-  2   |   0.839   |  0.832   | 0.007
-  3   |   0.921   |  0.912   | 0.009
-  4   |   0.978   |  0.962   | 0.016
-  5   |   0.990   |  0.967   | 0.023
-  6   |   0.996   |  0.965   | 0.031
-  7   |   0.999   |  0.960   | 0.039
-  ...
- 15   |   1.000   |  0.943   | 0.057
+Depth | Train Acc | Test Acc |    Gap
+----------------------------------------
+    1 |     0.487 |    0.475 |  0.013
+    2 |     0.717 |    0.693 |  0.024
+    3 |     0.938 |    0.915 |  0.023
+    4 |     0.940 |    0.910 |  0.030
+    5 |     0.944 |    0.895 |  0.049
+    6 |     0.950 |    0.895 |  0.055
+    7 |     0.954 |    0.882 |  0.072
+   ...
+   15 |     0.998 |    0.843 |  0.155
 
 TASK 2 — Sweet spot:
-Best test accuracy: 0.967 at depth=5
-Best train/test gap: 0.004 at depth=1 (but accuracy is too low)
-Recommended depth: 5
+Best test accuracy: 0.915 at depth=3
+Recommended max_depth: 3
 
 TASK 3 — Plot created.
 ```

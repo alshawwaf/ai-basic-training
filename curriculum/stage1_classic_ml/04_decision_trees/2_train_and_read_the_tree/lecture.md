@@ -97,6 +97,11 @@ The split question routes samples to one of two children:
 
 The **root node** is the first split — the single most informative feature/threshold the tree could find. Nodes near the root are always more important than nodes near the leaves.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_tree_depth4.png" alt="Decision tree visualisation produced by sklearn plot_tree at max_depth=4. The root node splits on duration_seconds <= 59.34 with 1600 samples. Internal nodes branch on connection_rate, unique_dest_ports, bytes_sent, bytes_received and failed_connections; leaf nodes are coloured by majority class (orange benign, green port_scan, blue exfil, magenta DoS)">
+  <div class="vis-caption">Real <code>plot_tree(model, max_depth=4)</code> on the lab dataset. The root split is <code>duration_seconds ≤ 59.34</code> — exfil has long sessions and ends up on the right, everything else on the left.</div>
+</div>
+
 ---
 
 ## Concept: Interpreting Rules in a Security Context
@@ -104,16 +109,24 @@ The **root node** is the first split — the single most informative feature/thr
 When `export_text()` shows:
 
 ```
-|--- connection_rate <= 55.30
-|   |--- unique_dest_ports <= 14.50
-|   |   |--- class: benign
-|   |--- unique_dest_ports >  14.50
-|   |   |--- class: port_scan
-|--- connection_rate >  55.30
-|   |--- class: DoS
+|--- duration_seconds <= 59.34
+|   |--- connection_rate <= 64.98
+|   |   |--- unique_dest_ports <= 14.00
+|   |   |   |--- class: benign
+|   |   |--- unique_dest_ports >  14.00
+|   |   |   |--- class: port_scan
+|   |--- connection_rate >  64.98
+|   |   |--- class: DoS
+|--- duration_seconds >  59.34
+|   |--- class: exfil
 ```
 
-This tells you: "If connection rate is normal (≤55 rps) and the source contacts many ports (>14), it is a port scan. If connection rate is very high (>55), it is DoS." These rules are directly actionable in a firewall or IDS.
+This tells you: "Short sessions with normal connection rate and few ports → benign. Short sessions with normal rate but many ports → port scan. Short sessions with very high rate → DoS. Long sessions → exfil." These rules are directly actionable in a firewall or IDS.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/dt_decision_regions.png" alt="2D decision regions plot. Background is divided into four colour bands by the trained tree on connection_rate and bytes_sent (log axes). Cyan benign region top-left, violet port_scan band, green exfil top, red DoS far right. Training points overlaid as small coloured dots">
+  <div class="vis-caption">A 2-feature tree's decision regions visualised. The boundaries are always axis-aligned rectangles — that is the only kind of region a decision tree can carve out.</div>
+</div>
 
 ---
 
@@ -137,23 +150,23 @@ Pick one test sample and trace it through the tree manually using the exported t
 
 ```
 TASK 1 — Training:
-Training accuracy: 0.978
-Test accuracy:     0.962
+Training accuracy: 0.940
+Test accuracy:     0.910
 
 TASK 2 — Tree rules (first 30 lines):
-|--- connection_rate <= 55.32
-|   |--- bytes_sent <= 27500.00
-|   |   |--- unique_dest_ports <= 14.50
+|--- duration_seconds <= 59.34
+|   |--- connection_rate <= 64.98
+|   |   |--- unique_dest_ports <= 14.00
 |   |   |   |--- class: 0 (benign)
-|   |   |--- unique_dest_ports >  14.50
+|   |   |--- unique_dest_ports >  14.00
 |   |   |   |--- class: 1 (port_scan)
-|   |--- bytes_sent >  27500.00
-|   |   |--- class: 2 (exfil)
-|--- connection_rate >  55.32
-|   |--- class: 3 (DoS)
+|   |--- connection_rate >  64.98
+|   |   |--- class: 3 (DoS)
+|--- duration_seconds >  59.34
+|   |--- class: 2 (exfil)
 
-Root split: connection_rate <= 55.32
-Meaning: High connection rate (>55 rps) immediately → DoS classification
+Root split: duration_seconds <= 59.34
+Meaning: Long-lived sessions (>59 s) are almost always exfil
 
 TASK 3 — Tree visualisation created.
 ```

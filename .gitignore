@@ -7,6 +7,8 @@ venv/
 *.png
 # Keep asset images
 !ops/assets/*.png
+# Keep lecture visuals — these are checked-in PNGs rendered inside lecture.md
+!portal/static/lecture_assets/*.png
 
 # Per-deployment portal settings (admin-toggleable home view, etc.)
 portal/site_settings.json

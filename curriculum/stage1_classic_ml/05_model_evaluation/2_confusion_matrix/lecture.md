@@ -41,12 +41,17 @@ Once you have TP, TN, FP, FN, every metric follows:
 
 |              | Predicted **Benign** | Predicted **Attack** |
 |---           |---:                  |---:                  |
-| **Actual Benign** | TN = 1,888           | FP = 12              |
-| **Actual Attack** | FN = 28              | TP = 72              |
+| **Actual Benign** | TN = 1,882           | FP = 18              |
+| **Actual Attack** | FN = 17              | TP = 83              |
 
 - **Precision** uses the *Predicted Attack* column → `TP / (FP + TP)`
 - **Recall** uses the *Actual Attack* row → `TP / (FN + TP)`
 - **Accuracy** uses the diagonal → `(TN + TP) / total`
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_metric_zones.png" alt="Diagram of the 2x2 confusion matrix. Top-left TN=1882 (cyan), top-right FP=18 (orange), bottom-left FN=17 (red), bottom-right TP=83 (green). A red dashed rectangle outlines the bottom row labelled Recall = TP/(TP+FN). A violet dashed rectangle outlines the right column labelled Precision = TP/(TP+FP)">
+  <div class="vis-caption">Real lab numbers laid out as a confusion matrix. Each metric uses a different slice — recall reads the *actual attack* row, precision reads the *predicted attack* column.</div>
+</div>
 
 | Metric | Formula |
 |--------|---------|
@@ -57,10 +62,10 @@ Once you have TP, TN, FP, FN, every metric follows:
 | F1 | 2 × Precision × Recall / (Precision + Recall) |
 | False Positive Rate | FP / (FP + TN) |
 
-**Example:** If TP=72, TN=1888, FP=12, FN=28:
-- Accuracy = (72+1888) / 2000 = 0.980
-- Precision = 72 / (72+12) = 0.857
-- Recall = 72 / (72+28) = 0.720
+**Example:** If TP=83, TN=1882, FP=18, FN=17:
+- Accuracy = (83+1882) / 2000 = 0.983
+- Precision = 83 / (83+18) = 0.822
+- Recall = 83 / (83+17) = 0.830
 
 ---
 
@@ -77,6 +82,11 @@ sns.heatmap(cm, annot=True, fmt='d',
             yticklabels=['Benign', 'Attack'],
             cmap='Blues')
 ```
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_confusion_heatmap.png" alt="Confusion matrix heatmap from the trained LogisticRegression. Top-left TN=1882 (dark blue), top-right FP=18 (very light blue), bottom-left FN=17 (very light blue), bottom-right TP=83 (light blue). Each cell labelled with its security meaning">
+  <div class="vis-caption">Real <code>confusion_matrix(y_test, y_pred)</code> rendered as a heatmap. Diagonal cells (TN, TP) are dark — those are the predictions the model gets right.</div>
+</div>
 
 ---
 
@@ -100,22 +110,22 @@ Create a seaborn heatmap of the confusion matrix. Annotate with both counts and 
 
 ```
 TASK 1 — Manual confusion matrix:
-True Negatives  (TN) = 1888  — benign correctly ignored
-False Positives (FP) =   12  — benign falsely flagged (analyst alert fatigue)
-False Negatives (FN) =   28  — ATTACKS MISSED! (most dangerous)
-True Positives  (TP) =   72  — attacks correctly caught
+True Negatives  (TN) = 1882  — benign correctly ignored
+False Positives (FP) =   18  — benign falsely flagged (analyst alert fatigue)
+False Negatives (FN) =   17  — ATTACKS MISSED! (most dangerous)
+True Positives  (TP) =   83  — attacks correctly caught
 
 TASK 2 — sklearn confusion matrix:
               Predicted Benign  Predicted Attack
-Actual Benign        1888              12
-Actual Attack          28              72
+Actual Benign        1882              18
+Actual Attack          17              83
 Matches manual: True ✓
 
 TASK 3 — Metrics from matrix:
-Accuracy  = (TP+TN)/(TP+TN+FP+FN) = 1960/2000 = 0.980
-Precision = TP/(TP+FP)             = 72/84     = 0.857
-Recall    = TP/(TP+FN)             = 72/100    = 0.720
-F1        = 2*P*R/(P+R)            = 0.783
+Accuracy  = (TP+TN)/(TP+TN+FP+FN) = 1965/2000 = 0.983
+Precision = TP/(TP+FP)             = 83/101    = 0.822
+Recall    = TP/(TP+FN)             = 83/100    = 0.830
+F1        = 2*P*R/(P+R)            = 0.826
 ```
 
 ---

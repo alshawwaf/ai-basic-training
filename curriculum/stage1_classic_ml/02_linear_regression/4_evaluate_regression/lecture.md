@@ -50,6 +50,13 @@ A **residual** is `actual - predicted`. Examining residuals reveals:
 
 In the security context, **large positive residuals** (actual >> predicted) are the most interesting: they mean the server is slower than expected, which could indicate an attack.
 
+A healthy model produces residuals that are tightly centred on zero and randomly scattered (no curves, no fans):
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_residuals.png" alt="Left panel: histogram of training residuals shaped like a bell curve centred at zero. Right panel: scatter of residuals against predicted values showing a random cloud around the y=0 line">
+  <div class="vis-caption">Real training residuals from the lab's fitted model. Left = roughly normal, centred on zero. Right = random scatter — no leftover pattern for the model to capture.</div>
+</div>
+
 **Reading residuals — `residual = actual - predicted`**
 
 | Sign of residual | Position vs the regression line | What it means | Why you care |
@@ -70,7 +77,12 @@ Once the model is trained on normal traffic, it defines a **behavioural baseline
 4. **Set a threshold**: flag any observation where `residual > k * σ` (commonly k = 2 or 3)
 5. **Alert** when a new observation exceeds the threshold
 
-This is a statistical process control approach — the same idea as control charts used in manufacturing, now applied to network security.
+This is a statistical process control approach — the same idea as control charts used in manufacturing, now applied to network security. Drawn on the scatter plot, the baseline is a band around the regression line: any point that pokes above the +3σ line is an anomaly worth investigating.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/lr_security_baseline.png" alt="Scatter plot of training data with the fitted regression line and a green ±3σ normal zone, an orange +2σ to +3σ warning band, and a dashed red +3σ alert threshold line; three red X marks above the threshold are labelled as anomalies">
+  <div class="vis-caption">Real fitted line + ±3σ bands. Green = normal. Orange = warning. Above the dashed red line = alert. Three synthetic anomalies plotted as red X.</div>
+</div>
 
 **The bands around the regression line — measured in σ (standard deviations of the training residuals)**
 

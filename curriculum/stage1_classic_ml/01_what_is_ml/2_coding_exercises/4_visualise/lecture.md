@@ -31,49 +31,114 @@ In security you have an additional concern: if your training data contains data 
 
 ## Concept: matplotlib — The Core Functions
 
-```
-plt.subplots(rows, cols, figsize=(width, height))
-```
-Creates a grid of empty panels. Returns two things:
-- `fig` — the whole figure (used for overall title and saving)
-- `axes` — a NumPy array of panels, shape `(rows, cols)`
+Before reaching for code, picture what you are building: **a grid of small images**, each one a numeric array painted as pixels, optionally with titles. The functions below each handle one piece of that picture. We introduce each one in plain English first, then show the call.
 
-Access individual panels: `axes[0][3]` is row 0, column 3.
+---
 
+### 1. Reserve an empty grid → `plt.subplots()`
+
+You start with a blank canvas. The first decision is **how many panels you need and how they should be laid out**. `plt.subplots(rows, cols)` reserves an empty `rows × cols` grid and hands you back an array of panel handles, addressed by `axes[row][col]`. Calling it with `2, 3` produces these six empty panels — you can then drop an image into any of them by index:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/subplots_grid.png" alt="2x3 grid of empty matplotlib panels labelled axes[0][0] through axes[1][2]">
+  <div class="vis-caption">Real output of <code>plt.subplots(2, 3)</code>. Write to any panel with <code>axes[0][2].imshow(...)</code>.</div>
+</div>
+
+```python
+fig, axes = plt.subplots(rows, cols, figsize=(width, height))
 ```
+
+- `fig` — the whole figure (used for the overall title and `savefig`)
+- `axes` — the NumPy array of panels you just saw
+- `figsize` — width × height **in inches**
+
+---
+
+### 2. Numbers become pixels → `ax.imshow()`
+
+A 2D NumPy array is just rows of numbers. `imshow()` walks the array and paints each cell as a coloured square. With `cmap="gray_r"` (reversed greyscale), **high values become dark ink and low values stay as white background** — matching how you would draw on paper. The same digit-3 sample, shown as raw numbers on the left and as pixels on the right:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/imshow_demo.png" alt="An 8x8 array of numbers from 0 to 16 next to the same array rendered as a greyscale handwritten 3">
+  <div class="vis-caption">Real digit-3 sample from sklearn. The numbers on the left literally are the pixels on the right.</div>
+</div>
+
+```python
 ax.imshow(array_2d, cmap="gray_r")
 ```
-Renders a 2D NumPy array as an image. `cmap="gray_r"` means reversed greyscale: high values (ink = 16) appear dark, low values (background = 0) appear white — matching how you would draw on paper.
 
-Other useful colourmaps:
-- `"gray"` — standard greyscale (high = white)
-- `"hot"` — black → red → yellow → white, useful for heatmaps
-- `"viridis"` — blue → green → yellow, perceptually uniform
+The `cmap` argument is the value-to-colour mapping. The same digit, painted with four different cmaps, looks like this:
 
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cmap_compare.png" alt="The same digit-3 image rendered with four colourmaps: gray_r, gray, hot, and viridis">
+  <div class="vis-caption">Four cmaps applied to the same array. Pick the one that matches your data type.</div>
+</div>
+
+| cmap | Low &rarr; high | Best for |
+|---|---|---|
+| `"gray_r"` | white &rarr; black | digits, scanned text |
+| `"gray"` | black &rarr; white | astronomy, MRI scans |
+| `"hot"` | black &rarr; red &rarr; yellow | heatmaps, feature importance |
+| `"viridis"` | dark blue &rarr; green &rarr; yellow | scientific data (perceptually uniform) |
+
+---
+
+### 3. Hide the rulers → `ax.axis("off")`
+
+By default every panel ships with x/y tick marks and numeric labels along its edges. For pixel images those numbers are noise — they refer to row and column indices nobody needs to read. Switch them off so the eye lands directly on the digit.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/axis_on_off.png" alt="The same digit with default x/y tick marks on the left and a clean borderless version on the right">
+  <div class="vis-caption">Same image, same data. <code>ax.axis("off")</code> removes the borders, ticks, and numeric labels.</div>
+</div>
+
+```python
 ax.axis("off")
 ```
-Hides the tick marks and axis labels — cleaner for image grids.
 
-```
-fig.suptitle("text", fontsize=12)
-```
-Adds a centred title above the entire figure.
+---
 
+### 4. One title above the whole figure → `fig.suptitle()`
+
+Each panel can carry its own `set_title("3")` for the digit it shows, but you usually want one heading **above the entire figure** as well. That is the figure-level "super title". Notice the per-panel labels (`3`, `5`, `8`) and the suptitle sitting above all of them:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/suptitle_demo.png" alt="Three digit panels with individual titles 3, 5, 8 and a single figure-level suptitle above them">
+  <div class="vis-caption">Per-panel titles via <code>ax.set_title()</code>, plus one figure-level heading via <code>fig.suptitle()</code>.</div>
+</div>
+
+```python
+fig.suptitle("Average digit per class", fontsize=12)
 ```
+
+---
+
+### 5. Stop the overlap → `plt.tight_layout()`
+
+Without this call, the per-panel titles from the previous step often collide with the next row of panels. `tight_layout()` measures every label and nudges things until they fit. Compare these two figures — same code, same data, only difference is the call to `tight_layout()`:
+
+<div class="lecture-visual lecture-visual-pair">
+  <img src="/static/lecture_assets/tight_layout_off.png" alt="A 2x3 figure where the panel titles overlap the row beneath them">
+  <img src="/static/lecture_assets/tight_layout_on.png" alt="The same 2x3 figure with tight_layout applied — titles no longer overlap">
+  <div class="vis-caption">Left: default spacing — titles crash into the row beneath. Right: <code>plt.tight_layout()</code> nudges everything until it fits.</div>
+</div>
+
+```python
 plt.tight_layout()
 ```
-Automatically adjusts spacing so panels don't overlap each other or the title.
 
-```
-plt.savefig("path/filename.png")
-```
-Saves the figure to disk. Call this before `plt.show()`.
+Always call it just before `savefig` or `show`.
 
+---
+
+### 6. Save and display → `plt.savefig()` and `plt.show()`
+
+```python
+plt.savefig("path/filename.png")  # write to disk first…
+plt.show()                         # …then open the window (may block)
 ```
-plt.show()
-```
-Opens the display window. On some systems this blocks execution until you close it.
+
+Save **before** show — on some systems `show()` clears the figure when the window closes, leaving you with an empty PNG.
 
 ---
 

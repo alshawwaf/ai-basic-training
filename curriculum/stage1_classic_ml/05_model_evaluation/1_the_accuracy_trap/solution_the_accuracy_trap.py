@@ -26,6 +26,10 @@ attack_data = np.column_stack([
 # Combine benign + attack, then shuffle so samples aren't in class order
 X = np.vstack([benign_data, attack_data])
 y = np.array([0]*n_benign + [1]*n_attack)
+# Add per-feature Gaussian noise so classes overlap the way real captures do —
+# without it the synthetic distributions are perfectly separable.
+rng = np.random.default_rng(7)
+X = X + rng.normal(0, X.std(axis=0) * 1.9, X.shape)
 idx = np.random.permutation(len(y))
 X, y = X[idx], y[idx]
 

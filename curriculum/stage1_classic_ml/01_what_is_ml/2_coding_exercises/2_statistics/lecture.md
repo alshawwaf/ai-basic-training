@@ -37,24 +37,18 @@ In security data **all five of these are common.** Logs come from multiple senso
 
 ## Concept: `.describe()` — One Call, Everything
 
-`df.describe()` returns a table of summary statistics for every numeric column:
+`df.describe()` returns a table of summary statistics for every numeric column. Here is the real output for five representative columns from the digits DataFrame, with the `std` row highlighted:
 
-```
-           pixel_0   pixel_32   target
-count      1797.00    1797.00  1797.00    <- how many non-null values
-mean          0.00       5.19     4.49    <- average
-std           0.00       4.54     2.87    <- standard deviation (spread)
-min           0.00       0.00     0.00    <- smallest value
-25%           0.00       0.00     2.00    <- 25th percentile
-50%           0.00       5.00     4.00    <- median
-75%           0.00       9.00     7.00    <- 75th percentile
-max           0.00      16.00     9.00    <- largest value
-```
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/statistics_describe.png" alt="A pandas describe table for pixel_0 pixel_10 pixel_32 pixel_63 and target columns showing count mean std min 25% 50% 75% max rows; the std row is highlighted in yellow and the pixel_0 column is in red because it is always 0">
+  <div class="vis-caption">Real <code>df[[...]].describe().round(2)</code> output. The yellow row is what we care about most — <code>std</code>. The red column is dead weight.</div>
+</div>
 
 **Reading this table:**
 
 - `pixel_0` has `mean=0` and `std=0` — it **never changes**. It is always white background. Feeding it to the model is harmless but wasteful — it carries zero predictive information.
-- `pixel_32` (the centre of the 8×8 grid) has `std=4.54` — it varies a lot. That variation is signal the model can learn from.
+- `pixel_28` and `pixel_36` (near the centre of the 8×8 grid) have `std ≈ 6` — they vary a lot. That variation is signal the model can learn from.
+- `pixel_63` has `std=1.86` — it occasionally has ink but mostly stays blank, so it carries weak signal.
 - `target` ranges from 0 to 9 as expected — confirms labels loaded correctly.
 
 ---
@@ -79,7 +73,19 @@ Zero std  →  the feature never changes                 →  completely useless
 
 A feature that is always the same value for every sample tells the model nothing at all. When you are working with real data, removing zero-variance features before training is standard practice.
 
-In this dataset the corner pixels (pixel_0, pixel_8, pixel_63, pixel_55) are always white — they are the corners of a hand-drawn digit. You could drop them safely.
+Plotting the standard deviation of every one of the 64 pixels makes the useless ones jump out:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/statistics_pixel_std.png" alt="Bar chart of standard deviation for all 64 pixels with red bars at near-zero positions, orange bars in the middle, and tall cyan bars for the most informative pixels">
+  <div class="vis-caption">Real <code>df.std()</code> for all 64 pixels. Red = std &lt; 0.5 (useless), orange = weak signal, cyan = informative.</div>
+</div>
+
+Mapping those red pixels back onto the actual 8×8 grid shows they are exactly the corners and edges that never get inked when someone writes a digit:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/statistics_useless_pixels.png" alt="Two side by side images: the average of all 1797 digits as a soft greyscale blob, and the same image with red squares around the corner and edge pixels that have std less than 0.5">
+  <div class="vis-caption">The red boxes are the std &lt; 0.5 pixels — they sit in the corners where no one ever puts ink, so the model gains nothing from them.</div>
+</div>
 
 ---
 
@@ -122,20 +128,12 @@ Feature C:  syn_flag_ratio     range 0.0 – 1.0
 
 An algorithm using Euclidean distance will be dominated entirely by `bytes_sent` — one feature will overwhelm all others simply because its numbers are bigger. This is not what you want.
 
-**Three features on wildly different scales:**
+Two data points fed into a distance calculation, three features that span nine orders of magnitude:
 
-| Feature | Range |
-|---|---|
-| `bytes_sent`     | 0 – 2,000,000,000 |
-| `unique_ports`   | 0 – 65,535        |
-| `syn_flag_ratio` | 0 – 1.0           |
-
-**Two data points fed into a distance calculation:**
-
-| Point | bytes_sent | unique_ports | syn_flag_ratio |
-|---|---:|---:|---:|
-| Point 1 | 1,000,000,000 | 443 | 0.8 |
-| Point 2 | 1,000,000,500 |  80 | 0.1 |
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/statistics_scale_problem.png" alt="Three side by side bar charts for bytes_sent unique_ports and syn_flag_ratio showing two points each; bytes_sent values are around one billion, unique_ports are 443 and 80, syn_flag_ratio is 0.8 and 0.1">
+  <div class="vis-caption">Same two data points, three features. <code>bytes_sent</code> is a billion times larger than <code>syn_flag_ratio</code> — distance metrics will only "see" the bytes column.</div>
+</div>
 
 **Euclidean distance ≈ 500** — and that 500 comes almost entirely from `bytes_sent`. The differences in `unique_ports` and `syn_flag_ratio` are invisible to the math, even though they may be the most important signals.
 

@@ -42,6 +42,11 @@ If 95% of events are benign and 5% are attacks, a model that simply predicts "be
 
 **Result:** accuracy = **95%** · attacks caught = **0 of 500**.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_imbalance_bar.png" alt="Bar chart of 10000 events split into 9500 benign (cyan) and 500 attack (red), with an annotation pointing to the benign bar saying 'a model that always says benign already scores 95% accuracy'">
+  <div class="vis-caption">The lab dataset at a glance. Because benign vastly outnumbers attack, a useless "always-benign" model already starts at 95% accuracy.</div>
+</div>
+
 ---
 
 ## Concept: DummyClassifier
@@ -96,6 +101,11 @@ This tells you immediately: the model is useless for its security purpose. `accu
 
 `recall = 0.00` for the attack class means **zero attacks were caught** — the headline accuracy number is hiding a model that has completely failed at its job.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/me_dummy_vs_lr.png" alt="Grouped bar chart comparing two models. DummyClassifier on the left has accuracy 0.95 and attack-class recall 0.00. LogisticRegression on the right has accuracy 0.98 and attack-class recall 0.83. The recall bars tell a very different story than the accuracy bars">
+  <div class="vis-caption">Real lab numbers. Both models look fine on accuracy — the attack-class recall is what separates a useful model from a useless one.</div>
+</div>
+
 ---
 
 ## What Each Task Asks You to Do
@@ -131,15 +141,16 @@ attack          0.00      0.00      0.00      100
 accuracy                            0.95     2000
 
 TASK 3 — DummyClassifier vs LogisticRegression:
-              DummyClassifier  LogisticRegression
-Accuracy           0.950            0.962
-Attack Recall      0.000            0.720
-The LR model catches 72 attacks; Dummy catches 0.
+Model                       Accuracy  Attack Recall
+----------------------------------------------------
+DummyClassifier                0.950          0.000
+LogisticRegression             0.983          0.830
+Of 100 test attacks: Dummy caught 0, LR caught ~83.
 
 TASK 4 (BONUS):
 Daily attacks (5% of 10,000): 500
 DummyClassifier  missed: 500 / 500 (100%)
-LogisticRegression missed: 140 / 500 (28%)
+LogisticRegression missed:  85 / 500 (17%)
 ```
 
 ---

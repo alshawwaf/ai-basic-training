@@ -26,6 +26,11 @@ The problems with using linear regression for binary outcomes:
 | Poor fit | The true relationship between features and class probability is usually an S-curve, not a line |
 | No built-in threshold | You have to arbitrarily pick a cutoff (e.g., ŷ > 0.5 = phishing) |
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_linear_fails.png" alt="Scatter plot of legitimate URLs at y=0 and phishing URLs at y=1, with a violet LinearRegression line that crosses below 0 on the left and above 1 on the right; red shaded regions mark the invalid zones with arrow annotations">
+  <div class="vis-caption">Real <code>LinearRegression</code> fit on a binary target. The line escapes the [0, 1] band on both ends — you cannot read those values as probabilities. This is exactly the failure mode the sigmoid fixes.</div>
+</div>
+
 ---
 
 ## Concept: The Sigmoid Function
@@ -47,6 +52,11 @@ Where `z = w₀ + w₁x₁ + w₂x₂ + ...` is the linear combination of featur
 | +5 | 0.993 | Almost certainly phishing |
 
 The sigmoid produces an **S-curve**: near 0 for very negative `z`, near 1 for very positive `z`, passing through `0.5` at `z = 0`. Pictured another way, it's a flat floor on the left, a steep climb in the middle, and a flat ceiling on the right — every linear score gets mapped into the `(0, 1)` band.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/logreg_sigmoid.png" alt="The sigmoid S-curve drawn in cyan from z=-8 to z=+8 with five violet marker dots at z=-5, -2, 0, 2, 5 labelled with their probabilities 0.01, 0.12, 0.50, 0.88, 0.99; the left half is shaded cyan (predict legitimate) and the right half red (predict phishing)">
+  <div class="vis-caption">The sigmoid plotted from <code>z = np.linspace(-8, 8, 400)</code>. Five sample points show how every <code>z</code> maps to a probability between 0 and 1. <code>z = 0</code> is the decision boundary.</div>
+</div>
 
 | `z` (linear score) | `σ(z)` (probability) | Side of the decision boundary | Predicted class |
 |---:|---:|---|---|

@@ -17,6 +17,11 @@ A 28×28 greyscale image has 784 pixels. When flattened:
 
 A 28x28 image is flattened to a 784-element array: `[0.0, 0.0, 0.12, 0.85, 0.95, 0.71, 0.0, ...]`
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cnn_image_vs_flat.png" alt="Two side-by-side panels of the same MNIST digit. Left panel: a 28×28 greyscale image of the digit '7' rendered as a real picture with a cyan border, titled 'What humans see — 28×28 pixel grid'. Right panel: a bar chart of 784 grey bars (one per pixel index 0 to 783) showing pixel values from 0.0 to 1.0, titled 'What Dense sees — 784 numbers, no spatial relationship'.">
+  <div class="vis-caption">The exact same MNIST digit shown two ways. Humans see a 7. A Dense layer sees an unordered list of 784 brightness numbers — pixel 0 and pixel 1 are no more "neighbours" to it than pixel 0 and pixel 783.</div>
+</div>
+
 Dense doesn't know pixel 3 is next to pixel 4. It doesn't know they form an edge. It just knows "when index 3 is high, index 4 is usually also high" — a correlation without geometry.
 
 A Dense layer with `input_shape=(784,)` and 128 units learns:
@@ -45,6 +50,16 @@ This is why CNNs use dramatically fewer parameters:
 |-------------|----------------------|
 | Dense(128) on 784 pixels | ~101,770 |
 | Conv2D(32,(3,3)) on 28×28×1 | 288 (just the filter weights!) |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cnn_dense_vs_cnn_params.png" alt="Bar chart titled 'Parameter cost — Dense vs Conv2D for the same MNIST input'. Left red bar labelled 'Dense(128) on flat 784' towering with the value 100,480. Right cyan bar labelled 'Conv2D(32, 3×3) on 28×28×1' tiny by comparison with the value 320. Orange bold text near the top reads 'Dense uses 314× more parameters'.">
+  <div class="vis-caption">Same MNIST input, two layer choices. The Dense layer has to learn a separate weight for every (pixel, neuron) pair — over 100,000 parameters. A Conv2D layer with thirty-two 3×3 filters reuses the same handful of weights at every position and only needs ~320 parameters total.</div>
+</div>
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/cnn_shuffled_pixels.png" alt="Two MNIST images side by side. Left panel titled 'Original — humans see 7' with a cyan title shows a clean greyscale digit 7. Right panel titled 'Same pixels, shuffled positions' with a red title shows what looks like random scattered noise — the exact same pixel values rearranged with a fixed permutation. A subtitle below reads 'Dense scores ≈ identically on both — it has no spatial awareness'.">
+  <div class="vis-caption">The shuffle test from Task 4. The right image contains the exact same 784 pixel values as the left — just in different positions. A Dense network trained on either version reaches almost identical accuracy, because it never knew where the pixels were in the first place. A CNN, by contrast, would collapse on the right image.</div>
+</div>
 
 > **Want to go deeper?** [Convolutional neural network (Wikipedia)](https://en.wikipedia.org/wiki/Convolutional_neural_network)
 

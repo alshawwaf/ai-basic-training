@@ -18,13 +18,17 @@ LESSON_TITLE = "Logistic Regression"
 
 STEPS = [
     {"id": 0, "title": "From Regression to Classification",
-     "sub": "The sigmoid function and why linear regression fails for yes/no"},
+     "sub": "The sigmoid function and why linear regression fails for yes/no",
+     "icon": "sigmoid-curve"},
     {"id": 1, "title": "Feature Engineering URLs",
-     "sub": "Turn raw URLs into numbers a model can learn from"},
+     "sub": "Turn raw URLs into numbers a model can learn from",
+     "icon": "url-tokens"},
     {"id": 2, "title": "Train and Evaluate",
-     "sub": "Scaling, fitting, confusion matrix, classification report"},
+     "sub": "Scaling, fitting, confusion matrix, classification report",
+     "icon": "train-evaluate"},
     {"id": 3, "title": "Threshold Tuning",
-     "sub": "predict_proba() and the precision-recall tradeoff"},
+     "sub": "predict_proba() and the precision-recall tradeoff",
+     "icon": "threshold-slider"},
 ]
 
 CHALLENGES = {

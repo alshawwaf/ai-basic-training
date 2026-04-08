@@ -18,11 +18,14 @@ LESSON_TITLE = "RAG (Retrieval-Augmented Generation)"
 
 STEPS = [
     {"id": 0, "title": "Document Chunking",
-     "sub": "Split documents into embeddable pieces"},
+     "sub": "Split documents into embeddable pieces",
+     "icon": "chunk-doc"},
     {"id": 1, "title": "Retrieval",
-     "sub": "Find the most relevant chunks for any query"},
+     "sub": "Find the most relevant chunks for any query",
+     "icon": "retrieval-match"},
     {"id": 2, "title": "The Full RAG Pipeline",
-     "sub": "Retrieve, augment, generate -- end to end"},
+     "sub": "Retrieve, augment, generate -- end to end",
+     "icon": "rag-pipeline"},
 ]
 
 CHALLENGES = {

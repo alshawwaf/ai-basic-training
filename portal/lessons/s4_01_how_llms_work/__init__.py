@@ -73,14 +73,14 @@ ATTENTION_WEIGHTS = [
 # ── Step metadata ─────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "Next-Token Prediction", "sub": "The core idea behind every LLM"},
-    {"id": 1, "title": "Tokenisation",          "sub": "Text to numbers"},
-    {"id": 2, "title": "Vocabulary Limits",      "sub": "When words go missing"},
-    {"id": 3, "title": "Embeddings",             "sub": "Words as vectors"},
-    {"id": 4, "title": "Cosine Similarity",      "sub": "Measuring meaning"},
-    {"id": 5, "title": "Attention",              "sub": "Which words matter to which"},
-    {"id": 6, "title": "Context Vectors",        "sub": "Attention in action"},
-    {"id": 7, "title": "LLMs vs Classic ML",     "sub": "Different tools, different problems"},
+    {"id": 0, "title": "Next-Token Prediction", "sub": "The core idea behind every LLM",       "icon": "next-token"},
+    {"id": 1, "title": "Tokenisation",          "sub": "Text to numbers",                      "icon": "tokenize"},
+    {"id": 2, "title": "Vocabulary Limits",      "sub": "When words go missing",                "icon": "vocab-question"},
+    {"id": 3, "title": "Embeddings",             "sub": "Words as vectors",                     "icon": "embedding-vector"},
+    {"id": 4, "title": "Cosine Similarity",      "sub": "Measuring meaning",                    "icon": "cosine-angle"},
+    {"id": 5, "title": "Attention",              "sub": "Which words matter to which",          "icon": "attention-arrows"},
+    {"id": 6, "title": "Context Vectors",        "sub": "Attention in action",                  "icon": "context-vector"},
+    {"id": 7, "title": "LLMs vs Classic ML",     "sub": "Different tools, different problems", "icon": "llm-vs-ml"},
 ]
 
 CHALLENGES = {

@@ -15,10 +15,10 @@ LESSON_ID = "s3_04"
 LESSON_TITLE = "Hyperparameter Tuning"
 
 STEPS = [
-    {"id": 0, "title": "What Are Hyperparameters?",     "sub": "Parameters vs hyperparameters"},
-    {"id": 1, "title": "Learning Rate Sensitivity",     "sub": "The most important knob to turn"},
-    {"id": 2, "title": "Batch Size Effects",            "sub": "Gradient noise vs training stability"},
-    {"id": 3, "title": "Architecture Search",           "sub": "Systematic search over width and depth"},
+    {"id": 0, "title": "What Are Hyperparameters?",     "sub": "Parameters vs hyperparameters",            "icon": "dial-tuning"},
+    {"id": 1, "title": "Learning Rate Sensitivity",     "sub": "The most important knob to turn",          "icon": "learning-rate"},
+    {"id": 2, "title": "Batch Size Effects",            "sub": "Gradient noise vs training stability",     "icon": "batch-stack"},
+    {"id": 3, "title": "Architecture Search",           "sub": "Systematic search over width and depth",   "icon": "arch-search"},
 ]
 
 CHALLENGES = {

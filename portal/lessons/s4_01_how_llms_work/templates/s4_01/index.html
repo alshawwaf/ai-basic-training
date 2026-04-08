@@ -1,4 +1,5 @@
 {% extends "portal_base.html" %}
+{% from "icons.html" import step_icon %}
 {% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}
 {% block body %}
 <div class="welcome">
@@ -26,6 +27,7 @@
             <div class="num">{{ s.id }}</div>
             <div class="info"><div class="title">{{ s.title }}</div><div class="desc">{{ s.sub }}</div></div>
             <span class="step-status"></span>
+            {% if s.icon %}<div class="step-icon" aria-hidden="true">{{ step_icon(s.icon) }}</div>{% endif %}
         </a>
         {% endfor %}
     </div>

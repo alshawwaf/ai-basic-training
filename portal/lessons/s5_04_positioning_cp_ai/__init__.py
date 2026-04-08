@@ -16,13 +16,17 @@ LESSON_TITLE = "Positioning CP AI"
 
 STEPS = [
     {"id": 0, "title": "The Three-Layer Narrative",
-     "sub": "Workforce, Applications, Agents \u2014 map concerns to products"},
+     "sub": "Workforce, Applications, Agents \u2014 map concerns to products",
+     "icon": "three-layers"},
     {"id": 1, "title": "Competitive Positioning",
-     "sub": "Microsoft, Zscaler, Palo Alto, Lakera \u2014 where we win"},
+     "sub": "Microsoft, Zscaler, Palo Alto, Lakera \u2014 where we win",
+     "icon": "compete-bars"},
     {"id": 2, "title": "Building Your Demo",
-     "sub": "Three 5-minute demo scripts ready to deliver"},
+     "sub": "Three 5-minute demo scripts ready to deliver",
+     "icon": "demo-screen"},
     {"id": 3, "title": "Role-Play Scenarios",
-     "sub": "Practice with the CISO, the builder, and the AI-first SOC"},
+     "sub": "Practice with the CISO, the builder, and the AI-first SOC",
+     "icon": "roleplay-masks"},
 ]
 
 CHALLENGES = {

@@ -714,6 +714,47 @@ body.lesson-page .content-main::-webkit-scrollbar-thumb:hover {
 }
 [data-theme="dark"] .card p { color: #c4ccea; }
 
+/* Code blocks inside step-content cards. Step templates render in
+   .content-main (not .md-content), so the drawer's pre/code rules don't
+   apply. These rules give bare <pre><code> blocks the same dark code-block
+   look as the drawer, plus an inline <code> chip for things like
+   `connection_rate` mentioned in body text. Prism-tagged blocks
+   (`pre[class*="language-"]`) have higher-specificity rules that override
+   these, so syntax-highlighted Python/Bash still renders normally. */
+.card pre {
+    background: #1e1e2e;
+    color: var(--text);
+    padding: 14px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin: 10px 0 12px;
+    overflow-x: auto;
+    font-family: 'Space Mono', 'Fira Code', Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.card pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    border: none;
+}
+.card p > code,
+.card li > code,
+.card td > code,
+.card h3 > code,
+.card h4 > code {
+    background: rgba(6, 214, 224, 0.10);
+    color: var(--accent, #06d6e0);
+    padding: 1px 7px;
+    border-radius: 4px;
+    border: 1px solid rgba(6, 214, 224, 0.22);
+    font-family: 'Space Mono', 'Consolas', monospace;
+    font-size: 0.92em;
+}
+
 /* ── Digit grids ─────────────────────────────────────────────────────────── */
 .grid-container {
     display: inline-block;
@@ -953,6 +994,183 @@ select option:hover {
             0 6px 22px rgba(0,0,0,0.40);
     }
 }
+
+/* ── Lab guide cards (Stage 5 PDFs) ───────────────────────────────────────
+   Used inside step templates whose hands-on lab references one or more
+   external PDF guides served from /api/pdf-guide/<slug>. Each card is a
+   self-contained call to action: icon, title, subtitle, two buttons. */
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 14px 0 18px;
+}
+.guide-card-pdf {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg,
+        rgba(6,214,224,0.06),
+        rgba(168,85,247,0.04));
+    border: 1px solid rgba(6,214,224,0.28);
+    border-radius: 12px;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.guide-card-pdf:hover {
+    border-color: rgba(6,214,224,0.55);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 18px rgba(6,214,224,0.18);
+}
+.guide-card-pdf .guide-icon {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--accent, #06d6e0);
+}
+.guide-card-pdf .guide-title {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--text);
+    letter-spacing: 0.2px;
+}
+.guide-card-pdf .guide-sub {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.45;
+}
+.guide-card-pdf .guide-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 4px;
+}
+.guide-card-pdf .guide-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.guide-card-pdf .guide-btn-primary {
+    background: linear-gradient(135deg, #06d6e0, #0891b2);
+    color: #0a0a1a;
+    border-color: rgba(6,214,224,0.65);
+}
+.guide-card-pdf .guide-btn-primary:hover {
+    background: linear-gradient(135deg, #22e6f0, #06b6d4);
+    color: #000;
+}
+.guide-card-pdf .guide-btn-secondary {
+    background: rgba(168,85,247,0.10);
+    color: var(--violet, #a855f7);
+    border-color: rgba(168,85,247,0.35);
+}
+.guide-card-pdf .guide-btn-secondary:hover {
+    background: rgba(168,85,247,0.18);
+    border-color: rgba(168,85,247,0.55);
+}
+
+/* ── Decision-tree ASCII block ────────────────────────────────────────────
+   Used inside lecture cards to render an if/else tree where the connectors
+   stay dim and the *meaning* (questions, predictions) carries the colour.
+   The leaf classes are semantic — re-use .tree-leaf-safe / .tree-leaf-warn
+   / .tree-leaf-danger for any tree, not just the network-traffic example. */
+.decision-tree {
+    font-family: "Space Mono", "Consolas", "Fira Code", monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    background: rgba(6, 214, 224, 0.04);
+    border: 1px solid rgba(6, 214, 224, 0.18);
+    border-left: 3px solid var(--cyan, #06d6e0);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0 14px;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--text-dim);
+}
+/* Token classes — work both inside .decision-tree AND inline in body
+   text so the same vocabulary teaches itself in the paragraph above. */
+.tree-question {
+    color: var(--cyan, #06d6e0);
+    font-weight: 700;
+}
+.tree-yes {
+    color: #a855f7;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.tree-no {
+    color: #f59e0b;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.decision-tree .tree-arrow {
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+.decision-tree .tree-connector {
+    color: var(--text-dim);
+    opacity: 0.55;
+}
+.tree-leaf-safe {
+    color: #a855f7;
+    font-weight: 700;
+    background: rgba(168, 85, 247, 0.10);
+    padding: 1px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+}
+.tree-leaf-warn {
+    color: #f59e0b;
+    font-weight: 700;
+    background: rgba(245, 158, 11, 0.10);
+    padding: 1px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.tree-leaf-danger {
+    color: #f43f5e;
+    font-weight: 700;
+    background: rgba(244, 63, 94, 0.10);
+    padding: 1px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+/* Inline legend chips that sit above the tree so the colour code is
+   self-explanatory without a separate paragraph. */
+.tree-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 4px;
+    font-size: 12px;
+}
+.tree-legend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    background: var(--bg-card);
+}
+.tree-legend-chip .tree-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.tree-legend-chip.is-question .tree-legend-dot { background: #06d6e0; }
+.tree-legend-chip.is-safe     .tree-legend-dot { background: #a855f7; }
+.tree-legend-chip.is-warn     .tree-legend-dot { background: #f59e0b; }
+.tree-legend-chip.is-danger   .tree-legend-dot { background: #f43f5e; }
 
 /* Scenario / preset button group — sits beneath the main controls and
    acts as one-click jumps to canonical settings. Default .btn was too
@@ -1564,6 +1782,56 @@ select option:hover {
                 0 0 32px rgba(168,85,247,0.18);
 }
 
+/* ── Home page reset buttons ────────────────────────────────────────────
+   Two new reset entry points on the home page that mirror .welcome-reset:
+   • .hero-reset-btn — top-right of the program hero, wipes ALL progress
+   • .stage-reset-btn — top-right of each stage card, wipes only that stage
+   Both use the same circular icon-button shape so the destructive intent
+   reads consistently with the in-lesson reset the learner already knows. */
+.hero-reset-btn,
+.stage-reset-btn {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text-dim);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    z-index: 5;
+}
+.hero-reset-btn {
+    top: 8px;
+    right: 8px;
+}
+.stage-reset-btn {
+    top: 16px;
+    right: 16px;
+}
+.hero-reset-btn:hover,
+.stage-reset-btn:hover {
+    background: linear-gradient(135deg, rgba(244,63,94,0.18), rgba(168,85,247,0.18));
+    border-color: var(--red);
+    color: var(--red);
+    transform: rotate(-90deg);
+    box-shadow: 0 0 18px rgba(244,63,94,0.30),
+                0 0 32px rgba(168,85,247,0.18);
+}
+/* Each stage's reset button picks up that stage's accent at rest, so the
+   button reads as "part of this card" until you hover and the destructive
+   red takes over. Matches the body[data-stage] .welcome-reset pattern. */
+.stage-reset-btn.s1 { border-color: rgba(168,85,247,0.40); color: var(--violet); }
+.stage-reset-btn.s2 { border-color: rgba(6,182,212,0.40);  color: var(--accent); }
+.stage-reset-btn.s3 { border-color: rgba(245,158,11,0.40); color: var(--orange); }
+.stage-reset-btn.s4 { border-color: rgba(244,63,94,0.40);  color: var(--red); }
+.stage-reset-btn.s5 { border-color: rgba(16,185,129,0.40); color: var(--green); }
+
 .welcome h1 {
     font-size: 28px;
     margin-bottom: 4px;
@@ -1643,7 +1911,10 @@ select option:hover {
     display: flex;
     align-items: center;
     gap: 18px;
-    padding: 20px 24px;
+    /* Right padding reserves space for the .step-icon watermark
+       (64px wide, anchored at right:18px) so long descriptions never
+       run under it. Left stays at 24px. */
+    padding: 20px 96px 20px 24px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
@@ -1705,13 +1976,64 @@ select option:hover {
     color: var(--text-dim);
     margin-top: 3px;
 }
-/* Step card status badge */
+/* Step card status badge — floats in the top-right corner so it never
+   collides with the watermark icon that sits centered on the right edge. */
 .step-card .step-status {
-    margin-left: auto;
-    font-size: 10px;
-    font-weight: 600;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
     color: var(--green);
-    flex-shrink: 0;
+    background: rgba(34, 211, 160, 0.12);
+    border: 1px solid rgba(34, 211, 160, 0.35);
+    padding: 2px 7px;
+    border-radius: 999px;
+    z-index: 3;
+    pointer-events: none;
+    line-height: 1;
+}
+.step-card .step-status:empty {
+    display: none;
+}
+/* Activity-type icon (watermark on the right side of each card).
+   Inline SVG that literally depicts the step concept — pixel grid for
+   "first look", uneven bars for "class balance", bullseye for "pixel
+   importance", etc. Sits behind the title text so it never crowds
+   the heading. Uses currentColor so the stage hue carries through. */
+.step-card .step-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 64px;
+    height: 64px;
+    color: var(--stage-accent, var(--violet));
+    opacity: 0.22;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 0;
+    user-select: none;
+    line-height: 0;
+}
+.step-card .step-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.step-card:hover .step-icon {
+    opacity: 0.55;
+    transform: translateY(-50%) scale(1.08);
+}
+.step-card.done .step-icon {
+    opacity: 0.08;
+    color: var(--green);
+}
+.step-card .info {
+    position: relative;
+    z-index: 1;
 }
 /* Dark mode step card glow */
 [data-theme="dark"] .step-card {

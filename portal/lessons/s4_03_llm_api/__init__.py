@@ -18,13 +18,17 @@ LESSON_TITLE = "Working with LLM APIs"
 
 STEPS = [
     {"id": 0, "title": "Your First API Call",
-     "sub": "Understand the request/response structure"},
+     "sub": "Understand the request/response structure",
+     "icon": "api-call"},
     {"id": 1, "title": "System Prompt Design",
-     "sub": "Control model behaviour with a security analyst persona"},
+     "sub": "Control model behaviour with a security analyst persona",
+     "icon": "system-prompt"},
     {"id": 2, "title": "Structured JSON Output",
-     "sub": "Machine-readable output for pipeline integration"},
+     "sub": "Machine-readable output for pipeline integration",
+     "icon": "json-braces"},
     {"id": 3, "title": "Multi-Turn Conversation",
-     "sub": "Maintain context across multiple exchanges"},
+     "sub": "Maintain context across multiple exchanges",
+     "icon": "chat-bubbles"},
 ]
 
 CHALLENGES = {

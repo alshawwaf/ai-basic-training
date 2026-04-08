@@ -108,16 +108,16 @@ for pct in range(0, 100, 5):
 # ── Step metadata ───────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "First Look",        "sub": "What does ML data look like?"},
-    {"id": 1, "title": "Draw a Digit",       "sub": "Pixels are just numbers"},
-    {"id": 2, "title": "Spot the Difference", "sub": "Models see differences, not images"},
-    {"id": 3, "title": "Dataset Shape",       "sub": "1,797 samples x 64 features"},
-    {"id": 4, "title": "Useless Pixels",      "sub": "Zero-variance features"},
-    {"id": 5, "title": "Class Balance",       "sub": "Not all classes are equal"},
-    {"id": 6, "title": "Accuracy Trap",       "sub": "When 99% accuracy is a lie"},
-    {"id": 7, "title": "Average Digits",      "sub": "Prototype confusion"},
-    {"id": 8, "title": "Pixel Importance",    "sub": "Which features matter?"},
-    {"id": 9, "title": "Model's Eye View",   "sub": "Just numbers in a row"},
+    {"id": 0, "title": "First Look",          "sub": "What does ML data look like?",       "icon": "first-look"},        # mag glass over a 3x3 sample
+    {"id": 1, "title": "Draw a Digit",        "sub": "Pixels are just numbers",            "icon": "draw-digit"},        # pixel-art "1" inside a grid
+    {"id": 2, "title": "Spot the Difference", "sub": "Models see differences, not images", "icon": "spot-difference"},   # two grids with ≠ between
+    {"id": 3, "title": "Dataset Shape",       "sub": "1,797 samples x 64 features",        "icon": "dataset-shape"},     # rows×cols table outline
+    {"id": 4, "title": "Useless Pixels",      "sub": "Zero-variance features",             "icon": "useless-pixels"},    # lit center, X-marked edges
+    {"id": 5, "title": "Class Balance",       "sub": "Not all classes are equal",          "icon": "class-balance"},     # uneven bar chart
+    {"id": 6, "title": "Accuracy Trap",       "sub": "When 99% accuracy is a lie",         "icon": "accuracy-trap"},     # warning triangle with "99%"
+    {"id": 7, "title": "Average Digits",      "sub": "Prototype confusion",                "icon": "average-digits"},    # two overlapping circles
+    {"id": 8, "title": "Pixel Importance",    "sub": "Which features matter?",             "icon": "pixel-importance"},  # bullseye + crosshair
+    {"id": 9, "title": "Model's Eye View",    "sub": "Just numbers in a row",              "icon": "model-eye-view"},    # rows of monospace numbers
 ]
 
 CHALLENGES = {

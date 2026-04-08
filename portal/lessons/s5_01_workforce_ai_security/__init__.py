@@ -100,14 +100,14 @@ DASHBOARD = {
 # ── Step metadata ─────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "The Shadow AI Problem",  "sub": "What you can't see can hurt you"},
-    {"id": 1, "title": "Data at Risk",            "sub": "Classify sensitive content"},
-    {"id": 2, "title": "The Six Policy Actions",  "sub": "Allow, Prevent, Redact, Detect, Block, Ask"},
-    {"id": 3, "title": "Policy Matrix Builder",   "sub": "Design your own policy"},
-    {"id": 4, "title": "Redaction in Action",     "sub": "Strip sensitive data in real time"},
-    {"id": 5, "title": "Dashboard Deep Dive",     "sub": "Read the metrics like a SOC analyst"},
-    {"id": 6, "title": "Risk Scoring",            "sub": "Anomaly detection meets AI governance"},
-    {"id": 7, "title": "The Full Picture",        "sub": "Connecting all stages to Workforce AI Security"},
+    {"id": 0, "title": "The Shadow AI Problem",  "sub": "What you can't see can hurt you",                  "icon": "shadow-ai"},
+    {"id": 1, "title": "Data at Risk",            "sub": "Classify sensitive content",                       "icon": "data-shield"},
+    {"id": 2, "title": "The Six Policy Actions",  "sub": "Allow, Prevent, Redact, Detect, Block, Ask",       "icon": "policy-list"},
+    {"id": 3, "title": "Policy Matrix Builder",   "sub": "Design your own policy",                           "icon": "policy-matrix"},
+    {"id": 4, "title": "Redaction in Action",     "sub": "Strip sensitive data in real time",                "icon": "redact-bars"},
+    {"id": 5, "title": "Dashboard Deep Dive",     "sub": "Read the metrics like a SOC analyst",              "icon": "dashboard-charts"},
+    {"id": 6, "title": "Risk Scoring",            "sub": "Anomaly detection meets AI governance",            "icon": "risk-meter"},
+    {"id": 7, "title": "The Full Picture",        "sub": "Connecting all stages to Workforce AI Security",   "icon": "puzzle-full"},
 ]
 
 CHALLENGES = {

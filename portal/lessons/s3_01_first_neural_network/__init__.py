@@ -129,14 +129,14 @@ PARAM_EXAMPLES = [
 # ── Step metadata ─────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "What is a Neuron?",    "sub": "Weighted sum + activation"},
-    {"id": 1, "title": "Activation Functions",  "sub": "ReLU, sigmoid, and softmax"},
-    {"id": 2, "title": "Build a Network",       "sub": "Layers, widths, and parameter counts"},
-    {"id": 3, "title": "The Forward Pass",      "sub": "Data flows through layers"},
-    {"id": 4, "title": "The Training Loop",     "sub": "Epochs, batches, and loss curves"},
-    {"id": 5, "title": "Overfitting",           "sub": "When the model memorises instead of learns"},
-    {"id": 6, "title": "Neural Net vs Baseline", "sub": "Is deeper always better?"},
-    {"id": 7, "title": "When to Go Deep",       "sub": "The right tool for the job"},
+    {"id": 0, "title": "What is a Neuron?",    "sub": "Weighted sum + activation",                "icon": "neuron"},
+    {"id": 1, "title": "Activation Functions",  "sub": "ReLU, sigmoid, and softmax",               "icon": "activation-curve"},
+    {"id": 2, "title": "Build a Network",       "sub": "Layers, widths, and parameter counts",     "icon": "network-layers"},
+    {"id": 3, "title": "The Forward Pass",      "sub": "Data flows through layers",                "icon": "forward-pass"},
+    {"id": 4, "title": "The Training Loop",     "sub": "Epochs, batches, and loss curves",         "icon": "training-loop"},
+    {"id": 5, "title": "Overfitting",           "sub": "When the model memorises instead of learns", "icon": "overfit-curve"},
+    {"id": 6, "title": "Neural Net vs Baseline", "sub": "Is deeper always better?",                "icon": "vs-compare"},
+    {"id": 7, "title": "When to Go Deep",       "sub": "The right tool for the job",               "icon": "depth-stack"},
 ]
 
 CHALLENGES = {

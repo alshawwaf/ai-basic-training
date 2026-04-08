@@ -18,11 +18,14 @@ LESSON_TITLE = "HuggingFace Pre-trained Models"
 
 STEPS = [
     {"id": 0, "title": "Zero-Shot Classification",
-     "sub": "Classify security logs with no training data"},
+     "sub": "Classify security logs with no training data",
+     "icon": "zero-shot"},
     {"id": 1, "title": "Sentence Embeddings",
-     "sub": "Encode sentences as vectors for semantic comparison"},
+     "sub": "Encode sentences as vectors for semantic comparison",
+     "icon": "embedding-vector"},
     {"id": 2, "title": "Semantic Search",
-     "sub": "Build a search engine over a security knowledge base"},
+     "sub": "Build a search engine over a security knowledge base",
+     "icon": "semantic-search"},
 ]
 
 CHALLENGES = {

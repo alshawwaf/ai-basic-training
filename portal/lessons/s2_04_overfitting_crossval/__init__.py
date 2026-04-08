@@ -18,13 +18,17 @@ LESSON_TITLE = "Overfitting & Cross-Validation"
 
 STEPS = [
     {"id": 0, "title": "Overfitting Demo",
-     "sub": "Watch train vs validation accuracy diverge as depth grows"},
+     "sub": "Watch train vs validation accuracy diverge as depth grows",
+     "icon": "overfit-curve"},
     {"id": 1, "title": "Bias-Variance Tradeoff",
-     "sub": "Underfit, good fit, overfit -- three regimes visualised"},
+     "sub": "Underfit, good fit, overfit -- three regimes visualised",
+     "icon": "bias-variance"},
     {"id": 2, "title": "K-Fold Cross-Validation",
-     "sub": "Reliable performance estimates with cross_val_score"},
+     "sub": "Reliable performance estimates with cross_val_score",
+     "icon": "kfold-bars"},
     {"id": 3, "title": "Validation Curve",
-     "sub": "Automated parameter sweep with validation_curve()"},
+     "sub": "Automated parameter sweep with validation_curve()",
+     "icon": "validation-curve"},
 ]
 
 CHALLENGES = {

@@ -18,13 +18,17 @@ LESSON_TITLE = "Clustering & Anomaly Detection"
 
 STEPS = [
     {"id": 0, "title": "Unsupervised Framing",
-     "sub": "Why labels are unavailable and what clustering finds"},
+     "sub": "Why labels are unavailable and what clustering finds",
+     "icon": "unlabeled-cloud"},
     {"id": 1, "title": "K-Means and Visualisation",
-     "sub": "Cluster assignment, PCA to 2D, colour-coded plots"},
+     "sub": "Cluster assignment, PCA to 2D, colour-coded plots",
+     "icon": "kmeans-cluster"},
     {"id": 2, "title": "Choosing K",
-     "sub": "Elbow method, silhouette score, picking the right K"},
+     "sub": "Elbow method, silhouette score, picking the right K",
+     "icon": "elbow-curve"},
     {"id": 3, "title": "Anomaly Scoring",
-     "sub": "Distance from centroid as an anomaly score"},
+     "sub": "Distance from centroid as an anomaly score",
+     "icon": "anomaly-outlier"},
 ]
 
 CHALLENGES = {

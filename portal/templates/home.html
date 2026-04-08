@@ -11,6 +11,10 @@
 {% macro stage_card(stage) %}
 <div class="stage-card {{ stage.id }}">
     <div class="stage-card-glow {{ stage.id }}"></div>
+    <button class="stage-reset-btn {{ stage.id }}"
+            onclick="resetStageProgress('{{ stage.title }}', '{{ stage.lessons | map(attribute='id') | join(',') }}', event)"
+            title="Reset progress for {{ stage.title }}"
+            aria-label="Reset progress for {{ stage.title }}">&#8634;</button>
     <div class="stage-header">
         <div class="stage-icon-wrap {{ stage.id }}">{{ stage_icons[stage.id](32) }}</div>
         <div class="stage-info">
@@ -46,6 +50,10 @@
 {# by roadmap-mesh-neuron.js and the branches drawn in the SVG layer. #}
 {% macro neuron_cluster(stage, side) %}
 <div class="neuron-cluster {{ stage.id }} {{ side }}" data-stage="{{ stage.id }}">
+    <button class="stage-reset-btn {{ stage.id }} stage-reset-btn-neuron"
+            onclick="resetStageProgress('{{ stage.title }}', '{{ stage.lessons | map(attribute='id') | join(',') }}', event)"
+            title="Reset progress for {{ stage.title }}"
+            aria-label="Reset progress for {{ stage.title }}">&#8634;</button>
     <header class="neuron-header">
         <div class="neuron-header-row">
             <span class="neuron-stage-num">Stage {{ stage.num }}</span>
@@ -94,6 +102,10 @@
 <div class="portal-home">
     <div class="portal-hero">
         <div class="hero-glow"></div>
+        <button class="hero-reset-btn"
+                onclick="resetAllProgressFromHome(event)"
+                title="Reset progress for the entire program"
+                aria-label="Reset progress for the entire program">&#8634;</button>
         <h1>AI Ninja Program</h1>
         <p class="tagline">Security Engineers &rarr; AI-Powered Security Experts</p>
         <div class="hero-stats">

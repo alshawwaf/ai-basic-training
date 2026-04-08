@@ -18,13 +18,17 @@ LESSON_TITLE = "Random Forests"
 
 STEPS = [
     {"id": 0, "title": "From Tree to Forest",
-     "sub": "Why a single tree overfits and how bagging fixes it"},
+     "sub": "Why a single tree overfits and how bagging fixes it",
+     "icon": "tree-to-forest"},
     {"id": 1, "title": "Train a Random Forest",
-     "sub": "RandomForestClassifier, OOB score, tree vs forest"},
+     "sub": "RandomForestClassifier, OOB score, tree vs forest",
+     "icon": "forest-grid"},
     {"id": 2, "title": "Feature Importance",
-     "sub": "Stable importance rankings across many trees"},
+     "sub": "Stable importance rankings across many trees",
+     "icon": "bar-ranked"},
     {"id": 3, "title": "Tune the Forest",
-     "sub": "n_estimators sweep, max_features, learning curve"},
+     "sub": "n_estimators sweep, max_features, learning curve",
+     "icon": "dial-tuning"},
 ]
 
 CHALLENGES = {

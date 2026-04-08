@@ -15,10 +15,10 @@ LESSON_ID = "s3_03"
 LESSON_TITLE = "Convolutional Networks"
 
 STEPS = [
-    {"id": 0, "title": "Why Dense Fails on Images",       "sub": "Flattening destroys spatial structure"},
-    {"id": 1, "title": "Conv2D & MaxPooling",             "sub": "Sliding filters and downsampling"},
-    {"id": 2, "title": "Build & Train a CNN",             "sub": "Full CNN on MNIST digit classification"},
-    {"id": 3, "title": "Malware Visualisation Context",   "sub": "Binary-to-image for malware families"},
+    {"id": 0, "title": "Why Dense Fails on Images",       "sub": "Flattening destroys spatial structure",  "icon": "flatten-fail"},
+    {"id": 1, "title": "Conv2D & MaxPooling",             "sub": "Sliding filters and downsampling",       "icon": "conv-filter"},
+    {"id": 2, "title": "Build & Train a CNN",             "sub": "Full CNN on MNIST digit classification", "icon": "cnn-stack"},
+    {"id": 3, "title": "Malware Visualisation Context",   "sub": "Binary-to-image for malware families",   "icon": "binary-image"},
 ]
 
 CHALLENGES = {

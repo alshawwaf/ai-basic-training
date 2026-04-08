@@ -16,13 +16,17 @@ LESSON_TITLE = "AI Guardrails"
 
 STEPS = [
     {"id": 0, "title": "The Threat Landscape",
-     "sub": "Prompt injection, jailbreaks, and why WAFs don't work"},
+     "sub": "Prompt injection, jailbreaks, and why WAFs don't work",
+     "icon": "threat-map"},
     {"id": 1, "title": "How Guardrails Work",
-     "sub": "Inbound + outbound scanning, detection methods"},
+     "sub": "Inbound + outbound scanning, detection methods",
+     "icon": "guardrail-fence"},
     {"id": 2, "title": "Hands-On Lab",
-     "sub": "Attack an LLM, observe what gets caught"},
+     "sub": "Attack an LLM, observe what gets caught",
+     "icon": "lab-flask"},
     {"id": 3, "title": "Positioning Guardrails",
-     "sub": "Customer conversations and competitive differentiation"},
+     "sub": "Customer conversations and competitive differentiation",
+     "icon": "position-target"},
 ]
 
 CHALLENGES = {
@@ -46,6 +50,10 @@ CHALLENGES = {
 
 _base = "curriculum/stage5_cp_ai_security/03_ai_guardrails"
 
+# Step 2 (Hands-On Lab) references the Lakera Playground Guide PDF served
+# from /api/pdf-guide/lakera-playground. The PDF isn't in MATERIALS — the
+# step template renders it as an inline guide card. See portal/app.py
+# PDF_GUIDES for the slug whitelist.
 MATERIALS = {
     0: [("lecture", "Full Lecture", f"{_base}/README.md"),
         ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],

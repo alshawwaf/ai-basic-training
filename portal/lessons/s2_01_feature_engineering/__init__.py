@@ -209,14 +209,14 @@ COLUMN_META = [
 # ── Step metadata ─────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "The Raw Log",           "sub": "What a firewall export looks like"},
-    {"id": 1, "title": "Transformation Plan",    "sub": "Which columns need work?"},
-    {"id": 2, "title": "Parse Hidden Numbers",   "sub": "Strings that are actually numbers"},
-    {"id": 3, "title": "Security Knowledge",     "sub": "Port risk scores from domain expertise"},
-    {"id": 4, "title": "Encode Categories",      "sub": "Label vs OneHot encoding"},
-    {"id": 5, "title": "The Scaling Problem",    "sub": "StandardScaler vs MinMaxScaler"},
-    {"id": 6, "title": "Feature Impact",         "sub": "Which features help the model?"},
-    {"id": 7, "title": "The Full Pipeline",      "sub": "Raw log → ML-ready features"},
+    {"id": 0, "title": "The Raw Log",           "sub": "What a firewall export looks like",       "icon": "raw-log"},
+    {"id": 1, "title": "Transformation Plan",    "sub": "Which columns need work?",                "icon": "transform-plan"},
+    {"id": 2, "title": "Parse Hidden Numbers",   "sub": "Strings that are actually numbers",       "icon": "string-to-number"},
+    {"id": 3, "title": "Security Knowledge",     "sub": "Port risk scores from domain expertise",  "icon": "port-shield"},
+    {"id": 4, "title": "Encode Categories",      "sub": "Label vs OneHot encoding",                "icon": "category-encode"},
+    {"id": 5, "title": "The Scaling Problem",    "sub": "StandardScaler vs MinMaxScaler",          "icon": "scaling-axis"},
+    {"id": 6, "title": "Feature Impact",         "sub": "Which features help the model?",          "icon": "bar-ranked"},
+    {"id": 7, "title": "The Full Pipeline",      "sub": "Raw log → ML-ready features",             "icon": "pipeline-flow"},
 ]
 
 CHALLENGES = {

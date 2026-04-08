@@ -318,6 +318,75 @@ async function resetLessonProgress(lessonId, event) {
     window.location.reload();
 }
 
+/* Reset progress for every lesson in a single stage — wired to the
+   .stage-reset-btn on each stage card on the home page. Drops step
+   progress for the listed lesson ids, removes any of their bookmarks,
+   clears the global "last visited" pointer if it pointed at one of them,
+   and reloads. Other stages are left untouched. */
+async function resetStageProgress(stageTitle, lessonIdsCsv, event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    const lessonIds = (lessonIdsCsv || '').split(',').filter(Boolean);
+    if (!lessonIds.length) return;
+
+    const ok = await showConfirm({
+        title: 'Reset progress for ' + stageTitle + '?',
+        body: 'This clears step progress and bookmarks for every lesson in this stage. Other stages are not affected.',
+        confirmLabel: 'Reset stage',
+        cancelLabel: 'Cancel',
+        danger: true,
+    });
+    if (!ok) return;
+
+    try {
+        const progress = JSON.parse(localStorage.getItem('portalProgress') || '{}');
+        let changed = false;
+        lessonIds.forEach(id => {
+            if (id in progress) { delete progress[id]; changed = true; }
+        });
+        if (changed) localStorage.setItem('portalProgress', JSON.stringify(progress));
+    } catch (e) {}
+
+    try {
+        const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+        const filtered = bookmarks.filter(bm => !lessonIds.includes(bm.lessonId));
+        if (filtered.length !== bookmarks.length) {
+            localStorage.setItem('portalBookmarks', JSON.stringify(filtered));
+        }
+    } catch (e) {}
+
+    try {
+        const last = JSON.parse(localStorage.getItem('portalLastVisited') || 'null');
+        if (last && lessonIds.includes(last.lessonId)) {
+            localStorage.removeItem('portalLastVisited');
+        }
+    } catch (e) {}
+
+    window.location.reload();
+}
+
+/* Reset every lesson across every stage — wired to the .hero-reset-btn
+   on the home page. Same destructive scope as the command-menu reset,
+   but with a confirm modal and no command-menu coupling so it can run
+   from any page that includes app.js. */
+async function resetAllProgressFromHome(event) {
+    if (event) event.preventDefault();
+
+    const ok = await showConfirm({
+        title: 'Reset ALL program progress?',
+        body: 'This clears every lesson, every step, and every bookmark across all 5 stages. This cannot be undone.',
+        confirmLabel: 'Reset everything',
+        cancelLabel: 'Cancel',
+        danger: true,
+    });
+    if (!ok) return;
+
+    localStorage.removeItem('portalProgress');
+    localStorage.removeItem('portalLastVisited');
+    localStorage.removeItem('portalBookmarks');
+    localStorage.removeItem('visitedSteps');
+    window.location.reload();
+}
+
 /* ── Color maps ──────────────────────────────────────────────────────────── */
 
 /* Default teal theme: dark → bright teal (matches dark UI) */

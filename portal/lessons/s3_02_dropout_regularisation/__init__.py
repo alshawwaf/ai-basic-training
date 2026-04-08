@@ -15,10 +15,10 @@ LESSON_ID = "s3_02"
 LESSON_TITLE = "Dropout & Regularisation"
 
 STEPS = [
-    {"id": 0, "title": "Demonstrate Overfitting",  "sub": "Build a deliberately oversized network"},
-    {"id": 1, "title": "Add Dropout",              "sub": "Randomly silence neurons to regularise"},
-    {"id": 2, "title": "Batch Normalisation",       "sub": "Stabilise training with normalised activations"},
-    {"id": 3, "title": "Early Stopping",            "sub": "Stop training at the right moment"},
+    {"id": 0, "title": "Demonstrate Overfitting",  "sub": "Build a deliberately oversized network",         "icon": "overfit-curve"},
+    {"id": 1, "title": "Add Dropout",              "sub": "Randomly silence neurons to regularise",         "icon": "dropout-x"},
+    {"id": 2, "title": "Batch Normalisation",       "sub": "Stabilise training with normalised activations", "icon": "batchnorm"},
+    {"id": 3, "title": "Early Stopping",            "sub": "Stop training at the right moment",              "icon": "early-stop"},
 ]
 
 CHALLENGES = {

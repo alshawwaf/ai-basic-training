@@ -18,13 +18,17 @@ LESSON_TITLE = "Decision Trees"
 
 STEPS = [
     {"id": 0, "title": "How Trees Make Decisions",
-     "sub": "If/else rules, Gini impurity, information gain"},
+     "sub": "If/else rules, Gini impurity, information gain",
+     "icon": "tree-branches"},
     {"id": 1, "title": "Train and Read the Tree",
-     "sub": "Visualise the tree and extract learned rules"},
+     "sub": "Visualise the tree and extract learned rules",
+     "icon": "tree-train"},
     {"id": 2, "title": "Feature Importance",
-     "sub": "Which features drive predictions?"},
+     "sub": "Which features drive predictions?",
+     "icon": "bar-ranked"},
     {"id": 3, "title": "Depth and Overfitting",
-     "sub": "Finding the sweet-spot between too simple and too complex"},
+     "sub": "Finding the sweet-spot between too simple and too complex",
+     "icon": "tree-depth"},
 ]
 
 CHALLENGES = {

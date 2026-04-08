@@ -18,15 +18,20 @@ LESSON_TITLE = "Model Evaluation"
 
 STEPS = [
     {"id": 0, "title": "The Accuracy Trap",
-     "sub": "Why 99% accuracy can mean zero detections"},
+     "sub": "Why 99% accuracy can mean zero detections",
+     "icon": "accuracy-trap"},
     {"id": 1, "title": "Confusion Matrix",
-     "sub": "TP, TN, FP, FN — the four outcomes of every prediction"},
+     "sub": "TP, TN, FP, FN — the four outcomes of every prediction",
+     "icon": "confusion-matrix"},
     {"id": 2, "title": "Precision, Recall, F1",
-     "sub": "The metrics that actually matter in security"},
+     "sub": "The metrics that actually matter in security",
+     "icon": "pr-formula"},
     {"id": 3, "title": "ROC Curve and AUC",
-     "sub": "Compare classifiers across all thresholds"},
+     "sub": "Compare classifiers across all thresholds",
+     "icon": "roc-curve"},
     {"id": 4, "title": "Threshold Tuning",
-     "sub": "Choose the right operating point for your SOC"},
+     "sub": "Choose the right operating point for your SOC",
+     "icon": "threshold-slider"},
 ]
 
 CHALLENGES = {

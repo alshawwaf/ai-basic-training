@@ -16,13 +16,20 @@ LESSON_TITLE = "AI Agent Security"
 
 STEPS = [
     {"id": 0, "title": "From Chat to Agents",
-     "sub": "The agent loop: observe, reason, act, evaluate"},
+     "sub": "The agent loop: observe, reason, act, evaluate",
+     "icon": "agent-arrow"},
     {"id": 1, "title": "MCP Protocol",
-     "sub": "Model Context Protocol \u2014 the universal adapter for AI tools"},
+     "sub": "Model Context Protocol \u2014 the universal adapter for AI tools",
+     "icon": "mcp-plug"},
     {"id": 2, "title": "Security Challenges",
-     "sub": "Excessive permissions, data exfiltration, prompt injection via tools"},
+     "sub": "Excessive permissions, data exfiltration, prompt injection via tools",
+     "icon": "warn-shield"},
     {"id": 3, "title": "Hands-On Lab",
-     "sub": "Build a threat investigation workflow with MCP"},
+     "sub": "Build a threat investigation workflow with MCP",
+     "icon": "lab-flask"},
+    {"id": 4, "title": "Bridging Agents & Guardrails",
+     "sub": "Pipe agent prompts through Lakera before they hit the model",
+     "icon": "bridge-link"},
 ]
 
 CHALLENGES = {
@@ -42,10 +49,19 @@ CHALLENGES = {
         "q": "You built a workflow that chains 3 MCP tools. If this agent were compromised, what's the worst it could do?",
         "a": "This is the <strong>blast radius question</strong>. The answer depends on which tools are connected and their permissions. A compromised agent with gateway CLI access could modify firewall rules, disable protections, or exfiltrate configuration data. The blast radius should be <strong>as small as possible</strong> \u2014 scope each agent to only the tools it needs.",
     },
+    4: {
+        "q": "You wired Lakera between the user and your n8n agent. Where else in the chain do prompt-injection payloads still get in unscanned?",
+        "a": "The <strong>tool outputs</strong> \u2014 every MCP call returns text that the agent treats as trusted context (log lines, ticket bodies, threat-feed entries). A complete defense scans both the <strong>inbound user prompt</strong> AND the <strong>data the agent reads from tools</strong> before either reaches the model. One Lakera call at the front door is necessary but not sufficient.",
+    },
 }
 
 _base = "curriculum/stage5_cp_ai_security/02_ai_agent_security"
 
+# Step 3 (Hands-On Lab) and Step 4 (Bridging) reference lab guide PDFs
+# served from /api/pdf-guide/<slug>. Those PDFs aren't in MATERIALS — the
+# top toolbar only carries one of each phase, and these steps need to
+# surface multiple PDFs side-by-side. The step templates render guide
+# cards directly. See portal/app.py PDF_GUIDES for the slug whitelist.
 MATERIALS = {
     0: [("lecture", "Full Lecture", f"{_base}/README.md"),
         ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
@@ -54,6 +70,8 @@ MATERIALS = {
     2: [("lecture", "Full Lecture", f"{_base}/README.md"),
         ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
     3: [("lecture", "Full Lecture", f"{_base}/README.md"),
+        ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
+    4: [("lecture", "Full Lecture", f"{_base}/README.md"),
         ("lab", "Discussion Guide", f"{_base}/discussion_guide.md")],
 }
 

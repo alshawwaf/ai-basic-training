@@ -12,13 +12,18 @@ Machine learning is a branch of computer science where systems **learn patterns 
 
 A spam filter built with traditional programming needs a human to maintain a list of spam keywords. An ML spam filter learns from thousands of labelled emails and discovers its own patterns — including ones no human would think to check.
 
-## The Three Ingredients
+## The Four Ingredients
 
-Every ML problem has the same three components:
+Every ML problem has the same four components:
 
 1. **Data** — rows of observations, each described by numbers (features)
 2. **Labels** — the answer you want the model to predict (supervised learning)
 3. **Algorithm** — the method that finds patterns connecting features to labels
+4. **Model** — the bag of tuned numbers the algorithm produces, which you save and use to make predictions
+
+Think of the **algorithm as the recipe and the model as the cake.** The algorithm runs once (during `.fit()`), looks at all the data, and tunes a set of numeric parameters until they describe the patterns it found. Those tuned numbers ARE the model — for linear regression they are literally two numbers (`weight` and `bias`); for the digits classifier you'll build below, they are around 640 numbers (one weight per pixel, per digit class). After training, the algorithm is done. The numbers are what you save to disk and ship to production.
+
+> Want to physically *be* the algorithm? In Lesson 1.2 you can drag two sliders to set `weight` and `bias` by hand and watch the error grow and shrink — see [`02_linear_regression/0_interactive_intro/explore_model_knobs.py`](../02_linear_regression/0_interactive_intro/explore_model_knobs.py).
 
 In this lesson you'll work with the **digits dataset**: 1,797 handwritten digit images, each stored as an 8x8 grid of pixel intensities (64 features), labelled 0–9.
 

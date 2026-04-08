@@ -1,64 +1,64 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Why You Must Split Your Data</h3>
-    <p>Imagine studying for an exam using a practice test, then taking the <em>exact same</em> test as the real exam. Your score looks great &mdash; but it doesn't prove you learned anything.</p>
-    <p>The same applies to ML models. If you train and evaluate on the same data:</p>
-    <ul>
-        <li>The model has already "seen" those examples</li>
-        <li>It can <strong>memorise</strong> specific points rather than learn patterns</li>
-        <li>Your error metric is falsely optimistic</li>
-        <li>The model may fail completely in production</li>
-    </ul>
-    <p>This is called <strong>overfitting to the training set</strong>.</p>
+    <h3>What Is a Model, Really?</h3>
+    <p>You'll hear the word <em>model</em> in every ML course, blog post, and product spec — usually without anyone defining it. Here's the unflashy truth:</p>
+    <p style="font-size:1.05em;"><strong>A model is a small bag of numbers.</strong> Nothing more. Not an algorithm. Not code. Not a black box. Just numbers stored in memory that, together, describe a function from input to output.</p>
+    <p>For linear regression that bag has <strong>exactly two numbers</strong>: a <code>weight</code> and a <code>bias</code>. They define a single straight line:</p>
+    <pre><code class="language-python">response_time = (weight * requests_per_second) + bias</code></pre>
+    <p>That equation IS the model. When you save a trained linear regression to disk, those two numbers are what get saved.</p>
 </div>
 
 <div class="card">
-    <h3>The Fix: Train/Test Split</h3>
-    <p>Hold out a portion of your data <em>before</em> training and never touch it until final evaluation.</p>
+    <h3>Algorithm vs Model</h3>
+    <p>The two words get used interchangeably and they shouldn't be. Here's the split:</p>
     <table class="info-table">
-        <thead><tr><th>Set</th><th>Size</th><th>Purpose</th></tr></thead>
+        <thead><tr><th></th><th>Algorithm</th><th>Model</th></tr></thead>
         <tbody>
-            <tr><td>Training set</td><td>80% (400 rows)</td><td>Model learns from this</td></tr>
-            <tr><td>Test set</td><td>20% (100 rows)</td><td>Final evaluation only &mdash; locked until the end</td></tr>
+            <tr><td>What it is</td><td>A procedure (a recipe)</td><td>A bag of tuned numbers (the cake)</td></tr>
+            <tr><td>When it runs</td><td>Once, during training</td><td>Every time you call <code>.predict()</code></td></tr>
+            <tr><td>Linear regression example</td><td>"Find <code>w</code> and <code>b</code> that minimise squared error"</td><td><code>w = 1.82</code>, <code>b = 29.5</code></td></tr>
+            <tr><td>What you ship to prod</td><td>Nothing</td><td>The numbers</td></tr>
         </tbody>
     </table>
+    <p>The algorithm runs once, looks at all your data, picks the best numbers, and then it is done. The model — those numbers — is the thing you actually use in production.</p>
 </div>
 
 <div class="card">
-    <h3>Key Code Pattern</h3>
-    <pre><code class="language-python">from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X,                  # features array
-    y,                  # target array
-    test_size=0.2,      # 20% goes to test set
-    random_state=42     # reproducible shuffle
-)
-
-print(f"Train: {X_train.shape}  Test: {X_test.shape}")
-# Train: (400, 1)  Test: (100, 1)</code></pre>
-</div>
-
-<div class="card">
-    <h3>Data Leakage</h3>
-    <p>Data leakage means information from the test set "leaks" into training, making results unrealistically good:</p>
+    <h3>How Big Is a "Model"?</h3>
+    <p>The number of parameters in the bag depends on what kind of model it is. The mental model is the same at every scale:</p>
     <table class="info-table">
-        <thead><tr><th>Leakage type</th><th>Example</th><th>Fix</th></tr></thead>
+        <thead><tr><th>Model</th><th>Parameter count</th><th>What they represent</th></tr></thead>
         <tbody>
-            <tr><td>Direct</td><td>Evaluating on training data</td><td>Always split first</td></tr>
-            <tr><td>Feature</td><td>Computing mean/std on full dataset before splitting</td><td>Fit scalers on train only</td></tr>
-            <tr><td>Temporal</td><td>Using future data to predict the past</td><td>Chronological splits</td></tr>
-            <tr><td>Label</td><td>Features derived from the target</td><td>Audit feature construction</td></tr>
+            <tr><td>Linear regression (this lesson)</td><td><strong>2</strong></td><td>1 weight + 1 bias</td></tr>
+            <tr><td>Digits classifier (Lesson 1.1)</td><td><strong>~640</strong></td><td>64 pixels &times; 10 digit classes</td></tr>
+            <tr><td>ResNet-50 (image classifier)</td><td><strong>~25 million</strong></td><td>Convolutional filter weights</td></tr>
+            <tr><td>GPT-4 (LLM)</td><td><strong>~1.7 trillion</strong></td><td>Transformer attention + feed-forward weights</td></tr>
         </tbody>
     </table>
+    <p>Same idea, twelve orders of magnitude apart. The bag of numbers gets bigger; what it <em>is</em> doesn't change.</p>
+</div>
+
+<div class="card">
+    <h3>Be the Algorithm — Drag Two Knobs</h3>
+    <p>Reading about this is the wrong way to learn it. Run the explore script and physically tune the model by hand: drag two sliders, watch the red line move across the data cloud, watch the error metric (RMSE) climb and fall. Then click <strong>"Let the algorithm do it"</strong> and watch sklearn snap the knobs to the optimal values in one shot.</p>
+    <p style="margin-top:14px;">After you've tuned the model by hand, the next step in this lesson — <code>model.fit()</code> — stops being magic. <code>.fit()</code> is doing exactly what you just did, just analytically and instantly.</p>
+    <pre><code class="language-bash">python curriculum/stage1_classic_ml/02_linear_regression/0_interactive_intro/explore_model_knobs.py</code></pre>
+    <p style="margin-top:10px;"><strong>Challenges to attempt before clicking "Let the algorithm do it":</strong></p>
+    <ol>
+        <li>What is the RMSE of a totally random model (the starting position)?</li>
+        <li>How low can <em>you</em> push the RMSE by hand? Write your best score down.</li>
+        <li>By how much does the algorithm beat your best score?</li>
+        <li>The optimal values are roughly <code>w &approx; 1.8</code> and <code>b &approx; 30</code>. Translate them into plain English for a SOC analyst monitoring the server.</li>
+    </ol>
 </div>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> Data leakage is the #1 reason security ML models fail in production.
-    A malware classifier trained with leakage can look 99% accurate in the lab but miss 90% of real threats.
-    Always split your data <em>before</em> any preprocessing.
+    <strong>Cybersecurity tie-in:</strong> When a vendor says "we shipped a new model to production," they mean
+    they updated a file containing tuned parameters. That file is an <em>asset</em> &mdash; it can be stolen
+    (model exfiltration), tampered with (model poisoning), or backdoored before deployment. You cannot
+    defend the model if you do not know what the model physically <em>is</em>. It is a file with numbers in it.
 </div>
 {% endblock %}

@@ -1,72 +1,64 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>What model.fit() Does</h3>
-    <p>When you call <code>LinearRegression().fit(X_train, y_train)</code>, sklearn finds the <strong>slope</strong> and <strong>intercept</strong> that minimise the total squared distance between each actual value and the model's prediction.</p>
-    <pre><code class="language-python">y_predicted = slope * x + intercept</code></pre>
-    <p>After <code>.fit()</code>, the model stores:</p>
+    <h3>Why You Must Split Your Data</h3>
+    <p>Imagine studying for an exam using a practice test, then taking the <em>exact same</em> test as the real exam. Your score looks great &mdash; but it doesn't prove you learned anything.</p>
+    <p>The same applies to ML models. If you train and evaluate on the same data:</p>
     <ul>
-        <li><code>model.coef_[0]</code> &mdash; the slope (weight)</li>
-        <li><code>model.intercept_</code> &mdash; the intercept (bias)</li>
+        <li>The model has already "seen" those examples</li>
+        <li>It can <strong>memorise</strong> specific points rather than learn patterns</li>
+        <li>Your error metric is falsely optimistic</li>
+        <li>The model may fail completely in production</li>
     </ul>
+    <p>This is called <strong>overfitting to the training set</strong>.</p>
 </div>
 
 <div class="card">
-    <h3>Physical Meaning</h3>
-    <p>For our server model: <code>response_time_ms = slope &times; requests_per_second + intercept</code></p>
+    <h3>The Fix: Train/Test Split</h3>
+    <p>Hold out a portion of your data <em>before</em> training and never touch it until final evaluation.</p>
     <table class="info-table">
-        <thead><tr><th>Parameter</th><th>Value</th><th>Physical meaning</th></tr></thead>
+        <thead><tr><th>Set</th><th>Size</th><th>Purpose</th></tr></thead>
         <tbody>
-            <tr><td>Intercept</td><td>~29.5 ms</td><td>Baseline response time at 0 rps (network stack overhead)</td></tr>
-            <tr><td>Slope</td><td>~1.82 ms/rps</td><td>Additional milliseconds per extra request per second</td></tr>
+            <tr><td>Training set</td><td>80% (400 rows)</td><td>Model learns from this</td></tr>
+            <tr><td>Test set</td><td>20% (100 rows)</td><td>Final evaluation only &mdash; locked until the end</td></tr>
         </tbody>
     </table>
-    <p><strong>Example:</strong> At 100 rps: 1.82 &times; 100 + 29.5 = <strong>211.5 ms</strong> predicted.</p>
-    <p>This interpretability is why linear regression remains a valuable baseline &mdash; you can explain to a SOC analyst <em>why</em> an alert fired.</p>
 </div>
 
 <div class="card">
     <h3>Key Code Pattern</h3>
-    <pre><code class="language-python">from sklearn.linear_model import LinearRegression
-import numpy as np
+    <pre><code class="language-python">from sklearn.model_selection import train_test_split
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+X_train, X_test, y_train, y_test = train_test_split(
+    X,                  # features array
+    y,                  # target array
+    test_size=0.2,      # 20% goes to test set
+    random_state=42     # reproducible shuffle
+)
 
-print(f"Slope:     {model.coef_[0]:.2f} ms per rps")
-print(f"Intercept: {model.intercept_:.2f} ms")
-
-# Predict for specific loads
-new_loads = np.array([[50], [100], [150]])
-predictions = model.predict(new_loads)
-for load, pred in zip([50, 100, 150], predictions):
-    print(f"At {load} rps: {pred:.1f} ms")
-
-# Predict for the full test set
-y_pred = model.predict(X_test)</code></pre>
+print(f"Train: {X_train.shape}  Test: {X_test.shape}")
+# Train: (400, 1)  Test: (100, 1)</code></pre>
 </div>
 
 <div class="card">
-    <h3>Visualising the Regression Line</h3>
-    <p>Overlay the model's predictions on the scatter plot to see the fit:</p>
-    <pre><code class="language-python">x_line = np.linspace(X.min(), X.max(), 200).reshape(-1, 1)
-y_line = model.predict(x_line)
-
-plt.scatter(X_test, y_test, alpha=0.4, label="Actual")
-plt.plot(x_line, y_line, color="red", label="Predicted")
-plt.xlabel("Requests per second")
-plt.ylabel("Response time (ms)")
-plt.legend()
-plt.show()</code></pre>
-    <p>Points <strong>above</strong> the line have longer-than-predicted response times &mdash; worth investigating.</p>
+    <h3>Data Leakage</h3>
+    <p>Data leakage means information from the test set "leaks" into training, making results unrealistically good:</p>
+    <table class="info-table">
+        <thead><tr><th>Leakage type</th><th>Example</th><th>Fix</th></tr></thead>
+        <tbody>
+            <tr><td>Direct</td><td>Evaluating on training data</td><td>Always split first</td></tr>
+            <tr><td>Feature</td><td>Computing mean/std on full dataset before splitting</td><td>Fit scalers on train only</td></tr>
+            <tr><td>Temporal</td><td>Using future data to predict the past</td><td>Chronological splits</td></tr>
+            <tr><td>Label</td><td>Features derived from the target</td><td>Audit feature construction</td></tr>
+        </tbody>
+    </table>
 </div>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> The slope and intercept have physical meaning you can explain
-    to a non-technical stakeholder. "Each extra 10 rps adds 18 ms of latency" is actionable.
-    When the actual response time deviates from the prediction, something changed &mdash; and in security,
-    unexplained changes deserve investigation.
+    <strong>Cybersecurity tie-in:</strong> Data leakage is the #1 reason security ML models fail in production.
+    A malware classifier trained with leakage can look 99% accurate in the lab but miss 90% of real threats.
+    Always split your data <em>before</em> any preprocessing.
 </div>
 {% endblock %}

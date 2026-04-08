@@ -1,0 +1,80 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>Error Metrics for Regression</h3>
+    <p>After fitting a model, you need to quantify how wrong it is. Four metrics are standard:</p>
+    <table class="info-table">
+        <thead><tr><th>Metric</th><th>Units</th><th>Interpretation</th></tr></thead>
+        <tbody>
+            <tr><td><strong>MSE</strong></td><td>ms&sup2;</td><td>Penalises large errors heavily; hard to interpret directly</td></tr>
+            <tr><td><strong>RMSE</strong></td><td>ms</td><td>Same units as target; "average error magnitude"</td></tr>
+            <tr><td><strong>MAE</strong></td><td>ms</td><td>Robust to outliers; typical error size</td></tr>
+            <tr><td><strong>R&sup2;</strong></td><td>0&ndash;1</td><td>Fraction of variance explained; 1.0 = perfect</td></tr>
+        </tbody>
+    </table>
+    <p><strong>For our server model:</strong> RMSE &asymp; 15 ms means predictions are off by ~15 ms on average. R&sup2; &asymp; 0.97 means the model explains 97% of response time variance.</p>
+</div>
+
+<div class="card">
+    <h3>Key Code Pattern</h3>
+    <pre><code class="language-python">from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import numpy as np
+
+y_pred = model.predict(X_test)
+
+mse  = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae  = mean_absolute_error(y_test, y_pred)
+r2   = r2_score(y_test, y_pred)
+
+print(f"MSE:  {mse:.1f} ms²")
+print(f"RMSE: {rmse:.1f} ms")
+print(f"MAE:  {mae:.1f} ms")
+print(f"R²:   {r2:.3f}")</code></pre>
+</div>
+
+<div class="card">
+    <h3>Residual Analysis</h3>
+    <p>A <strong>residual</strong> is <code>actual &minus; predicted</code>. Examining residuals reveals model quality:</p>
+    <table class="info-table">
+        <thead><tr><th>Pattern</th><th>Meaning</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Random around 0</td><td>Good fit</td><td>None needed</td></tr>
+            <tr><td>Systematic curve</td><td>Non-linear relationship</td><td>Try polynomial features</td></tr>
+            <tr><td>Fan shape</td><td>Heteroscedasticity</td><td>Transform target (log)</td></tr>
+            <tr><td>Large individual residuals</td><td>Outliers</td><td>Investigate those rows</td></tr>
+        </tbody>
+    </table>
+    <p>In security, <strong>large positive residuals</strong> (actual >> predicted) are the most interesting &mdash; the server is slower than expected.</p>
+</div>
+
+<div class="card">
+    <h3>Building a Security Baseline</h3>
+    <p>Turn the regression model into an anomaly detector in 4 steps:</p>
+    <ol>
+        <li><strong>Fit</strong> the model on historical normal traffic</li>
+        <li><strong>Compute residuals</strong> on new observations</li>
+        <li><strong>Calculate &sigma;</strong> (standard deviation of training residuals)</li>
+        <li><strong>Alert</strong> when residual &gt; k&sigma; (typically k=3)</li>
+    </ol>
+    <pre><code class="language-python"># Compute training residuals and threshold
+train_residuals = y_train - model.predict(X_train)
+sigma = np.std(train_residuals)
+threshold = 3 * sigma
+
+# Flag anomalies in test set
+test_residuals = y_test - y_pred
+anomalies = test_residuals > threshold
+print(f"Threshold (3σ): {threshold:.1f} ms")
+print(f"Anomalies: {anomalies.sum()} / {len(y_test)}")</code></pre>
+    <p>Under a normal distribution, only 0.3% of observations naturally fall beyond 3&sigma; &mdash; roughly 3 false alarms per 1,000 legitimate observations.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Cybersecurity tie-in:</strong> This is exactly how statistical anomaly detection works in production.
+    Your IDS/IPS baselines network behaviour, then flags deviations. The k&sigma; threshold controls
+    the tradeoff between catching real attacks and drowning analysts in false positives.
+</div>
+{% endblock %}

@@ -5589,8 +5589,11 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .md-content pre {
     background: #1e1e2e; padding: 16px; border-radius: 8px;
     overflow-x: auto; margin: 12px 0;
-    /* Prism Tomorrow theme owns the foreground/token colours so we don't
-       set color here — leaving it lets the theme's .token.* rules show. */
+    /* The background is always dark, so the foreground must always be
+       light — otherwise plain (non-Prism) code blocks inherit var(--text)
+       and become dark-on-dark invisible in light mode. Prism's .token.*
+       rules override this for language-tagged blocks. */
+    color: #e6e8f0;
 }
 .md-content pre code,
 .md-content pre code[class*="language-"] {
@@ -5599,6 +5602,7 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     font-size: 13px;
     font-family: 'Space Mono', 'Fira Code', Consolas, monospace;
     text-shadow: none;
+    color: inherit;
 }
 /* Tighten Prism Tomorrow's defaults to match the lesson palette without
    killing token colours. */

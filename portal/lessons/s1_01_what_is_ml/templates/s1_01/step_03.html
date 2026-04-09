@@ -33,15 +33,7 @@
         </div>
     </div>
 
-    <div class="flat-array" id="sample-flat" style="margin-top:8px;"></div>
     <div id="sample-error" class="info-box red hidden"></div>
-</div>
-
-<div class="card">
-    <h3>Class distribution</h3>
-    <p>How many samples per digit? Are they evenly distributed?</p>
-
-    <div id="class-bars"></div>
 </div>
 {% endblock %}
 
@@ -55,8 +47,6 @@
 
 {% block scripts %}
 <script>
-    const classCounts = {{ class_counts | tojson }};
-    const maxCount = Math.max(...classCounts);
     const nSamples = {{ n_samples }};
 
     // Animated stat counters on load
@@ -86,8 +76,6 @@
             document.getElementById('sample-label').textContent =
                 `Sample ${idx} — label: ${data.label}`;
             renderGrid('sample-grid', data.image, {animate: true});
-            document.getElementById('sample-flat').textContent =
-                '[' + data.flat.join(', ') + ']';
         } catch(e) {
             errEl.textContent = 'Error loading sample';
             errEl.classList.remove('hidden');
@@ -124,7 +112,6 @@
             area.appendChild(container);
             renderGrid(`batch-${n}`, data.image, {animate: true});
         }
-        document.getElementById('sample-flat').textContent = '(Select a single sample to see its flat array)';
     }
 
     // Keyboard: left/right for sample navigation (when input focused)
@@ -132,20 +119,6 @@
         if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { e.preventDefault(); nextSample(); }
         if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { e.preventDefault(); prevSample(); }
         if (e.key === 'Enter') loadSample();
-    });
-
-    // Class distribution bars
-    const barsEl = document.getElementById('class-bars');
-    classCounts.forEach((count, d) => {
-        const pct = (count / maxCount * 100).toFixed(0);
-        barsEl.innerHTML += `
-            <div class="bar-row">
-                <div class="bar-label">Digit ${d}</div>
-                <div class="bar-track">
-                    <div class="bar-fill blue" style="width:${pct}%"></div>
-                </div>
-                <div class="bar-count">${count}</div>
-            </div>`;
     });
 
     loadSample();

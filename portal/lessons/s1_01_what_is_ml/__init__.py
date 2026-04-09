@@ -109,7 +109,7 @@ for pct in range(0, 100, 5):
 
 STEPS = [
     {"id": 0, "title": "What is Machine Learning?", "sub": "Data, features, and labels — the ML vocabulary", "icon": "first-look"},  # mag glass over a 3x3 sample
-    {"id": 1, "title": "Loading a Dataset",   "sub": "Pixels are just numbers",            "icon": "draw-digit"},        # pixel-art "1" inside a grid
+    {"id": 1, "title": "Pixels Are Numbers",  "sub": "Draw a digit, see what the model sees", "icon": "draw-digit"},     # pixel-art "1" inside a grid
     {"id": 2, "title": "Spot the Difference", "sub": "Models see differences, not images", "icon": "spot-difference"},   # two grids with ≠ between
     {"id": 3, "title": "Dataset Shape",       "sub": "1,797 samples x 64 features",        "icon": "dataset-shape"},     # rows×cols table outline
     {"id": 4, "title": "Useless Pixels",      "sub": "Zero-variance features",             "icon": "useless-pixels"},    # lit center, X-marked edges
@@ -242,9 +242,9 @@ _ex = f"{_base}/2_coding_exercises"
 # Accuracy Trap lab).
 MATERIALS = {
     0: [("lecture", "What is Machine Learning?", f"{_base}/README.md")],
-    1: [("lecture", "Loading a Dataset", f"{_ex}/1_loading_data/lecture.md"),
-        ("lab", "Lab — Loading a Dataset", f"{_ex}/1_loading_data/handson.md"),
-        ("solution", "Solution", f"{_ex}/1_loading_data/solution_loading_data.py")],
+    1: [("lecture", "What the Model Actually Sees", f"{_ex}/5_what_model_sees/lecture.md"),
+        ("lab", "Lab — What the Model Actually Sees", f"{_ex}/5_what_model_sees/handson.md"),
+        ("solution", "Solution", f"{_ex}/5_what_model_sees/solution_what_model_sees.py")],
     2: [("lecture", "Visualising Your Data", f"{_ex}/4_visualise/lecture.md"),
         ("lab", "Lab — Visualising Your Data", f"{_ex}/4_visualise/handson.md"),
         ("solution", "Solution", f"{_ex}/4_visualise/solution_visualise.py")],
@@ -336,7 +336,6 @@ def step(n):
 
     elif n == 3:
         ctx["shape"] = list(digits.data.shape)
-        ctx["class_counts"] = class_counts
         ctx["n_samples"] = len(digits.data)
 
     elif n == 4:

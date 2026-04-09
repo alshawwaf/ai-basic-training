@@ -52,22 +52,48 @@ fig, axes = plt.subplots(rows, cols, figsize=(width, height))
 - `axes` — the NumPy array of panels you just saw
 - `figsize` — width × height **in inches**
 
+**One panel vs many panels — `ax` vs `axes`**
+
+`axes` (plural) is the *whole grid* of panels. A single panel inside it is conventionally called `ax` (singular). You get an `ax` either by indexing into the grid or by looping over it:
+
+```python
+fig, axes = plt.subplots(2, 3)        # 2x3 grid → axes.shape == (2, 3)
+
+ax = axes[0][2]                        # one specific panel (row 0, column 2)
+ax.imshow(image)                       # draw into THAT panel
+
+# or, more commonly, loop and draw into each panel in turn:
+for ax, image in zip(axes.flat, images):
+    ax.imshow(image)
+```
+
+So whenever you see `ax.something(...)` in the code below, picture a single rectangle inside the grid and that call drawing into it. `axes.flat` is a handy 1D view of the grid that lets you iterate without nested loops.
+
 ---
 
 ### 2. Numbers become pixels → `ax.imshow()`
 
-A 2D NumPy array is just rows of numbers. `imshow()` walks the array and paints each cell as a coloured square. With `cmap="gray_r"` (reversed greyscale), **high values become dark ink and low values stay as white background** — matching how you would draw on paper. The same digit-3 sample, shown as raw numbers on the left and as pixels on the right:
+The name `imshow` is short for **image show**: take a 2D array of numbers, paint each number as a coloured square, and display the result inside a panel. It is a *method on a panel* — you call it as `ax.imshow(...)`, and the picture appears inside that specific `ax`.
 
-<div class="lecture-visual">
-  <img src="/static/lecture_assets/imshow_demo.png" alt="An 8x8 array of numbers from 0 to 16 next to the same array rendered as a greyscale handwritten 3">
-  <div class="vis-caption">Real digit-3 sample from sklearn. The numbers on the left literally are the pixels on the right.</div>
-</div>
+**What the call needs:**
 
 ```python
 ax.imshow(array_2d, cmap="gray_r")
 ```
 
-The `cmap` argument is the value-to-colour mapping. The same digit, painted with four different cmaps, looks like this:
+| Argument | What it is | Example |
+|---|---|---|
+| `array_2d` | the 2D NumPy array of pixel values you want to draw | shape `(8, 8)` for a digit |
+| `cmap` | the **colour map** — the rule that turns each number into a colour | `"gray_r"`, `"hot"`, `"viridis"`, … |
+
+`imshow` walks the array row by row, looks up each value in the colour map, and paints that colour into the corresponding square. With `cmap="gray_r"` (reversed greyscale), **high values become dark ink and low values stay as white background** — matching how you would draw on paper. The same digit-3 sample, shown as raw numbers on the left and as pixels on the right:
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/imshow_demo.png" alt="An 8x8 array of numbers from 0 to 16 next to the same array rendered as a greyscale handwritten 3">
+  <div class="vis-caption">Real digit-3 sample from sklearn. The numbers on the left literally are the pixels on the right — <code>imshow</code> just does the lookup.</div>
+</div>
+
+The `cmap` is the only knob that decides what colours come out. The same digit, painted with four different colour maps, looks like this:
 
 <div class="lecture-visual">
   <img src="/static/lecture_assets/cmap_compare.png" alt="The same digit-3 image rendered with four colourmaps: gray_r, gray, hot, and viridis">

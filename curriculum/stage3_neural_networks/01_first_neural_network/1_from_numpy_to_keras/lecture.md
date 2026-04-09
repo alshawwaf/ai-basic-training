@@ -1,4 +1,4 @@
-# Exercise 1 — From NumPy to Keras
+# From NumPy to Keras
 
 > Read this guide fully before opening the lab.
 

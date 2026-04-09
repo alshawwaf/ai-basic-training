@@ -1,4 +1,4 @@
-# Exercise 1 — Why Dense Fails on Images
+# Why Dense Fails on Images
 
 > Read this guide fully before opening the lab.
 

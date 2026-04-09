@@ -1,4 +1,4 @@
-# Exercise 2 — Build the Network
+# Build the Network
 
 > Read this guide fully before opening the lab.
 

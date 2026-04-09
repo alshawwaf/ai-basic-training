@@ -1,4 +1,4 @@
-# Exercise 4 — ROC Curve and AUC
+# ROC Curve and AUC
 
 > Back to [README.md](README.md)
 

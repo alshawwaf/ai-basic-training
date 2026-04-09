@@ -1,4 +1,4 @@
-# Exercise 2 — Numeric Feature Extraction
+# Numeric Feature Extraction
 
 > Back to [README.md](README.md)
 

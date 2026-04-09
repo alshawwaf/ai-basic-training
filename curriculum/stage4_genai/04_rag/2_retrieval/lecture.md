@@ -1,4 +1,4 @@
-# Exercise 2 — Retrieval: Finding Relevant Chunks
+# Retrieval: Finding Relevant Chunks
 
 > Read this guide fully before opening the lab.
 

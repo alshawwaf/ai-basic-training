@@ -1,4 +1,4 @@
-# Lesson 1.3 — Logistic Regression
+# Logistic Regression
 
 ---
 

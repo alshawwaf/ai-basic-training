@@ -1,4 +1,4 @@
-# Exercise 1 — What Are Hyperparameters?
+# What Are Hyperparameters?
 
 > Read this guide fully before opening the lab.
 

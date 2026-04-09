@@ -1,4 +1,4 @@
-# Exercise 3 — Train and Evaluate the Phishing Classifier
+# Train and Evaluate the Phishing Classifier
 
 > Back to [README.md](README.md)
 

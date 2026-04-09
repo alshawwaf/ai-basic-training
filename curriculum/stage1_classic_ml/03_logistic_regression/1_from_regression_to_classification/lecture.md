@@ -1,4 +1,4 @@
-# Exercise 1 — From Regression to Classification
+# From Regression to Classification
 
 > Back to [README.md](README.md)
 

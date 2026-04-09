@@ -1,4 +1,4 @@
-# Exercise 4 — Evaluate Regression and Build a Security Baseline
+# Evaluate Regression and Build a Security Baseline
 
 > Back to [README.md](README.md)
 

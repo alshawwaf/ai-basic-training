@@ -37,7 +37,7 @@
             {% for s in steps %}
             <li class="{{ 'active' if s.id == current and not is_quiz else '' }}" data-step="{{ s.id }}">
                 <a href="{{ url_prefix }}/step/{{ s.id }}">
-                    <span class="step-num">{{ s.id }}</span>
+                    <span class="step-num">{{ s.id + 1 }}</span>
                     <span>{{ s.title }}</span>
                 </a>
             </li>
@@ -67,7 +67,7 @@
 
         {% if not is_quiz %}
         <div class="step-header">
-            <h1>Step {{ current }}: {{ steps[current].title }}</h1>
+            <h1>Step {{ current + 1 }}: {{ steps[current].title }}</h1>
             <p>{{ steps[current].sub }}</p>
         </div>
         {% endif %}
@@ -84,14 +84,14 @@
             {% set has_solution = materials | selectattr('0', 'equalto', 'solution') | list %}
             {% if has_lecture %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', '{{ has_lecture[0][1] }}'); activateLpStep(this)">
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', {{ steps[current].title | tojson }}); activateLpStep(this)">
                 <span class="lp-num">2</span>
                 <span class="lp-text"><span class="lp-label">Read</span><span class="lp-hint">Understand</span></span>
             </div>
             {% endif %}
             {% if has_lab %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', '{{ has_lab[0][1] }}'); activateLpStep(this)">
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', {{ steps[current].title | tojson }}); activateLpStep(this)">
                 <span class="lp-num">{{ 3 if has_lecture else 2 }}</span>
                 <span class="lp-text"><span class="lp-label">Build</span><span class="lp-hint">Hands-on lab</span></span>
             </div>
@@ -523,7 +523,7 @@
         // and which document this came from. Sanitised for Windows.
         function buildDownloadName(extension) {
             var lt = {{ lesson_title | tojson }};
-            var stepNum = {{ current }};
+            var stepNum = {{ current + 1 }};
             var sanitize = function(s) {
                 return (s || '').replace(/[<>:"/\\|?*]+/g, '').replace(/\s+/g, ' ').trim();
             };
@@ -547,7 +547,7 @@
             var drawer = document.getElementById('contentDrawer');
             var overlay = document.getElementById('drawerOverlay');
             document.getElementById('drawerTitle').textContent = title;
-            document.getElementById('drawerBreadcrumb').textContent = '{{ lesson_title }} — Step {{ current }}';
+            document.getElementById('drawerBreadcrumb').textContent = '{{ lesson_title }} — Step {{ current + 1 }}';
             document.getElementById('drawerBody').innerHTML = '<div class="drawer-loading">Loading...</div>';
             var miniLabel = document.getElementById('drawerMiniTabLabel');
             if (miniLabel) miniLabel.textContent = title;

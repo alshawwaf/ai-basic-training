@@ -1,4 +1,4 @@
-# Exercise 1 — Your First LLM API Call
+# Your First LLM API Call
 
 > Read this guide fully before opening the lab.
 

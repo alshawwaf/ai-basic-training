@@ -1,4 +1,4 @@
-# Exercise 3 — Semantic Search over a Security Knowledge Base
+# Semantic Search over a Security Knowledge Base
 
 > Read this guide fully before opening the lab.
 

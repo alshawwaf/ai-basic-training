@@ -1,4 +1,4 @@
-# Exercise 4 — Evaluate and Improve
+# Evaluate and Improve
 
 > Read this guide fully before opening the lab.
 

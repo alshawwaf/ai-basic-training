@@ -1,4 +1,4 @@
-# Exercise 1 — Demonstrate Overfitting
+# Demonstrate Overfitting
 
 > Read this guide fully before opening the lab.
 

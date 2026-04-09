@@ -1,4 +1,4 @@
-# Exercise 4 — Validation Curve
+# Validation Curve
 
 > Read this guide fully before opening the lab.
 

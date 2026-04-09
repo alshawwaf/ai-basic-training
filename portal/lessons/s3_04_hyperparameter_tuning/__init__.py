@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s3_04"
-LESSON_TITLE = "Hyperparameter Tuning"
+LESSON_TITLE = "Hyperparameters & Tuning"
 
 STEPS = [
     {"id": 0, "title": "What Are Hyperparameters?",     "sub": "Parameters vs hyperparameters",            "icon": "dial-tuning"},

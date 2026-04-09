@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s2_04"
-LESSON_TITLE = "Overfitting & Cross-Validation"
+LESSON_TITLE = "Cross-Validation & Overfitting"
 
 # ── Step metadata ───────────────────────────────────────────────────────────
 

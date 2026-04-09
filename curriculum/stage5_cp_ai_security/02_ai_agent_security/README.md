@@ -1,4 +1,4 @@
-# Session 5.2 — AI Agent Security + MCP
+# AI Agent Security + MCP
 
 > **Stage:** 5  |  **Week:** 14  |  **Time:** 90 min  |  **Format:** Lecture + hands-on lab
 

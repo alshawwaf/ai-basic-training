@@ -1,4 +1,4 @@
-# Lesson 4.3 — Working with LLM APIs
+# Working with LLM APIs
 
 ---
 

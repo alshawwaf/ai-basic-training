@@ -1,4 +1,4 @@
-# Lesson 1.1 — Interactive Introduction
+# Interactive Introduction
 
 This lesson has moved to the **Training Portal**.
 

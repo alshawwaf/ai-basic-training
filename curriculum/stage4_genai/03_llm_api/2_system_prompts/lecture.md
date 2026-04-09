@@ -1,4 +1,4 @@
-# Exercise 2 — System Prompt Design
+# System Prompt Design
 
 > Read this guide fully before opening the lab.
 

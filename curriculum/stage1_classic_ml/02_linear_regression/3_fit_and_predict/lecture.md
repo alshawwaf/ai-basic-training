@@ -1,4 +1,4 @@
-# Exercise 3 — Fit and Predict
+# Fit and Predict
 
 > Back to [README.md](README.md)
 

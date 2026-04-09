@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s5_02"
-LESSON_TITLE = "AI Agent Security"
+LESSON_TITLE = "AI Agent Security + MCP"
 
 STEPS = [
     {"id": 0, "title": "From Chat to Agents",

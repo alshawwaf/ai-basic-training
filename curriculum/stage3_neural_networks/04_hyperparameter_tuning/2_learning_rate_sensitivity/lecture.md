@@ -1,4 +1,4 @@
-# Exercise 2 — Learning Rate Sensitivity
+# Learning Rate Sensitivity
 
 > Read this guide fully before opening the lab.
 

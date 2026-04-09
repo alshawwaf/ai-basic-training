@@ -1,4 +1,4 @@
-# Session 5.3 — AI Guardrails
+# AI Guardrails
 
 > **Stage:** 5  |  **Week:** 15  |  **Time:** 90 min  |  **Format:** Lecture + hands-on lab
 

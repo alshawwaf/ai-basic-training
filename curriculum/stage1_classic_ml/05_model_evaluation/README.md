@@ -1,4 +1,4 @@
-# Lesson 1.5 — Model Evaluation
+# Model Evaluation
 
 ---
 

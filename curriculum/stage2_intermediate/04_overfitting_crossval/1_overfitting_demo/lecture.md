@@ -1,4 +1,4 @@
-# Exercise 1 — Overfitting Demo
+# Overfitting Demo
 
 > Back to [README.md](README.md)
 

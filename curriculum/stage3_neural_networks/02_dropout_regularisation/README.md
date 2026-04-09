@@ -1,4 +1,4 @@
-# Lesson 3.2 — Deeper Networks, Dropout & Batch Normalisation
+# Deeper Networks & Dropout
 
 ---
 

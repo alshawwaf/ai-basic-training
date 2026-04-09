@@ -1,4 +1,4 @@
-# Exercise 4 — Threshold Tuning
+# Threshold Tuning
 
 > Back to [README.md](README.md)
 

@@ -1,4 +1,4 @@
-# Exercise 2 — Feature Engineering for URL Phishing Detection
+# Feature Engineering for URL Phishing Detection
 
 > Back to [README.md](README.md)
 

@@ -1,4 +1,4 @@
-# Exercise 4 — Depth and Overfitting
+# Depth and Overfitting
 
 > Back to [README.md](README.md)
 

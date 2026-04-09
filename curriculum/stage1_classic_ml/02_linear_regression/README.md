@@ -1,4 +1,4 @@
-# Lesson 1.2 — Linear Regression
+# Linear Regression
 
 ---
 

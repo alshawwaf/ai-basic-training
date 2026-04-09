@@ -1,4 +1,4 @@
-# Lesson 3.3 — Convolutional Neural Networks (CNNs)
+# Convolutional Neural Networks
 
 ---
 

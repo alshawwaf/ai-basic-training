@@ -1,4 +1,4 @@
-# Exercise 5 — Threshold Tuning for Your Use Case
+# Threshold Tuning for Your Use Case
 
 > Back to [README.md](README.md)
 

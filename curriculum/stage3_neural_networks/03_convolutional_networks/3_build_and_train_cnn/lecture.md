@@ -1,4 +1,4 @@
-# Exercise 3 — Build and Train a CNN
+# Build and Train a CNN
 
 > Read this guide fully before opening the lab.
 

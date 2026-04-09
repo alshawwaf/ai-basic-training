@@ -1,4 +1,4 @@
-# Exercise 2 — K-Means and Visualisation
+# K-Means and Visualisation
 
 > Back to [README.md](README.md)
 

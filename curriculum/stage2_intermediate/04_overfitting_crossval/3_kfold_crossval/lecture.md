@@ -1,4 +1,4 @@
-# Exercise 3 — K-Fold Cross-Validation
+# K-Fold Cross-Validation
 
 > Back to [README.md](README.md)
 

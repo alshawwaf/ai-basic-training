@@ -1,4 +1,4 @@
-# Exercise 4 — Tune the Forest
+# Tune the Forest
 
 > Back to [README.md](README.md)
 

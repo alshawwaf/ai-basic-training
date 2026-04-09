@@ -18,7 +18,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s1_01"
-LESSON_TITLE = "What is ML?"
+LESSON_TITLE = "What is Machine Learning?"
 
 # ── Load and pre-compute at import time ─────────────────────────────────────
 
@@ -108,7 +108,7 @@ for pct in range(0, 100, 5):
 # ── Step metadata ───────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "First Look",          "sub": "What does ML data look like?",       "icon": "first-look"},        # mag glass over a 3x3 sample
+    {"id": 0, "title": "What is Machine Learning?", "sub": "Data, features, and labels — the ML vocabulary", "icon": "first-look"},  # mag glass over a 3x3 sample
     {"id": 1, "title": "Loading a Dataset",   "sub": "Pixels are just numbers",            "icon": "draw-digit"},        # pixel-art "1" inside a grid
     {"id": 2, "title": "Spot the Difference", "sub": "Models see differences, not images", "icon": "spot-difference"},   # two grids with ≠ between
     {"id": 3, "title": "Dataset Shape",       "sub": "1,797 samples x 64 features",        "icon": "dataset-shape"},     # rows×cols table outline
@@ -241,7 +241,7 @@ _ex = f"{_base}/2_coding_exercises"
 # both topics (e.g. Step 5 + Step 6 share the same Class Balance & the
 # Accuracy Trap lab).
 MATERIALS = {
-    0: [("lecture", "What is ML?", f"{_base}/README.md")],
+    0: [("lecture", "What is Machine Learning?", f"{_base}/README.md")],
     1: [("lecture", "Loading a Dataset", f"{_ex}/1_loading_data/lecture.md"),
         ("lab", "Lab — Loading a Dataset", f"{_ex}/1_loading_data/handson.md"),
         ("solution", "Solution", f"{_ex}/1_loading_data/solution_loading_data.py")],

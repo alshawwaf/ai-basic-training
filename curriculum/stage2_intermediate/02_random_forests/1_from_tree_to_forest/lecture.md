@@ -1,4 +1,4 @@
-# Exercise 1 — From Tree to Forest
+# From Tree to Forest
 
 > Back to [README.md](README.md)
 

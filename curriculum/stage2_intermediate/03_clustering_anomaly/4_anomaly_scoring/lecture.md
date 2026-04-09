@@ -1,4 +1,4 @@
-# Exercise 4 — Anomaly Scoring
+# Anomaly Scoring
 
 > Back to [README.md](README.md)
 

@@ -1,4 +1,4 @@
-# Exercise 4 — Architecture Search
+# Architecture Search
 
 > Read this guide fully before opening the lab.
 

@@ -1,4 +1,4 @@
-# Lesson 4.1 — How LLMs Work
+# How LLMs Work
 
 ---
 

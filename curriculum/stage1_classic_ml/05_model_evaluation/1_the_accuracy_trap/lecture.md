@@ -1,4 +1,4 @@
-# Exercise 1 — The Accuracy Trap
+# The Accuracy Trap
 
 > Back to [README.md](README.md)
 

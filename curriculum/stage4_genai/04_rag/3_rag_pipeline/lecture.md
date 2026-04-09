@@ -1,4 +1,4 @@
-# Exercise 3 — The Full RAG Pipeline
+# The Full RAG Pipeline
 
 > Read this guide fully before opening the lab.
 

@@ -1,4 +1,4 @@
-# Exercise 3 — Compile and Train
+# Compile and Train
 
 > Read this guide fully before opening the lab.
 

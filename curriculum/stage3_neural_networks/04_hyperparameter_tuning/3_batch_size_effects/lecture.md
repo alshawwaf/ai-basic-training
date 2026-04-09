@@ -1,4 +1,4 @@
-# Exercise 3 — Batch Size Effects
+# Batch Size Effects
 
 > Read this guide fully before opening the lab.
 

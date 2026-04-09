@@ -1,4 +1,4 @@
-# Exercise 1 — How Trees Make Decisions
+# How Trees Make Decisions
 
 > Back to [README.md](README.md)
 

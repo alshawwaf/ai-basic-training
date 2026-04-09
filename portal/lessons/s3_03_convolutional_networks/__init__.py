@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s3_03"
-LESSON_TITLE = "Convolutional Networks"
+LESSON_TITLE = "Convolutional Neural Networks"
 
 STEPS = [
     {"id": 0, "title": "Why Dense Fails on Images",       "sub": "Flattening destroys spatial structure",  "icon": "flatten-fail"},

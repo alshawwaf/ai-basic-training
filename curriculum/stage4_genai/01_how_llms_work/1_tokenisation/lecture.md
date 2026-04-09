@@ -1,4 +1,4 @@
-# Exercise 1 — Tokenisation: Text as Token IDs
+# Tokenisation: Text as Token IDs
 
 > Read this guide fully before opening the lab.
 

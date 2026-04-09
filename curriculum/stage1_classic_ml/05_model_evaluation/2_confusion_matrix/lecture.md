@@ -1,4 +1,4 @@
-# Exercise 2 — Confusion Matrix
+# Confusion Matrix
 
 > Back to [README.md](README.md)
 

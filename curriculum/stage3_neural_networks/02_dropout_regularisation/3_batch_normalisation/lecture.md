@@ -1,4 +1,4 @@
-# Exercise 3 — Batch Normalisation
+# Batch Normalisation
 
 > Read this guide fully before opening the lab.
 

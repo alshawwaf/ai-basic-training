@@ -1,4 +1,4 @@
-# Session 5.1 — Workforce AI Security
+# Workforce AI Security
 
 > **Stage:** 5  |  **Week:** 14  |  **Time:** 60 min  |  **Format:** Lecture + dashboard walkthrough
 

@@ -1,4 +1,4 @@
-# Exercise 3 — Categorical Encoding
+# Categorical Encoding
 
 > Back to [README.md](README.md)
 

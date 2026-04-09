@@ -1,4 +1,4 @@
-# Exercise 1 — Document Chunking
+# Document Chunking
 
 > Read this guide fully before opening the lab.
 

@@ -1,4 +1,4 @@
-# Lesson 2.3 — k-Means Clustering (Unsupervised Learning)
+# k-Means Clustering
 
 ---
 

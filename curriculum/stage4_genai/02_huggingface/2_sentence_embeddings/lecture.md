@@ -1,4 +1,4 @@
-# Exercise 2 — Sentence Embeddings
+# Sentence Embeddings
 
 > Read this guide fully before opening the lab.
 

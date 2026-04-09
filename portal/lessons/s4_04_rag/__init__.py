@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s4_04"
-LESSON_TITLE = "RAG (Retrieval-Augmented Generation)"
+LESSON_TITLE = "Retrieval-Augmented Generation"
 
 # -- Step metadata -----------------------------------------------------------
 

@@ -27,7 +27,7 @@
     <div class="step-cards">
         {% for s in steps %}
         <a href="{{ url_prefix }}/step/{{ s.id }}" class="step-card" id="card-{{ s.id }}">
-            <div class="num">{{ s.id }}</div>
+            <div class="num">{{ s.id + 1 }}</div>
             <div class="info">
                 <div class="title">{{ s.title }}</div>
                 <div class="desc">{{ s.sub }}</div>

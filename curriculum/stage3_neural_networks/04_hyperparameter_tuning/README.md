@@ -1,4 +1,4 @@
-# Lesson 3.4 — Hyperparameters & Tuning
+# Hyperparameters & Tuning
 
 ---
 

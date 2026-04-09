@@ -1,4 +1,4 @@
-# Exercise 1 — Unsupervised Framing
+# Unsupervised Framing
 
 > Back to [README.md](README.md)
 

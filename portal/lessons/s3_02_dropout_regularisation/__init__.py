@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s3_02"
-LESSON_TITLE = "Dropout & Regularisation"
+LESSON_TITLE = "Deeper Networks & Dropout"
 
 STEPS = [
     {"id": 0, "title": "Demonstrate Overfitting",  "sub": "Build a deliberately oversized network",         "icon": "overfit-curve"},

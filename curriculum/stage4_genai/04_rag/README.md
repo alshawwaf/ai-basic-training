@@ -1,4 +1,4 @@
-# Lesson 4.4 — RAG (Retrieval-Augmented Generation)
+# RAG (Retrieval-Augmented Generation)
 
 ---
 

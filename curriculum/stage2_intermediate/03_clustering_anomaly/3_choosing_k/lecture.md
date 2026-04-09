@@ -1,4 +1,4 @@
-# Exercise 3 — Choosing K
+# Choosing K
 
 > Back to [README.md](README.md)
 

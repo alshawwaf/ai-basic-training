@@ -1,4 +1,4 @@
-# Exercise 2 — Bias-Variance Tradeoff
+# Bias-Variance Tradeoff
 
 > Back to [README.md](README.md)
 

@@ -1,4 +1,4 @@
-# Exercise 4 — Scaling and Validation
+# Scaling and Validation
 
 > Back to [README.md](README.md)
 

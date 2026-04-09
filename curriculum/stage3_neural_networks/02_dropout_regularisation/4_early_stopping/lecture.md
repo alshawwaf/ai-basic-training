@@ -1,4 +1,4 @@
-# Exercise 4 — Early Stopping
+# Early Stopping
 
 > Read this guide fully before opening the lab.
 

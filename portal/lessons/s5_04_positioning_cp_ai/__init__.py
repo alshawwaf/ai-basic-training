@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s5_04"
-LESSON_TITLE = "Positioning CP AI"
+LESSON_TITLE = "Positioning Check Point AI Security"
 
 STEPS = [
     {"id": 0, "title": "The Three-Layer Narrative",

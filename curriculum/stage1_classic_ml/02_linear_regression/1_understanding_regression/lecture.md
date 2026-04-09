@@ -1,4 +1,4 @@
-# Exercise 1 — Understanding Regression
+# Understanding Regression
 
 > Back to [README.md](README.md)
 

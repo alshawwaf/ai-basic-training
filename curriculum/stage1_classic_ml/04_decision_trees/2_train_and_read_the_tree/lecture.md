@@ -1,4 +1,4 @@
-# Exercise 2 — Train and Read the Tree
+# Train and Read the Tree
 
 > Back to [README.md](README.md)
 

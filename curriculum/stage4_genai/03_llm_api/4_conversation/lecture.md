@@ -1,4 +1,4 @@
-# Exercise 4 — Multi-Turn Conversation
+# Multi-Turn Conversation
 
 > Read this guide fully before opening the lab.
 

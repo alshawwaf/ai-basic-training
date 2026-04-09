@@ -1,4 +1,4 @@
-# Exercise 2 — Train a Random Forest
+# Train a Random Forest
 
 > Back to [README.md](README.md)
 

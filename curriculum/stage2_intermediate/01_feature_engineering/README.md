@@ -1,4 +1,4 @@
-# Lesson 2.1 — Feature Engineering
+# Feature Engineering
 
 ---
 

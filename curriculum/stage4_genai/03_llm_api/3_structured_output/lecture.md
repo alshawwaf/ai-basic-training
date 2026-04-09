@@ -1,4 +1,4 @@
-# Exercise 3 — Structured JSON Output
+# Structured JSON Output
 
 > Read this guide fully before opening the lab.
 

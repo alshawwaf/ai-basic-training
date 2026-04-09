@@ -1,4 +1,4 @@
-# Exercise 3 — Precision, Recall, and F1
+# Precision, Recall, and F1
 
 > Back to [README.md](README.md)
 

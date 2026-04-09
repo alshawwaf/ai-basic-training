@@ -1,4 +1,4 @@
-# Lesson 4.2 — HuggingFace Pre-trained Models
+# HuggingFace Pre-trained Models
 
 ---
 

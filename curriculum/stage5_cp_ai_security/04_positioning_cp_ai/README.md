@@ -1,4 +1,4 @@
-# Session 5.4 — Positioning Check Point AI Security
+# Positioning Check Point AI Security
 
 > **Stage:** 5  |  **Week:** 15  |  **Time:** 60 min  |  **Format:** Workshop
 

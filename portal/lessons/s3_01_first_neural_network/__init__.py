@@ -20,7 +20,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s3_01"
-LESSON_TITLE = "First Neural Network"
+LESSON_TITLE = "First Neural Network in Keras"
 
 # ── Generate dataset ──────────────────────────────────────────────────────
 

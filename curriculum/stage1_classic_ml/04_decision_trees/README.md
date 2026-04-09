@@ -1,4 +1,4 @@
-# Lesson 1.4 — Decision Trees
+# Decision Trees
 
 ---
 

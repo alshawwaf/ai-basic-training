@@ -1,4 +1,4 @@
-# Exercise 1 — Why Raw Logs Fail
+# Why Raw Logs Fail
 
 > Back to [README.md](README.md)
 

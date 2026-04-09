@@ -1,4 +1,4 @@
-# Exercise 1 — Zero-Shot Classification
+# Zero-Shot Classification
 
 > Read this guide fully before opening the lab.
 

@@ -1,4 +1,4 @@
-# Exercise 3 — Attention: Which Words Matter to Which
+# Attention: Which Words Matter to Which
 
 > Read this guide fully before opening the lab.
 

@@ -1,4 +1,4 @@
-# Exercise 2 — Add Dropout
+# Add Dropout
 
 > Read this guide fully before opening the lab.
 

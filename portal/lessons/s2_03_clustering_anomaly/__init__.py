@@ -12,7 +12,7 @@ bp = Blueprint(
 )
 
 LESSON_ID = "s2_03"
-LESSON_TITLE = "Clustering & Anomaly Detection"
+LESSON_TITLE = "k-Means Clustering"
 
 # ── Step metadata ───────────────────────────────────────────────────────────
 

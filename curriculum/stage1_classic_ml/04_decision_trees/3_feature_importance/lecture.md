@@ -1,4 +1,4 @@
-# Exercise 3 — Feature Importance
+# Feature Importance
 
 > Back to [README.md](README.md)
 

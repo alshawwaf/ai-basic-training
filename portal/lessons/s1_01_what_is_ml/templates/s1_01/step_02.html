@@ -1,8 +1,8 @@
 {% extends "lesson_base.html" %}
 {% block content %}
-<div class="card">
+<div class="card step2-compact">
     <h3>Compare two digit prototypes</h3>
-    <p>Each image is the <em>average</em> of all samples for that digit. <strong>The Difference panel is the one that matters</strong> &mdash; it shows the pixels where the two digits disagree, and those are the <em>only</em> places a model can look to tell them apart. The fewer bright cells, the harder the job.</p>
+    <p class="step2-intro">Each image is the <em>average</em> of all samples for that digit. <strong>The Difference panel is the one that matters</strong> &mdash; it shows where the two digits disagree, and those are the <em>only</em> pixels a model can use. Fewer bright cells = harder job.</p>
 
     <div class="controls">
         <label>Digit A:
@@ -36,24 +36,28 @@
         </button>
     </div>
 
-    <div class="grids-row">
-        <div class="grid-container">
-            <div class="label" id="label-a">Average 3</div>
-            <div class="digit-grid medium" id="grid-a"></div>
+    <div class="step2-split">
+        <div class="grids-row">
+            <div class="grid-container">
+                <div class="label" id="label-a">Average 3</div>
+                <div class="digit-grid medium" id="grid-a"></div>
+            </div>
+            <div class="grid-container">
+                <div class="label" id="label-b">Average 8</div>
+                <div class="digit-grid medium" id="grid-b"></div>
+            </div>
+            <div class="grid-container diff-highlight">
+                <div class="label">Difference <span class="diff-badge">model&#39;s tells</span></div>
+                <div class="digit-grid medium" id="grid-diff"></div>
+                <div class="grid-caption">Brighter cell = bigger gap between A and B at that pixel.</div>
+            </div>
         </div>
-        <div class="grid-container">
-            <div class="label" id="label-b">Average 8</div>
-            <div class="digit-grid medium" id="grid-b"></div>
-        </div>
-        <div class="grid-container diff-highlight">
-            <div class="label">Difference <span class="diff-badge">model&#39;s tells</span></div>
-            <div class="digit-grid medium" id="grid-diff"></div>
-            <div class="grid-caption">Brighter cell = bigger gap between A and B at that pixel.<br>These are the only signals the model can use.</div>
+
+        <div class="step2-readout">
+            <div class="sim-meter" id="sim-meter"></div>
+            <div class="verdict-card" id="verdict-card"></div>
         </div>
     </div>
-
-    <div class="sim-meter" id="sim-meter"></div>
-    <div class="verdict-card" id="verdict-card"></div>
 </div>
 {% endblock %}
 

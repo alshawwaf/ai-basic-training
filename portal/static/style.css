@@ -2199,6 +2199,42 @@ select option:hover {
     text-align: right;
 }
 
+/* ── Step 2: compact layout so the meter + verdict are visible above the
+   fold, plus a 2-column split (grids on the left, readout on the right)
+   on wide viewports. Scoped to .step2-compact so other steps that use
+   .digit-grid.medium are not affected. */
+.step2-compact { padding: 14px 18px; }
+.step2-compact h3 { margin: 0 0 4px; font-size: 16px; }
+.step2-compact .step2-intro { margin: 0 0 8px; font-size: 12.5px; line-height: 1.45; color: var(--text-dim); }
+.step2-compact .controls { margin: 6px 0; gap: 10px; }
+.step2-compact .preset-row { margin: 4px 0 8px; }
+.step2-compact .grids-row { margin: 0; gap: 10px; }
+.step2-compact .grid-container { margin: 0; }
+.step2-compact .grid-container .label { font-size: 11px; margin-bottom: 3px; }
+.step2-compact .digit-grid.medium { width: 150px; }
+.step2-compact .grid-caption { font-size: 10px; margin-top: 4px; max-width: 150px; }
+.step2-compact .sim-meter { padding: 8px 12px; margin: 0; }
+.step2-compact .sim-meter .meter-label { font-size: 16px; min-width: 50px; }
+.step2-compact .verdict-card { margin: 8px 0 0; }
+.step2-compact .verdict-card .verdict-body { padding: 10px 14px; }
+.step2-compact .verdict-card .verdict-title { font-size: 10px; margin-bottom: 4px; }
+.step2-compact .verdict-card .verdict-headline { font-size: 13.5px; margin-bottom: 3px; }
+.step2-compact .verdict-card .verdict-text { font-size: 12px; line-height: 1.45; }
+
+/* On wide viewports split the lower area into two columns: grids on the
+   left, sim-meter + verdict stacked on the right. Falls back to a single
+   column on narrow screens so nothing gets crushed. */
+.step2-compact .step2-split {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+.step2-compact .step2-readout { display: flex; flex-direction: column; min-width: 0; }
+@media (max-width: 1100px) {
+    .step2-compact .step2-split { grid-template-columns: 1fr; }
+}
+
 /* ── Step 2: emphasise the Difference panel + verdict card ─────────────── */
 .grid-container.diff-highlight {
     padding: 10px 10px 8px;

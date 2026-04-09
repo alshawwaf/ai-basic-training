@@ -1938,9 +1938,13 @@ select option:hover {
 .step-card:nth-child(9)  { animation-delay: 0.36s; }
 .step-card:nth-child(10) { animation-delay: 0.40s; }
 .step-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    border-left-width: 5px;
+    padding-left: 22px; /* compensate for thicker left border so content doesn't shift */
     border-left-color: var(--violet);
 }
+.step-card:hover .num { transform: scale(1.08); }
+.step-card:hover .info .title { color: #fff; }
 .step-card .num {
     width: 44px;
     height: 44px;
@@ -2024,8 +2028,8 @@ select option:hover {
     display: block;
 }
 .step-card:hover .step-icon {
-    opacity: 0.55;
-    transform: translateY(-50%) scale(1.08);
+    opacity: 0.78;
+    transform: translateY(-50%) scale(1.18);
 }
 .step-card.done .step-icon {
     opacity: 0.08;
@@ -2041,8 +2045,11 @@ select option:hover {
     background: linear-gradient(135deg, rgba(17, 17, 34, 0.9), rgba(20, 20, 40, 0.9));
 }
 [data-theme="dark"] .step-card:hover {
-    border-color: rgba(168, 85, 247, 0.3);
-    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1), 0 0 30px rgba(168, 85, 247, 0.06);
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 36px rgba(168, 85, 247, 0.35),
+                0 10px 32px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 1px rgba(168, 85, 247, 0.4);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.10), rgba(20, 20, 40, 0.95));
 }
 [data-theme="dark"] .step-card .num {
     box-shadow: 0 0 12px rgba(6, 214, 224, 0.3);
@@ -6231,7 +6238,17 @@ body[data-stage="s5"] .step-card .num { background: linear-gradient(135deg, #34d
 body[data-stage] .step-card { border-left-color: var(--stage-accent); }
 body[data-stage] .step-card:hover {
     border-left-color: var(--stage-accent-2);
-    box-shadow: 0 0 24px var(--stage-tint-18);
+    border-color: var(--stage-tint-28);
+    box-shadow: 0 0 36px var(--stage-glow-soft),
+                0 10px 32px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 1px var(--stage-tint-28);
+    background: linear-gradient(135deg, var(--stage-tint-08), rgba(20, 20, 40, 0.95));
+}
+body[data-stage] .step-card:hover .num {
+    box-shadow: 0 0 18px var(--stage-glow-soft);
+}
+body[data-stage] .step-card:hover .info .title {
+    text-shadow: 0 0 10px var(--stage-glow-soft);
 }
 
 /* Done state stays green across all stages — graduates know what done means. */

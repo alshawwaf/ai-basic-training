@@ -1,9 +1,12 @@
 {% extends "lesson_base.html" %}
 {% block content %}
-<div class="card">
+<div class="card step7-compact">
     <h3>The accuracy trap</h3>
-    <p>A real LogisticRegression model is trained as you drag the slider.
-       Watch accuracy stay high while recall collapses — this is the most dangerous metric in security.</p>
+    <p class="step7-intro">
+        A real <code>LogisticRegression</code> model is trained on the digits every time you move the slider.
+        As you remove samples of one class, the dataset becomes increasingly imbalanced — and the four metrics below diverge.
+        <strong>Accuracy stays near 100%. Recall collapses toward 0%.</strong> The gap between them <em>is</em> the trap.
+    </p>
 
     <div class="controls">
         <label>Target class:
@@ -22,27 +25,35 @@
 
     <div class="metrics-row" id="metric-cards">
         <div class="metric-card" id="mc-acc">
-            <div class="metric-tip">How often the model is correct overall</div>
-            <div class="name">Accuracy</div><div class="val">—</div>
+            <div class="name">Accuracy</div>
+            <div class="val">—</div>
+            <div class="metric-desc"><strong>Of every prediction</strong>, what fraction did the model get right?<br><span class="metric-formula">(correct &divide; total)</span></div>
         </div>
         <div class="metric-card" id="mc-prec">
-            <div class="metric-tip">When it says "target", how often is it right?</div>
-            <div class="name">Precision</div><div class="val">—</div>
+            <div class="name">Precision</div>
+            <div class="val">—</div>
+            <div class="metric-desc"><strong>When it cries "target"</strong>, how often is it right?<br><span class="metric-formula">(true&nbsp;positives &divide; predicted&nbsp;positives)</span></div>
         </div>
         <div class="metric-card" id="mc-rec">
-            <div class="metric-tip">Of all real targets, how many does it find?</div>
-            <div class="name">Recall</div><div class="val">—</div>
+            <div class="name">Recall</div>
+            <div class="val">—</div>
+            <div class="metric-desc"><strong>Of every real target</strong>, what fraction did it actually catch?<br><span class="metric-formula">(true&nbsp;positives &divide; real&nbsp;positives)</span></div>
         </div>
         <div class="metric-card" id="mc-f1">
-            <div class="metric-tip">Balance of precision and recall (harmonic mean)</div>
-            <div class="name">F1 Score</div><div class="val">—</div>
+            <div class="name">F1 Score</div>
+            <div class="val">—</div>
+            <div class="metric-desc"><strong>Balance</strong> of precision and recall — drops if either one collapses.<br><span class="metric-formula">(harmonic mean)</span></div>
         </div>
     </div>
 
     <div class="info-box red hidden" id="trap-warn"></div>
 
-    <div class="card" style="margin-top:16px;">
+    <div class="card step7-chart-card">
         <h3>Metric trajectories</h3>
+        <p class="chart-hint">
+            Each dot is one model trained at that imbalance level. <strong>Watch the green line</strong> (accuracy) stay flat near the top while
+            <strong>the red line</strong> (recall) crashes downward. A model evaluated only on accuracy looks fine all the way to 95% removal — but it has long since stopped finding the target class.
+        </p>
         <div class="chart-wrap"><canvas id="line-chart"></canvas></div>
     </div>
 </div>

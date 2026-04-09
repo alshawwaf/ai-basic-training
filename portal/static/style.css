@@ -2235,6 +2235,52 @@ select option:hover {
     .step2-compact .step2-split { grid-template-columns: 1fr; }
 }
 
+/* ── Step 7: Accuracy Trap — surface the metric definitions instead of
+   hiding them in hover tooltips, and add a chart-reading hint. */
+.step7-compact { padding: 14px 18px; }
+.step7-compact h3 { margin: 0 0 6px; font-size: 16px; }
+.step7-compact .step7-intro { margin: 0 0 10px; font-size: 13px; line-height: 1.5; color: var(--text); }
+.step7-compact .step7-intro strong { color: var(--accent); }
+.step7-compact .step7-intro code { font-size: 12px; padding: 1px 5px; background: rgba(6,214,224,0.08); border-radius: 4px; color: var(--accent); }
+.step7-compact .controls { margin: 6px 0 10px; }
+
+/* Metric cards: make the per-card definition always visible (drop hover) */
+.step7-compact .metrics-row { margin: 6px 0 10px; gap: 10px; }
+.step7-compact .metric-card { padding: 12px 12px 10px; min-width: 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.step7-compact .metric-card .name { margin-bottom: 2px; font-size: 11px; cursor: default; }
+.step7-compact .metric-card .val { font-size: 26px; line-height: 1.1; margin-bottom: 6px; }
+.step7-compact .metric-desc {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-dim);
+    border-top: 1px dashed var(--border);
+    padding-top: 6px;
+    margin-top: auto;
+    width: 100%;
+}
+.step7-compact .metric-desc strong { color: var(--text); font-weight: 600; }
+.step7-compact .metric-formula { display: inline-block; margin-top: 3px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); opacity: 0.75; }
+
+/* Hide the legacy hover tooltip inside the compact scope so we don't get
+   both the always-visible description AND the floating tooltip. */
+.step7-compact .metric-tip { display: none !important; }
+
+/* Chart-reading hint — small callout above the line chart */
+.step7-compact .step7-chart-card { margin-top: 12px; padding: 12px 16px 14px; }
+.step7-compact .step7-chart-card h3 { margin: 0 0 4px; font-size: 14px; }
+.step7-compact .chart-hint {
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-dim);
+    padding: 8px 12px;
+    border-left: 3px solid var(--accent);
+    background: rgba(6, 214, 224, 0.05);
+    border-radius: 4px;
+}
+.step7-compact .chart-hint strong:nth-of-type(1) { color: var(--green); }
+.step7-compact .chart-hint strong:nth-of-type(2) { color: var(--red); }
+
 /* ── Step 6: compact layout so the 10 bars + imbalance ratio + lazy-model
    warning all fit above the fold. Scoped to .step6-compact so other steps
    that use .bar-row are not affected. */

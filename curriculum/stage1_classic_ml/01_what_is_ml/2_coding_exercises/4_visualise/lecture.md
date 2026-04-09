@@ -184,14 +184,18 @@ Always call it just before `savefig` or `show`.
 
 ---
 
-### 6. Save and display → `plt.savefig()` and `plt.show()`
+### 6. Save and display → `fig.savefig()` and `plt.show()`
+
+Saving is a *whole-figure* operation, so it lives on `fig` — same pattern as `fig.suptitle()`. Showing the window is a global pyplot action, so it stays on `plt`.
 
 ```python
-plt.savefig("path/filename.png")  # write to disk first…
-plt.show()                         # …then open the window (may block)
+fig.savefig("path/filename.png")   # write the whole figure to disk first…
+plt.show()                          # …then open the window (may block)
 ```
 
 Save **before** show — on some systems `show()` clears the figure when the window closes, leaving you with an empty PNG.
+
+> **Shortcut:** `plt.savefig("path/filename.png")` does the exact same thing — it just saves whichever figure is currently active. With one figure on screen the two forms are interchangeable; `fig.savefig()` is more explicit when you have several figures open at once.
 
 ---
 

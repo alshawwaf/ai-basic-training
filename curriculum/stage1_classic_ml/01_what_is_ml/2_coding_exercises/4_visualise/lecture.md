@@ -62,7 +62,9 @@ from sklearn.datasets import load_digits
 
 digits = load_digits()
 
-# Reserve a 1-row, 3-column grid → axes is a list of 3 panels
+# Reserve a 1-row, 3-column grid.
+# fig  = the whole figure (the outer canvas, one per call)
+# axes = the list of 3 panels inside it
 fig, axes = plt.subplots(1, 3, figsize=(6, 2))
 
 # Pick each panel by index and draw a digit into it
@@ -70,10 +72,17 @@ axes[0].imshow(digits.images[0], cmap="gray_r")
 axes[1].imshow(digits.images[1], cmap="gray_r")
 axes[2].imshow(digits.images[2], cmap="gray_r")
 
+# fig is the handle to the WHOLE figure, so anything that applies to
+# every panel at once goes through fig:
+fig.suptitle("First three digits")     # one heading above all panels
+fig.savefig("first_three_digits.png")  # save the whole figure to disk
+
 plt.show()
 ```
 
 That is the whole pattern. `axes[0]` is the leftmost panel, `axes[1]` is the middle one, `axes[2]` is the rightmost. Whenever you see `ax.something(...)` in the code below, picture **one of those three rectangles** and that call drawing into it.
+
+**`fig` vs `axes` — when do you use which?** Think of `fig` as the outer picture frame and each `ax` as one painting hanging inside it. Anything that affects *one panel* (drawing the image, hiding its ticks, setting its title) is a method on `ax`. Anything that affects the *entire figure at once* (a single overall title, saving the whole thing to a file) is a method on `fig`. We will see `fig.suptitle()` again in section 4 below.
 
 If you have *many* panels and don't want to write `axes[0]`, `axes[1]`, … by hand, a regular `for` loop with an index works:
 

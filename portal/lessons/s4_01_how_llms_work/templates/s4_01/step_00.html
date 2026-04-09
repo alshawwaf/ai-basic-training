@@ -1,8 +1,9 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>An LLM is a next-token predictor</h3>
-    <p>Type a sentence. The model's only job is to predict what comes next — one token at a time. Everything else (reasoning, coding, summarisation) emerges from this.</p>
+    <h3>A Large Language Model is a next-token predictor</h3>
+    <p>An <strong>LLM</strong> — short for <strong>Large Language Model</strong> — is the kind of system that powers ChatGPT, Claude, and Gemini. Despite the name, its only job is surprisingly narrow: <em>given the words so far, predict what word comes next</em>. One token at a time. Everything else you've heard about — reasoning, coding, summarisation — emerges from doing this prediction loop billions of times on trillions of words of text.</p>
+    <p>Type a sentence below and watch it happen. The next-token guess appears to the right of the last word.</p>
 
     <div class="controls">
         <input type="text" id="prompt-input" placeholder="Type a sentence..." value="The attacker used a SQL injection to"

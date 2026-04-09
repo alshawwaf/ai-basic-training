@@ -2235,6 +2235,21 @@ select option:hover {
     .step2-compact .step2-split { grid-template-columns: 1fr; }
 }
 
+/* ── Step 6: compact layout so the 10 bars + imbalance ratio + lazy-model
+   warning all fit above the fold. Scoped to .step6-compact so other steps
+   that use .bar-row are not affected. */
+.step6-compact { padding: 12px 18px; }
+.step6-compact .step6-intro { margin: 0 0 10px; font-size: 12.5px; line-height: 1.45; color: var(--text-dim); }
+.step6-compact .controls { margin: 6px 0; gap: 12px; }
+.step6-compact .btn-group { margin: 4px 0 8px; }
+.step6-compact #balance-bars { margin: 8px 0; }
+.step6-compact .bar-row { margin: 2px 0; gap: 8px; }
+.step6-compact .bar-track { height: 18px; }
+.step6-compact .bar-label { font-size: 12px; width: 54px; }
+.step6-compact .bar-count { font-size: 12px; width: 36px; }
+.step6-compact .info-box { padding: 8px 14px; margin: 6px 0 0; text-align: center; font-size: 14px; }
+.step6-compact #balance-warn { font-size: 13px; }
+
 /* ── Step 2: emphasise the Difference panel + verdict card ─────────────── */
 .grid-container.diff-highlight {
     padding: 10px 10px 8px;

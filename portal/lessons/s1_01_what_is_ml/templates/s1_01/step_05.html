@@ -1,8 +1,7 @@
 {% extends "lesson_base.html" %}
 {% block content %}
-<div class="card">
-    <h3>What happens when classes are imbalanced?</h3>
-    <p>Select a digit and drag the slider to remove its samples. Watch the bar chart shift and the imbalance ratio grow.</p>
+<div class="card step6-compact">
+    <p class="step6-intro">Pick a digit and drag the slider to remove its samples. Watch the imbalance ratio grow — and watch the lazy-model warning appear.</p>
 
     <div class="controls">
         <label>Target class:
@@ -26,10 +25,10 @@
         <button class="btn btn-sm" onclick="setScenario(5, 95)">Extreme (needle in haystack)</button>
     </div>
 
-    <div id="balance-bars" style="margin: 16px 0;"></div>
+    <div id="balance-bars"></div>
 
-    <div class="info-box blue" id="balance-info" style="text-align:center; font-size:16px;"></div>
-    <div class="info-box red hidden" id="balance-warn" style="text-align:center;"></div>
+    <div class="info-box blue" id="balance-info"></div>
+    <div class="info-box red hidden" id="balance-warn"></div>
 </div>
 {% endblock %}
 

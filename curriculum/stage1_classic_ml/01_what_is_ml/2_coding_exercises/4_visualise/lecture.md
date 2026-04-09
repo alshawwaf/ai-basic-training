@@ -54,20 +54,33 @@ fig, axes = plt.subplots(rows, cols, figsize=(width, height))
 
 **One panel vs many panels — `ax` vs `axes`**
 
-`axes` (plural) is the *whole grid* of panels. A single panel inside it is conventionally called `ax` (singular). You get an `ax` either by indexing into the grid or by looping over it:
+`axes` (plural) is the *whole grid* of panels. A single panel inside it is conventionally called `ax` (singular). You pick a panel out of the grid by indexing into it, exactly like a list. Here is the simplest possible full example — three digits side by side:
 
 ```python
-fig, axes = plt.subplots(2, 3)        # 2x3 grid → axes.shape == (2, 3)
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
 
-ax = axes[0][2]                        # one specific panel (row 0, column 2)
-ax.imshow(image)                       # draw into THAT panel
+digits = load_digits()
 
-# or, more commonly, loop and draw into each panel in turn:
-for ax, image in zip(axes.flat, images):
-    ax.imshow(image)
+# Reserve a 1-row, 3-column grid → axes is a list of 3 panels
+fig, axes = plt.subplots(1, 3, figsize=(6, 2))
+
+# Pick each panel by index and draw a digit into it
+axes[0].imshow(digits.images[0], cmap="gray_r")
+axes[1].imshow(digits.images[1], cmap="gray_r")
+axes[2].imshow(digits.images[2], cmap="gray_r")
+
+plt.show()
 ```
 
-So whenever you see `ax.something(...)` in the code below, picture a single rectangle inside the grid and that call drawing into it. `axes.flat` is a handy 1D view of the grid that lets you iterate without nested loops.
+That is the whole pattern. `axes[0]` is the leftmost panel, `axes[1]` is the middle one, `axes[2]` is the rightmost. Whenever you see `ax.something(...)` in the code below, picture **one of those three rectangles** and that call drawing into it.
+
+If you have *many* panels and don't want to write `axes[0]`, `axes[1]`, … by hand, a regular `for` loop with an index works:
+
+```python
+for i in range(10):
+    axes[i].imshow(digits.images[i], cmap="gray_r")
+```
 
 ---
 

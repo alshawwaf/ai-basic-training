@@ -6120,18 +6120,22 @@ pre[class*="language-"] .token.entity,
 pre[class*="language-"] .token.inserted {
     color: var(--green) !important;
 }
-/* Light theme tweaks: the tokens above use CSS vars that flip with theme,
- * but the base text colour needs an explicit light-mode value too. */
+/* Light-theme base text colour for code blocks. The background of every
+ * code block is intentionally dark in BOTH themes (set on .md-content pre
+ * and .card pre to #1e1e2e / #0a1024), so the foreground must stay light
+ * in light mode too. Earlier this was set to #2a2f4a, which made plain
+ * (non-Prism) code blocks like ASCII diagrams render dark-on-dark and
+ * become invisible. */
 :root:not([data-theme="dark"]) pre[class*="language-"],
 :root:not([data-theme="dark"]) code[class*="language-"] {
-    color: #2a2f4a !important;
+    color: #e6e8f0 !important;
 }
 :root:not([data-theme="dark"]) pre[class*="language-"] .token.punctuation,
 :root:not([data-theme="dark"]) pre[class*="language-"] .token.operator {
-    color: #4d5373 !important;
+    color: #c4ccea !important;
 }
 :root:not([data-theme="dark"]) pre[class*="language-"] .token.variable {
-    color: #2a2f4a !important;
+    color: #d8e0f5 !important;
 }
 
 @media (max-width: 768px) {

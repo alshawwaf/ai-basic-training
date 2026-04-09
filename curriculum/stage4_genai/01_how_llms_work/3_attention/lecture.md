@@ -37,6 +37,11 @@ When processing "blocked", attention weights might be:
 
 The model learns which words are relevant to each word's meaning in context.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_attention_arrows.png" alt="A row of five word boxes spelling 'the firewall blocked malicious connection'. The middle word 'blocked' is highlighted in orange. Cyan arrows of varying thickness fan down from 'blocked' to each of the other four words. The thickest arrow points to 'firewall' (labelled 0.45), the second thickest to 'malicious' (labelled 0.28), a thinner arrow to 'connection' (labelled 0.24), and very thin lines to 'the' and other small weights. Caption above: 'When the model processes blocked, it asks every other word: how much do you matter to me?'">
+  <div class="vis-caption">Attention in one picture. When the transformer is computing the new representation for "blocked", it weighs every other word in the sentence by an attention score. The thickness of each arrow is the score. "firewall" wins (subject doing the blocking) and "malicious" comes second (the thing being blocked) — exactly what a human would consider when interpreting that word.</div>
+</div>
+
 ---
 
 ## Concept: Query, Key, Value
@@ -92,6 +97,11 @@ Rows sum to 1.0 (softmax output).
 | **blocked** | 0.03 | **0.45** | 0.00 | **0.28** | 0.24 | 1.0 |
 
 > **firewall** (0.45) = strongest — "who blocked?" **malicious** (0.28) = second — "what was blocked?"
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_attention_matrix.png" alt="A 5×5 heatmap titled 'Attention matrix — gold row is blocked'. Rows and columns are labelled the, firewall, blocked, malicious, connection. Cells are coloured on a yellow-to-blue gradient with the numerical attention weight written in each cell. The 'blocked' row (third row) is highlighted with a thick gold border. In that row, the cell for 'firewall' (0.45) is the darkest, followed by 'malicious' (0.28) and 'connection' (0.24); the diagonal cell ('blocked' to itself) is 0.00.">
+  <div class="vis-caption">The full 5×5 attention matrix. Each row is one word asking "what should I look at?" — and the row's values must sum to 1.0 because they come from a softmax. The gold-highlighted "blocked" row is the same one visualised by the arrow diagram above, but here you can read the exact numerical weights.</div>
+</div>
 
 ---
 

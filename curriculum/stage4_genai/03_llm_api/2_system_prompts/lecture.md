@@ -33,6 +33,11 @@ The system prompt is a persistent instruction that frames the model's role befor
 
 The system prompt sits at the top of every request and influences every assistant response in the conversation — even though the end user never sees it.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_system_user_assistant.png" alt="Three stacked rounded panels. Top panel labelled SYSTEM (cyan) contains 'You are a senior SOC analyst. Be concise.' with a note 'visible to user: no — invisible to end user'. Middle panel labelled USER (orange) contains '\"Analyse this log entry: ...\"' with note 'visible to user: yes'. Bottom panel labelled ASSISTANT (green) contains 'model's reply, shaped by the system prompt above' with note 'visible to user: yes'. Small grey arrows connect each panel to the next.">
+  <div class="vis-caption">How the three message roles stack inside a single API call. The system message at the top is invisible to the end user but shapes every assistant response below it. Changing the system prompt is the most powerful single lever for controlling model behaviour.</div>
+</div>
+
 ---
 
 ## Concept: Bad vs Good System Prompts

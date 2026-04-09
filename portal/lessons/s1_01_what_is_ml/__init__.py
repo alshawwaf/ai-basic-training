@@ -109,7 +109,7 @@ for pct in range(0, 100, 5):
 
 STEPS = [
     {"id": 0, "title": "First Look",          "sub": "What does ML data look like?",       "icon": "first-look"},        # mag glass over a 3x3 sample
-    {"id": 1, "title": "Draw a Digit",        "sub": "Pixels are just numbers",            "icon": "draw-digit"},        # pixel-art "1" inside a grid
+    {"id": 1, "title": "Loading a Dataset",   "sub": "Pixels are just numbers",            "icon": "draw-digit"},        # pixel-art "1" inside a grid
     {"id": 2, "title": "Spot the Difference", "sub": "Models see differences, not images", "icon": "spot-difference"},   # two grids with ≠ between
     {"id": 3, "title": "Dataset Shape",       "sub": "1,797 samples x 64 features",        "icon": "dataset-shape"},     # rows×cols table outline
     {"id": 4, "title": "Useless Pixels",      "sub": "Zero-variance features",             "icon": "useless-pixels"},    # lit center, X-marked edges

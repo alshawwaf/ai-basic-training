@@ -25,6 +25,11 @@ There are three natural ways to split text:
 
 Modern LLMs use **subword tokenisation** (Byte Pair Encoding or similar). Common words get their own token; rare words are split into subword pieces. This balances vocabulary size against sequence length.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_subword_split.png" alt="Three rows comparing tokenisation strategies for the word 'unhappiness'. Row 1 'Character-level' (grey) shows eleven small grey boxes one per letter: u, n, h, a, p, p, i, n, e, s, s; subtitle 'vocab ~100, sequence too long, no semantic units'. Row 2 'Word-level' (orange) shows one big orange box containing the whole word 'unhappiness'; subtitle 'vocab 50,000+, fails on any unseen word'. Row 3 'Subword (BPE / GPT-4)' (cyan) shows two cyan boxes: 'un' and 'happiness'; subtitle 'vocab ~100,000, handles new words, compact sequences'.">
+  <div class="vis-caption">The same word, three tokenisation philosophies. Character-level produces 11 tokens for one word; word-level uses just one token but breaks on any unseen word. Subword tokenisation gets the best of both — common prefixes like "un" become reusable units, but rare combinations like "hap-pi-ness" can be split as needed.</div>
+</div>
+
 ---
 
 ## Concept: Token IDs
@@ -43,6 +48,11 @@ A tokeniser converts text to a sequence of integers:
 | Tokens | `"Hello"`, `" world"` | Subword pieces |
 | Token IDs | `9906`, `1917` | Integers for the model |
 | Embedding Layer | vectors per token | Dense representations |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_tokenisation_pipeline.png" alt="A vertical four-stage diagram. Stage 1 'Raw text' shows a grey box containing 'Analyse this log entry for threats' as a string. Stage 2 'Tokens (subword pieces)' shows seven coloured rounded rectangles in a row, each containing one token: 'Analy', 'se', ' this', ' log', ' entry', ' for', ' threats'. Stage 3 'Token IDs (integers from a 100k vocabulary)' shows seven numbers below the tokens: 74,407, 325, 420, 1,515, 4,441, 369, 18,208. Stage 4 'Embedding lookup → vectors fed to the transformer' shows seven '[ … ]' placeholders.">
+  <div class="vis-caption">Real GPT-4 tokenisation (cl100k_base) of one sentence. Notice how "Analyse" splits into two pieces ("Analy" + "se") because it's less common than "Analyze", while "this", "log", "entry", "for", and "threats" each get their own token. The seven integers on the third row are the actual values fed into GPT-4's embedding layer.</div>
+</div>
 
 Each integer is a **token ID** — an index into the model's vocabulary. The model's embedding layer converts each ID into a high-dimensional vector.
 

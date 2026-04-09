@@ -45,6 +45,11 @@ Three parameters control every call:
 
 The whole interaction is one HTTP request and one HTTP response — there is no persistent connection.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_api_anatomy.png" alt="A diagram showing two tall boxes connected by HTTPS arrows. Left cyan-bordered box 'YOUR PYTHON CODE' contains the chat call: 'client.chat(', 'system=\"You are...\",', 'messages=[ {role: \"user\", content: \"...\"} ],', 'max_tokens=200', ')'. At the bottom: '→ str (the reply)'. Right orange-bordered box 'LLM PROVIDER' lists: receives JSON payload, runs the model, generates tokens one at a time until end-of-sequence, bills you per token, returns JSON response, stateless — no memory of previous calls. Two grey arrows between the boxes labelled 'HTTPS request' (going right) and 'HTTPS response' (going left).">
+  <div class="vis-caption">Anatomy of a single chat API call. Your code builds a request, sends it over HTTPS, the provider runs the model server-side, and a string comes back. The connection is stateless — there is no memory of previous calls on the server side.</div>
+</div>
+
 ---
 
 ## Concept: What Are Tokens?

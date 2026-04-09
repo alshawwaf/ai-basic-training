@@ -47,6 +47,11 @@ The model has never seen your labels before. It uses its general understanding o
 | normal traffic | 0.09 | |
 | configuration change | 0.04 | |
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_zeroshot_pipeline.png" alt="A four-stage pipeline diagram. Left grey 'INPUT TEXT' box contains a security log entry about an outbound connection. Below it an orange 'CANDIDATE LABELS' box lists three labels invented at inference time: 'malicious activity', 'normal traffic', 'configuration change'. Both flow into a central cyan 'BART-large MNLI' box that asks 'for each label, does the text entail it?'. An arrow then leads to a green 'RANKED RESULT' box on the right showing 'malicious activity 0.87' (highlighted as winner), 'normal traffic 0.09', 'configuration change 0.04'.">
+  <div class="vis-caption">The full zero-shot classification pipeline in one picture. The novel part is that the candidate labels are invented at inference time — the model never trained on them. NLI scoring asks "does this text entail this label as a hypothesis?" once per label, and the entailment scores become the classification probabilities.</div>
+</div>
+
 ---
 
 ## Concept: How It Works — Natural Language Inference

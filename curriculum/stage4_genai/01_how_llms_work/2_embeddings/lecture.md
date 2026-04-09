@@ -42,6 +42,11 @@ Words that appear in similar contexts get similar vectors after training. This i
 
 > Notice: "suspicious" and "malicious" have very close vectors — similar meaning produces similar embeddings.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_embedding_space.png" alt="A 2D scatter plot titled 'Real sentence-transformer embeddings — PCA to 2D' with 18 word labels coloured by category. Red 'threat' cluster: malicious, suspicious, attack, breach, exploit grouped together in one region. Cyan 'network' cluster: firewall, router, packet, traffic, port grouped in another region. Grey 'function' cluster: the, a, of, and grouped together. Green 'food' cluster: apple, pizza, bread, coffee grouped together far from the others. The four clusters are visibly separated.">
+  <div class="vis-caption">Real embeddings from <code>all-MiniLM-L6-v2</code> projected to 2D with PCA. No labels were given to the model — it learned during pre-training that "malicious" and "suspicious" belong together, "firewall" and "router" belong together, and food words live somewhere completely different. This is what "the geometry of meaning" looks like.</div>
+</div>
+
 ---
 
 ## Concept: Cosine Similarity
@@ -70,6 +75,11 @@ In a well-trained embedding space:
 | Threat terms | malicious, suspicious | Close together (cosine ~ 0.95) |
 | Network terms | firewall, traffic | Moderate similarity |
 | Function words | the, a | Far from security terms |
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_cosine_pairs.png" alt="A bar chart titled 'Real cosine similarities from all-MiniLM-L6-v2 embeddings' with five bars. From left to right: '\"malicious\" vs \"suspicious\"' high green bar, '\"malicious\" vs \"benign\"' moderate green bar, '\"firewall\" vs \"router\"' green bar, '\"the\" vs \"malicious\"' green bar, '\"phishing\" vs \"credential theft\"' green bar. Each bar shows the exact similarity score above it. Two dashed reference lines: green at 0.70 (strong) and orange at 0.40 (weak).">
+  <div class="vis-caption">Real cosine similarities measured by encoding each word individually with the same sentence-transformer model. The numbers come straight from the model — no hand-picked toy values. Word pairs that share security context have higher similarity; unrelated function words have lower scores.</div>
+</div>
 
 ---
 

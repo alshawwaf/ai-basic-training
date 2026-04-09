@@ -50,6 +50,11 @@ The JSON version can be consumed directly by a SIEM, ticketing system, or automa
 
 The whole point: every step after the LLM is just normal Python code working on a dict — no scraping, no regex on prose.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_json_pipeline.png" alt="A four-stage horizontal pipeline. Stage 1 grey 'Log entry' box contains '198 failed logins in 60s from 45.33.32.156'. Stage 2 cyan 'LLM call' box contains 'system: JSON only + user log'. Stage 3 orange 'json.loads()' box contains 'dict with threat_type, severity, ...'. Stage 4 green 'Downstream' box contains 'SIEM / ticket / SOAR playbook'. Arrows connect each stage. Caption below: 'every step after the LLM is normal Python on a dict — no scraping prose'.">
+  <div class="vis-caption">The structured-output pipeline. The LLM is the only fuzzy step in the chain — everything before and after is deterministic plain Python. By forcing the model to return a JSON document with a fixed schema, you make its output trivially consumable by downstream systems.</div>
+</div>
+
 ---
 
 ## Concept: How to Request JSON Output

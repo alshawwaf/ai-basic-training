@@ -39,6 +39,11 @@ But chunking is not just a technical constraint — it also determines retrieval
 
 Each resulting chunk is small enough to fit through a sentence-embedding model (typical limit: 128–512 tokens) and produces its own vector in the index.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_chunking_strategies.png" alt="A diagram comparing three chunking strategies on the same source document. At the top, a long horizontal grey bar represents an 800-word source article. Below it, three rows show different chunking approaches. Row 1 'Fixed-size (chunk_size=100, no overlap)' shows 8 equal-width orange chunks labelled C1-C8 placed end-to-end with no gaps. Row 2 'Overlap (chunk_size=100, overlap=20)' shows 9 cyan chunks that visually overlap with their neighbours, slightly offset vertically to show the overlap regions. Row 3 'Sentence-based (~3 sentences per chunk, variable size)' shows variable-width violet chunks of different sizes filling the same width.">
+  <div class="vis-caption">Three ways to chop the same document into pieces. Fixed-size is the simplest but cuts sentences in half at boundaries. Overlap chunking buys "boundary safety" by repeating the last 20 words in the next chunk. Sentence-based chunking respects natural sentence boundaries but produces variable sizes.</div>
+</div>
+
 ---
 
 ## Concept: Fixed-Size Chunking
@@ -94,6 +99,11 @@ def chunk_overlap(text, chunk_size=100, overlap=20):
 | Chunk 3 | 161 – 260 | shares words 161–180 with Chunk 2, words 241–260 with Chunk 4 |
 
 Because words 81–100 appear in **both** Chunk 1 and Chunk 2, the sentence *"detection of LSASS access relies on Sysmon Event ID 10"* now lives intact in at least one chunk — so a retrieval query about it can find a single chunk that contains the whole answer.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_chunk_overlap_detail.png" alt="A close-up of two overlapping chunks. Cyan rectangle 'Chunk 1 (words 1-100)' contains '... detection of LSASS access ...'. Below and to the right, an orange rectangle 'Chunk 2 (words 81-180)' contains '... relies on Sysmon Event ID 10 ...'. A gold rectangle highlights the overlapping zone where the cyan and orange rectangles meet, labelled 'shared words 81-100'. Caption below explains that the boundary sentence now lives intact inside Chunk 2.">
+  <div class="vis-caption">Why overlap matters: the gold zone is shared between Chunk 1 and Chunk 2. The sentence that talks about Sysmon Event ID 10 now lives inside Chunk 2 in its entirety, so a query about LSASS detection can retrieve a single chunk that contains the complete answer.</div>
+</div>
 
 ---
 

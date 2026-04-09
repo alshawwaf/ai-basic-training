@@ -45,6 +45,11 @@ This is **Phase 1 + Phase 2** of the RAG pipeline — everything except the fina
 
 The retriever computes cosine similarity between the query vector and every chunk vector in one matrix-vector operation, runs `argsort`, and returns the top-k chunks (e.g. Chunk 2, Chunk 3, Chunk 5). The chunk *text* is then handed to the LLM in the next stage.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_search_two_phase.png" alt="A two-row pipeline diagram. Top row 'PHASE 1 — Indexing (offline, once per corpus update)' shows three boxes: 'Doc 1 ... Doc N' → 'model.encode(docs)' → 'Embedding matrix (N, 384) on disk'. Bottom row 'PHASE 2 — Query (real-time, every search)' shows four boxes: query string → 'encode(query) (1, 384)' → 'cosine vs index' → 'top-k results'. Caption: 'phase 1 is the slow step — phase 2 only encodes the query'.">
+  <div class="vis-caption">The retrieval half of RAG. Phase 1 happens once per chunk update — every chunk goes through the embedder and lands in the vector index. Phase 2 happens on every query and is the part you call <code>retrieve(query, top_k=3)</code> for. The top-k chunk texts that come out of phase 2 are the input to the generation step in the next exercise.</div>
+</div>
+
 ---
 
 ## Concept: Top-k vs Threshold Retrieval

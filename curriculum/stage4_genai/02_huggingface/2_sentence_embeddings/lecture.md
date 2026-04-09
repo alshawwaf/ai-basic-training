@@ -75,6 +75,11 @@ Practical thresholds for security text:
 
 The diagonal is always 1.00 (every sentence is identical to itself). Sentences A and B score 0.91 — nearly identical meaning. Sentence C scores ~0.13 with both — clearly unrelated.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_sentence_similarity.png" alt="A 6×6 cosine similarity heatmap titled 'Real cosine similarity matrix from all-MiniLM-L6-v2'. Rows and columns are six security sentences: outbound connection to suspicious IP, powershell launched from word.exe, user logged in from new location, DNS query to C2 domain, multiple failed logins, and an unrelated FedEx delivery sentence. The diagonal is all 1.00. Security-related sentences show moderate-to-high cosine values with each other (0.4-0.7 range) and the FedEx sentence shows very low similarity to everything else.">
+  <div class="vis-caption">Real cosine similarity matrix computed by encoding 6 sentences with <code>all-MiniLM-L6-v2</code> and comparing every pair. The unrelated FedEx sentence (row/column 6) sits at the bottom of the heatmap with low similarity to everything — exactly what we want from a semantic search engine.</div>
+</div>
+
 ---
 
 ## What Each Task Asks You to Do

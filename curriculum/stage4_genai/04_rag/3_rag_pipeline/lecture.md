@@ -42,6 +42,11 @@ The key insight: the LLM is not memorising your security knowledge — it is rea
 
 The LLM never *learned* the knowledge base — it reads it at inference time. Update the KB and the next call automatically uses the new content; no retraining required.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_rag_pipeline.png" alt="A horizontal three-stage pipeline diagram. Stage 1 cyan box 'RETRIEVE' shows a user query going into a vector index labelled 'top-k chunks'. Stage 2 orange box 'AUGMENT' shows the chunks being inserted into a system prompt under a 'CONTEXT:' heading. Stage 3 violet box 'GENERATE' shows the LLM reading the augmented prompt and producing a grounded answer. Arrows connect each stage. A dashed loop labelled 'KB updates' returns to the vector index, showing that updating the knowledge base does not require retraining the model.">
+  <div class="vis-caption">The full RAG pipeline as a single diagram. Retrieval pulls the relevant chunks, augmentation injects them into the system prompt, and generation produces an answer that is grounded in those exact chunks. The model itself is never retrained — the knowledge lives entirely in the vector index.</div>
+</div>
+
 ---
 
 ## Concept: The Augmented Prompt
@@ -84,6 +89,11 @@ The retrieved chunks live inside the system prompt — the user question is unch
 | Cost | Same per call | Slightly higher (retrieval step) |
 
 RAG is the standard architecture for any production AI assistant over private or dynamic knowledge.
+
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_rag_vs_llm.png" alt="A two-column comparison diagram. Left column 'Pure LLM' shows a single brain icon with a dashed circle around it labelled 'frozen training data'. A user question 'What does the latest Mimikatz module do?' goes in, and the answer below is shown in red as 'I last trained in 2024 — may hallucinate'. Right column 'RAG' shows the same brain icon plus a stack of document chunks feeding into it via a 'retrieve' arrow. The same user question is answered in green as 'Per the 2026-03 advisory in your KB, ...' with a citation marker. A row of icons below each column compares: knowledge source, hallucination risk, source citation, freshness, and cost.">
+  <div class="vis-caption">Why teams reach for RAG. The pure LLM only knows what was in its training data — anything newer or anything private is invisible to it. RAG closes that gap by handing the model the relevant document chunks at inference time, so the answer is grounded in your real, current documentation.</div>
+</div>
 
 ---
 

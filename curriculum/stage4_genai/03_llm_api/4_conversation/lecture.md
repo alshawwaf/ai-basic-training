@@ -44,6 +44,11 @@ This is why the conversation list grows with each turn. You are sending the enti
 
 Every call ships the *entire* history because the API itself is stateless. The list keeps growing until you eventually hit the model's context window — at which point you must summarise older turns or drop them.
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/gn_conversation_growth.png" alt="Two side-by-side panels. Left bar chart titled 'Conversation length grows linearly (2N − 1 messages on turn N)' shows five cyan bars rising linearly: turn 1 with 1 message, turn 2 with 3, turn 3 with 5, turn 4 with 7, turn 5 with 9. Right panel titled 'Incident investigation — context builds' shows three rows. Each row has a grey 'turn' box on the left containing new evidence, an arrow, and a green box on the right showing what the model can now reason about. Turn 1: 'WORKSTATION-042 unusual outbound' → 'traffic anomaly, no attribution'. Turn 2: '+ powershell.exe spawned by winword.exe' → 'macro-doc execution → likely spear-phishing'. Turn 3: '+ connected to 185.219.47.33:443' → 'phishing → execution → C2, full kill chain'.">
+  <div class="vis-caption">Left: how the messages list grows on every turn — by turn 5 you're shipping 9 messages every call. Right: how that growing list lets the model reason over an entire investigation. Each turn doesn't replace the picture, it extends it.</div>
+</div>
+
 ---
 
 ## Concept: Context Window Limits

@@ -216,10 +216,11 @@ code, .flat-array, .guess-input {
 }
 .sidebar li.visited .step-num {
     background: rgba(16, 185, 129, 0.25);
-    color: #6ef0bf;
+    color: var(--green);
     border-color: rgba(34, 211, 160, 0.45);
 }
 [data-theme="dark"] .sidebar li.visited .step-num {
+    color: #6ef0bf;
     box-shadow: 0 0 8px rgba(34,211,160,0.3);
 }
 .sidebar li.active .step-num {

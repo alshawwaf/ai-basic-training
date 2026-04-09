@@ -25,6 +25,18 @@ SAVE = dict(dpi=DPI, bbox_inches="tight", facecolor="white")
 ACCENT = "#0891b2"  # brand cyan (light-theme accent)
 
 
+# ── 0. ax-vs-axes bridge example output ────────────────────────────────────
+# Exactly the script that appears in the lecture's "ax vs axes" bridge box,
+# so the reader sees the literal output of the code they just read.
+fig, axes = plt.subplots(1, 3, figsize=(6, 2))
+axes[0].imshow(digits.images[0], cmap="gray_r")
+axes[1].imshow(digits.images[1], cmap="gray_r")
+axes[2].imshow(digits.images[2], cmap="gray_r")
+fig.suptitle("First three digits")
+plt.savefig(OUT / "ax_vs_axes_example.png", **SAVE)
+plt.close(fig)
+
+
 # ── 1. plt.subplots() — empty 2x3 grid with axes[r][c] labels ───────────────
 fig, axes = plt.subplots(2, 3, figsize=(6, 3.6))
 for r in range(2):
@@ -136,6 +148,6 @@ _make_collision_fig(True, "tight_layout_on.png")
 # (skipped — savefig/show are pure I/O, no useful visual)
 
 
-print(f"Wrote 7 images to {OUT}")
+print(f"Wrote 8 images to {OUT}")
 for p in sorted(OUT.glob("*.png")):
     print("  -", p.name)

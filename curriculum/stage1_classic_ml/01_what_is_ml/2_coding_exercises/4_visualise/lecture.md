@@ -80,6 +80,11 @@ fig.savefig("first_three_digits.png")  # save the whole figure to disk
 plt.show()
 ```
 
+<div class="lecture-visual">
+  <img src="/static/lecture_assets/ax_vs_axes_example.png" alt="Three matplotlib panels in a single row showing the first three sklearn digit images (0, 1, 2) rendered as greyscale 8x8 grids, with the figure-level title 'First three digits' above them">
+  <div class="vis-caption">Real output of the script above. Three panels in one row, one digit each, with a single <code>fig.suptitle</code> heading above all of them.</div>
+</div>
+
 That is the whole pattern. `axes[0]` is the leftmost panel, `axes[1]` is the middle one, `axes[2]` is the rightmost. Whenever you see `ax.something(...)` in the code below, picture **one of those three rectangles** and that call drawing into it.
 
 **`fig` vs `axes` — when do you use which?** Think of `fig` as the outer picture frame and each `ax` as one painting hanging inside it. Anything that affects *one panel* (drawing the image, hiding its ticks, setting its title) is a method on `ax`. Anything that affects the *entire figure at once* (a single overall title, saving the whole thing to a file) is a method on `fig`. We will see `fig.suptitle()` again in section 4 below.

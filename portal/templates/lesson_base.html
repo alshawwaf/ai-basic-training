@@ -84,14 +84,14 @@
             {% set has_solution = materials | selectattr('0', 'equalto', 'solution') | list %}
             {% if has_lecture %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', {{ steps[current].title | tojson }}); activateLpStep(this)">
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', {{ steps[current].title | tojson | forceescape }}); activateLpStep(this)">
                 <span class="lp-num">2</span>
                 <span class="lp-text"><span class="lp-label">Read</span><span class="lp-hint">Understand</span></span>
             </div>
             {% endif %}
             {% if has_lab %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', {{ steps[current].title | tojson }}); activateLpStep(this)">
+            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', {{ steps[current].title | tojson | forceescape }}); activateLpStep(this)">
                 <span class="lp-num">{{ 3 if has_lecture else 2 }}</span>
                 <span class="lp-text"><span class="lp-label">Build</span><span class="lp-hint">Hands-on lab</span></span>
             </div>

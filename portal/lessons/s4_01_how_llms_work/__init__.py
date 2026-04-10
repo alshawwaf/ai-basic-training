@@ -80,7 +80,8 @@ STEPS = [
     {"id": 4, "title": "Cosine Similarity",      "sub": "Measuring meaning",                    "icon": "cosine-angle"},
     {"id": 5, "title": "Attention",              "sub": "Which words matter to which",          "icon": "attention-arrows"},
     {"id": 6, "title": "Context Vectors",        "sub": "Attention in action",                  "icon": "context-vector"},
-    {"id": 7, "title": "LLMs vs Classic ML",     "sub": "Different tools, different problems", "icon": "llm-vs-ml"},
+    {"id": 7, "title": "Pretraining",            "sub": "How the weights get made",             "icon": "loss-curve"},
+    {"id": 8, "title": "LLMs vs Classic ML",     "sub": "Different tools, different problems", "icon": "llm-vs-ml"},
 ]
 
 # ── Quiz ────────────────────────────────────────────────────────────────────
@@ -131,6 +132,17 @@ QUIZ = [
         "explanation": "<strong>Attention</strong> is the mechanism that lets each token decide which other tokens matter for understanding it. Function words like 'the' carry almost no signal; content words like 'firewall' and 'malicious' do. This is the core innovation that made Transformers so powerful.",
     },
     {
+        "q": "Why is LLM pretraining called <strong>self-supervised</strong> &mdash; what makes it different from a normal supervised learning setup?",
+        "options": [
+            "It runs without any training data",
+            "Humans label only 1% of the corpus and the model figures out the rest",
+            "The label for each example is already inside the source text &mdash; the model is trained to predict the next token, and the next token is just the word that comes next in the sentence (no human labelling needed)",
+            "The model supervises itself by checking its own answers against an oracle",
+        ],
+        "answer": 2,
+        "explanation": "Pretraining turns every position in every sentence into a free training example. The input is everything before the cut, and the label is the actual next token in the source text &mdash; <strong>no human ever wrote a label</strong>. That is why a 1 trillion-token corpus produces ~1 trillion training examples without any annotation cost.",
+    },
+    {
         "q": "Your team has 5,000 labelled firewall logs and wants to classify them as malicious or benign. Should you use an LLM or classic ML?",
         "options": [
             "LLM &mdash; LLMs are better at everything",
@@ -174,6 +186,10 @@ CHALLENGES = {
         "a": "The context vector would be a simple <strong>average</strong> of all word vectors — treating 'the' as equally important as 'firewall'. This is what bag-of-words models do. Attention is better because it <strong>selectively focuses</strong> on the relevant words.",
     },
     7: {
+        "q": "Drag the slider from 0 to 1 trillion tokens. The architecture never changes — only the values of the weights. So where do reasoning, world knowledge, and coding ability actually come from?",
+        "a": "They are <strong>emergent side-effects</strong> of getting good at one thing: predicting the next token. To predict the next token <em>well</em>, the model has to implicitly know who Marie Curie was, what TCP port 443 is for, and how a SQL injection works — because all of those facts shaped the next-token statistics in the training corpus. Nothing was explicitly programmed in. The weights just slowly absorbed the structure of human language across trillions of nudges.",
+    },
+    8: {
         "q": "Your team has 5,000 labelled firewall logs and wants to build a classifier. Should they use an LLM or classic ML?",
         "a": "<strong>Classic ML</strong> (Random Forest, LogReg). Structured tabular data with labels is exactly what classic ML excels at. LLMs are for unstructured text. Using GPT-4 to classify CSV rows is like using a helicopter to cross the street — technically possible, absurdly expensive.",
     },
@@ -204,7 +220,8 @@ MATERIALS = {
     6: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
         ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
         ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
-    7: [("lecture", "How LLMs Work", f"{_base}/README.md")],
+    7: [("lecture", "Pretraining", f"{_base}/4_pretraining/lecture.md")],
+    8: [("lecture", "How LLMs Work", f"{_base}/README.md")],
 }
 
 

@@ -61,7 +61,7 @@ def save(fig, name):
 # 1. gn_tokenisation_pipeline.png — text → tokens → IDs → embeddings
 import tiktoken
 enc = tiktoken.get_encoding("cl100k_base")
-sentence = "Analyse this log entry for threats"
+sentence = "Investigate the ransomware payload immediately"
 ids = enc.encode(sentence)
 toks = [enc.decode([i]) for i in ids]
 print(f"  → real GPT-4 tokeniser: {len(ids)} tokens for {sentence!r}")
@@ -116,25 +116,27 @@ save(fig, "gn_tokenisation_pipeline.png")
 
 
 # 2. gn_subword_split.png — same word split three ways
-fig, ax = plt.subplots(figsize=(11, 4.6))
-ax.set_xlim(0, 11); ax.set_ylim(0, 5)
+# Layout:  [strategy name + short caption]   |   [token boxes]
+# The left column gets ~5 axis units, the box column starts at px=5.6.
+fig, ax = plt.subplots(figsize=(12, 4.6))
+ax.set_xlim(0, 12); ax.set_ylim(0, 5)
 ax.axis('off')
 
 word = "unhappiness"
 strategies = [
     ("Character-level",       list(word),               GREY,
-     "vocab ~100, sequence too long, no semantic units"),
+     "vocab ~100; long sequences, no semantic units"),
     ("Word-level",            [word],                   ORANGE,
-     "vocab 50,000+, fails on any unseen word ('unfamiliar' → <UNK>)"),
+     "vocab 50K+; fails on unseen words (→ <UNK>)"),
     ("Subword (BPE / GPT-4)", ["un", "happiness"],      ACCENT,
-     "vocab ~100,000, handles new words, compact sequences"),
+     "vocab ~100K; compact, handles new words"),
 ]
 for si, (name, parts, colour, why) in enumerate(strategies):
     y = 4.2 - si * 1.5
     ax.text(0.3, y + 0.45, name, fontsize=12, color=colour, fontweight='bold')
     ax.text(0.3, y - 0.05, why, fontsize=9, color=GREY, style='italic')
-    # part boxes
-    px = 4.0
+    # part boxes — start well to the right of the caption column
+    px = 5.6
     for p in parts:
         w = max(0.6, len(p) * 0.18 + 0.25)
         box = FancyBboxPatch((px, y - 0.05), w, 0.55,
@@ -326,6 +328,130 @@ ax.text(5.5, 4.6, 'When the model processes "blocked", it asks every other word:
         '"how much do you matter to me?"',
         ha='center', fontsize=11, color=DARK)
 save(fig, "gn_attention_arrows.png")
+
+
+# 7. gn_pretraining_loss_curve.png — loss vs tokens-seen on log scale
+#    Synthetic but realistic shape: high random-init loss, sharp early drop,
+#    long slow asymptotic tail toward ~1.7 (typical frontier final loss).
+tokens_log = np.linspace(np.log10(1e6), np.log10(1e13), 400)
+tokens = 10 ** tokens_log
+# Smooth curve from ~11 (random over 100k vocab) down to ~1.7 (frontier).
+# Use a shifted log decay that flattens out.
+final_loss = 1.7
+init_loss  = 10.8
+curve = final_loss + (init_loss - final_loss) * np.exp(
+    -(tokens_log - np.log10(1e6)) * 0.55
+)
+
+fig, ax = plt.subplots(figsize=(11, 5.4))
+ax.plot(tokens, curve, color=VIOLET, linewidth=2.8, zorder=3)
+ax.fill_between(tokens, curve, final_loss - 0.2, color=VIOLET, alpha=0.10, zorder=1)
+ax.set_xscale('log')
+ax.set_xlim(1e6, 2e13)
+ax.set_ylim(0, 12)
+ax.set_xlabel('training tokens seen  (log scale)')
+ax.set_ylabel('cross-entropy loss')
+ax.set_title('How the loss falls during pretraining\n'
+             'one curve = trillions of next-token predictions')
+ax.grid(True, which='both', alpha=0.25, linestyle='--')
+
+# Annotated waypoints
+waypoints = [
+    (1e6,  None,        'frequency learned',   ACCENT),
+    (1e8,  None,        'grammar learned',     GREEN),
+    (1e9,  None,        'plausible sentences', ORANGE),
+    (1e11, None,        'domain coherence',    RED),
+    (1e13, None,        'frontier model',      DARK),
+]
+for x, _, label, colour in waypoints:
+    # Find loss at that x
+    y = float(np.interp(np.log10(x), tokens_log, curve))
+    ax.scatter([x], [y], s=80, color=colour, zorder=5,
+               edgecolor='white', linewidth=2)
+    # Stagger label vertical offset so they don't collide
+    ax.annotate(label, xy=(x, y),
+                xytext=(8, 14), textcoords='offset points',
+                fontsize=10, color=colour, fontweight='bold',
+                arrowprops=dict(arrowstyle='-', color=colour, alpha=0.5, lw=1))
+
+# Random-init reference line (the loss you would get from a uniform
+# guess over a 100k vocabulary is -log(1/100000) ≈ 11.5)
+ax.axhline(np.log(100000), color=GREY, linestyle=':', alpha=0.7)
+ax.text(1.2e6, np.log(100000) + 0.18,
+        'random-init loss (uniform over 100k vocab)',
+        fontsize=9, color=GREY, style='italic')
+
+# Asymptote line
+ax.axhline(final_loss, color=GREEN, linestyle=':', alpha=0.7)
+ax.text(1.2e6, final_loss + 0.18,
+        'best achievable loss (≈ irreducible language entropy)',
+        fontsize=9, color=GREEN, style='italic')
+
+fig.tight_layout()
+save(fig, "gn_pretraining_loss_curve.png")
+
+
+# 8. gn_pretraining_pipeline.png — five-stage horizontal flow:
+#    raw text → pretraining → base model → fine-tuning/RLHF → product model
+fig, ax = plt.subplots(figsize=(12.5, 4.4))
+ax.set_xlim(0, 12.5); ax.set_ylim(0, 4)
+ax.axis('off')
+
+stages = [
+    # (label_top, label_bottom, sub, colour, x_start, width)
+    ("WEB TEXT + BOOKS\n+ CODE",
+     "~10 trillion tokens",
+     "no labels",
+     ACCENT,  0.2, 2.0),
+    ("PRETRAINING",
+     "predict next token\nbillions of weight updates",
+     "$100M  ·  2-6 months",
+     VIOLET,  2.6, 2.4),
+    ("BASE MODEL",
+     "knows language\ncompletes any text",
+     "not yet a chatbot",
+     ORANGE,  5.4, 2.0),
+    ("FINE-TUNING\n+ RLHF",
+     "instruction-following\nsafety, persona",
+     "$1k - $10M",
+     GREEN,   7.8, 2.0),
+    ("PRODUCT MODEL",
+     "ChatGPT, Claude,\nGemini",
+     "what you call from an API",
+     DARK,    10.2, 2.1),
+]
+
+for i, (top, mid, sub, colour, x0, w) in enumerate(stages):
+    # Stage box
+    box = FancyBboxPatch((x0, 0.6), w, 2.6,
+                         boxstyle="round,pad=0.05,rounding_size=0.18",
+                         facecolor=colour, edgecolor='white',
+                         linewidth=2, alpha=0.92)
+    ax.add_patch(box)
+    ax.text(x0 + w / 2, 2.7, top, ha='center', va='center',
+            fontsize=11, color='white', fontweight='bold')
+    ax.text(x0 + w / 2, 1.9, mid, ha='center', va='center',
+            fontsize=9.5, color='white')
+    ax.text(x0 + w / 2, 1.0, sub, ha='center', va='center',
+            fontsize=8.5, color='white', style='italic')
+    # Connector arrow to the next stage
+    if i < len(stages) - 1:
+        next_x = stages[i + 1][4]
+        arrow = FancyArrowPatch((x0 + w + 0.02, 1.9),
+                                (next_x - 0.02, 1.9),
+                                arrowstyle='->', mutation_scale=18,
+                                color=GREY, linewidth=2)
+        ax.add_patch(arrow)
+
+ax.text(6.25, 3.7,
+        'From raw web text to a model you can call from your code',
+        ha='center', fontsize=12, color=DARK, fontweight='bold')
+ax.text(6.25, 0.18,
+        'pretraining is the most expensive stage by ~100x — '
+        'and the only one you will not do yourself',
+        ha='center', fontsize=10, color=GREY, style='italic')
+
+save(fig, "gn_pretraining_pipeline.png")
 
 
 # ============================================================

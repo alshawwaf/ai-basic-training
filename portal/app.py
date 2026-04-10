@@ -78,6 +78,28 @@ for stage in STAGES:
             print(f"  [!] Could not load lesson {folder}: {e}")
 
 
+# ── Lesson → stage lookup (for breadcrumbs in lesson_base.html) ─────────────
+
+_LESSON_STAGE_INDEX = {}
+for _stage in STAGES:
+    for _lesson in _stage["lessons"]:
+        _LESSON_STAGE_INDEX[_lesson["id"]] = {
+            "stage_id":    _stage["id"],
+            "stage_num":   _stage["num"],
+            "stage_title": _stage["title"],
+            "lesson_num":  _lesson["num"],
+            "lesson_title": _lesson["title"],
+        }
+
+
+@app.context_processor
+def _inject_lesson_breadcrumb():
+    """Expose `get_lesson_crumbs(lesson_id)` to every template."""
+    def get_lesson_crumbs(lesson_id):
+        return _LESSON_STAGE_INDEX.get(lesson_id)
+    return {"get_lesson_crumbs": get_lesson_crumbs}
+
+
 # ── Portal routes ───────────────────────────────────────────────────────────
 
 @app.route("/")

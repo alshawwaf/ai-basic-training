@@ -65,6 +65,30 @@
             <div class="progress-fill" style="width: {% if is_quiz %}100{% else %}{{ ((current + 1) / (steps | length) * 100) | round(0) }}{% endif %}%"></div>
         </div>
 
+        {% set _crumbs = get_lesson_crumbs(lesson_id) if lesson_id is defined else None %}
+        {% if _crumbs %}
+        <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+            <a href="/" class="bc-link bc-home" title="Portal home">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M5 10v10h14V10"/></svg>
+            </a>
+            <span class="bc-sep">/</span>
+            <a href="/stage/{{ _crumbs.stage_id }}" class="bc-link bc-stage">
+                <span class="bc-kicker">Stage {{ _crumbs.stage_num }}</span>
+                <span class="bc-text">{{ _crumbs.stage_title }}</span>
+            </a>
+            <span class="bc-sep">/</span>
+            <a href="{{ url_prefix }}/" class="bc-link bc-lesson">
+                <span class="bc-kicker">Lesson {{ _crumbs.stage_num }}.{{ _crumbs.lesson_num }}</span>
+                <span class="bc-text">{{ _crumbs.lesson_title }}</span>
+            </a>
+            <span class="bc-sep">/</span>
+            <span class="bc-link bc-current" aria-current="page">
+                <span class="bc-kicker">{% if is_quiz %}Quiz{% else %}Step {{ current + 1 }}{% endif %}</span>
+                <span class="bc-text">{% if is_quiz %}Knowledge check{% else %}{{ steps[current].title }}{% endif %}</span>
+            </span>
+        </nav>
+        {% endif %}
+
         {% if not is_quiz %}
         <div class="step-header">
             <h1>Step {{ current + 1 }}: {{ steps[current].title }}</h1>

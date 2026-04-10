@@ -642,6 +642,7 @@ body.lesson-page .step-header p { font-size: 12px; }
 body.lesson-page .learning-path { margin: 4px 0 10px; padding: 6px 10px; }
 body.lesson-page .progress-wrap { margin: 0 -32px 8px; }
 body.lesson-page main { padding: 6px 32px 10px; }
+body.lesson-page .lesson-breadcrumb { margin: 6px 0 6px; padding: 6px 10px; }
 
 /* Make the inner scrollbar visible so learners know when an interactive
    page has more content below the fold (instead of looking "cut off"). */
@@ -660,6 +661,99 @@ body.lesson-page .content-main::-webkit-scrollbar-thumb {
 body.lesson-page .content-main::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, rgba(6,214,224,0.8), rgba(168,85,247,0.7));
     background-clip: padding-box;
+}
+
+/* ── Lesson breadcrumb (Portal > Stage > Lesson > Step) ─────────────────── */
+.lesson-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin: 10px 0 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: linear-gradient(
+        90deg,
+        rgba(8,145,178,0.10) 0%,
+        rgba(139,92,246,0.08) 50%,
+        rgba(245,158,11,0.06) 100%
+    );
+    border: 1px solid var(--border-color, rgba(148,163,184,0.22));
+    font-size: 12px;
+    line-height: 1.15;
+    animation: fadeSlideUp 0.35s ease both;
+    flex-shrink: 0;
+}
+.lesson-breadcrumb .bc-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 7px;
+    color: var(--text-color);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+.lesson-breadcrumb a.bc-link:hover {
+    background: rgba(8,145,178,0.14);
+    border-color: rgba(8,145,178,0.45);
+    color: var(--cyan);
+    transform: translateY(-1px);
+}
+.lesson-breadcrumb a.bc-stage:hover  { background: rgba(245,158,11,0.14); border-color: rgba(245,158,11,0.45); color: var(--orange); }
+.lesson-breadcrumb a.bc-lesson:hover { background: rgba(139,92,246,0.14); border-color: rgba(139,92,246,0.45); color: var(--violet); }
+
+.lesson-breadcrumb .bc-home {
+    padding: 5px 7px;
+    color: var(--text-dim);
+}
+.lesson-breadcrumb .bc-home svg { display: block; }
+
+.lesson-breadcrumb .bc-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 700;
+}
+.lesson-breadcrumb a.bc-stage  .bc-kicker { color: var(--orange); }
+.lesson-breadcrumb a.bc-lesson .bc-kicker { color: var(--violet); }
+.lesson-breadcrumb .bc-current .bc-kicker { color: var(--cyan); }
+
+.lesson-breadcrumb .bc-text {
+    font-weight: 600;
+    font-size: 12.5px;
+}
+
+.lesson-breadcrumb .bc-sep {
+    color: var(--text-dim);
+    opacity: 0.55;
+    font-weight: 400;
+    user-select: none;
+}
+
+.lesson-breadcrumb .bc-current {
+    cursor: default;
+    background: rgba(6,182,212,0.10);
+    border-color: rgba(6,182,212,0.35);
+}
+
+[data-theme="light"] .lesson-breadcrumb {
+    background: linear-gradient(
+        90deg,
+        rgba(8,145,178,0.07) 0%,
+        rgba(139,92,246,0.06) 50%,
+        rgba(217,119,6,0.05) 100%
+    );
+}
+
+@media (max-width: 760px) {
+    .lesson-breadcrumb { font-size: 11px; padding: 6px 8px; }
+    .lesson-breadcrumb .bc-kicker { display: none; }
+    .lesson-breadcrumb .bc-text { font-size: 11.5px; }
 }
 
 .step-header {
@@ -5023,6 +5117,509 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
     box-shadow: 0 0 12px rgba(6,182,212,0.2);
 }
 
+/* ── Vocabulary Limits step (s4_01 step 3) — TOY vs BPE side-by-side ─── */
+.vl-input-row {
+    margin: 18px 0 10px;
+}
+.vl-input-row input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.vl-input-row input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(8,145,178,0.18);
+}
+
+.vl-presets {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 8px; margin-bottom: 18px;
+}
+.vl-preset-label {
+    color: var(--text-dim); font-size: 13px; margin-right: 4px;
+}
+.vl-preset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.vl-preset-btn:hover {
+    border-color: var(--cyan);
+    background: rgba(8,145,178,0.10);
+    color: var(--cyan);
+}
+
+.vl-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+@media (max-width: 880px) {
+    .vl-compare { grid-template-columns: 1fr; }
+}
+
+.vl-side {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.vl-side-toy { border-top: 3px solid var(--orange); }
+.vl-side-bpe { border-top: 3px solid var(--green); }
+
+.vl-side-head { margin-bottom: 14px; }
+.vl-side-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+.vl-badge-bad  { background: rgba(245,158,11,0.14); color: var(--orange); border: 1px solid rgba(245,158,11,0.4); }
+.vl-badge-good { background: rgba(16,185,129,0.14); color: var(--green); border: 1px solid rgba(16,185,129,0.4); }
+
+.vl-side-sub {
+    color: var(--text-dim);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.vl-side-sub code {
+    background: rgba(245,158,11,0.12);
+    color: var(--orange);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.vl-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    padding: 14px 12px;
+    background: rgba(15,23,42,0.35);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    min-height: 80px;
+    margin-bottom: 14px;
+}
+
+/* individual token chip */
+.vl-tok {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    border: 1px solid transparent;
+    line-height: 1;
+}
+.vl-tok-known {
+    background: rgba(8,145,178,0.14);
+    border-color: rgba(8,145,178,0.35);
+    color: var(--cyan);
+}
+.vl-tok-lost {
+    background: rgba(245,158,11,0.18);
+    border-color: rgba(245,158,11,0.65);
+    color: #fde68a;
+    gap: 7px;
+}
+.vl-tok-strike {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #f59e0b;
+    color: #fde68a;
+    opacity: 1;
+}
+.vl-tok-unk {
+    font-size: 9.5px;
+    background: #d97706;
+    color: #ffffff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+}
+.vl-tok-split {
+    background: rgba(16,185,129,0.10);
+    border-color: rgba(16,185,129,0.4);
+    color: var(--green);
+    padding: 6px 10px;
+    gap: 0;
+}
+.vl-tok-piece {
+    padding: 0 2px;
+}
+.vl-tok-sep {
+    color: rgba(16,185,129,0.55);
+    margin: 0 2px;
+    font-weight: 400;
+}
+
+/* survival bar */
+.vl-survival { margin-top: auto; }
+.vl-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(100,116,139,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.vl-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+.vl-bar-fill-toy { background: linear-gradient(90deg, #d97706, var(--orange)); }
+.vl-bar-fill-bpe { background: linear-gradient(90deg, var(--green), #34d399); }
+
+.vl-survival-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+.vl-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+}
+.vl-pct-good { color: var(--green); }
+.vl-pct-warn { color: var(--orange); }
+.vl-pct-bad  { color: var(--orange); }
+
+/* takeaway box */
+.vl-takeaway {
+    margin-top: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--border);
+    background: rgba(100,116,139,0.08);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.55;
+}
+.vl-takeaway code {
+    background: rgba(8,145,178,0.12);
+    color: var(--cyan);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+}
+.vl-takeaway-good {
+    border-left-color: var(--green);
+    background: rgba(16,185,129,0.08);
+}
+.vl-takeaway-bad {
+    border-left-color: var(--orange);
+    background: rgba(245,158,11,0.08);
+}
+
+/* ── Pretraining slider (s4_01 step 7) ──────────────────────────────────── */
+
+.pt-prompt-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(8,145,178,0.08);
+    border: 1px solid rgba(8,145,178,0.3);
+    border-radius: 8px;
+    margin: 14px 0 18px;
+}
+.pt-prompt-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cyan);
+    font-weight: 700;
+}
+.pt-prompt-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    background: transparent;
+    padding: 0;
+}
+.pt-prompt-cursor {
+    display: inline-block;
+    width: 8px;
+    color: var(--violet);
+    font-weight: 700;
+    animation: pt-blink 1.1s steps(2, start) infinite;
+}
+@keyframes pt-blink { to { visibility: hidden; } }
+
+.pt-stage-grid {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 2.4fr;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.pt-stage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 110px;
+}
+.pt-stage-output {
+    border-color: rgba(139,92,246,0.4);
+    background: rgba(139,92,246,0.06);
+}
+.pt-stage-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.pt-stage-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1.25;
+}
+.pt-stage-completion {
+    font-size: 16px;
+    color: var(--violet);
+    word-break: break-word;
+}
+.pt-stage-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.pt-slider-row {
+    margin: 8px 0 18px;
+}
+.pt-slider-row input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--violet), var(--cyan));
+    outline: none;
+    cursor: pointer;
+}
+.pt-slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--violet);
+    cursor: pointer;
+}
+.pt-slider-row input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--violet);
+    cursor: pointer;
+}
+.pt-slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+}
+.pt-slider-ticks span {
+    flex: 1;
+    text-align: center;
+    transition: color 0.15s, font-weight 0.15s;
+}
+.pt-slider-ticks span:first-child { text-align: left; }
+.pt-slider-ticks span:last-child  { text-align: right; }
+.pt-tick-active {
+    color: var(--cyan) !important;
+    font-weight: 700;
+}
+
+.pt-loss-block {
+    margin: 18px 0;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+}
+.pt-loss-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+}
+.pt-loss-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    font-weight: 700;
+}
+.pt-loss-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--violet);
+}
+.pt-loss-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(100,116,139,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.pt-loss-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--orange), var(--red));
+    border-radius: 4px;
+    transition: width 0.25s ease;
+}
+.pt-loss-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+}
+
+.pt-takeaway {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--violet);
+    background: rgba(139,92,246,0.08);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.55;
+}
+.pt-takeaway code {
+    background: rgba(139,92,246,0.14);
+    color: var(--violet);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+}
+
+/* probability table for the cross-entropy worked example */
+.pt-prob-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+}
+.pt-prob-table th {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-dim);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.pt-prob-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+.pt-prob-table td:nth-child(2) {
+    font-family: 'Space Mono', monospace;
+    width: 110px;
+}
+.pt-prob-table td:nth-child(3) {
+    width: 50%;
+}
+.pt-prob-correct td {
+    background: rgba(16,185,129,0.06);
+}
+.pt-correct-flag {
+    margin-left: 8px;
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.pt-pbar {
+    height: 10px;
+    border-radius: 3px;
+    min-width: 4px;
+}
+.pt-pbar-wrong {
+    background: rgba(244,63,94,0.55);
+}
+.pt-pbar-correct {
+    background: var(--green);
+}
+
+.pt-loss-calc {
+    margin: 12px 0;
+    padding: 12px 14px;
+    border-left: 4px solid var(--cyan);
+    background: rgba(8,145,178,0.08);
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.pt-loss-calc code {
+    font-family: 'Space Mono', monospace;
+    background: rgba(8,145,178,0.12);
+    color: var(--cyan);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12.5px;
+}
+
+@media (max-width: 760px) {
+    .pt-stage-grid {
+        grid-template-columns: 1fr;
+    }
+    .pt-prob-table td:nth-child(3) {
+        display: none;
+    }
+}
+
 /* ── Material Toolbar + Drawer + Code Modal ───────────────────────────────── */
 
 /* Floating material buttons */
@@ -5206,10 +5803,15 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
 
 /* Content drawer (slides from right) — leaves the bottom nav row
-   uncovered so the user can keep walking through phases without closing. */
+   uncovered so the user can keep walking through phases without closing.
+   Default opens to half the viewport so the lecture sits side-by-side with
+   the interactive panel, never covering it. */
 .content-drawer {
     position: fixed; top: 0; right: 0; bottom: 64px;
-    width: clamp(480px, 45vw, 1100px); z-index: 910;
+    width: clamp(640px, 60vw, 1400px); z-index: 910;
+    /* min-width: 0 lets flex children inside .drawer-body shrink and wrap
+       instead of forcing horizontal scroll on the whole drawer. */
+    min-width: 0;
     background: var(--bg-card); border-left: 1px solid var(--border);
     box-shadow: -8px 0 30px rgba(0,0,0,0.15);
     transform: translateX(100%);
@@ -5406,8 +6008,61 @@ th.col-string  { border-bottom: 3px solid var(--red) !important; }
 }
 
 .drawer-body {
-    flex: 1; overflow-y: auto; padding: 24px;
+    flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px;
     font-size: 14px; line-height: 1.7; color: var(--text);
+    /* min-width:0 inside the flex column lets long lines wrap instead of
+       expanding the drawer. */
+    min-width: 0;
+}
+/* Force every block-level child to respect the drawer width — no element
+   may push the drawer wider than its current size. Wide stuff (code,
+   tables, images) handles its own overflow internally. */
+.drawer-body .md-content,
+.drawer-body .md-content > * {
+    max-width: 100%;
+    min-width: 0;
+}
+.drawer-body .md-content p,
+.drawer-body .md-content li,
+.drawer-body .md-content blockquote,
+.drawer-body .md-content h1,
+.drawer-body .md-content h2,
+.drawer-body .md-content h3 {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+/* Images are the most aggressive overflow source — clamp them with
+   !important so no inline width/height attribute can break out of the
+   drawer width. height:auto preserves aspect ratio. */
+.drawer-body .md-content img,
+.drawer-body .md-content p img,
+.drawer-body img {
+    display: block !important;
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Tables overflow-scroll inside their own scroll-box rather than pushing
+   the drawer wider. */
+.drawer-body .md-content table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+/* Same for the new diagram widgets — let chips wrap onto a second row
+   if the drawer is narrow. */
+.drawer-body .md-content .md-flow {
+    flex-wrap: wrap;
+}
+.drawer-body .md-content .md-cluster-grid {
+    grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+    .drawer-body .md-content .md-cluster-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
 }
 .drawer-loading {
     text-align: center; padding: 40px; color: var(--text-dim);
@@ -6828,3 +7483,324 @@ body[data-stage] .step-card:hover .info .title {
     .quiz-results { padding: 22px 16px; }
     .quiz-score-num { font-size: 44px; }
 }
+
+/* ── Markdown drawer: color-coded diagram primitives ────────────────── */
+/* Used by curriculum/stage4_genai/01_how_llms_work/README.md to replace
+   ASCII art with proper visual flows. */
+.md-content .md-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+.md-content .md-flow-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    border: 1px solid;
+}
+.md-content .md-flow-chip small {
+    margin-left: 6px;
+    font-weight: 400;
+    opacity: 0.8;
+}
+.md-content .md-chip-cyan {
+    background: rgba(6, 214, 224, 0.10);
+    border-color: rgba(6, 214, 224, 0.45);
+    color: var(--cyan);
+}
+.md-content .md-chip-violet {
+    background: rgba(168, 85, 247, 0.10);
+    border-color: rgba(168, 85, 247, 0.45);
+    color: var(--violet);
+}
+.md-content .md-chip-amber {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.45);
+    color: var(--orange);
+}
+.md-content .md-flow-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.md-content .md-callout {
+    margin: 14px 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.md-content .md-callout-red {
+    background: rgba(244, 63, 94, 0.07);
+    border-left-color: var(--red);
+}
+.md-content .md-callout-cyan {
+    background: rgba(8, 145, 178, 0.08);
+    border-left-color: var(--cyan);
+}
+.md-content .md-callout-violet {
+    background: rgba(139, 92, 246, 0.08);
+    border-left-color: var(--violet);
+}
+
+/* Cluster grid for the embeddings vector groups */
+.md-content .md-cluster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 14px 0 18px;
+}
+.md-content .md-cluster {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+}
+.md-content .md-cluster-cyan {
+    background: rgba(6, 214, 224, 0.07);
+    border-color: rgba(6, 214, 224, 0.30);
+}
+.md-content .md-cluster-amber {
+    background: rgba(245, 158, 11, 0.07);
+    border-color: rgba(245, 158, 11, 0.30);
+}
+.md-content .md-cluster-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.md-content .md-cluster-cyan .md-cluster-title { color: var(--cyan); }
+.md-content .md-cluster-amber .md-cluster-title { color: var(--orange); }
+.md-content .md-cluster-title small {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.7;
+}
+.md-content .md-vec {
+    color: var(--text-dim);
+    font-size: 11px;
+}
+
+/* ── Tokenisation example cards ────────────────────────────────────── */
+/* Each example is a distinct visual unit: header strip with a colored
+   verdict badge, the input string, the resulting token chips inline,
+   and a one-line takeaway. Used in s4_01 README for the "is one token =
+   one word?" section. */
+.md-content .tok-example {
+    margin: 16px 0 22px;
+    padding: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.md-content .tok-example-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(6, 214, 224, 0.07);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+.md-content .tok-example-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 0;
+}
+.md-content .tok-example-title small {
+    margin-left: 8px;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    text-transform: none;
+    letter-spacing: 0;
+}
+.md-content .tok-verdict {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border: 1px solid;
+    white-space: nowrap;
+}
+.md-content .tok-verdict-good {
+    background: rgba(34, 211, 160, 0.10);
+    border-color: rgba(34, 211, 160, 0.45);
+    color: var(--green);
+}
+.md-content .tok-verdict-warn {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.45);
+    color: var(--orange);
+}
+.md-content .tok-verdict-bad {
+    background: rgba(244, 63, 94, 0.10);
+    border-color: rgba(244, 63, 94, 0.45);
+    color: var(--red);
+}
+.md-content .tok-input {
+    padding: 12px 16px 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+.md-content .tok-input strong {
+    color: var(--text);
+}
+.md-content .tok-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 16px 14px;
+}
+.md-content .tok-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 10px 4px;
+    background: rgba(168, 85, 247, 0.10);
+    border: 1px solid rgba(168, 85, 247, 0.40);
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.2;
+}
+.md-content .tok-chip-text {
+    font-weight: 700;
+    color: var(--violet);
+    white-space: pre;
+}
+.md-content .tok-chip-id {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+.md-content .tok-takeaway {
+    padding: 10px 16px 14px;
+    border-top: 1px dashed var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.02);
+}
+.md-content .tok-takeaway strong { color: var(--text); }
+
+/* Inline horizontal bar (for attention weight tables) */
+.md-content .md-bar {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 40px;
+}
+.md-content .md-bar-cyan {
+    background: linear-gradient(90deg, rgba(6, 214, 224, 0.55), rgba(6, 214, 224, 0.20));
+    color: var(--cyan);
+}
+.md-content .md-bar-amber {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.45), rgba(245, 158, 11, 0.15));
+    color: var(--orange);
+}
+
+/* ── s4_01 step 1: compact layout for above-the-fold fit ─────────────── */
+body.lesson-page .card.step1-compact h3 {
+    margin: 0 0 8px;
+}
+body.lesson-page .card.step1-compact p {
+    margin: 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+body.lesson-page .card.step1-compact .llm-quote {
+    margin: 8px 0;
+    padding: 8px 14px;
+    background: rgba(6, 214, 224, 0.07);
+    border-left: 4px solid var(--cyan);
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text);
+    font-style: normal;
+}
+body.lesson-page .card.step1-compact .llm-quote em {
+    color: var(--cyan);
+    font-style: italic;
+    font-weight: 600;
+}
+body.lesson-page .card.step1-compact .controls {
+    margin: 10px 0 0;
+}
+body.lesson-page .card.step1-compact #prompt-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+}
+body.lesson-page .card.step1-compact .token-flow {
+    margin-top: 10px;
+}
+body.lesson-page .card.step1-compact .pred-block {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 8px;
+}
+body.lesson-page .card.step1-compact .pred-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--orange);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+body.lesson-page .card.step1-compact #predictions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+body.lesson-page .card.step1-compact .compact-info {
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+

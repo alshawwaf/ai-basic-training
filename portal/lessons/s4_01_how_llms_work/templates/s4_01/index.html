@@ -1,45 +1,20 @@
 {% extends "portal_base.html" %}
-{% from "icons.html" import step_icon %}
 {% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}
 {% block body %}
-<div class="welcome">
-    <div class="welcome-topbar">
-        <a href="/" class="welcome-back"><span class="welcome-back-icon">&larr;</span> Back to portal</a>
-        <button class="welcome-reset" onclick="resetLessonProgress('{{ lesson_id }}', event)" title="Reset progress for this lesson" aria-label="Reset progress for this lesson">&#8634;</button>
-    </div>
-<h1>{{ lesson_title }}</h1>
-    <p class="tagline">An <strong>LLM (Large Language Model)</strong> is the engine behind ChatGPT, Claude, and Gemini. This lesson opens the hood: tokens, embeddings, and attention — the building blocks of GPT.</p>
-    <div class="welcome-progress">
-        <div class="welcome-progress-track">
-            <div class="welcome-progress-fill" id="progRing"></div>
-        </div>
-        <div class="welcome-progress-meta">
-            <span class="welcome-progress-pct" id="progPct">0%</span>
-            <span class="welcome-progress-dot">&middot;</span>
-            <span id="progLabel">0 of {{ steps | length }} steps completed</span>
-            <span class="welcome-progress-dot">&middot;</span>
-            <span class="welcome-progress-sub">~90 min &middot; No API key needed — pure intuition building</span>
-        </div>
-    </div>
-    <div class="step-cards">
-        {% for s in steps %}
-        <a href="{{ url_prefix }}/step/{{ s.id }}" class="step-card" id="card-{{ s.id }}">
-            <div class="num">{{ s.id + 1 }}</div>
-            <div class="info"><div class="title">{{ s.title }}</div><div class="desc">{{ s.sub }}</div></div>
-            <span class="step-status"></span>
-            {% if s.icon %}<div class="step-icon" aria-hidden="true">{{ step_icon(s.icon) }}</div>{% endif %}
-        </a>
-        {% endfor %}
-    </div>
-</div>
 <script>
-    const visited = getVisitedSteps();
-    const total = {{ steps | length }};
-    visited.forEach(step => { const c = document.getElementById('card-'+step); if(c){c.classList.add('done');c.querySelector('.num').textContent='\u2713';c.querySelector('.step-status').textContent='Done';}});
-    const pct = total > 0 ? visited.length / total : 0;
-    const ring = document.getElementById('progRing');
-    if(ring) ring.style.strokeDashoffset = 163.36 * (1 - pct);
-    document.getElementById('progPct').textContent = Math.round(pct*100)+'%';
-    document.getElementById('progLabel').textContent = visited.length + ' of ' + total + ' steps completed';
+// The lesson welcome page is a thin redirect: send returning learners straight
+// to the step they were last on, and first-time visitors to step 1.
+(function() {
+    var lessonId  = '{{ lesson_id }}';
+    var urlPrefix = '{{ url_prefix }}';
+    var target    = 0;
+    try {
+        var lastBy = JSON.parse(localStorage.getItem('portalLastStep') || '{}');
+        if (typeof lastBy[lessonId] === 'number') {
+            target = lastBy[lessonId];
+        }
+    } catch (e) { /* fall through to step 0 */ }
+    window.location.replace(urlPrefix + '/step/' + target);
+})();
 </script>
 {% endblock %}

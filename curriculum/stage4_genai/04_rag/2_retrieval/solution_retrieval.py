@@ -19,12 +19,19 @@ from sentence_transformers import SentenceTransformer
 
 KNOWLEDGE_BASE = {
     "mimikatz": """
-Mimikatz extracts plaintext passwords and NTLM hashes from Windows LSASS memory.
-Common techniques: sekurlsa::logonpasswords, lsadump::dcsync, kerberos::golden for Golden Ticket attacks.
-Detection: monitor LSASS memory access by non-system processes using Sysmon Event ID 10.
-Unexpected lsass.exe access from procdump, taskmgr, or unsigned binaries triggers high alerts.
-Mitigations: Credential Guard, disable WDigest, Protected Users group, LSA Protection.
-Enable audit policies for privilege use; baseline normal dcsync behaviour.
+Mimikatz is a credential dumping tool that extracts plaintext passwords and NTLM hashes
+from Windows LSASS memory. It was created by Benjamin Delpy and is used by both red teams
+and threat actors. Common techniques include sekurlsa::logonpasswords for plaintext creds,
+lsadump::dcsync for domain replication, and kerberos::golden for Golden Ticket attacks.
+
+Detection relies on monitoring LSASS memory access by non-system processes using Sysmon
+Event ID 10. Unexpected access to lsass.exe from tools like procdump, taskmgr, or
+unsigned binaries should trigger high-severity alerts.
+
+Mitigations include enabling Windows Credential Guard, disabling WDigest authentication,
+placing high-value accounts in the Protected Users group, and enabling LSA Protection.
+For active directory environments, enable audit policies for privilege use and account
+management, and baseline normal dcsync behaviour to detect unauthorized replication.
 """,
     "log4shell": """
 CVE-2021-44228 Log4Shell is a critical RCE vulnerability in Apache Log4j2 versions 2.0-beta9 through 2.14.1.

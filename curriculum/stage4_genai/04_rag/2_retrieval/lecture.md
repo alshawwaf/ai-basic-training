@@ -13,42 +13,20 @@
 
 ---
 
-## Concept: The Vector Index
+## Concept: From Whole-Document Search to Chunk-Aware Retrieval
 
-After chunking, you encode each chunk into a vector using a sentence embedding model. All chunk vectors together form a **vector index** (an embedding matrix):
+In **Lesson 4.2.3** you already built a two-phase semantic search engine: indexing once, then querying. This exercise is the same machine, with one change — instead of encoding *whole documents*, you encode the **chunks** you produced in 4.4.1.
 
-```
-Corpus: N chunks
-Encode: model.encode(chunks)   → shape: (N, 384)
+| | 4.2.3 Semantic Search | 4.4.2 Retrieval for RAG |
+|---|---|---|
+| Unit of indexing | Whole documents | Chunks (from 4.4.1) |
+| Index shape | `(num_docs, 384)` | `(num_chunks, 384)` — usually much larger |
+| What a "hit" returns | A document to read | A passage the LLM can inline into its prompt |
+| Tracked alongside each vector | `doc_id` | `(doc_id, chunk_text)` — you need the text itself, not just a label |
 
-Query: "how to detect LSASS dumping"
-Encode: model.encode([query])  → shape: (1, 384)
+That last row is the only real code change. When you built the index in 4.2.3 you stored `(doc_id, vector)` pairs, because the aim was to point the user at a document. Here you store `(doc_id, chunk_text, vector)` triples, because in the next exercise the *chunk text itself* will be pasted into the LLM's system prompt.
 
-Retrieve: cosine_similarity(query_vector, index) → scores (N,)
-          top_k = argsort(scores)[::-1][:k]
-          return [chunks[i] for i in top_k]
-```
-
-This is **Phase 1 + Phase 2** of the RAG pipeline — everything except the final LLM generation step.
-
-**Vector retrieval — query embedding vs chunk embeddings**
-
-> Query: `"how to detect LSASS dumping"` → `model.encode()` → `[0.45, 0.12, -0.33, ...]` (1 × 384)
-
-| Chunk | Embedding (truncated) | Cosine score | |
-|---|---|---:|---|
-| Chunk 1 | `[0.10, -0.55, 0.22, ...]` | 0.31 | |
-| **Chunk 2** | `[0.43, 0.15, -0.30, ...]` | **0.92** | ← top match |
-| Chunk 3 | `[0.38, 0.08, -0.28, ...]` | 0.78 | |
-| … | … | … | |
-| Chunk N | `[-0.12, 0.60, 0.05, ...]` | 0.15 | |
-
-The retriever computes cosine similarity between the query vector and every chunk vector in one matrix-vector operation, runs `argsort`, and returns the top-k chunks (e.g. Chunk 2, Chunk 3, Chunk 5). The chunk *text* is then handed to the LLM in the next stage.
-
-<div class="lecture-visual">
-  <img src="/static/lecture_assets/gn_search_two_phase.png" alt="A two-row pipeline diagram. Top row 'PHASE 1 — Indexing (offline, once per corpus update)' shows three boxes: 'Doc 1 ... Doc N' → 'model.encode(docs)' → 'Embedding matrix (N, 384) on disk'. Bottom row 'PHASE 2 — Query (real-time, every search)' shows four boxes: query string → 'encode(query) (1, 384)' → 'cosine vs index' → 'top-k results'. Caption: 'phase 1 is the slow step — phase 2 only encodes the query'.">
-  <div class="vis-caption">The retrieval half of RAG. Phase 1 happens once per chunk update — every chunk goes through the embedder and lands in the vector index. Phase 2 happens on every query and is the part you call <code>retrieve(query, top_k=3)</code> for. The top-k chunk texts that come out of phase 2 are the input to the generation step in the next exercise.</div>
-</div>
+Everything else — `model.encode()`, cosine similarity, `argsort`, top-k — is identical to 4.2.3. If that lesson felt shaky, skim it once before continuing; this exercise will assume you remember it.
 
 ---
 

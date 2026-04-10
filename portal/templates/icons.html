@@ -1341,6 +1341,19 @@
 </svg>
 
 {# ── Stage 4.4 RAG ───────────────────────────────────────────────────── #}
+{% elif name == "vector-db" %}
+{# Database cylinder with dots representing vectors #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <ellipse cx="32" cy="16" rx="22" ry="8" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.12"/>
+  <path d="M10 16 v28 a22 8 0 0 0 44 0 v-28" stroke="currentColor" stroke-width="2" fill="none"/>
+  <ellipse cx="32" cy="44" rx="22" ry="8" stroke="currentColor" stroke-width="2" fill="none"/>
+  <circle cx="22" cy="26" r="2.5" fill="currentColor" opacity="0.7"/>
+  <circle cx="34" cy="24" r="2.5" fill="currentColor" opacity="0.7"/>
+  <circle cx="42" cy="28" r="2.5" fill="currentColor" opacity="0.7"/>
+  <circle cx="26" cy="34" r="2.5" fill="currentColor" opacity="0.5"/>
+  <circle cx="38" cy="36" r="2.5" fill="currentColor" opacity="0.5"/>
+  <circle cx="30" cy="40" r="2.5" fill="currentColor" opacity="0.35"/>
+</svg>
 {% elif name == "chunk-doc" %}
 {# Document split into chunks #}
 <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

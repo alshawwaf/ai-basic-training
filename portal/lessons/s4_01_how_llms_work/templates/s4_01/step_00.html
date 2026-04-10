@@ -1,26 +1,25 @@
 {% extends "lesson_base.html" %}
 {% block content %}
-<div class="card">
+<div class="card step1-compact">
     <h3>A Large Language Model is a next-token predictor</h3>
-    <p>An <strong>LLM</strong> — short for <strong>Large Language Model</strong> — is the kind of system that powers ChatGPT, Claude, and Gemini. Despite the name, its only job is surprisingly narrow: <em>given the words so far, predict what word comes next</em>. One token at a time. Everything else you've heard about — reasoning, coding, summarisation — emerges from doing this prediction loop billions of times on trillions of words of text.</p>
-    <p>Type a sentence below and watch it happen. The next-token guess appears to the right of the last word.</p>
+    <p><strong>LLM</strong> = <strong>Large Language Model</strong> — the engine behind ChatGPT, Claude, and Gemini. Despite the name, its job is surprisingly narrow:</p>
+    <blockquote class="llm-quote"><em>Given the words so far, predict what word comes next</em> — one token at a time.</blockquote>
+    <p>Everything else — reasoning, coding, summarisation — <strong>emerges</strong> from running this loop billions of times on trillions of words.</p>
 
     <div class="controls">
         <input type="text" id="prompt-input" placeholder="Type a sentence..." value="The attacker used a SQL injection to"
-               style="flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);font-family:'Space Mono',monospace;font-size:14px;"
                oninput="predict()">
     </div>
 
-    <div class="token-flow" id="token-flow" style="margin-top:20px;"></div>
+    <div class="token-flow" id="token-flow"></div>
 
-    <div class="card" style="margin-top:16px;">
-        <h3>Predicted next tokens</h3>
-        <div id="predictions" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+    <div class="pred-block">
+        <div class="pred-label">Predicted next tokens</div>
+        <div id="predictions"></div>
     </div>
 
-    <div class="info-box blue" style="margin-top:16px;">
-        <strong>The loop:</strong> predict next token → append it → predict again → append → repeat.
-        This is how LLMs generate entire paragraphs from a short prompt. Each token is chosen based on <strong>all previous tokens</strong>.
+    <div class="info-box blue compact-info">
+        <strong>The loop:</strong> predict → append → predict → append. Each token is chosen based on <strong>all previous tokens</strong>.
     </div>
 </div>
 {% endblock %}

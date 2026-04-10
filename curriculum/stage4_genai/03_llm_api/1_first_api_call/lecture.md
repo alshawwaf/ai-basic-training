@@ -52,34 +52,16 @@ The whole interaction is one HTTP request and one HTTP response — there is no 
 
 ---
 
-## Concept: What Are Tokens?
+## Concept: Why Tokens Show Up on Your Bill
 
-LLMs don't process characters or words — they process **tokens**. A token is roughly:
-- A common word: `"the"` → 1 token
-- A longer word: `"cybersecurity"` → 2-3 tokens
-- A number: `"12345"` → 1-2 tokens
-- A code symbol: `"{}"` → 1 token
+You already know **what** a token is from Lesson 4.1.1 — text gets split into subword pieces, each piece becomes an integer ID, and that is what the model actually consumes. This lesson is where those tokens stop being a learning curiosity and start being a *cost line*.
 
-```
-"Analyse this log entry for threats"
- → ["Analyse", " this", " log", " entry", " for", " threats"]
- → 6 tokens
-```
+Two things you only see on the API side:
 
-Pricing and context limits are measured in tokens. GPT-4 context window = 128,000 tokens ≈ 100,000 words.
+1. **Pricing is per token**, in both directions. You pay one rate for the tokens you send (input) and a different, usually higher, rate for the tokens the model writes back (output). A request that sends 2,000 tokens of context to get 200 tokens of answer back is billed as `2000 × input_price + 200 × output_price`.
+2. **Context limits are measured in tokens**, not words or characters. GPT-4o, Claude 4.5, and Gemini 2.5 all advertise context windows of 128k to 1M+ tokens — the model literally cannot read more than that in one call. Anything beyond the limit must be summarised, retrieved, or dropped.
 
-**Tokenisation of one sentence**
-
-| Position | Source word | Token (with leading space when relevant) |
-|---:|---|---|
-| 1 | Analyse | `"Analyse"` |
-| 2 | this | `" this"` |
-| 3 | log | `" log"` |
-| 4 | entry | `" entry"` |
-| 5 | for | `" for"` |
-| 6 | threats | `" threats"` |
-
-Total: **6 tokens** for `"Analyse this log entry for threats"`. Each token is what the model actually sees and what counts toward your context window and bill.
+The `max_tokens` parameter you will set in the next section is the cap on the **output** side only — it has no effect on how many input tokens you send. If you forget about input tokens and stuff a 50,000-token document into every call, you can run a hundred-dollar bill in an afternoon. Watching token counts is the API equivalent of watching memory usage in a long-running process.
 
 ---
 

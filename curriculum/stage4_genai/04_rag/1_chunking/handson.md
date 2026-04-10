@@ -14,7 +14,7 @@ Create a new file called `01_chunking.py` in this folder.
 
 ## Step 2: Add the imports and document
 
-`re` is needed for sentence-boundary splitting in Task 3. The sample document is a short security article about Mimikatz — long enough to demonstrate three different chunking strategies.
+`re` is needed for sentence-boundary splitting in Task 3. The sample document is a short security article about Mimikatz — long enough to demonstrate three different chunking strategies. You will meet this same Mimikatz document again in Exercise 2 (Retrieval) and Exercise 3 (Full RAG pipeline) as one entry in a 6-document knowledge base — chunking it here is the first step of building that pipeline.
 
 ```python
 import re

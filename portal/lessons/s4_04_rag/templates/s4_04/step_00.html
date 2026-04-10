@@ -1,65 +1,70 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Why Documents Must Be Chunked</h3>
-    <p>Sentence embedding models have a maximum input length (typically 128-512 tokens). A CVE advisory or incident report can be thousands of words. You must split documents into chunks before embedding.</p>
-    <p>But chunking is not just a technical constraint -- it determines retrieval quality:</p>
+    <h3>From Embeddings to Search</h3>
+    <p>In <strong>Lesson 4.1</strong> you learned that embeddings place text into a high-dimensional space where similar meaning = nearby coordinates. In <strong>Lesson 4.2</strong> you encoded sentences and measured cosine similarity between them.</p>
+    <p>That works for comparing a handful of sentences. But what happens when you have <strong>millions</strong> of them and need to ask: <em>"which ones are nearest to this query?"</em></p>
+    <p>That is what a <strong>vector database</strong> is for &mdash; Pinecone, Weaviate, Qdrant, Chroma, FAISS, pgvector, and others all do the same thing: <strong>store vectors, find nearest neighbours, fast.</strong></p>
+</div>
+
+<div class="card">
+    <h3>What Is a "Document"?</h3>
+    <p>In vector-DB land, a <strong>document</strong> is just <strong>one piece of text you want to be searchable</strong>. It is not necessarily a Word file or a PDF:</p>
     <table class="info-table">
-        <thead><tr><th>Problem</th><th>Chunks too large</th><th>Chunks too small</th></tr></thead>
+        <thead><tr><th>Real thing</th><th>What gets stored as a "document"</th></tr></thead>
         <tbody>
-            <tr><td>Embedding quality</td><td>Averages too much content -- embeddings become vague</td><td>Loses cross-sentence context -- embeddings are narrow</td></tr>
-            <tr><td>Retrieval precision</td><td>Retrieved chunks contain irrelevant information</td><td>Answers split across multiple chunks</td></tr>
-            <tr><td>Attribution</td><td>Hard to pinpoint which part of a chunk is relevant</td><td>Many more chunks to search through</td></tr>
+            <tr><td>A 200-page playbook</td><td>Each <strong>paragraph</strong> or section becomes one document &mdash; chopping it up is called <em>chunking</em> (next step)</td></tr>
+            <tr><td>A SOC ticket</td><td>The ticket <strong>summary + description</strong> as a single document</td></tr>
+            <tr><td>A Slack message</td><td>One <strong>message</strong> = one document</td></tr>
+            <tr><td>A firewall log line</td><td>One <strong>log entry</strong> = one document</td></tr>
+            <tr><td>A knowledge-base article</td><td>Title + body as one document, or each section as its own</td></tr>
         </tbody>
     </table>
-    <p><strong>Rule of thumb:</strong> 100-300 words per chunk, with 20-50 word overlap.</p>
+    <p>The rule of thumb: a document is <em>whatever sized chunk of text you want the search to return as a single hit.</em></p>
 </div>
 
 <div class="card">
-    <h3>Three Chunking Strategies</h3>
+    <h3>Step 1 &mdash; INDEX (done once)</h3>
+    <p>Every document is converted to a vector <strong>once</strong> by an embedding model and stored in the database. Documents that talk about the same thing land near each other <strong>automatically</strong>:</p>
+    <pre><code class="language-python"># Index time -- done once per document
+vec = embedding_model.encode("Ransomware encrypted the file server")
+vector_db.upsert(id="ticket-4291", vector=vec, metadata={"severity": "high"})</code></pre>
+    <p>Nobody told the database that ransomware and SQL injection are both threats. The clustering is a free side effect of the embedding model you already know from Lesson 4.2.</p>
+</div>
+
+<div class="card">
+    <h3>Step 2 &mdash; SEARCH (done every query)</h3>
+    <p>At query time the user's question gets encoded with the <strong>same</strong> embedding model and dropped onto the same map. The database returns the <strong>K closest vectors</strong> by distance &mdash; those are the most semantically similar documents:</p>
+    <pre><code class="language-python"># Query time -- done on every user question
+query_vec = embedding_model.encode("How do I detect ransomware on a host?")
+hits = vector_db.search(vector=query_vec, top_k=3)
+# [{"id": "ticket-4291", "score": 0.91, "metadata": {...}}, ...]</code></pre>
+    <p><strong>That is the entire algorithm.</strong> Two functions: <code>upsert</code> (write a vector) and <code>search</code> (find K nearest). Everything else &mdash; RAG, semantic cache, dedup &mdash; is built on these two calls.</p>
+</div>
+
+<div class="card">
+    <h3>Keyword Search vs Semantic Search</h3>
+    <p>A SQL <code>WHERE text LIKE '%ransomware%'</code> only finds documents containing the literal word. A vector database finds documents with <strong>similar meaning</strong>, even when the surface words are different:</p>
     <table class="info-table">
-        <thead><tr><th>Strategy</th><th>How it works</th><th>Best for</th></tr></thead>
+        <thead><tr><th>Document text</th><th>Contains "ransomware"?</th><th>Found by vector search?</th></tr></thead>
         <tbody>
-            <tr><td><strong>Fixed-size</strong></td><td>Split every N words, no overlap</td><td>Simple, fast; risk of cutting mid-sentence</td></tr>
-            <tr><td><strong>Fixed-size with overlap</strong></td><td>Split every N words, overlap by M words</td><td>General purpose; boundary content preserved</td></tr>
-            <tr><td><strong>Sentence-based</strong></td><td>Split on sentence boundaries; group sentences into chunks</td><td>High quality; respects natural structure</td></tr>
+            <tr><td>"Files were encrypted and a ransom note appeared"</td><td>No</td><td><strong>Yes</strong></td></tr>
+            <tr><td>"Encryption malware demanding bitcoin payment"</td><td>No</td><td><strong>Yes</strong></td></tr>
+            <tr><td>"Cryptolocker variant detected on host"</td><td>No</td><td><strong>Yes</strong></td></tr>
         </tbody>
     </table>
+    <p>This is the difference between <strong>keyword search</strong> and <strong>semantic search</strong> &mdash; and it is why RAG uses a vector database, not a SQL <code>LIKE</code> query.</p>
 </div>
 
 <div class="card">
-    <h3>Fixed-Size Chunking with Overlap</h3>
-    <pre><code class="language-python">def chunk_text(text, chunk_size=200, overlap=50):
-    """Split text into overlapping word-level chunks."""
-    words = text.split()
-    chunks = []
-    start = 0
-    while start < len(words):
-        end = start + chunk_size
-        chunk = " ".join(words[start:end])
-        chunks.append(chunk)
-        start += chunk_size - overlap    # step forward by (chunk_size - overlap)
-    return chunks
-
-# Example: 1000-word document
-doc = open("cve_advisory.txt").read()
-chunks = chunk_text(doc, chunk_size=200, overlap=50)
-print(f"Document: {len(doc.split())} words")
-print(f"Chunks:   {len(chunks)}")
-print(f"Chunk 1:  {len(chunks[0].split())} words")</code></pre>
-    <p>Overlap ensures that a sentence spanning a chunk boundary appears in both chunks. Without overlap, a question about that sentence might fail to retrieve either chunk.</p>
-</div>
-
-<div class="card">
-    <h3>Chunk Size vs Retrieval Quality</h3>
-    <p>Choosing the right chunk size is an empirical decision. Here is a practical starting point for security documents:</p>
+    <h3>When to Use a Vector Database</h3>
     <table class="info-table">
-        <thead><tr><th>Document type</th><th>Recommended chunk size</th><th>Overlap</th><th>Reasoning</th></tr></thead>
+        <thead><tr><th>You have</th><th>Use a vector DB?</th></tr></thead>
         <tbody>
-            <tr><td>CVE advisories</td><td>150-200 words</td><td>30 words</td><td>Vulnerability + mitigation often in adjacent paragraphs</td></tr>
-            <tr><td>Incident reports</td><td>200-300 words</td><td>50 words</td><td>Timeline entries are longer and interconnected</td></tr>
-            <tr><td>Policy documents</td><td>100-150 words</td><td>20 words</td><td>Short, self-contained sections</td></tr>
-            <tr><td>Threat intel feeds</td><td>100-200 words</td><td>30 words</td><td>IOCs and descriptions are compact</td></tr>
+            <tr><td>50 internal policy PDFs and want a chatbot to answer questions</td><td><strong>Yes</strong> &mdash; this is the canonical use case (RAG)</td></tr>
+            <tr><td>10 million SOC tickets you want to find "things like this one" in</td><td><strong>Yes</strong> &mdash; semantic similarity over a huge corpus</td></tr>
+            <tr><td>A structured table with <code>user_id</code>, <code>email</code>, <code>last_login</code></td><td><strong>No</strong> &mdash; normal SQL query, no embeddings needed</td></tr>
+            <tr><td>Real-time stream of 100k events/sec for exact rule matching</td><td><strong>No</strong> &mdash; use a SIEM / Sigma rules; vector search is too slow</td></tr>
         </tbody>
     </table>
 </div>
@@ -67,10 +72,9 @@ print(f"Chunk 1:  {len(chunks[0].split())} words")</code></pre>
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> Chunking quality directly affects retrieval accuracy. If a CVE advisory's
-    vulnerability description ends up in one chunk and its mitigation steps in another, a query like
-    "how to fix CVE-2024-1234" might retrieve the vulnerability chunk but miss the mitigation. Overlap is
-    your first defence against this failure mode. For critical security documents, test your chunking strategy
-    by verifying that key question-answer pairs retrieve the correct chunks.
+    <strong>Cybersecurity tie-in:</strong> Vector databases are the backbone of every modern security knowledge assistant.
+    When an analyst asks "how do we respond to ransomware?", the system encodes that question, finds the nearest
+    chunks in your indexed runbooks, and passes them to the LLM. The quality of that answer depends entirely on
+    <strong>what was indexed</strong> and <strong>how it was chunked</strong> &mdash; which is what the next three steps teach you to build.
 </div>
 {% endblock %}

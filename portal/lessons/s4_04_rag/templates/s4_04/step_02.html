@@ -1,96 +1,87 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>The Full RAG Pipeline</h3>
-    <p>RAG combines three components you have already built individually. Now they connect end-to-end:</p>
+    <h3>From Chunks to a Vector Index</h3>
+    <p>After chunking, you encode each chunk into a vector using a sentence embedding model. All chunk vectors together form a <strong>vector index</strong> -- an embedding matrix you search against at query time:</p>
     <table class="info-table">
-        <thead><tr><th>Stage</th><th>Component</th><th>What happens</th></tr></thead>
+        <thead><tr><th>Step</th><th>Input</th><th>Output</th><th>When</th></tr></thead>
         <tbody>
-            <tr><td><strong>R</strong> - Retrieval</td><td>Semantic search (Lesson 4.2 + Step 2)</td><td>Encode query, find top-k chunks from vector index</td></tr>
-            <tr><td><strong>A</strong> - Augmentation</td><td>Prompt construction</td><td>Inject retrieved chunks into the LLM prompt as context</td></tr>
-            <tr><td><strong>G</strong> - Generation</td><td>LLM API call (Lesson 4.3)</td><td>Model reads the context and generates a grounded answer</td></tr>
+            <tr><td>1. Chunk</td><td>Raw documents</td><td>List of N text chunks</td><td>Once (offline)</td></tr>
+            <tr><td>2. Encode</td><td>N text chunks</td><td>Embedding matrix (N x 384)</td><td>Once (offline)</td></tr>
+            <tr><td>3. Query</td><td>User question</td><td>Query vector (1 x 384)</td><td>Every search</td></tr>
+            <tr><td>4. Rank</td><td>Query vector vs embedding matrix</td><td>Cosine similarity scores (N,)</td><td>Every search</td></tr>
+            <tr><td>5. Return</td><td>Top-k scores</td><td>k most relevant chunks</td><td>Every search</td></tr>
         </tbody>
     </table>
-    <p>The key insight: the LLM is not memorising your security documents -- it reads them at inference time, injected as context. This means the knowledge base can be updated without retraining.</p>
+    <p>Steps 1-2 are done once. Steps 3-5 run in milliseconds because the expensive encoding is already done.</p>
 </div>
 
 <div class="card">
-    <h3>The Augmented Prompt</h3>
-    <pre><code class="language-python">def build_rag_prompt(question, retrieved_chunks):
-    """Build a prompt that grounds the LLM in retrieved context."""
-    context = "\n\n---\n\n".join(retrieved_chunks)
+    <h3>Building the Vector Index</h3>
+    <pre><code class="language-python">from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
-    system = """You are a security analyst assistant.
-Answer the question based ONLY on the provided context.
-If the context does not contain enough information, say:
-'The provided context does not contain information about this.'
-Do not use your general knowledge. Cite specific details from the context."""
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
-    user_message = f"""Context:
-{context}
+# Assume chunks is a list of strings from step 1
+chunks = [
+    "Mimikatz can extract plaintext passwords from LSASS process memory...",
+    "To detect LSASS dumping, monitor for process access events (Sysmon ID 10)...",
+    "SSH brute force attacks generate many failed authentication events...",
+    "DNS tunnelling encodes exfiltrated data in DNS query subdomains...",
+    "Ransomware typically encrypts files using AES-256 and stores the key...",
+]
 
-Question: {question}"""
-
-    return system, user_message</code></pre>
-    <p>The instruction "based ONLY on the provided context" is the most important line. Without it, the model blends its pre-training knowledge with your documents, making it impossible to verify where the answer came from.</p>
+# Encode all chunks (done once, offline)
+chunk_embeddings = model.encode(chunks)
+print(f"Index shape: {chunk_embeddings.shape}")  # (5, 384)</code></pre>
 </div>
 
 <div class="card">
-    <h3>Putting It All Together</h3>
-    <pre><code class="language-python">from llm_client import get_client
+    <h3>Retrieving Relevant Chunks</h3>
+    <pre><code class="language-python">def retrieve(query, chunk_embeddings, chunks, k=3):
+    """Retrieve the top-k most relevant chunks for a query."""
+    query_vec = model.encode([query])
+    scores = cosine_similarity(query_vec, chunk_embeddings)[0]
+    top_k_indices = np.argsort(scores)[::-1][:k]
 
-provider, client = get_client()
+    results = []
+    for idx in top_k_indices:
+        results.append({
+            "chunk": chunks[idx],
+            "score": float(scores[idx]),
+            "index": int(idx),
+        })
+    return results
 
-def rag_query(question, chunk_embeddings, chunks, k=3):
-    """Full RAG pipeline: retrieve, augment, generate."""
-    # 1. RETRIEVE
-    results = retrieve(question, chunk_embeddings, chunks, k=k)
-    retrieved_texts = [r["chunk"] for r in results]
-
-    # 2. AUGMENT
-    system, user_msg = build_rag_prompt(question, retrieved_texts)
-
-    # 3. GENERATE
-    answer = client.chat(
-        system=system,
-        messages=[{"role": "user", "content": user_msg}],
-        max_tokens=400,
-    )
-
-    return {
-        "answer": answer,
-        "sources": results,     # for attribution
-    }
-
-# Ask a question
-result = rag_query("How do I detect Mimikatz?", chunk_embeddings, chunks)
-print(result["answer"])
-print(f"\nBased on {len(result['sources'])} retrieved chunks")</code></pre>
+# Test it
+results = retrieve("how to detect credential dumping", chunk_embeddings, chunks)
+for r in results:
+    print(f"[{r['score']:.3f}] {r['chunk'][:80]}...")</code></pre>
 </div>
 
 <div class="card">
-    <h3>RAG vs Pure LLM: Why Grounding Matters</h3>
+    <h3>Evaluating Retrieval Quality</h3>
+    <p>Before connecting retrieval to an LLM, verify that the right chunks come back for your expected queries:</p>
     <table class="info-table">
-        <thead><tr><th>Property</th><th>Pure LLM</th><th>RAG</th></tr></thead>
+        <thead><tr><th>Test query</th><th>Expected top chunk</th><th>Pass?</th></tr></thead>
         <tbody>
-            <tr><td>Knowledge source</td><td>Pre-training data (stale)</td><td>Your documents (up-to-date)</td></tr>
-            <tr><td>Knowledge cutoff</td><td>Fixed at training date</td><td>Updated when you add documents</td></tr>
-            <tr><td>Internal policies</td><td>Unknown to the model</td><td>Indexed and searchable</td></tr>
-            <tr><td>Hallucination risk</td><td>High -- model invents plausible answers</td><td>Low -- answer grounded in context</td></tr>
-            <tr><td>Attribution</td><td>None -- cannot cite sources</td><td>Yes -- you know which chunks were used</td></tr>
-            <tr><td>Cost per query</td><td>Lower (no retrieval step)</td><td>Slightly higher (embedding + retrieval + generation)</td></tr>
+            <tr><td>"how to detect credential dumping"</td><td>LSASS dumping detection (Sysmon ID 10)</td><td>Check top-1</td></tr>
+            <tr><td>"what is DNS tunnelling"</td><td>DNS tunnelling encodes data in subdomains</td><td>Check top-1</td></tr>
+            <tr><td>"ransomware encryption method"</td><td>Ransomware typically encrypts with AES-256</td><td>Check top-1</td></tr>
         </tbody>
     </table>
-    <p>For security work, the attribution and accuracy benefits of RAG far outweigh the marginal cost increase. When an analyst asks "what is our response procedure for ransomware?", the answer must come from <em>your</em> runbook -- not the model's general knowledge.</p>
+    <p>If the correct chunk does not appear in the top-3 results, the problem is in your chunking strategy or embedding model -- not in the LLM. Fix retrieval <em>before</em> adding generation.</p>
 </div>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> RAG is the architecture behind every production security assistant --
-    from CVE lookup tools to incident response copilots. The "based on context only" instruction is a
-    <strong>safety control against hallucination</strong>. Without it, the model might generate remediation steps
-    that sound correct but are fabricated. In a security context, hallucinated remediation advice during an active
-    incident could delay response or cause further damage. Always ground security answers in verified documents.
+    <strong>Cybersecurity tie-in:</strong> Retrieval is the most critical component of a RAG security assistant.
+    If the wrong chunk is retrieved, the LLM will confidently generate an answer based on irrelevant context --
+    potentially giving incorrect remediation advice during an active incident. Always evaluate retrieval quality
+    independently before trusting the full pipeline. A wrong answer from a trusted tool is more dangerous than
+    no answer at all.
 </div>
 {% endblock %}

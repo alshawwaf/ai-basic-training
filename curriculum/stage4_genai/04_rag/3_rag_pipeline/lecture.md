@@ -15,14 +15,16 @@
 
 ## Concept: RAG Architecture
 
+You have already built two of the three pieces: **chunking** in 4.4.1 turned each document into passage-sized units, and **retrieval** in 4.4.2 returned the top-k chunks for any query. This exercise adds the third piece — handing those chunks to an LLM (the same one you called in Lesson 4.3) so it can write a grounded answer instead of you reading the chunks yourself.
+
 ```
 User query
     ↓
-[Retrieval] → top-k relevant chunks from knowledge base
+[Retrieval] → top-k relevant chunks from knowledge base   ← built in 4.4.2
     ↓
-[Augmentation] → inject chunks into system prompt as context
+[Augmentation] → inject chunks into system prompt as context   ← built here
     ↓
-[Generation] → LLM answers using the provided context
+[Generation] → LLM answers using the provided context   ← the API call from 4.3
     ↓
 Grounded answer
 ```

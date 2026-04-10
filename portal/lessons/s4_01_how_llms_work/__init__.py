@@ -201,7 +201,7 @@ CHALLENGES = {
 _base = "curriculum/stage4_genai/01_how_llms_work"
 
 MATERIALS = {
-    0: [("lecture", "How LLMs Work", f"{_base}/README.md")],
+    0: [("lecture", "Next-Token Prediction", f"{_base}/0_next_token_prediction/lecture.md")],
     1: [("lecture", "Tokenisation", f"{_base}/1_tokenisation/lecture.md"),
         ("lab", "Hands-on Lab", f"{_base}/1_tokenisation/handson.md"),
         ("solution", "Solution", f"{_base}/1_tokenisation/solution_tokenisation.py")],
@@ -221,7 +221,7 @@ MATERIALS = {
         ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
         ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
     7: [("lecture", "Pretraining", f"{_base}/4_pretraining/lecture.md")],
-    8: [("lecture", "How LLMs Work", f"{_base}/README.md")],
+    8: [("lecture", "LLMs vs Classic ML", f"{_base}/5_llms_vs_classic_ml/lecture.md")],
 }
 
 

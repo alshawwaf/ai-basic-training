@@ -15,7 +15,12 @@
 
 ## Concept: Sentence Embeddings vs Word Embeddings
 
-Word embeddings (covered in Lesson 4.1) give one vector per token. The full sentence meaning is lost.
+In **Lesson 4.1.2** you built a toy embedding matrix by hand: 20 tokens, 4 dimensions each, and you computed cosine similarity with `numpy.dot` and `numpy.linalg.norm`. The mechanics in this lesson are *exactly the same operation* — `cosine_similarity(a, b)` against an embedding matrix — with two upgrades:
+
+- The vectors are no longer 4-dim toys; they are **384-dim** real outputs from a model trained on a billion sentence pairs.
+- The unit of embedding is no longer one token at a time, but **a whole sentence** as a single vector.
+
+Word embeddings (covered in Lesson 4.1.2) give one vector per token. The full sentence meaning is lost when you try to compare sentences by averaging or comparing tokens individually.
 
 Sentence embeddings encode the **entire sentence** into one vector that captures its overall meaning:
 
@@ -48,6 +53,22 @@ embeddings = model.encode(["sentence one", "sentence two"])
 ```
 
 `all-MiniLM-L6-v2` was trained on 1 billion sentence pairs. Similar sentences were pulled together, dissimilar ones pushed apart (contrastive learning). It is the standard first choice for semantic similarity tasks.
+
+---
+
+## Concept: Picking an Embedding Model
+
+`all-MiniLM-L6-v2` is the standard first choice, but it is one of many. The number of dimensions is the main lever &mdash; more dimensions usually means higher quality, at the cost of bigger vectors to store and slower similarity search.
+
+| Embedding model | Dimensions | Notes |
+|---|---:|---|
+| `all-MiniLM-L6-v2` <small>(free, runs locally)</small> | **384** | Small, fast, good enough for most internal tools |
+| OpenAI `text-embedding-3-small` | **1,536** | Cheap API, the default for most RAG apps |
+| Cohere `embed-english-v3.0` | **1,024** | Strong on English |
+| OpenAI `text-embedding-3-large` | **3,072** | Highest quality, more expensive |
+| Llama-3 hidden state | **4,096** | What an LLM uses internally |
+
+> **Important:** all vectors compared with cosine similarity must come from the **same model**. You cannot mix MiniLM vectors with OpenAI vectors &mdash; they live in completely different coordinate systems. Pick one model when you build your index, and use the same model at query time.
 
 ---
 

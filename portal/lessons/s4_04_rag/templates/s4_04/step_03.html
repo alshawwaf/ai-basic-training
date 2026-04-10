@@ -1,0 +1,96 @@
+{% extends "lesson_base.html" %}
+{% block content %}
+<div class="card">
+    <h3>The Full RAG Pipeline</h3>
+    <p>RAG combines three components you have already built individually. Now they connect end-to-end:</p>
+    <table class="info-table">
+        <thead><tr><th>Stage</th><th>Component</th><th>What happens</th></tr></thead>
+        <tbody>
+            <tr><td><strong>R</strong> - Retrieval</td><td>Semantic search (Lesson 4.2 + Step 3)</td><td>Encode query, find top-k chunks from vector index</td></tr>
+            <tr><td><strong>A</strong> - Augmentation</td><td>Prompt construction</td><td>Inject retrieved chunks into the LLM prompt as context</td></tr>
+            <tr><td><strong>G</strong> - Generation</td><td>LLM API call (Lesson 4.3)</td><td>Model reads the context and generates a grounded answer</td></tr>
+        </tbody>
+    </table>
+    <p>The key insight: the LLM is not memorising your security documents -- it reads them at inference time, injected as context. This means the knowledge base can be updated without retraining.</p>
+</div>
+
+<div class="card">
+    <h3>The Augmented Prompt</h3>
+    <pre><code class="language-python">def build_rag_prompt(question, retrieved_chunks):
+    """Build a prompt that grounds the LLM in retrieved context."""
+    context = "\n\n---\n\n".join(retrieved_chunks)
+
+    system = """You are a security analyst assistant.
+Answer the question based ONLY on the provided context.
+If the context does not contain enough information, say:
+'The provided context does not contain information about this.'
+Do not use your general knowledge. Cite specific details from the context."""
+
+    user_message = f"""Context:
+{context}
+
+Question: {question}"""
+
+    return system, user_message</code></pre>
+    <p>The instruction "based ONLY on the provided context" is the most important line. Without it, the model blends its pre-training knowledge with your documents, making it impossible to verify where the answer came from.</p>
+</div>
+
+<div class="card">
+    <h3>Putting It All Together</h3>
+    <pre><code class="language-python">from llm_client import get_client
+
+provider, client = get_client()
+
+def rag_query(question, chunk_embeddings, chunks, k=3):
+    """Full RAG pipeline: retrieve, augment, generate."""
+    # 1. RETRIEVE
+    results = retrieve(question, chunk_embeddings, chunks, k=k)
+    retrieved_texts = [r["chunk"] for r in results]
+
+    # 2. AUGMENT
+    system, user_msg = build_rag_prompt(question, retrieved_texts)
+
+    # 3. GENERATE
+    answer = client.chat(
+        system=system,
+        messages=[{"role": "user", "content": user_msg}],
+        max_tokens=400,
+    )
+
+    return {
+        "answer": answer,
+        "sources": results,     # for attribution
+    }
+
+# Ask a question
+result = rag_query("How do I detect Mimikatz?", chunk_embeddings, chunks)
+print(result["answer"])
+print(f"\nBased on {len(result['sources'])} retrieved chunks")</code></pre>
+</div>
+
+<div class="card">
+    <h3>RAG vs Pure LLM: Why Grounding Matters</h3>
+    <table class="info-table">
+        <thead><tr><th>Property</th><th>Pure LLM</th><th>RAG</th></tr></thead>
+        <tbody>
+            <tr><td>Knowledge source</td><td>Pre-training data (stale)</td><td>Your documents (up-to-date)</td></tr>
+            <tr><td>Knowledge cutoff</td><td>Fixed at training date</td><td>Updated when you add documents</td></tr>
+            <tr><td>Internal policies</td><td>Unknown to the model</td><td>Indexed and searchable</td></tr>
+            <tr><td>Hallucination risk</td><td>High -- model invents plausible answers</td><td>Low -- answer grounded in context</td></tr>
+            <tr><td>Attribution</td><td>None -- cannot cite sources</td><td>Yes -- you know which chunks were used</td></tr>
+            <tr><td>Cost per query</td><td>Lower (no retrieval step)</td><td>Slightly higher (embedding + retrieval + generation)</td></tr>
+        </tbody>
+    </table>
+    <p>For security work, the attribution and accuracy benefits of RAG far outweigh the marginal cost increase. When an analyst asks "what is our response procedure for ransomware?", the answer must come from <em>your</em> runbook -- not the model's general knowledge.</p>
+</div>
+{% endblock %}
+
+{% block security %}
+<div class="security-callout">
+    <strong>Cybersecurity tie-in:</strong> RAG is the architecture behind every production security assistant --
+    from CVE lookup tools to incident response copilots. The "based on context only" instruction is a
+    <strong>safety control against hallucination</strong>. Without it, the model might generate remediation steps
+    that sound correct but are fabricated. In a security context, hallucinated remediation advice during an active
+    incident could delay response or cause further damage. Always ground security answers in verified documents.
+</div>
+{% endblock %}

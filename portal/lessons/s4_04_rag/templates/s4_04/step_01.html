@@ -1,87 +1,76 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>From Chunks to a Vector Index</h3>
-    <p>After chunking, you encode each chunk into a vector using a sentence embedding model. All chunk vectors together form a <strong>vector index</strong> -- an embedding matrix you search against at query time:</p>
+    <h3>Why Documents Must Be Chunked</h3>
+    <p>Sentence embedding models have a maximum input length (typically 128-512 tokens). A CVE advisory or incident report can be thousands of words. You must split documents into chunks before embedding.</p>
+    <p>But chunking is not just a technical constraint -- it determines retrieval quality:</p>
     <table class="info-table">
-        <thead><tr><th>Step</th><th>Input</th><th>Output</th><th>When</th></tr></thead>
+        <thead><tr><th>Problem</th><th>Chunks too large</th><th>Chunks too small</th></tr></thead>
         <tbody>
-            <tr><td>1. Chunk</td><td>Raw documents</td><td>List of N text chunks</td><td>Once (offline)</td></tr>
-            <tr><td>2. Encode</td><td>N text chunks</td><td>Embedding matrix (N x 384)</td><td>Once (offline)</td></tr>
-            <tr><td>3. Query</td><td>User question</td><td>Query vector (1 x 384)</td><td>Every search</td></tr>
-            <tr><td>4. Rank</td><td>Query vector vs embedding matrix</td><td>Cosine similarity scores (N,)</td><td>Every search</td></tr>
-            <tr><td>5. Return</td><td>Top-k scores</td><td>k most relevant chunks</td><td>Every search</td></tr>
+            <tr><td>Embedding quality</td><td>Averages too much content -- embeddings become vague</td><td>Loses cross-sentence context -- embeddings are narrow</td></tr>
+            <tr><td>Retrieval precision</td><td>Retrieved chunks contain irrelevant information</td><td>Answers split across multiple chunks</td></tr>
+            <tr><td>Attribution</td><td>Hard to pinpoint which part of a chunk is relevant</td><td>Many more chunks to search through</td></tr>
         </tbody>
     </table>
-    <p>Steps 1-2 are done once. Steps 3-5 run in milliseconds because the expensive encoding is already done.</p>
+    <p><strong>Rule of thumb:</strong> 100-300 words per chunk, with 20-50 word overlap.</p>
 </div>
 
 <div class="card">
-    <h3>Building the Vector Index</h3>
-    <pre><code class="language-python">from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-# Assume chunks is a list of strings from step 1
-chunks = [
-    "Mimikatz can extract plaintext passwords from LSASS process memory...",
-    "To detect LSASS dumping, monitor for process access events (Sysmon ID 10)...",
-    "SSH brute force attacks generate many failed authentication events...",
-    "DNS tunnelling encodes exfiltrated data in DNS query subdomains...",
-    "Ransomware typically encrypts files using AES-256 and stores the key...",
-]
-
-# Encode all chunks (done once, offline)
-chunk_embeddings = model.encode(chunks)
-print(f"Index shape: {chunk_embeddings.shape}")  # (5, 384)</code></pre>
-</div>
-
-<div class="card">
-    <h3>Retrieving Relevant Chunks</h3>
-    <pre><code class="language-python">def retrieve(query, chunk_embeddings, chunks, k=3):
-    """Retrieve the top-k most relevant chunks for a query."""
-    query_vec = model.encode([query])
-    scores = cosine_similarity(query_vec, chunk_embeddings)[0]
-    top_k_indices = np.argsort(scores)[::-1][:k]
-
-    results = []
-    for idx in top_k_indices:
-        results.append({
-            "chunk": chunks[idx],
-            "score": float(scores[idx]),
-            "index": int(idx),
-        })
-    return results
-
-# Test it
-results = retrieve("how to detect credential dumping", chunk_embeddings, chunks)
-for r in results:
-    print(f"[{r['score']:.3f}] {r['chunk'][:80]}...")</code></pre>
-</div>
-
-<div class="card">
-    <h3>Evaluating Retrieval Quality</h3>
-    <p>Before connecting retrieval to an LLM, verify that the right chunks come back for your expected queries:</p>
+    <h3>Three Chunking Strategies</h3>
     <table class="info-table">
-        <thead><tr><th>Test query</th><th>Expected top chunk</th><th>Pass?</th></tr></thead>
+        <thead><tr><th>Strategy</th><th>How it works</th><th>Best for</th></tr></thead>
         <tbody>
-            <tr><td>"how to detect credential dumping"</td><td>LSASS dumping detection (Sysmon ID 10)</td><td>Check top-1</td></tr>
-            <tr><td>"what is DNS tunnelling"</td><td>DNS tunnelling encodes data in subdomains</td><td>Check top-1</td></tr>
-            <tr><td>"ransomware encryption method"</td><td>Ransomware typically encrypts with AES-256</td><td>Check top-1</td></tr>
+            <tr><td><strong>Fixed-size</strong></td><td>Split every N words, no overlap</td><td>Simple, fast; risk of cutting mid-sentence</td></tr>
+            <tr><td><strong>Fixed-size with overlap</strong></td><td>Split every N words, overlap by M words</td><td>General purpose; boundary content preserved</td></tr>
+            <tr><td><strong>Sentence-based</strong></td><td>Split on sentence boundaries; group sentences into chunks</td><td>High quality; respects natural structure</td></tr>
         </tbody>
     </table>
-    <p>If the correct chunk does not appear in the top-3 results, the problem is in your chunking strategy or embedding model -- not in the LLM. Fix retrieval <em>before</em> adding generation.</p>
+</div>
+
+<div class="card">
+    <h3>Fixed-Size Chunking with Overlap</h3>
+    <pre><code class="language-python">def chunk_text(text, chunk_size=200, overlap=50):
+    """Split text into overlapping word-level chunks."""
+    words = text.split()
+    chunks = []
+    start = 0
+    while start < len(words):
+        end = start + chunk_size
+        chunk = " ".join(words[start:end])
+        chunks.append(chunk)
+        start += chunk_size - overlap    # step forward by (chunk_size - overlap)
+    return chunks
+
+# Example: 1000-word document
+doc = open("cve_advisory.txt").read()
+chunks = chunk_text(doc, chunk_size=200, overlap=50)
+print(f"Document: {len(doc.split())} words")
+print(f"Chunks:   {len(chunks)}")
+print(f"Chunk 1:  {len(chunks[0].split())} words")</code></pre>
+    <p>Overlap ensures that a sentence spanning a chunk boundary appears in both chunks. Without overlap, a question about that sentence might fail to retrieve either chunk.</p>
+</div>
+
+<div class="card">
+    <h3>Chunk Size vs Retrieval Quality</h3>
+    <p>Choosing the right chunk size is an empirical decision. Here is a practical starting point for security documents:</p>
+    <table class="info-table">
+        <thead><tr><th>Document type</th><th>Recommended chunk size</th><th>Overlap</th><th>Reasoning</th></tr></thead>
+        <tbody>
+            <tr><td>CVE advisories</td><td>150-200 words</td><td>30 words</td><td>Vulnerability + mitigation often in adjacent paragraphs</td></tr>
+            <tr><td>Incident reports</td><td>200-300 words</td><td>50 words</td><td>Timeline entries are longer and interconnected</td></tr>
+            <tr><td>Policy documents</td><td>100-150 words</td><td>20 words</td><td>Short, self-contained sections</td></tr>
+            <tr><td>Threat intel feeds</td><td>100-200 words</td><td>30 words</td><td>IOCs and descriptions are compact</td></tr>
+        </tbody>
+    </table>
 </div>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> Retrieval is the most critical component of a RAG security assistant.
-    If the wrong chunk is retrieved, the LLM will confidently generate an answer based on irrelevant context --
-    potentially giving incorrect remediation advice during an active incident. Always evaluate retrieval quality
-    independently before trusting the full pipeline. A wrong answer from a trusted tool is more dangerous than
-    no answer at all.
+    <strong>Cybersecurity tie-in:</strong> Chunking quality directly affects retrieval accuracy. If a CVE advisory's
+    vulnerability description ends up in one chunk and its mitigation steps in another, a query like
+    "how to fix CVE-2024-1234" might retrieve the vulnerability chunk but miss the mitigation. Overlap is
+    your first defence against this failure mode. For critical security documents, test your chunking strategy
+    by verifying that key question-answer pairs retrieve the correct chunks.
 </div>
 {% endblock %}

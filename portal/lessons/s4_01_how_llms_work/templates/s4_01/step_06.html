@@ -1,34 +1,24 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Context vectors: attention in action</h3>
-    <p>The attention weights determine how much each word contributes to the <strong>context vector</strong> — a new representation that captures meaning from surrounding words.</p>
+    <h3>Attention: which words matter to which?</h3>
+    <p>When processing a word, the model doesn't treat all other words equally. It <strong>attends</strong> to the most relevant ones. Click a word to see its attention pattern.</p>
 
-    <div class="controls">
-        <label>Compute context for:
-            <select id="ctx-word" onchange="computeContext()">
-                {% for w in attn_sentence %}
-                <option value="{{ loop.index0 }}" {{ 'selected' if loop.index0 == 2 }}>{{ w }}</option>
-                {% endfor %}
-            </select>
-        </label>
+    <div class="attn-sentence" id="attn-sentence">
+        {% for w in attn_sentence %}
+        <span class="attn-word" id="aw-{{ loop.index0 }}" onclick="showAttention({{ loop.index0 }})">{{ w }}</span>
+        {% endfor %}
     </div>
 
-    <div id="ctx-display" style="margin-top:20px;"></div>
-
-    <div class="info-box blue" id="ctx-info" style="margin-top:16px;"></div>
+    <div id="attn-bars" style="margin-top:20px;"></div>
 
     <div class="card" style="margin-top:16px;">
-        <h3>Why this matters</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-            <div class="info-box" style="background:rgba(244,63,94,0.08);border-left:4px solid var(--red);">
-                <strong>Without attention:</strong> "blocked" would have the same representation regardless of context.
-                "Firewall blocked traffic" = "Road blocked ahead" = same vector. Meaningless!
-            </div>
-            <div class="info-box green">
-                <strong>With attention:</strong> "blocked" in "firewall blocked malicious" gets a context vector
-                enriched by "firewall" and "malicious" — the model knows it's a <em>security action</em>.
-            </div>
+        <h3>Full attention matrix</h3>
+        <div style="overflow-x:auto;">
+            <table class="log-table" id="attn-table" style="font-size:12px;"></table>
+        </div>
+        <div class="info-box blue" style="margin-top:8px;">
+            Each row sums to 1.0 (softmax). Read row-wise: "When processing [row word], how much does it attend to [column word]?"
         </div>
     </div>
 </div>
@@ -36,9 +26,10 @@
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> Context vectors are why LLMs can distinguish
-    "port 443 is <strong>open</strong>" (network status) from "please <strong>open</strong> the attachment" (phishing).
-    The word "open" gets different context vectors depending on surrounding tokens.
+    <strong>Cybersecurity tie-in:</strong> Attention is why LLMs can understand context. In
+    "the firewall <strong>blocked</strong> malicious connection", the model knows "blocked" relates to
+    "firewall" (the blocker) and "malicious" (what was blocked). This contextual understanding
+    is what makes LLMs useful for parsing security logs and threat descriptions.
 </div>
 {% endblock %}
 
@@ -46,53 +37,58 @@
 <script>
     const sentence = {{ attn_sentence | tojson }};
     const weights = {{ attn_weights | tojson }};
-    const allEmb = {{ embeddings | tojson }};
-    const vocabMap = {{ vocab | tojson }};
+    let selectedWord = 2; // "blocked" is most interesting
 
-    // Get embeddings for attention sentence words
-    const sentenceEmb = sentence.map(w => allEmb[vocabMap[w]]);
-
-    function computeContext() {
-        const idx = parseInt(document.getElementById('ctx-word').value);
-        const attn = weights[idx];
-
-        // Weighted sum: context = sum(attn[j] * embedding[j])
-        const dims = sentenceEmb[0].length;
-        const context = new Array(dims).fill(0);
-        const contributions = [];
-
-        sentence.forEach((w, j) => {
-            const contrib = sentenceEmb[j].map(v => v * attn[j]);
-            contributions.push({word: w, weight: attn[j], contrib});
-            contrib.forEach((v, d) => context[d] += v);
+    function showAttention(idx) {
+        selectedWord = idx;
+        // Highlight selected word
+        document.querySelectorAll('.attn-word').forEach((el, i) => {
+            el.classList.toggle('attn-selected', i === idx);
         });
 
-        // Sort by weight descending
-        contributions.sort((a, b) => b.weight - a.weight);
-
-        const display = document.getElementById('ctx-display');
-        display.innerHTML = `<div style="text-align:center;font-size:14px;margin-bottom:16px;">
-            Context vector for "<strong>${sentence[idx]}</strong>" =
-            <span style="font-family:'Space Mono',monospace;">[${context.map(v => v.toFixed(2)).join(', ')}]</span>
-        </div>` +
-        contributions.filter(c => c.weight > 0.01).map(c => {
-            const pct = (c.weight * 100).toFixed(0);
-            return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
-                <span style="min-width:100px;font-weight:600;">${c.word}</span>
-                <span style="min-width:40px;color:var(--text-dim);font-size:12px;">${pct}%</span>
-                <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);">
-                    [${c.contrib.map(v => v.toFixed(3)).join(', ')}]
-                </span>
+        const bars = document.getElementById('attn-bars');
+        bars.innerHTML = `<div style="text-align:center;margin-bottom:12px;font-size:14px;">
+            When processing "<strong>${sentence[idx]}</strong>", it attends to:</div>` +
+        sentence.map((w, j) => {
+            const weight = weights[idx][j];
+            const pct = (weight * 100).toFixed(0);
+            const color = weight > 0.3 ? 'var(--cyan)' : weight > 0.1 ? 'var(--green)' : 'var(--text-dim)';
+            return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+                <span style="min-width:100px;font-weight:600;color:var(--text);">${w}</span>
+                <div style="flex:1;height:24px;background:var(--grid-bg);border-radius:4px;overflow:hidden;">
+                    <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;transition:width 0.3s;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">
+                        <span style="font-size:11px;color:#fff;font-weight:600;">${weight.toFixed(2)}</span>
+                    </div>
+                </div>
             </div>`;
         }).join('');
 
-        const topWord = contributions[0].word;
-        const info = document.getElementById('ctx-info');
-        info.innerHTML = `The context vector for "<strong>${sentence[idx]}</strong>" is dominated by
-            "<strong>${topWord}</strong>" (${(contributions[0].weight*100).toFixed(0)}% weight).
-            This means when the model processes "${sentence[idx]}", it "thinks about" "${topWord}" most.`;
+        // Highlight column in table
+        document.querySelectorAll('.attn-cell').forEach(c => c.style.outline = '');
+        document.querySelectorAll(`.attn-row-${idx}`).forEach(c => c.style.outline = '2px solid var(--cyan)');
     }
 
-    computeContext();
+    // Build attention table
+    function buildAttnTable() {
+        const table = document.getElementById('attn-table');
+        let html = '<thead><tr><th>Attends to &rarr;</th>';
+        sentence.forEach(w => html += `<th>${w}</th>`);
+        html += '<th>Sum</th></tr></thead><tbody>';
+
+        sentence.forEach((w, i) => {
+            html += `<tr onclick="showAttention(${i})" style="cursor:pointer;">`;
+            html += `<td><strong>${w}</strong></td>`;
+            weights[i].forEach((v, j) => {
+                const bg = `rgba(6,182,212,${v})`;
+                html += `<td class="attn-cell attn-row-${i}" style="background:${bg};text-align:center;font-weight:${v > 0.2 ? 700 : 400};">${v.toFixed(2)}</td>`;
+            });
+            html += `<td style="color:var(--text-dim);">${weights[i].reduce((a,b)=>a+b,0).toFixed(2)}</td></tr>`;
+        });
+        html += '</tbody>';
+        table.innerHTML = html;
+    }
+
+    buildAttnTable();
+    showAttention(selectedWord);
 </script>
 {% endblock %}

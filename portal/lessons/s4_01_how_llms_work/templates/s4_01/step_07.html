@@ -1,194 +1,98 @@
 {% extends "lesson_base.html" %}
 {% block content %}
 <div class="card">
-    <h3>Pretraining &mdash; how the weights get made</h3>
-    <p>You have been using a model that already knows things. But every weight inside it started as <strong>random noise</strong>. Drag the slider to scrub through training and watch the same prompt produce dramatically different output as the model sees more tokens.</p>
+    <h3>Context vectors: attention in action</h3>
+    <p>The attention weights determine how much each word contributes to the <strong>context vector</strong> — a new representation that captures meaning from surrounding words.</p>
 
-    <div class="pt-prompt-row">
-        <span class="pt-prompt-label">Fixed prompt:</span>
-        <code class="pt-prompt-text">The firewall blocked the&nbsp;&nbsp;<span class="pt-prompt-cursor">_</span></code>
+    <div class="controls">
+        <label>Compute context for:
+            <select id="ctx-word" onchange="computeContext()">
+                {% for w in attn_sentence %}
+                <option value="{{ loop.index0 }}" {{ 'selected' if loop.index0 == 2 }}>{{ w }}</option>
+                {% endfor %}
+            </select>
+        </label>
     </div>
 
-    <div class="pt-stage-grid">
-        <div class="pt-stage-card">
-            <div class="pt-stage-label">Tokens seen so far</div>
-            <div class="pt-stage-value" id="pt-tokens">0</div>
-            <div class="pt-stage-sub" id="pt-tokens-sub">random initialisation</div>
+    <div id="ctx-display" style="margin-top:20px;"></div>
+
+    <div class="info-box blue" id="ctx-info" style="margin-top:16px;"></div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Why this matters</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="info-box" style="background:rgba(244,63,94,0.08);border-left:4px solid var(--red);">
+                <strong>Without attention:</strong> "blocked" would have the same representation regardless of context.
+                "Firewall blocked traffic" = "Road blocked ahead" = same vector. Meaningless!
+            </div>
+            <div class="info-box green">
+                <strong>With attention:</strong> "blocked" in "firewall blocked malicious" gets a context vector
+                enriched by "firewall" and "malicious" — the model knows it's a <em>security action</em>.
+            </div>
         </div>
-
-        <div class="pt-stage-card pt-stage-output">
-            <div class="pt-stage-label">Model's completion</div>
-            <div class="pt-stage-value pt-stage-completion" id="pt-completion">qz $$ k7 ;; xx vv</div>
-            <div class="pt-stage-sub" id="pt-completion-sub">pure random token IDs from the vocabulary</div>
-        </div>
-    </div>
-
-    <div class="pt-slider-row">
-        <input type="range" min="0" max="5" step="1" value="0" id="pt-slider" oninput="ptUpdate()">
-        <div class="pt-slider-ticks">
-            <span data-stage="0">0</span>
-            <span data-stage="1">1M</span>
-            <span data-stage="2">100M</span>
-            <span data-stage="3">1B</span>
-            <span data-stage="4">100B</span>
-            <span data-stage="5">1T+</span>
-        </div>
-    </div>
-
-    <div class="pt-loss-block">
-        <div class="pt-loss-row">
-            <span class="pt-loss-label">cross-entropy loss</span>
-            <span class="pt-loss-value" id="pt-loss">10.8</span>
-        </div>
-        <div class="pt-loss-bar"><div class="pt-loss-bar-fill" id="pt-loss-bar"></div></div>
-        <div class="pt-loss-scale">
-            <span>0 (perfect)</span>
-            <span>~11 (random over 100k vocab)</span>
-        </div>
-    </div>
-
-    <div class="pt-takeaway" id="pt-takeaway">
-        <strong>Drag the slider.</strong> Nothing about the architecture is changing across these stages &mdash; only the values of the billions of weights, after billions of "predict, compare, nudge" updates. Reasoning, world knowledge, and coding ability are all emergent side-effects of getting good at one thing: predicting the next token.
-    </div>
-</div>
-
-<div class="card">
-    <h3>One step of pretraining, in numbers</h3>
-    <p>Suppose the model sees the input <code>"The firewall blocked the"</code> and outputs the following probability distribution over the next token:</p>
-
-    <table class="pt-prob-table">
-        <thead><tr><th>Candidate token</th><th>Model probability</th><th>Bar</th></tr></thead>
-        <tbody>
-            <tr><td><code>door</code></td><td>0.40</td><td><div class="pt-pbar pt-pbar-wrong" style="width:40%"></div></td></tr>
-            <tr><td><code>connection</code></td><td>0.20</td><td><div class="pt-pbar pt-pbar-wrong" style="width:20%"></div></td></tr>
-            <tr><td><code>traffic</code></td><td>0.05</td><td><div class="pt-pbar pt-pbar-wrong" style="width:5%"></div></td></tr>
-            <tr class="pt-prob-correct"><td><code>malicious</code> <span class="pt-correct-flag">&larr; correct</span></td><td>0.03</td><td><div class="pt-pbar pt-pbar-correct" style="width:3%"></div></td></tr>
-        </tbody>
-    </table>
-
-    <div class="pt-loss-calc">
-        <strong>Cross-entropy loss for this example:</strong><br>
-        <code>loss = -log(P[correct]) = -log(0.03) &approx; 3.51</code>
-    </div>
-
-    <p>That single number drives <strong>backpropagation</strong>: the gradient of the loss with respect to every weight is computed, and each weight is nudged a tiny step in the direction that would have made <code>malicious</code> slightly more likely (and <code>door</code> slightly less likely) the next time. After <strong>one</strong> update, this change is invisible. After <strong>a trillion</strong> updates, the weights have absorbed the entire structure of human language.</p>
-</div>
-
-<div class="card">
-    <h3>The full pipeline: pretraining vs fine-tuning vs inference</h3>
-    <p>Three phases that are often confused. Pretraining is by far the most expensive &mdash; and the only one you will never do yourself.</p>
-
-    <table class="log-table" style="font-size:13px;">
-        <thead><tr><th>Phase</th><th>Who</th><th>Cost</th><th>What it produces</th></tr></thead>
-        <tbody>
-            <tr>
-                <td><strong>Pretraining</strong></td>
-                <td>Big labs only<br><small>(OpenAI, Anthropic, Google, Meta)</small></td>
-                <td>$50M&ndash;$200M<br><small>2&ndash;6 months on 10k+ H100s</small></td>
-                <td>A <strong>base model</strong> that knows language but is not yet a chatbot</td>
-            </tr>
-            <tr>
-                <td><strong>Fine-tuning</strong></td>
-                <td>Same labs, or you on a small open-weight model</td>
-                <td>$1k&ndash;$10M<br><small>per dataset</small></td>
-                <td>A model specialised for a domain or aligned to instructions</td>
-            </tr>
-            <tr>
-                <td><strong>Inference</strong></td>
-                <td>You, every API call</td>
-                <td>fractions of a cent per query</td>
-                <td>The actual answer to your prompt</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="info-box blue compact-info" style="margin-top:14px;">
-        <strong>What this means for you:</strong> when you call an LLM API, you are renting the output of a $100M training run. You cannot change the weights &mdash; the only levers you have are the <em>tokens you put in front of the model</em>. Prompting, system prompts, and retrieval (RAG) are the only tools you actually control. Every later lesson in this stage is downstream of that fact.
     </div>
 </div>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> A pretrained model's knowledge has a hard cutoff at the date training ended. It does not know about a CVE published yesterday, the patch your team shipped this morning, or the policy your CISO updated last week. <strong>RAG</strong> (Lesson 4.4) exists specifically to inject fresh threat intel and internal docs at inference time, without retraining anything &mdash; because retraining costs nine figures.
+    <strong>Cybersecurity tie-in:</strong> Context vectors are why LLMs can distinguish
+    "port 443 is <strong>open</strong>" (network status) from "please <strong>open</strong> the attachment" (phishing).
+    The word "open" gets different context vectors depending on surrounding tokens.
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-const PT_STAGES = [
-    {
-        tokens: '0',
-        sub: 'random initialisation',
-        completion: 'qz $$ k7 ;; xx vv',
-        completion_sub: 'pure random token IDs from the vocabulary',
-        loss: 10.8,
-        takeaway: '<strong>Stage 1 &mdash; random init.</strong> The weights are literally <code>numpy.random.randn(...)</code>. The model has no idea English exists. Output is random tokens drawn from the ~100k vocabulary.'
-    },
-    {
-        tokens: '1 million',
-        sub: 'token frequencies learned',
-        completion: 'the the the the the',
-        completion_sub: 'common tokens dominate &mdash; the model learned that "the" is frequent',
-        loss: 7.2,
-        takeaway: '<strong>Stage 2 &mdash; token frequencies.</strong> The first thing the model learns is which tokens are common. It collapses to outputting the most frequent tokens because that minimises loss in the dumbest possible way.'
-    },
-    {
-        tokens: '100 million',
-        sub: 'grammar emerging',
-        completion: 'the door and went home',
-        completion_sub: 'English-shaped noise &mdash; word order is plausible, content is nonsense',
-        loss: 4.6,
-        takeaway: '<strong>Stage 3 &mdash; grammar.</strong> The model has learned word-order patterns: nouns follow articles, verbs follow subjects. It produces grammatically valid sequences that mean nothing in particular.'
-    },
-    {
-        tokens: '1 billion',
-        sub: 'plausible sentences',
-        completion: 'the user from accessing the website',
-        completion_sub: 'coherent English &mdash; but generic, no domain knowledge',
-        loss: 3.4,
-        takeaway: '<strong>Stage 4 &mdash; coherent English.</strong> Sentences hold together for a clause or two. The model can write generic English but does not know what a firewall is for.'
-    },
-    {
-        tokens: '100 billion',
-        sub: 'domain coherence',
-        completion: 'the suspicious connection and logged the event',
-        completion_sub: 'knows what firewalls do &mdash; absorbed domain patterns from training data',
-        loss: 2.3,
-        takeaway: '<strong>Stage 5 &mdash; domain coherence.</strong> The model has seen enough security text in pretraining to know that firewalls block <em>connections</em>, not <em>doors</em>. Specific, technical knowledge starts to emerge.'
-    },
-    {
-        tokens: '1 trillion+',
-        sub: 'frontier model',
-        completion: 'the malicious traffic on port 443 and triggered alert ID 1042',
-        completion_sub: 'specific, technical, contextually correct &mdash; this is what you call from an API',
-        loss: 1.7,
-        takeaway: '<strong>Stage 6 &mdash; frontier model.</strong> Loss has plateaued near the "irreducible" lower bound (~1.7) &mdash; language is inherently uncertain, so the loss can never reach zero. From here, fine-tuning and RLHF turn the base model into a polite, instruction-following chatbot.'
-    },
-];
+    const sentence = {{ attn_sentence | tojson }};
+    const weights = {{ attn_weights | tojson }};
+    const allEmb = {{ embeddings | tojson }};
+    const vocabMap = {{ vocab | tojson }};
 
-function ptUpdate() {
-    const idx = parseInt(document.getElementById('pt-slider').value, 10);
-    const s = PT_STAGES[idx];
+    // Get embeddings for attention sentence words
+    const sentenceEmb = sentence.map(w => allEmb[vocabMap[w]]);
 
-    document.getElementById('pt-tokens').textContent = s.tokens;
-    document.getElementById('pt-tokens-sub').textContent = s.sub;
-    document.getElementById('pt-completion').textContent = s.completion;
-    document.getElementById('pt-completion-sub').textContent = s.completion_sub;
-    document.getElementById('pt-loss').textContent = s.loss.toFixed(1);
+    function computeContext() {
+        const idx = parseInt(document.getElementById('ctx-word').value);
+        const attn = weights[idx];
 
-    // Loss bar fills proportionally to where loss sits between 0 and 11
-    const pct = Math.min(100, Math.max(0, (s.loss / 11) * 100));
-    document.getElementById('pt-loss-bar').style.width = pct + '%';
+        // Weighted sum: context = sum(attn[j] * embedding[j])
+        const dims = sentenceEmb[0].length;
+        const context = new Array(dims).fill(0);
+        const contributions = [];
 
-    document.getElementById('pt-takeaway').innerHTML = s.takeaway;
+        sentence.forEach((w, j) => {
+            const contrib = sentenceEmb[j].map(v => v * attn[j]);
+            contributions.push({word: w, weight: attn[j], contrib});
+            contrib.forEach((v, d) => context[d] += v);
+        });
 
-    // Highlight the active tick
-    document.querySelectorAll('.pt-slider-ticks span').forEach(el => {
-        el.classList.toggle('pt-tick-active', parseInt(el.dataset.stage, 10) === idx);
-    });
-}
+        // Sort by weight descending
+        contributions.sort((a, b) => b.weight - a.weight);
 
-ptUpdate();
+        const display = document.getElementById('ctx-display');
+        display.innerHTML = `<div style="text-align:center;font-size:14px;margin-bottom:16px;">
+            Context vector for "<strong>${sentence[idx]}</strong>" =
+            <span style="font-family:'Space Mono',monospace;">[${context.map(v => v.toFixed(2)).join(', ')}]</span>
+        </div>` +
+        contributions.filter(c => c.weight > 0.01).map(c => {
+            const pct = (c.weight * 100).toFixed(0);
+            return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="min-width:100px;font-weight:600;">${c.word}</span>
+                <span style="min-width:40px;color:var(--text-dim);font-size:12px;">${pct}%</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);">
+                    [${c.contrib.map(v => v.toFixed(3)).join(', ')}]
+                </span>
+            </div>`;
+        }).join('');
+
+        const topWord = contributions[0].word;
+        const info = document.getElementById('ctx-info');
+        info.innerHTML = `The context vector for "<strong>${sentence[idx]}</strong>" is dominated by
+            "<strong>${topWord}</strong>" (${(contributions[0].weight*100).toFixed(0)}% weight).
+            This means when the model processes "${sentence[idx]}", it "thinks about" "${topWord}" most.`;
+    }
+
+    computeContext();
 </script>
 {% endblock %}

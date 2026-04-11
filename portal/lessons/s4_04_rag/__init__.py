@@ -50,6 +50,66 @@ CHALLENGES = {
     },
 }
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "What is the fundamental advantage of a <strong>vector database</strong> over a SQL <code>LIKE</code> query?",
+        "options": [
+            "It's faster at exact-match lookups",
+            "It finds semantically similar documents even when the exact words are different",
+            "It stores more data per row",
+            "It supports JOIN operations",
+        ],
+        "answer": 1,
+        "explanation": "A SQL <code>LIKE '%ransomware%'</code> only finds the literal word. A vector database encodes meaning as vectors and finds documents about 'encryption malware demanding bitcoin' even though the word 'ransomware' never appears. <strong>Semantic similarity is the entire point.</strong>",
+    },
+    {
+        "q": "Why must documents be <strong>chunked</strong> before embedding?",
+        "options": [
+            "To save disk space",
+            "Embedding models have a maximum input length (128-512 tokens); a full document is too long and its embedding would be too vague",
+            "Chunking is optional and only used for performance",
+            "The vector database requires fixed-size inputs",
+        ],
+        "answer": 1,
+        "explanation": "Embedding models collapse an entire input into one vector. If you embed a 10-page document, the vector averages everything &mdash; too vague to match specific questions. Chunking produces focused vectors that match specific queries.",
+    },
+    {
+        "q": "You chunk a document with <code>overlap=0</code>. A question about content right at a chunk boundary fails to retrieve a useful answer. What went wrong?",
+        "options": [
+            "The embedding model is too small",
+            "The chunk size is too large",
+            "The relevant sentence was split across two chunks and neither chunk contains the full answer &mdash; overlap would have duplicated boundary content",
+            "The vector database index is corrupted",
+        ],
+        "answer": 2,
+        "explanation": "Without overlap, a sentence spanning a chunk boundary appears in neither chunk completely. <strong>Overlap duplicates boundary content</strong> so that both chunks contain the full sentence. For security documents where mitigation steps often follow vulnerability descriptions, this is critical.",
+    },
+    {
+        "q": "What does the instruction 'answer based ONLY on the provided context' do in a RAG prompt?",
+        "options": [
+            "Makes the model respond faster",
+            "Prevents the model from blending pre-training knowledge with your documents &mdash; a safety control against hallucination",
+            "Limits the response length",
+            "Enables multi-turn conversation",
+        ],
+        "answer": 1,
+        "explanation": "Without this instruction, the model freely mixes its general knowledge with your retrieved chunks. The answer might sound correct but contain fabricated details. In a security context, <strong>hallucinated remediation advice during an active incident could cause real damage</strong>. Grounding is a safety control.",
+    },
+    {
+        "q": "Compared to a pure LLM call, what is the key <strong>attribution</strong> advantage of RAG?",
+        "options": [
+            "RAG is cheaper per query",
+            "RAG responses are always shorter",
+            "You know exactly which document chunks were used to generate the answer &mdash; you can verify and cite sources",
+            "RAG never hallucinates",
+        ],
+        "answer": 2,
+        "explanation": "A pure LLM gives you an answer with no source trail. RAG returns the retrieved chunks alongside the answer, so you can <strong>verify every claim against the original document</strong>. This is essential when the answer is 'your incident response procedure says to do X' &mdash; you need to know it actually says that.",
+    },
+]
+
 # -- Course materials mapping ------------------------------------------------
 
 _base = "curriculum/stage4_genai/04_rag"
@@ -79,10 +139,27 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
 # -- Routes ------------------------------------------------------------------
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )
+
 
 @bp.route("/")
 def index():

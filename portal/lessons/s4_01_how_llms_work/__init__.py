@@ -73,15 +73,16 @@ ATTENTION_WEIGHTS = [
 # ── Step metadata ─────────────────────────────────────────────────────────
 
 STEPS = [
-    {"id": 0, "title": "Next-Token Prediction", "sub": "The core idea behind every LLM",       "icon": "next-token"},
-    {"id": 1, "title": "Tokenisation",          "sub": "Text to numbers",                      "icon": "tokenize"},
-    {"id": 2, "title": "Vocabulary Limits",      "sub": "When words go missing",                "icon": "vocab-question"},
-    {"id": 3, "title": "Embeddings",             "sub": "Words as vectors",                     "icon": "embedding-vector"},
-    {"id": 4, "title": "Cosine Similarity",      "sub": "Measuring meaning",                    "icon": "cosine-angle"},
-    {"id": 5, "title": "Attention",              "sub": "Which words matter to which",          "icon": "attention-arrows"},
-    {"id": 6, "title": "Context Vectors",        "sub": "Attention in action",                  "icon": "context-vector"},
-    {"id": 7, "title": "Pretraining",            "sub": "How the weights get made",             "icon": "loss-curve"},
-    {"id": 8, "title": "LLMs vs Classic ML",     "sub": "Different tools, different problems", "icon": "llm-vs-ml"},
+    {"id": 0, "title": "Next-Token Prediction",  "sub": "The core idea behind every LLM",       "icon": "next-token"},
+    {"id": 1, "title": "Tokenisation",           "sub": "Text to numbers",                      "icon": "tokenize"},
+    {"id": 2, "title": "Vocabulary Limits",       "sub": "When words go missing",                "icon": "vocab-question"},
+    {"id": 3, "title": "Embeddings",              "sub": "Words as vectors",                     "icon": "embedding-vector"},
+    {"id": 4, "title": "Comparing Embeddings",    "sub": "Similar fingerprints, similar meaning","icon": "embedding-compare"},
+    {"id": 5, "title": "Cosine Similarity",       "sub": "Measuring meaning",                   "icon": "cosine-angle"},
+    {"id": 6, "title": "Attention",               "sub": "Which words matter to which",         "icon": "attention-arrows"},
+    {"id": 7, "title": "Context Vectors",         "sub": "Attention in action",                 "icon": "context-vector"},
+    {"id": 8, "title": "Pretraining",             "sub": "How the weights get made",            "icon": "loss-curve"},
+    {"id": 9, "title": "LLMs vs Classic ML",      "sub": "Different tools, different problems", "icon": "llm-vs-ml"},
 ]
 
 # ── Quiz ────────────────────────────────────────────────────────────────────
@@ -170,26 +171,30 @@ CHALLENGES = {
         "a": "Only 'the' survives — 'ransomware', 'encrypted', 'all', 'files' all become &lt;UNK&gt;. <strong>4 out of 5 words lost!</strong> This is why real LLMs need 100,000+ tokens. With BPE, even rare words get broken into known subwords.",
     },
     3: {
+        "q": "The 4 dimensions are Threat, Network, Action, and Detection. Without looking at the numbers, predict which two dimensions are highest for the word 'scan'. Then check the embedding [0.40, 0.70, 0.50, 0.60].",
+        "a": "<strong>Network (0.70)</strong> and <strong>Detection (0.60)</strong> are highest. Port scanning is a network activity used for reconnaissance, and it's something security teams actively detect. The model learned this from context — 'scan' appears alongside networking and detection terms in training data. If you predicted Threat would be highest, that's reasonable — scans are often malicious. But the model sees 'scan' in many non-threat contexts (vulnerability scans, compliance scans), which keeps the Threat dimension moderate at 0.40.",
+    },
+    4: {
         "q": "Look at the embedding for 'malicious' vs 'benign'. They're about the same topic (security) but have very different vectors. Why?",
         "a": "Their vectors point in <strong>opposite directions</strong> — 'malicious' has high threat level, 'benign' has negative threat level. Embeddings capture semantic relationships, and <strong>antonyms are opposite vectors</strong>, not similar ones. The model knows they're related but opposite.",
     },
-    4: {
+    5: {
         "q": "Which pair has the highest similarity? Which has the lowest? Does this match your security intuition?",
         "a": "Highest: <strong>malicious ↔ suspicious</strong> (both threat indicators). Lowest: <strong>malicious ↔ benign</strong> (semantic opposites). This matches perfectly — a security analyst would group the same way. Embeddings learn the relationships humans intuitively know.",
     },
-    5: {
+    6: {
         "q": "When processing 'blocked', the model attends to 'firewall' (0.45) and 'malicious' (0.28). Why not 'the' (0.03)?",
         "a": "'the' carries almost no semantic information — it's a function word. 'firewall' tells the model <strong>who</strong> blocked and 'malicious' tells it <strong>what kind</strong> of thing was blocked. Attention learns to focus on <strong>informative tokens</strong> and ignore noise.",
     },
-    6: {
+    7: {
         "q": "The context vector for 'blocked' is a weighted mix of all word vectors. What would happen if all attention weights were equal (0.20 each)?",
         "a": "The context vector would be a simple <strong>average</strong> of all word vectors — treating 'the' as equally important as 'firewall'. This is what bag-of-words models do. Attention is better because it <strong>selectively focuses</strong> on the relevant words.",
     },
-    7: {
+    8: {
         "q": "Drag the slider from 0 to 1 trillion tokens. The architecture never changes — only the values of the weights. So where do reasoning, world knowledge, and coding ability actually come from?",
         "a": "They are <strong>emergent side-effects</strong> of getting good at one thing: predicting the next token. To predict the next token <em>well</em>, the model has to implicitly know who Marie Curie was, what TCP port 443 is for, and how a SQL injection works — because all of those facts shaped the next-token statistics in the training corpus. Nothing was explicitly programmed in. The weights just slowly absorbed the structure of human language across trillions of nudges.",
     },
-    8: {
+    9: {
         "q": "Your team has 5,000 labelled firewall logs and wants to build a classifier. Should they use an LLM or classic ML?",
         "a": "<strong>Classic ML</strong> (Random Forest, LogReg). Structured tabular data with labels is exactly what classic ML excels at. LLMs are for unstructured text. Using GPT-4 to classify CSV rows is like using a helicopter to cross the street — technically possible, absurdly expensive.",
     },
@@ -214,14 +219,17 @@ MATERIALS = {
     4: [("lecture", "Embeddings", f"{_base}/2_embeddings/lecture.md"),
         ("lab", "Hands-on Lab", f"{_base}/2_embeddings/handson.md"),
         ("solution", "Solution", f"{_base}/2_embeddings/solution_embeddings.py")],
-    5: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
-        ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
-        ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
+    5: [("lecture", "Embeddings", f"{_base}/2_embeddings/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/2_embeddings/handson.md"),
+        ("solution", "Solution", f"{_base}/2_embeddings/solution_embeddings.py")],
     6: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
         ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
         ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
-    7: [("lecture", "Pretraining", f"{_base}/4_pretraining/lecture.md")],
-    8: [("lecture", "LLMs vs Classic ML", f"{_base}/5_llms_vs_classic_ml/lecture.md")],
+    7: [("lecture", "Attention", f"{_base}/3_attention/lecture.md"),
+        ("lab", "Hands-on Lab", f"{_base}/3_attention/handson.md"),
+        ("solution", "Solution", f"{_base}/3_attention/solution_attention.py")],
+    8: [("lecture", "Pretraining", f"{_base}/4_pretraining/lecture.md")],
+    9: [("lecture", "LLMs vs Classic ML", f"{_base}/5_llms_vs_classic_ml/lecture.md")],
 }
 
 
@@ -275,17 +283,17 @@ def step(n):
         ctx["vocab"] = VOCAB
         ctx["words"] = WORDS
 
-    elif n == 3:
+    elif n in (3, 4):
         ctx["words"] = WORDS
         ctx["embeddings"] = EMBEDDING_MATRIX
         ctx["dim_labels"] = ["Threat", "Network", "Action", "Detection"]
 
-    elif n == 4:
+    elif n == 5:
         ctx["words"] = WORDS
         ctx["embeddings"] = EMBEDDING_MATRIX
         ctx["sim_matrix"] = SIM_MATRIX
 
-    elif n in (5, 6):
+    elif n in (6, 7):
         ctx["attn_sentence"] = ATTENTION_SENTENCE
         ctx["attn_weights"] = ATTENTION_WEIGHTS
         ctx["embeddings"] = EMBEDDING_MATRIX

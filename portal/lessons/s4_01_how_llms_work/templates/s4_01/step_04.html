@@ -1,89 +1,344 @@
 {% extends "lesson_base.html" %}
 {% block content %}
+<!-- ── Comparison view ──────────────────────────────────────────── -->
 <div class="card">
-    <h3>Measuring meaning with cosine similarity</h3>
-    <p>Cosine similarity measures how similar two vectors are: <strong>1.0 = identical</strong>, <strong>0.0 = unrelated</strong>, <strong>-1.0 = opposite</strong>. Pick two words to compare.</p>
+    <h3>Compare two fingerprints</h3>
+    <p>Pick two words. If their bars look the same, the model treats them as related. If they mirror each other, they are opposites. Try the preset buttons first, then pick your own pairs.</p>
 
     <div class="controls">
         <label>Word A:
-            <select id="wordA" onchange="comparePair()">
+            <select id="cmpA" onchange="renderCompare()">
                 {% for w in words %}{% if w not in ['<UNK>', '<EOS>', 'the', 'is'] %}
                 <option value="{{ w }}" {{ 'selected' if w == 'malicious' }}>{{ w }}</option>
                 {% endif %}{% endfor %}
             </select>
         </label>
         <label>Word B:
-            <select id="wordB" onchange="comparePair()">
+            <select id="cmpB" onchange="renderCompare()">
                 {% for w in words %}{% if w not in ['<UNK>', '<EOS>', 'the', 'is'] %}
                 <option value="{{ w }}" {{ 'selected' if w == 'suspicious' }}>{{ w }}</option>
                 {% endif %}{% endfor %}
             </select>
         </label>
+        <button class="btn" type="button" onclick="loadPreset('twin')">Show a similar pair</button>
+        <button class="btn" type="button" onclick="loadPreset('opposite')">Show an opposite pair</button>
     </div>
 
-    <div id="sim-display" style="margin-top:20px; text-align:center;"></div>
+    <div id="cmp-grid" class="cmp-grid"></div>
+    <div id="cmp-verdict" class="cmp-verdict"></div>
+</div>
 
-    <div class="card" style="margin-top:16px;">
-        <h3>Similarity heatmap</h3>
-        <div style="overflow-x:auto;">
-            <table class="log-table" id="sim-table" style="font-size:11px;"></table>
-        </div>
+<!-- ── Full heatmap ─────────────────────────────────────────────── -->
+<div class="card" style="margin-top:16px;">
+    <h3>The full embedding matrix</h3>
+    <p>16 words &times; 4 numbers = 64 values. <span style="color:var(--green);font-weight:600;">Greener</span> = strongly positive, <span style="color:var(--red);font-weight:600;">redder</span> = strongly negative, faded = near zero. Click any row to load it into the comparison above.</p>
+    <div style="overflow-x:auto;">
+        <table id="emb-heatmap" class="emb-heatmap"></table>
     </div>
 </div>
+
+<style>
+.cmp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 16px;
+}
+@media (max-width: 760px) {
+    .cmp-grid { grid-template-columns: 1fr; }
+}
+
+.fp-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px 12px 16px;
+    background: rgba(255, 255, 255, 0.02);
+}
+.fp-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+}
+.fp-vector {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 4px 0 12px 0;
+}
+.fp-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+}
+.fp-bar-label {
+    min-width: 70px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    text-align: right;
+}
+.fp-bar-track {
+    flex: 1;
+    height: 16px;
+    background: var(--grid-bg);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.fp-bar-zero {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+    z-index: 1;
+}
+.fp-bar-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 2px;
+    transition: width 0.25s, left 0.25s, right 0.25s, background 0.25s;
+}
+.fp-bar-value {
+    min-width: 46px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+}
+.fp-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 78px;
+    margin-right: 54px;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+    font-family: 'Space Mono', monospace;
+}
+
+.cmp-verdict {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    transition: border-color 0.25s;
+}
+.cmp-verdict .v-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.cmp-verdict .v-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+.cmp-verdict .v-score {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+}
+
+.emb-heatmap {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+}
+.emb-heatmap th {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+}
+.emb-heatmap th.h-word {
+    text-align: left;
+    padding-left: 10px;
+}
+.emb-heatmap td {
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: 3px;
+}
+.emb-heatmap td.h-word {
+    text-align: left;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding-left: 10px;
+    background: transparent;
+}
+.emb-heatmap tbody tr {
+    cursor: pointer;
+    transition: background 0.1s;
+}
+.emb-heatmap tbody tr:hover td.h-word {
+    color: var(--accent);
+}
+.emb-heatmap tbody tr.cmp-a td.h-word {
+    box-shadow: inset 4px 0 0 var(--cyan);
+    color: var(--cyan);
+}
+.emb-heatmap tbody tr.cmp-b td.h-word {
+    box-shadow: inset 4px 0 0 var(--orange);
+    color: var(--orange);
+}
+</style>
 {% endblock %}
 
 {% block security %}
 <div class="security-callout">
-    <strong>Cybersecurity tie-in:</strong> Cosine similarity is the foundation of <strong>semantic search</strong> in security.
-    When you search "lateral movement" in a threat intel database, the system finds documents about
-    "network propagation" and "credential hopping" because their embeddings are similar.
+    <strong>Cybersecurity tie-in:</strong> Comparing embedding fingerprints is the foundation of semantic search.
+    When you look up "credential theft" in a threat intel database, the system finds "password harvesting"
+    and "LSASS dumping" because their fingerprints are similar &mdash; even though the exact words
+    are completely different. You'll build this yourself in Lesson 4.4 (RAG).
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    const simMatrix = {{ sim_matrix | tojson }};
+    const embeddings = {{ embeddings | tojson }};
     const allWords = {{ words | tojson }};
-    const vocab = {};
-    allWords.forEach((w, i) => vocab[w] = i);
-    const skipWords = new Set(['<UNK>', '<EOS>', 'the', 'is']);
-    const activeWords = allWords.filter(w => !skipWords.has(w));
+    const dimLabels = {{ dim_labels | tojson }};
+    const dimColors = ['var(--red)', 'var(--cyan)', 'var(--orange)', 'var(--violet)'];
 
-    function comparePair() {
-        const a = document.getElementById('wordA').value;
-        const b = document.getElementById('wordB').value;
-        const sim = simMatrix[vocab[a]][vocab[b]];
+    const skip = new Set(['<UNK>', '<EOS>', 'the', 'is']);
+    const activeWords = allWords.filter(w => !skip.has(w));
+    const wordToIdx = {};
+    allWords.forEach((w, i) => wordToIdx[w] = i);
 
-        const color = sim > 0.7 ? 'var(--green)' : sim > 0.3 ? 'var(--cyan)' : sim > -0.3 ? 'var(--text-dim)' : 'var(--red)';
-        const label = sim > 0.7 ? 'Very similar' : sim > 0.3 ? 'Somewhat similar' : sim > -0.3 ? 'Unrelated' : 'Opposite';
+    const PRESETS = {
+        twin: ['malicious', 'suspicious'],
+        opposite: ['malicious', 'benign'],
+    };
 
-        document.getElementById('sim-display').innerHTML = `
-            <div style="font-size:16px;color:var(--text);">
-                <strong>"${a}"</strong> &harr; <strong>"${b}"</strong>
-            </div>
-            <div style="font-size:42px;font-weight:700;color:${color};margin:12px 0;">${sim.toFixed(3)}</div>
-            <div style="font-size:14px;color:${color};">${label}</div>
-            <div style="max-width:300px;margin:12px auto;height:12px;background:var(--grid-bg);border-radius:6px;overflow:hidden;">
-                <div style="width:${Math.max(0,(sim+1)/2*100)}%;height:100%;background:${color};border-radius:6px;transition:width 0.3s;"></div>
-            </div>
-        `;
+    function getVec(word) { return embeddings[wordToIdx[word]]; }
+
+    function cosine(a, b) {
+        let dot = 0, na = 0, nb = 0;
+        for (let i = 0; i < a.length; i++) {
+            dot += a[i] * b[i];
+            na  += a[i] * a[i];
+            nb  += b[i] * b[i];
+        }
+        return dot / (Math.sqrt(na) * Math.sqrt(nb) + 1e-12);
     }
 
-    // Build heatmap
-    function buildHeatmap() {
-        const table = document.getElementById('sim-table');
-        let html = '<thead><tr><th></th>';
-        activeWords.forEach(w => html += `<th style="writing-mode:vertical-lr;transform:rotate(180deg);padding:4px 2px;">${w}</th>`);
-        html += '</tr></thead><tbody>';
+    function fingerprintHTML(word) {
+        const vec = getVec(word);
+        const bars = vec.map((v, d) => {
+            const pct = Math.min(50, Math.abs(v) * 50);
+            const fillStyle = v >= 0
+                ? `left:50%; width:${pct}%; background:${dimColors[d]};`
+                : `right:50%; width:${pct}%; background:${dimColors[d]};`;
+            const sign = v >= 0 ? '+' : '';
+            return `
+                <div class="fp-bar-row">
+                    <span class="fp-bar-label" style="color:${dimColors[d]};">${dimLabels[d]}</span>
+                    <div class="fp-bar-track">
+                        <div class="fp-bar-zero"></div>
+                        <div class="fp-bar-fill" style="${fillStyle}"></div>
+                    </div>
+                    <span class="fp-bar-value" style="color:${dimColors[d]};">${sign}${v.toFixed(2)}</span>
+                </div>`;
+        }).join('');
 
-        activeWords.forEach(w1 => {
-            html += `<tr><td><strong>${w1}</strong></td>`;
-            activeWords.forEach(w2 => {
-                const sim = simMatrix[vocab[w1]][vocab[w2]];
-                const r = sim > 0 ? Math.round(sim * 100) : 0;
-                const g = sim < 0 ? Math.round(-sim * 100) : 0;
-                const bg = sim > 0 ? `rgba(16,185,129,${Math.abs(sim)*0.6})` : `rgba(244,63,94,${Math.abs(sim)*0.6})`;
-                html += `<td style="background:${bg};color:var(--text);text-align:center;font-size:10px;padding:3px;" title="${w1} ↔ ${w2}: ${sim.toFixed(3)}">${sim.toFixed(1)}</td>`;
+        return `
+            <div class="fp-card">
+                <div class="fp-name">"${word}"</div>
+                <div class="fp-vector">[${vec.map(v => v.toFixed(2)).join(', ')}]</div>
+                ${bars}
+                <div class="fp-axis"><span>&minus;1</span><span>0</span><span>+1</span></div>
+            </div>`;
+    }
+
+    function verdictForSim(sim) {
+        if (sim >  0.85) return { color: 'var(--green)',    title: 'Near-identical fingerprints',   body: 'The model treats these two words as nearly the same concept.' };
+        if (sim >  0.50) return { color: 'var(--cyan)',     title: 'Similar fingerprints',          body: 'These words share several dimensions of meaning.' };
+        if (sim > -0.20) return { color: 'var(--text-dim)', title: 'Different fingerprints',        body: 'The model sees these as covering different ideas.' };
+        return                  { color: 'var(--red)',      title: 'Mirror fingerprints &mdash; opposites', body: 'The bars point opposite directions on most dimensions. The model knows these are antonyms.' };
+    }
+
+    function renderCompare() {
+        const a = document.getElementById('cmpA').value;
+        const b = document.getElementById('cmpB').value;
+        document.getElementById('cmp-grid').innerHTML = fingerprintHTML(a) + fingerprintHTML(b);
+
+        const sim = cosine(getVec(a), getVec(b));
+        const v = verdictForSim(sim);
+        const verdict = document.getElementById('cmp-verdict');
+        verdict.innerHTML = `
+            <div class="v-title" style="color:${v.color};">${v.title}</div>
+            <div class="v-body">${v.body}</div>
+            <div class="v-score">cosine similarity = ${sim.toFixed(3)}</div>
+        `;
+        verdict.style.borderColor = v.color;
+
+        document.querySelectorAll('#emb-heatmap tbody tr').forEach(tr => {
+            tr.classList.remove('cmp-a', 'cmp-b');
+            if (tr.dataset.word === a) tr.classList.add('cmp-a');
+            if (tr.dataset.word === b) tr.classList.add('cmp-b');
+        });
+    }
+
+    function loadPreset(key) {
+        const [a, b] = PRESETS[key];
+        document.getElementById('cmpA').value = a;
+        document.getElementById('cmpB').value = b;
+        renderCompare();
+    }
+
+    function pickIntoSlot(word) {
+        const aSel = document.getElementById('cmpA');
+        const bSel = document.getElementById('cmpB');
+        if (aSel.value === word || bSel.value === word) return;
+        bSel.value = aSel.value;
+        aSel.value = word;
+        renderCompare();
+    }
+
+    function buildHeatmap() {
+        const table = document.getElementById('emb-heatmap');
+        let html = '<thead><tr><th class="h-word">Word</th>';
+        dimLabels.forEach((d, i) => {
+            html += `<th style="color:${dimColors[i]};">${d}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+        activeWords.forEach(w => {
+            const vec = getVec(w);
+            html += `<tr data-word="${w}" onclick="pickIntoSlot('${w}')">`;
+            html += `<td class="h-word">${w}</td>`;
+            vec.forEach(v => {
+                const mag = Math.min(0.85, Math.abs(v) * 0.95);
+                let bg, color;
+                if (v >= 0) {
+                    bg = `rgba(34, 211, 160, ${mag})`;
+                    color = v > 0.55 ? '#0a1f1a' : 'var(--text)';
+                } else {
+                    bg = `rgba(244, 63, 94, ${mag})`;
+                    color = v < -0.55 ? '#ffffff' : 'var(--text)';
+                }
+                const sign = v >= 0 ? '+' : '';
+                html += `<td style="background:${bg};color:${color};">${sign}${v.toFixed(2)}</td>`;
             });
             html += '</tr>';
         });
@@ -91,7 +346,7 @@
         table.innerHTML = html;
     }
 
-    comparePair();
     buildHeatmap();
+    renderCompare();
 </script>
 {% endblock %}

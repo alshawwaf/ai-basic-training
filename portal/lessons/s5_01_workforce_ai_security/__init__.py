@@ -145,6 +145,65 @@ CHALLENGES = {
     },
 }
 
+# ── Quiz ────────────────────────────────────────────────────────────────────
+
+QUIZ = [
+    {
+        "q": "Your company blocks <code>chat.openai.com</code> at the firewall. Why does this <strong>not</strong> solve the shadow AI problem?",
+        "options": [
+            "ChatGPT doesn't use that domain",
+            "Employees still access AI via personal devices, mobile data, embedded AI in approved tools (Notion AI, Grammarly), and browser extensions &mdash; none of which hit the corporate firewall",
+            "Firewall rules expire after 24 hours",
+            "OpenAI rotates its IP addresses too fast to block",
+        ],
+        "answer": 1,
+        "explanation": "Blocking a single domain gives a false sense of security. Shadow AI enters through <strong>personal devices, mobile networks, embedded AI features</strong> in otherwise-approved tools, and API calls from developer environments. Workforce AI Security provides visibility across all these vectors &mdash; blocking one URL does not.",
+    },
+    {
+        "q": "A prompt contains both a customer name and an AWS secret key. Which classification takes priority and why?",
+        "options": [
+            "PII &mdash; names are always the highest risk",
+            "They're equal &mdash; flag both at the same severity",
+            "Credentials &mdash; a leaked key gives direct infrastructure access exploitable in minutes; PII requires social engineering to weaponise",
+            "Neither &mdash; the prompt should be blocked entirely regardless of classification",
+        ],
+        "answer": 2,
+        "explanation": "Real systems use a <strong>highest-severity-wins</strong> rule. A leaked AWS key can be exploited by automated scanners within minutes of exposure. PII is serious but typically requires additional steps to weaponise. Credential leaks are <strong>immediate, direct-access risks</strong>.",
+    },
+    {
+        "q": "A customer wants to start enforcement by setting every policy to <strong>Block</strong>. What do you recommend instead?",
+        "options": [
+            "Block everything &mdash; security first",
+            "Start in <strong>Detect</strong> mode to understand real usage patterns, then design targeted policies based on data, then enforce gradually",
+            "Allow everything &mdash; don't disrupt workflows",
+            "Only block after a data breach occurs",
+        ],
+        "answer": 1,
+        "explanation": "Blocking without visibility causes employee backlash, shadow workarounds (personal devices), and you never learn what you're protecting against. The proven path is <strong>Detect &rarr; Analyse &rarr; Design targeted policies &rarr; Enforce gradually</strong>. Data-driven policy beats guesswork.",
+    },
+    {
+        "q": "The dashboard shows 31% of AI usage happens after business hours. What <strong>additional context</strong> do you need before treating this as a risk?",
+        "options": [
+            "No additional context needed &mdash; after-hours usage is always suspicious",
+            "Which departments, what data types are involved, and whether the trend is growing &mdash; Engineering working late is normal; HR at 2 AM with sensitive data is not",
+            "Only the total number of sessions",
+            "The user's job title is sufficient",
+        ],
+        "answer": 1,
+        "explanation": "A metric without context is just a number. <strong>Department + data type + trend</strong> turns it into an insight. Engineering at midnight is likely normal; HR accessing salary data at 2 AM during notice period is a potential exfiltration indicator. Context is everything.",
+    },
+    {
+        "q": "A user's risk score spikes from 15 to 78 after uploading 50 files to ChatGPT. Is this malicious?",
+        "options": [
+            "Yes &mdash; any score above 50 is malicious",
+            "No &mdash; high volume is always fine for power users",
+            "Not necessarily &mdash; check file types, business context, and history; anomaly detection flags the <em>deviation</em>, human judgement determines <em>intent</em>",
+            "Ignore it &mdash; risk scores are unreliable",
+        ],
+        "answer": 2,
+        "explanation": "Risk scoring works like UEBA: it detects <strong>statistical anomalies</strong>, not malice. Uploading 50 marketing images for a campaign is benign; uploading 50 source files the week before resignation is not. The system flags the deviation &mdash; <strong>investigation determines intent</strong>.",
+    },
+]
 
 # ── Course materials mapping ────────────────────────────────────────────────
 
@@ -175,10 +234,27 @@ def base_ctx(step_num):
         "lesson_title": LESSON_TITLE,
         "url_prefix": f"/lesson/{LESSON_ID}",
         "materials": MATERIALS.get(step_num, []),
+        "quiz_count": len(QUIZ),
+        "is_quiz": False,
     }
 
 
 # ── Routes ────────────────────────────────────────────────────────────────
+
+@bp.route("/quiz")
+def quiz():
+    return render_template(
+        "quiz.html",
+        steps=STEPS,
+        current=len(STEPS) - 1,
+        lesson_id=LESSON_ID,
+        lesson_title=LESSON_TITLE,
+        url_prefix=f"/lesson/{LESSON_ID}",
+        quiz=QUIZ,
+        quiz_count=len(QUIZ),
+        is_quiz=True,
+    )
+
 
 @bp.route("/")
 def index():

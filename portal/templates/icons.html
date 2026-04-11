@@ -1196,6 +1196,21 @@
   </g>
   <line x1="6" y1="56" x2="58" y2="56" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
 </svg>
+{% elif name == "embedding-compare" %}
+{# Two fingerprint bar charts side by side with similarity indicator #}
+<svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="4" y="12" width="24" height="40" rx="3" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.06"/>
+  <rect x="36" y="12" width="24" height="40" rx="3" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.06"/>
+  <rect x="8" y="18" width="16" height="3.5" rx="1" fill="currentColor" opacity="0.7"/>
+  <rect x="8" y="25" width="12" height="3.5" rx="1" fill="currentColor" opacity="0.5"/>
+  <rect x="8" y="32" width="8" height="3.5" rx="1" fill="currentColor" opacity="0.35"/>
+  <rect x="8" y="39" width="14" height="3.5" rx="1" fill="currentColor" opacity="0.55"/>
+  <rect x="40" y="18" width="15" height="3.5" rx="1" fill="currentColor" opacity="0.7"/>
+  <rect x="40" y="25" width="11" height="3.5" rx="1" fill="currentColor" opacity="0.5"/>
+  <rect x="40" y="32" width="9" height="3.5" rx="1" fill="currentColor" opacity="0.35"/>
+  <rect x="40" y="39" width="13" height="3.5" rx="1" fill="currentColor" opacity="0.55"/>
+  <path d="M29 32 L35 32" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2,2" opacity="0.6"/>
+</svg>
 {% elif name == "cosine-angle" %}
 {# Two vectors radiating from origin with angle arc #}
 <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

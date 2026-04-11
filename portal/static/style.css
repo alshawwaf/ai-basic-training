@@ -642,7 +642,7 @@ body.lesson-page .step-header p { font-size: 12px; }
 body.lesson-page .learning-path { margin: 4px 0 10px; padding: 6px 10px; }
 body.lesson-page .progress-wrap { margin: 0 -32px 8px; }
 body.lesson-page main { padding: 6px 32px 10px; }
-body.lesson-page .lesson-breadcrumb { margin: 6px 0 6px; padding: 6px 10px; }
+body.lesson-page .lesson-breadcrumb { margin: 6px 0 16px; padding: 6px 10px; }
 
 /* Make the inner scrollbar visible so learners know when an interactive
    page has more content below the fold (instead of looking "cut off"). */
@@ -721,7 +721,7 @@ body.lesson-page .content-main::-webkit-scrollbar-thumb:hover {
 }
 .lesson-breadcrumb a.bc-stage  .bc-kicker { color: var(--orange); }
 .lesson-breadcrumb a.bc-lesson .bc-kicker { color: var(--violet); }
-.lesson-breadcrumb .bc-current .bc-kicker { color: var(--cyan); }
+.lesson-breadcrumb .bc-current .bc-kicker { color: var(--violet); }
 
 .lesson-breadcrumb .bc-text {
     font-weight: 600;
@@ -737,8 +737,8 @@ body.lesson-page .content-main::-webkit-scrollbar-thumb:hover {
 
 .lesson-breadcrumb .bc-current {
     cursor: default;
-    background: rgba(6,182,212,0.10);
-    border-color: rgba(6,182,212,0.35);
+    background: rgba(139,92,246,0.10);
+    border-color: rgba(139,92,246,0.35);
 }
 
 [data-theme="light"] .lesson-breadcrumb {

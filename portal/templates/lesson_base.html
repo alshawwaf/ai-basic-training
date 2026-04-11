@@ -77,14 +77,9 @@
                 <span class="bc-text">{{ _crumbs.stage_title }}</span>
             </a>
             <span class="bc-sep">/</span>
-            <a href="{{ url_prefix }}/step/0" class="bc-link bc-lesson">
+            <span class="bc-link bc-current" aria-current="page">
                 <span class="bc-kicker">Lesson {{ _crumbs.stage_num }}.{{ _crumbs.lesson_num }}</span>
                 <span class="bc-text">{{ _crumbs.lesson_title }}</span>
-            </a>
-            <span class="bc-sep">/</span>
-            <span class="bc-link bc-current" aria-current="page">
-                <span class="bc-kicker">{% if is_quiz %}Quiz{% else %}Step {{ current + 1 }}{% endif %}</span>
-                <span class="bc-text">{% if is_quiz %}Knowledge check{% else %}{{ steps[current].title }}{% endif %}</span>
             </span>
         </nav>
         {% endif %}

@@ -21,7 +21,7 @@
             <span class="tier-badge {{ stage.id }}">{{ stage.tier }} &middot; {{ fmt_time(stage.lessons | sum(attribute='minutes')) }}</span>
         </div>
 
-        <div class="lesson-cards" style="grid-template-columns: 1fr;">
+        <div class="lesson-cards">
             {% for lesson in stage.lessons %}
             <a href="/lesson/{{ lesson.id }}/"
                class="lesson-card {{ stage.id }} {{ 'active' if lesson.id in registered else 'gated' }}"

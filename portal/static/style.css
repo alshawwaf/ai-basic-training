@@ -4346,6 +4346,7 @@ select option:hover {
     padding: 56px 24px 0;
     animation: fadeSlideUp 0.5s ease both;
 }
+.stage-detail .stage-card { height: auto; }
 .stage-detail .back-link {
     display: inline-block;
     color: var(--text-dim);

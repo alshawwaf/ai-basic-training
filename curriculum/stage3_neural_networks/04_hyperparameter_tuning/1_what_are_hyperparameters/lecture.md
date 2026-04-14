@@ -1,7 +1,5 @@
 # What Are Hyperparameters?
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - The distinction between model parameters (weights that change during training) and hyperparameters (settings that you control)

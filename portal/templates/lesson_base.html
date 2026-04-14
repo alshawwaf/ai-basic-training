@@ -6,8 +6,8 @@
     <title>{% block title %}{{ lesson_title }} — AI Ninja Program{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=42">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <!-- Prism.js for syntax highlighting (code modal) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
@@ -92,38 +92,38 @@
         {% endif %}
 
         {% if not is_quiz %}
+        {% set has_lecture = materials | selectattr('0', 'equalto', 'lecture') | list %}
+        {% set has_lab = materials | selectattr('0', 'equalto', 'lab') | list %}
+        {% set has_solution = materials | selectattr('0', 'equalto', 'solution') | list %}
         <!-- Learning path toolbar -->
         <div class="learning-path">
-            <div class="lp-step lp-active lp-clickable" id="lpExplore" data-lp="explore" onclick="returnToExplore()" title="Back to interactive content">
+            <div class="lp-step lp-active lp-clickable" id="lpExplore" data-lp="explore" onclick="switchTab('explore')" title="Back to interactive content">
                 <span class="lp-num">1</span>
                 <span class="lp-text"><span class="lp-label">Explore</span><span class="lp-hint">Play below</span></span>
             </div>
-            {% set has_lecture = materials | selectattr('0', 'equalto', 'lecture') | list %}
-            {% set has_lab = materials | selectattr('0', 'equalto', 'lab') | list %}
-            {% set has_solution = materials | selectattr('0', 'equalto', 'solution') | list %}
             {% if has_lecture %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lecture[0][2] }}', {{ steps[current].title | tojson | forceescape }}); activateLpStep(this)">
+            <div class="lp-step lp-clickable" data-lp="read" onclick="switchTab('read')">
                 <span class="lp-num">2</span>
                 <span class="lp-text"><span class="lp-label">Read</span><span class="lp-hint">Understand</span></span>
             </div>
             {% endif %}
             {% if has_lab %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openDrawer('{{ has_lab[0][2] }}', {{ steps[current].title | tojson | forceescape }}); activateLpStep(this)">
+            <div class="lp-step lp-clickable" data-lp="build" onclick="switchTab('build')">
                 <span class="lp-num">{{ 3 if has_lecture else 2 }}</span>
                 <span class="lp-text"><span class="lp-label">Build</span><span class="lp-hint">Hands-on lab</span></span>
             </div>
             {% endif %}
             {% if has_solution %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openCodeModal('{{ has_solution[0][2] }}', '{{ has_solution[0][1] }}'); activateLpStep(this)">
+            <div class="lp-step lp-clickable" data-lp="compare" onclick="switchTab('compare')">
                 <span class="lp-num">{{ (3 if has_lecture else 2) + (1 if has_lab else 0) }}</span>
                 <span class="lp-text"><span class="lp-label">Compare</span><span class="lp-hint">Solution</span></span>
             </div>
             {% endif %}
             <div class="lp-arrow">&#8250;</div>
-            <div class="lp-step lp-clickable" onclick="openHintModal(); activateLpStep(this)">
+            <div class="lp-step lp-clickable" data-lp="reflect" onclick="switchTab('reflect')">
                 <span class="lp-num lp-num-last">&#128161;</span>
                 <span class="lp-text"><span class="lp-label">Reflect</span><span class="lp-hint">Think deeper</span></span>
             </div>
@@ -131,32 +131,50 @@
         {% endif %}
 
         <div class="content-layout">
-            <!-- Left: main step content -->
             <div class="content-main">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-
-        {% if not is_quiz %}
-        <!-- Hint modal (challenge + security) -->
-        <div class="hint-modal-overlay" id="hintOverlay" onclick="closeHintModal()"></div>
-        <div class="hint-modal" id="hintModal">
-            <div class="hint-modal-header">
-                <span class="hint-modal-title">Think Deeper</span>
-                <button class="hint-modal-close" onclick="closeHintModal()">&times;</button>
-            </div>
-            <div class="hint-modal-body">
-                <div class="challenge-box">
-                    <div class="challenge-section-label">Try this:</div>
-                    <p>{{ challenge.q }}</p>
-                    <button class="btn btn-sm" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
-                    <div class="answer">{{ challenge.a | safe }}</div>
+                <!-- Tab: Explore (default — interactive step content) -->
+                <div class="tab-panel active" id="tabExplore">
+                    {% block content %}{% endblock %}
                 </div>
 
-                {% block security %}{% endblock %}
+                {% if not is_quiz %}
+                <!-- Tab: Read (lecture markdown — loaded via AJAX) -->
+                {% if has_lecture %}
+                <div class="tab-panel" id="tabRead" data-src="{{ has_lecture[0][2] }}">
+                    <div class="tab-loading">Loading...</div>
+                </div>
+                {% endif %}
+
+                <!-- Tab: Build (hands-on lab — loaded via AJAX) -->
+                {% if has_lab %}
+                <div class="tab-panel" id="tabBuild" data-src="{{ has_lab[0][2] }}">
+                    <div class="tab-loading">Loading...</div>
+                </div>
+                {% endif %}
+
+                <!-- Tab: Compare (solution code — loaded via AJAX) -->
+                {% if has_solution %}
+                <div class="tab-panel" id="tabCompare" data-src="{{ has_solution[0][2] }}" data-type="code">
+                    <div class="tab-loading">Loading...</div>
+                </div>
+                {% endif %}
+
+                <!-- Tab: Reflect (challenge + security) -->
+                <div class="tab-panel" id="tabReflect">
+                    <div class="reflect-content">
+                        <h3 class="reflect-title">Think Deeper</h3>
+                        <div class="challenge-box">
+                            <div class="challenge-section-label">Try this:</div>
+                            <p>{{ challenge.q }}</p>
+                            <button class="btn btn-sm" onclick="showAnswer()" style="margin-top:10px">Show answer</button>
+                            <div class="answer">{{ challenge.a | safe }}</div>
+                        </div>
+                        {% block security %}{% endblock %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% endif %}
 
         {% if not is_quiz %}
         <!-- Nav -->
@@ -349,13 +367,249 @@
             return 0;
         }
 
-        // Close any overlay that's currently open. The close functions no
-        // longer reset the active phase, so it's safe to call all three —
-        // the upcoming pill click will set the new active phase.
-        function _closeAllPhaseOverlays() {
+        // ── Inline tab switching ─────────────────────────────────────────
+        // Maps tab key → panel id. Content is lazily loaded on first switch.
+        var _tabIdMap = { explore: 'tabExplore', read: 'tabRead', build: 'tabBuild', compare: 'tabCompare', reflect: 'tabReflect' };
+        var _tabLoaded = { explore: true };  // explore is already rendered
+
+        function switchTab(key) {
+            var panelId = _tabIdMap[key];
+            var panel = document.getElementById(panelId);
+            if (!panel) return;
+
+            // Hide all tab panels, show the target
+            document.querySelectorAll('.content-main .tab-panel').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            panel.classList.add('active');
+
+            // Activate the matching LP pill
+            document.querySelectorAll('.lp-step').forEach(function(s) { s.classList.remove('lp-active'); });
+            var pill = document.querySelector('.lp-step[data-lp="' + key + '"]');
+            if (pill) pill.classList.add('lp-active');
+
+            // Close any still-open overlays (drawers from internal links)
             closeDrawer();
             closeCodeModal();
-            closeHintModal();
+
+            // Keep _currentScriptPath in sync when revisiting Compare tab
+            if (key === 'compare' && panel.dataset.src) {
+                _currentScriptPath = panel.dataset.src;
+                _currentScriptRaw = panel.dataset.raw || '';
+            }
+
+            // Lazy-load content on first visit
+            if (!_tabLoaded[key] && panel.dataset.src) {
+                _tabLoaded[key] = true;
+                var src = panel.dataset.src;
+                var isCode = panel.dataset.type === 'code';
+
+                fetch('/api/content?path=' + encodeURIComponent(src))
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (isCode) {
+                            // Code view — syntax-highlighted source
+                            var filename = src.split('/').pop();
+                            var isSolution = /^solution_.*\.py$/.test(filename);
+                            _currentScriptPath = src;
+                            _currentScriptRaw = data.raw || '';
+                            panel.innerHTML =
+                                '<div class="tab-code-header">' +
+                                    '<span class="tab-code-filename">' + escapeHtml(filename) + '</span>' +
+                                    '<div class="tab-code-actions">' +
+                                        (isSolution ? '<button class="btn btn-sm btn-run" onclick="runScript()">&#9654; Run</button>' : '') +
+                                        '<button class="btn btn-sm" onclick="downloadTabCode(\'' + escapeHtml(filename) + '\')">&#8615; Download</button>' +
+                                        '<button class="btn btn-sm" onclick="copyTabCode(this)">Copy</button>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<pre class="language-python"><code class="language-python">' +
+                                escapeHtml(data.raw) + '</code></pre>';
+                            panel.dataset.raw = data.raw;
+                        } else {
+                            // Markdown view — add action header + content
+                            var mdFilename = src.split('/').pop();
+                            var mdLabel = key === 'read' ? 'Lecture' : key === 'build' ? 'Lab Guide' : mdFilename;
+                            panel.dataset.raw = data.raw || '';
+                            panel.dataset.filename = mdFilename;
+                            panel.innerHTML =
+                                '<div class="tab-md-header">' +
+                                    '<span class="tab-md-title">' + escapeHtml(mdLabel) + '</span>' +
+                                    '<div class="tab-md-actions">' +
+                                        '<button class="btn btn-sm" onclick="downloadTabMd(\'' + escapeHtml(panelId) + '\')" title="Download Markdown">&#8615; Download</button>' +
+                                        '<button class="btn btn-sm tab-md-pdf" onclick="downloadTabPdf(\'' + escapeHtml(panelId) + '\')" title="Export PDF">&#128196; PDF</button>' +
+                                        '<button class="btn btn-sm" onclick="printTabMd(\'' + escapeHtml(panelId) + '\')" title="Print">&#128424; Print</button>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="md-content">' + data.html + '</div>';
+                            // Fix links
+                            var basePath = src.replace(/\/[^\/]*$/, '');
+                            panel.querySelectorAll('a').forEach(function(a) {
+                                var h = a.getAttribute('href');
+                                if (!h || /^#/.test(h)) return;
+                                if (/^https?:\/\//.test(h)) { a.target = '_blank'; a.rel = 'noopener'; return; }
+                                if (!/\.(md|py)$/i.test(h)) a.classList.add('dead-link');
+                            });
+                        }
+                        // Syntax highlighting
+                        panel.querySelectorAll('pre > code').forEach(function(code) {
+                            var hasLang = false;
+                            code.classList.forEach(function(c) { if (c.indexOf('language-') === 0) hasLang = true; });
+                            if (!hasLang) {
+                                var bare = null;
+                                code.classList.forEach(function(c) { if (Prism.languages[c]) bare = c; });
+                                code.classList.add('language-' + (bare || detectCodeLang(code.textContent)));
+                            }
+                        });
+                        if (window.Prism) Prism.highlightAllUnder(panel);
+                        // Add copy buttons to code blocks in markdown
+                        if (!isCode) {
+                            panel.querySelectorAll('pre').forEach(function(pre) {
+                                var btn = document.createElement('button');
+                                btn.className = 'code-block-copy';
+                                btn.textContent = 'Copy';
+                                btn.onclick = function() {
+                                    var c = pre.querySelector('code');
+                                    navigator.clipboard.writeText(c ? c.textContent : pre.textContent).then(function() {
+                                        btn.textContent = 'Copied!'; btn.classList.add('copied');
+                                        setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+                                    });
+                                };
+                                pre.appendChild(btn);
+                            });
+                        }
+                    })
+                    .catch(function(err) {
+                        panel.innerHTML = '<div style="color:var(--red);">Failed to load: ' + err.message + '</div>';
+                    });
+            }
+
+            // Scroll to top of content
+            var contentMain = document.querySelector('.content-main');
+            if (contentMain) contentMain.scrollTop = 0;
+
+            updateNavLabels();
+        }
+
+        function copyTabCode(btn) {
+            var panel = btn.closest('.tab-panel');
+            var raw = panel && panel.dataset.raw;
+            if (!raw) return;
+            navigator.clipboard.writeText(raw).then(function() {
+                btn.textContent = 'Copied!';
+                setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+            });
+        }
+
+        function downloadTabCode(filename) {
+            var raw = _currentScriptRaw;
+            if (!raw) return;
+            var blob = new Blob([raw], {type: 'text/x-python'});
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        /* ── Tab markdown actions: Download / PDF / Print ────────── */
+
+        function _tabDownloadName(panelId, ext) {
+            var panel = document.getElementById(panelId);
+            var lt = {{ lesson_title | tojson }};
+            var stepNum = {{ current + 1 }};
+            var docName = (panel && panel.dataset.filename)
+                ? panel.dataset.filename.replace(/\.[^.]+$/, '')
+                : 'document';
+            var sanitize = function(s) {
+                return (s || '').replace(/[<>:"/\\|?*]+/g, '').replace(/\s+/g, ' ').trim();
+            };
+            return sanitize(lt) + ' - Step ' + stepNum + ' - ' + sanitize(docName) + '.' + ext;
+        }
+
+        function downloadTabMd(panelId) {
+            var panel = document.getElementById(panelId);
+            if (!panel || !panel.dataset.raw) return;
+            var blob = new Blob([panel.dataset.raw], {type: 'text/markdown;charset=utf-8'});
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = _tabDownloadName(panelId, 'md');
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function downloadTabPdf(panelId) {
+            var panel = document.getElementById(panelId);
+            if (!panel || !panel.dataset.src) return;
+            var downloadName = _tabDownloadName(panelId, 'pdf');
+            var pdfTitle = downloadName.replace(/\.pdf$/, '');
+            var btn = panel.querySelector('.tab-md-pdf');
+            var origHtml = btn ? btn.innerHTML : null;
+            if (btn) { btn.disabled = true; btn.innerHTML = '&#8987; Generating...'; }
+
+            fetch('/api/pdf?path=' + encodeURIComponent(panel.dataset.src) + '&title=' + encodeURIComponent(pdfTitle))
+                .then(function(r) {
+                    if (!r.ok) return r.json().then(function(j) { throw new Error(j.error || 'PDF generation failed'); });
+                    return r.blob();
+                })
+                .then(function(blob) {
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url; a.download = downloadName;
+                    document.body.appendChild(a); a.click();
+                    document.body.removeChild(a); URL.revokeObjectURL(url);
+                    if (btn) { btn.innerHTML = '&#10003; Saved!'; setTimeout(function(){ btn.innerHTML = origHtml; btn.disabled = false; }, 1500); }
+                })
+                .catch(function(err) {
+                    if (btn) { btn.innerHTML = origHtml; btn.disabled = false; }
+                    alert('PDF download failed: ' + err.message);
+                });
+        }
+
+        function printTabMd(panelId) {
+            var panel = document.getElementById(panelId);
+            if (!panel) return;
+            var body = panel.querySelector('.md-content');
+            if (!body) return;
+            var win = window.open('', '_blank');
+            win.document.write(
+                '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+                '<title>' + escapeHtml(panel.dataset.filename || 'Document') + '</title>' +
+                '<style>' +
+                '@page { size: A4; margin: 18mm 16mm; }' +
+                'body { font-family: "Segoe UI", Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a2e; line-height: 1.7; font-size: 14px; }' +
+                'h1, h2, h3, h4 { font-family: "Space Mono", monospace; break-after: avoid; page-break-after: avoid; }' +
+                'h1 + p, h2 + p, h3 + p { break-before: avoid; page-break-before: avoid; }' +
+                'p { orphans: 3; widows: 3; }' +
+                'pre, code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: "Consolas","Fira Code",monospace; }' +
+                'pre { padding: 12px 16px; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; color: #1a1a2e; }' +
+                'pre code { background: none; padding: 0; }' +
+                '.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #708090; font-style: italic; }' +
+                '.token.punctuation { color: #555; }' +
+                '.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #905; }' +
+                '.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #690; }' +
+                '.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #9a6e3a; }' +
+                '.token.atrule, .token.attr-value, .token.keyword { color: #07a; }' +
+                '.token.function, .token.class-name { color: #dd4a68; }' +
+                '.token.regex, .token.important, .token.variable { color: #e90; }' +
+                '.token.important, .token.bold { font-weight: bold; }' +
+                '.token.italic { font-style: italic; }' +
+                'table { border-collapse: collapse; width: 100%; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }' +
+                'thead { display: table-header-group; }' +
+                'tr, td, th { break-inside: avoid; page-break-inside: avoid; }' +
+                'th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }' +
+                'th { background: #f4f4f8; font-weight: 600; }' +
+                'img, figure { max-width: 100%; break-inside: avoid; page-break-inside: avoid; }' +
+                'ul, ol { break-inside: avoid; page-break-inside: avoid; }' +
+                'li { break-inside: avoid; page-break-inside: avoid; }' +
+                'blockquote { break-inside: avoid; page-break-inside: avoid; }' +
+                '@media print { body { margin: 0; max-width: none; padding: 0; } }' +
+                '</style></head><body>' +
+                body.innerHTML +
+                '</body></html>'
+            );
+            win.document.close();
+            win.focus();
+            win.print();
         }
 
         function goToNextPhase(e) {
@@ -363,7 +617,6 @@
             var steps = _lpSteps();
             var idx = _activeLpIndex();
             if (idx < steps.length - 1) {
-                _closeAllPhaseOverlays();
                 steps[idx + 1].click();
             } else if (CUR_STEP < TOTAL_STEPS - 1) {
                 window.location.href = urlPrefix + '/step/' + (CUR_STEP + 1);
@@ -376,13 +629,7 @@
             if (e && e.preventDefault) e.preventDefault();
             var idx = _activeLpIndex();
             if (idx > 0) {
-                if (idx === 1) {
-                    // Stepping back to Explore — close everything and reactivate.
-                    returnToExplore();
-                } else {
-                    _closeAllPhaseOverlays();
-                    _lpSteps()[idx - 1].click();
-                }
+                _lpSteps()[idx - 1].click();
             } else if (CUR_STEP > 0) {
                 window.location.href = urlPrefix + '/step/' + (CUR_STEP - 1);
             } else {
@@ -437,7 +684,9 @@
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
             if (e.key === 'Escape') {
                 if (document.getElementById('runModal').classList.contains('open')) { closeRunModal(); return; }
-                closeDrawer(); closeCodeModal(); closeHintModal(); return;
+                closeDrawer(); closeCodeModal();
+                switchTab('explore');
+                return;
             }
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
@@ -806,10 +1055,7 @@
         }
 
         function returnToExplore() {
-            closeDrawer();
-            closeCodeModal();
-            closeHintModal();
-            activateExploreLp();
+            switchTab('explore');
         }
 
         // ── Code Modal logic ──────────────────────────────────────────────

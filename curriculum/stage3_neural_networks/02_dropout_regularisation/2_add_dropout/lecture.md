@@ -1,7 +1,5 @@
 # Add Dropout
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How `Dropout(rate)` randomly silences neurons during training

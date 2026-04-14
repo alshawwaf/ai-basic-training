@@ -2,17 +2,23 @@ FROM python:3.11-slim AS base
 
 # System deps for matplotlib + compilation
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        gcc g++ libffi-dev \
+        gcc g++ libffi-dev pkg-config libcairo2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Install Python packages (heaviest first for layer caching)
 COPY portal/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+    && pip install --no-cache-dir -r requirements.txt
 
 # ── Production stage ─────────────────────────────────────────────────────────
 FROM python:3.11-slim
+
+# Runtime C libs needed by pycairo
+RUN apt-get update && apt-get install -y --no-install-recommends libcairo2 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy only the Python environment (no gcc/g++ in final image)
 COPY --from=base /usr/local/lib/python3.11 /usr/local/lib/python3.11

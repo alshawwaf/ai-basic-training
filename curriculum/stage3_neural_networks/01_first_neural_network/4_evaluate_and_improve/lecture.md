@@ -1,7 +1,5 @@
 # Evaluate and Improve
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How `model.evaluate()` measures performance on unseen test data

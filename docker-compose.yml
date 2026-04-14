@@ -2,9 +2,13 @@ services:
   portal:
     build: .
     ports:
-      - "5000:5000"
+      - "5545:5000"
     environment:
       - MPLBACKEND=Agg
+    volumes:
+      - ./portal/static:/app/portal/static
+      - ./portal/templates:/app/portal/templates
+      - ./curriculum:/app/curriculum
     restart: unless-stopped
 
     # ── Security hardening ──────────────────────────────────────────────

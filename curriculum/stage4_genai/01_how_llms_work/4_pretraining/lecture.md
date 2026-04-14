@@ -1,6 +1,5 @@
 # Pretraining: How the Weights Get Made
 
-> Read this guide fully — there is no hands-on lab for this section. It is a conceptual deep-dive into how the model you've been using was actually built.
 
 ---
 

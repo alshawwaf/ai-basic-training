@@ -159,39 +159,39 @@ QUIZ = [
 
 CHALLENGES = {
     0: {
-        "q": "Type 'The attacker used' and look at the predictions. Now type 'The chef used'. How do predictions change?",
+        "q": "Go back to the Explore tab and type 'The attacker used' in the input box — look at the predicted next tokens. Now change it to 'The chef used'. How do the predictions change?",
         "a": "The model predicts different next tokens based on context. 'attacker used' suggests security terms (exploit, malware), while 'chef used' suggests cooking terms (knife, oven). This is <strong>contextual prediction</strong> — the same word 'used' leads to different outputs depending on surrounding words.",
     },
     1: {
-        "q": "Encode 'CVE-2024-1234'. How many tokens does it become? Why is this expensive?",
+        "q": "In the Explore tab, encode 'CVE-2024-1234'. How many tokens does it become? Why is this expensive?",
         "a": "With a word-level tokenizer, 'CVE-2024-1234' is a single unknown token (&lt;UNK&gt;). Real BPE tokenizers split it into ~5 tokens: 'CVE', '-', '2024', '-', '1234'. More tokens = higher API cost and more context window consumed. <strong>Security text is token-expensive</strong> because of IDs, hashes, and IPs.",
     },
     2: {
-        "q": "With the 20-word vocabulary, encode 'the ransomware encrypted all files'. How many words survive?",
+        "q": "In the Explore tab, encode 'the ransomware encrypted all files' with the 20-word vocabulary. How many words survive?",
         "a": "Only 'the' survives — 'ransomware', 'encrypted', 'all', 'files' all become &lt;UNK&gt;. <strong>4 out of 5 words lost!</strong> This is why real LLMs need 100,000+ tokens. With BPE, even rare words get broken into known subwords.",
     },
     3: {
-        "q": "The 4 dimensions are Threat, Network, Action, and Detection. Without looking at the numbers, predict which two dimensions are highest for the word 'scan'. Then check the embedding [0.40, 0.70, 0.50, 0.60].",
+        "q": "The 4 dimensions are Threat, Network, Action, and Detection. Without looking at the numbers, predict which two dimensions are highest for the word 'scan'. Then check the Explore tab — the embedding is [0.40, 0.70, 0.50, 0.60].",
         "a": "<strong>Network (0.70)</strong> and <strong>Detection (0.60)</strong> are highest. Port scanning is a network activity used for reconnaissance, and it's something security teams actively detect. The model learned this from context — 'scan' appears alongside networking and detection terms in training data. If you predicted Threat would be highest, that's reasonable — scans are often malicious. But the model sees 'scan' in many non-threat contexts (vulnerability scans, compliance scans), which keeps the Threat dimension moderate at 0.40.",
     },
     4: {
-        "q": "Look at the embedding for 'malicious' vs 'benign'. They're about the same topic (security) but have very different vectors. Why?",
+        "q": "In the Explore tab, look at the embeddings for 'malicious' vs 'benign'. They're about the same topic (security) but have very different vectors. Why?",
         "a": "Their vectors point in <strong>opposite directions</strong> — 'malicious' has high threat level, 'benign' has negative threat level. Embeddings capture semantic relationships, and <strong>antonyms are opposite vectors</strong>, not similar ones. The model knows they're related but opposite.",
     },
     5: {
-        "q": "Which pair has the highest similarity? Which has the lowest? Does this match your security intuition?",
+        "q": "Look at the similarity matrix in the Explore tab. Which pair has the highest similarity? Which has the lowest? Does this match your security intuition?",
         "a": "Highest: <strong>malicious ↔ suspicious</strong> (both threat indicators). Lowest: <strong>malicious ↔ benign</strong> (semantic opposites). This matches perfectly — a security analyst would group the same way. Embeddings learn the relationships humans intuitively know.",
     },
     6: {
-        "q": "When processing 'blocked', the model attends to 'firewall' (0.45) and 'malicious' (0.28). Why not 'the' (0.03)?",
+        "q": "In the Explore tab, when processing 'blocked', the model attends to 'firewall' (0.45) and 'malicious' (0.28). Why not 'the' (0.03)?",
         "a": "'the' carries almost no semantic information — it's a function word. 'firewall' tells the model <strong>who</strong> blocked and 'malicious' tells it <strong>what kind</strong> of thing was blocked. Attention learns to focus on <strong>informative tokens</strong> and ignore noise.",
     },
     7: {
-        "q": "The context vector for 'blocked' is a weighted mix of all word vectors. What would happen if all attention weights were equal (0.20 each)?",
+        "q": "In the Explore tab, the context vector for 'blocked' is a weighted mix of all word vectors. What would happen if all attention weights were equal (0.20 each)?",
         "a": "The context vector would be a simple <strong>average</strong> of all word vectors — treating 'the' as equally important as 'firewall'. This is what bag-of-words models do. Attention is better because it <strong>selectively focuses</strong> on the relevant words.",
     },
     8: {
-        "q": "Drag the slider from 0 to 1 trillion tokens. The architecture never changes — only the values of the weights. So where do reasoning, world knowledge, and coding ability actually come from?",
+        "q": "In the Explore tab, drag the slider from 0 to 1 trillion tokens. The architecture never changes — only the values of the weights. So where do reasoning, world knowledge, and coding ability actually come from?",
         "a": "They are <strong>emergent side-effects</strong> of getting good at one thing: predicting the next token. To predict the next token <em>well</em>, the model has to implicitly know who Marie Curie was, what TCP port 443 is for, and how a SQL injection works — because all of those facts shaped the next-token statistics in the training corpus. Nothing was explicitly programmed in. The weights just slowly absorbed the structure of human language across trillions of nudges.",
     },
     9: {

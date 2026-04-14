@@ -185,43 +185,43 @@ QUIZ = [
 
 CHALLENGES = {
     0: {
-        "q": "Run 'New digit' 10 times. Do you ever get one that's hard to recognize even as a human?",
+        "q": "In the Explore tab, hit 'New digit' 10 times. Do you ever get one that's hard to recognize even as a human?",
         "a": "Some 8x8 images are genuinely ambiguous — even you can't tell if it's a 1 or a 7. If a human struggles, a model will too. This is called <strong>irreducible error</strong> — the noise floor no algorithm can beat.",
     },
     1: {
-        "q": "Edit the grid to draw a 3. Then change just ONE pixel. Does it still look like a 3?",
+        "q": "In the Explore tab, edit the grid to draw a 3. Then change just ONE pixel. Does it still look like a 3?",
         "a": "A single pixel change barely matters — the model looks at the whole pattern. This is why ML is robust to small noise but vulnerable to <strong>adversarial examples</strong> that change many pixels in a coordinated way.",
     },
     2: {
-        "q": "Find the pair with the highest similarity. Now find the pair with the lowest. Why?",
+        "q": "In the Explore tab, find the digit pair with the highest similarity. Now find the pair with the lowest. Why?",
         "a": "Digits that share structural elements (like 3 and 8 — both have curves) are hard to separate. Digits that are structurally different (like 0 and 1) are easy. A model's <strong>confusion matrix</strong> mirrors this.",
     },
     3: {
-        "q": "Try entering index 1797. What happens? Why?",
+        "q": "In the Explore tab, try entering index 1797. What happens? Why?",
         "a": "<code>Index out of range</code> — there are only 1,797 samples (indices 0–1796). In production, your model only knows what it was trained on. Data outside that range is <strong>out of distribution</strong>.",
     },
     4: {
-        "q": "Drag the slider to max. How many pixels survive? Could a model still work with just those?",
+        "q": "In the Explore tab, drag the variance slider to max. How many pixels survive? Could a model still work with just those?",
         "a": "At high thresholds, only ~10-15 center pixels remain — and yes, a model can still classify reasonably well. This is <strong>dimensionality reduction</strong>: fewer features can mean faster training and less overfitting.",
     },
     5: {
-        "q": "Remove 95% of digit 5. What would happen if a model just guessed the most common digit every time?",
+        "q": "In the Explore tab, remove 95% of digit 5. What would happen if a model just guessed the most common digit every time?",
         "a": "With ~9 samples of digit 5 vs ~1,600 of everything else, a model that <strong>never predicts 5</strong> gets ~99.5% accuracy. This sets up the accuracy trap in Step 6.",
     },
     6: {
-        "q": "At what removal % does recall drop below 50% while accuracy stays above 90%?",
+        "q": "In the Explore tab, at what removal % does recall drop below 50% while accuracy stays above 90%?",
         "a": "The trap springs around 70-80% removal. Accuracy barely moves because the majority class dominates. <strong>Recall collapses</strong> because the model stops finding the rare class. A malware detector with 99% accuracy but 10% recall misses 9 out of 10 threats.",
     },
     7: {
-        "q": "Click 'Rank all pairs.' Which pair is most similar? Go back to Step 2 — do the results agree?",
+        "q": "In the Explore tab, click 'Rank all pairs.' Which pair is most similar? Go back to Step 3 — do the results agree?",
         "a": "Yes — the most similar prototypes match the hardest-to-distinguish pairs. Prototypes are what the model learns. When prototypes overlap, the <strong>decision boundary</strong> becomes thin and error-prone.",
     },
     8: {
-        "q": "Set correlation to 0.5 and click 'Show on digit' several times. Can you still recognize the digits?",
+        "q": "In the Explore tab, set the correlation threshold to 0.5 and click 'Show on digit' several times. Can you still recognize the digits?",
         "a": "Usually yes — center pixels carry almost all the signal. This is <strong>feature selection</strong>: drop noisy columns (like TTL or source MAC) and keep the signal (entropy, byte distribution, timing patterns).",
     },
     9: {
-        "q": "Try to get 5/5. If you can't, what would make it easier?",
+        "q": "In the Explore tab, try to get 5/5 in the guessing game. If you can't, what would make it easier?",
         "a": "Raw numbers are nearly impossible for humans but trivial for algorithms. The 8x8 grid helps you, but the model never sees it. This is why <strong>feature engineering</strong> matters: presenting data in a form that makes patterns easier to find.",
     },
 }

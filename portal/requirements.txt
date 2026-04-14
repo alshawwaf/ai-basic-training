@@ -14,5 +14,6 @@ seaborn
 tensorflow-cpu
 
 # GenAI / NLP
+torch
 transformers
 sentence-transformers

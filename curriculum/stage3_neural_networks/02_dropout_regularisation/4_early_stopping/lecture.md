@@ -1,7 +1,5 @@
 # Early Stopping
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How `EarlyStopping` monitors validation loss and stops training automatically

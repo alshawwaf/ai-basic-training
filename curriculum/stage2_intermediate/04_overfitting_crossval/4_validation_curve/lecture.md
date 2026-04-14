@@ -1,7 +1,5 @@
 # Validation Curve
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How `validation_curve()` automates a cross-validated parameter sweep

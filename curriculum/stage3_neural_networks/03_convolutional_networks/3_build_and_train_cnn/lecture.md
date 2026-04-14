@@ -1,7 +1,5 @@
 # Build and Train a CNN
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How to assemble a full CNN from the building blocks covered in Exercise 2

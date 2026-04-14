@@ -1,7 +1,5 @@
 # Conv2D and MaxPooling2D
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How `Conv2D(filters, kernel_size)` slides a filter window over an image

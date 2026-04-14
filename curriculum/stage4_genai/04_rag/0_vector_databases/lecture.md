@@ -1,6 +1,5 @@
 # Vector Databases: Why They Exist and How They Work
 
-> Read this guide fully before moving to the chunking step.
 
 ---
 

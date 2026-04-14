@@ -1,7 +1,5 @@
 # Why Dense Fails on Images
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - Why flattening an image to a 1D vector destroys spatial structure

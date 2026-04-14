@@ -1,6 +1,14 @@
 # Visualising Your Data
 
-> Read this guide fully before opening the lab.
+---
+
+## What You Will Learn
+
+- Why visual inspection catches problems that statistics miss
+- How to reserve a grid of panels with `plt.subplots()`
+- How to display numeric arrays as images with `ax.imshow()`
+- How to add titles and labels, and control layout with `plt.tight_layout()`
+- How to build a reusable function that plots sample grids
 
 ---
 

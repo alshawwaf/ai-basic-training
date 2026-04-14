@@ -1,7 +1,5 @@
 # Demonstrate Overfitting
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How too much model capacity relative to training data causes overfitting

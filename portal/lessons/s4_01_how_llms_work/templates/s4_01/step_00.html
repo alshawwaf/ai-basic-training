@@ -6,15 +6,22 @@
     <blockquote class="llm-quote"><em>Given the words so far, predict what word comes next</em> — one token at a time.</blockquote>
     <p>Everything else — reasoning, coding, summarisation — <strong>emerges</strong> from running this loop billions of times on trillions of words.</p>
 
-    <div class="controls">
-        <input type="text" id="prompt-input" placeholder="Type a sentence..." value="The attacker used a SQL injection to"
+    <div class="prompt-input-wrap">
+        <label class="prompt-input-label" for="prompt-input">&#9998; Type or edit a sentence below — predictions update live</label>
+        <input type="text" id="prompt-input" class="prompt-input-field" placeholder="Try: The attacker used a SQL injection to" value="The attacker used a SQL injection to"
                oninput="predict()">
     </div>
 
     <div class="token-flow" id="token-flow"></div>
 
     <div class="pred-block">
-        <div class="pred-label">Predicted next tokens</div>
+        <div class="pred-label">
+            Predicted next tokens
+            <button class="pred-info-btn" onclick="document.getElementById('pred-info').classList.toggle('hidden')" title="How does this work?">&#9432;</button>
+        </div>
+        <div id="pred-info" class="pred-info-panel hidden">
+            This is a <strong>toy demo</strong>, not a real LLM. Predictions come from a small hardcoded dictionary of ~12 keyword patterns (e.g. "injection to" → exfiltrate, bypass…) with illustrative confidence scores. A real LLM like GPT-4 has billions of parameters trained on trillions of tokens — it doesn't use keyword matching. The point here is to show the <em>concept</em>: given words so far, predict what comes next.
+        </div>
         <div id="predictions"></div>
     </div>
 

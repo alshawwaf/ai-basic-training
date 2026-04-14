@@ -1,7 +1,5 @@
 # From NumPy to Keras
 
-> Read this guide fully before opening the lab.
-
 ## What You Will Learn
 
 - How a Keras `Dense` layer directly mirrors the NumPy matrix multiply you did in the foundations

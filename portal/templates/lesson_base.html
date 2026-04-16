@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css?v=42">
+    <link rel="stylesheet" href="/static/style.css?v=43">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <!-- Prism.js for syntax highlighting (code modal) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
@@ -311,14 +311,9 @@
                     progress[lessonId].push(step);
                     localStorage.setItem('portalProgress', JSON.stringify(progress));
                 }
-                // Per-lesson "most recently viewed step" — used by the lesson
-                // index route to redirect a returning learner straight back
-                // to the step they were last on. Updated on every step view,
-                // unlike portalProgress which only records first visits.
                 const lastBy = JSON.parse(localStorage.getItem('portalLastStep') || '{}');
                 lastBy[lessonId] = step;
                 localStorage.setItem('portalLastStep', JSON.stringify(lastBy));
-                // Save last visited for "Continue" feature
                 localStorage.setItem('portalLastVisited', JSON.stringify({
                     lessonId: lessonId,
                     step: step,
@@ -327,15 +322,15 @@
                 }));
             } catch(e) {}
             markStepVisited(step);
+            _apiPost('/api/user/progress', {
+                lessonId: lessonId, step: step, title: '{{ lesson_title }}'
+            });
         }
 
         {% if not is_quiz %}
         markStepVisitedPortal({{ current }});
         applyVisitedSteps();
         {% else %}
-        // On the quiz page we still want the "last visited" marker so that
-        // the home page's "Continue" handle points back here, but we don't
-        // mark a step number as visited (the quiz isn't a step).
         try {
             localStorage.setItem('portalLastVisited', JSON.stringify({
                 lessonId: lessonId,
@@ -344,6 +339,9 @@
                 ts: Date.now()
             }));
         } catch(e) {}
+        _apiPost('/api/user/progress', {
+            lessonId: lessonId, step: 'quiz', title: '{{ lesson_title }}'
+        });
         {% endif %}
 
         {% if not is_quiz %}

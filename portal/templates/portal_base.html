@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css?v=42">
+    <link rel="stylesheet" href="/static/style.css?v=43">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <script>if(localStorage.getItem('portalTheme')!=='light')document.documentElement.setAttribute('data-theme','dark');</script>
 </head>
@@ -17,6 +17,7 @@
     <nav class="top-nav">
         <a href="/" class="nav-brand">{{ brand_logo(38) }}</a>
         <div class="top-controls">
+            <span class="user-pill" id="userPill" style="display:none" onclick="showUserMenu(event)" title="Signed in"></span>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span class="icon-sun">&#9728;</span>
                 <span class="icon-moon">&#9790;</span>
@@ -57,6 +58,19 @@
         <div class="confirm-modal-actions">
             <button class="confirm-modal-btn confirm-modal-cancel" id="confirmModalCancel" type="button" onclick="hideConfirmModal(false)">Cancel</button>
             <button class="confirm-modal-btn confirm-modal-ok" id="confirmModalOk" type="button" onclick="hideConfirmModal(true)">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Welcome modal — first-visit identity -->
+    <div class="confirm-modal-overlay" id="welcomeOverlay"></div>
+    <div class="confirm-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" style="max-width:380px">
+        <h2 class="confirm-modal-title" id="welcomeTitle">Welcome</h2>
+        <p class="confirm-modal-body">Choose a display name to track your progress across sessions.</p>
+        <input type="text" id="welcomeName" class="guess-input" placeholder="Your name" maxlength="40"
+               style="width:100%; margin:8px 0 4px; box-sizing:border-box;">
+        <div id="welcomeError" style="color:var(--red); font-size:13px; min-height:20px; margin-bottom:4px;"></div>
+        <div class="confirm-modal-actions">
+            <button class="confirm-modal-btn confirm-modal-ok" id="welcomeSubmit" type="button" onclick="submitWelcome()">Start</button>
         </div>
     </div>
 

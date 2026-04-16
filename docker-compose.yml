@@ -5,10 +5,12 @@ services:
       - "5545:5000"
     environment:
       - MPLBACKEND=Agg
+      - PORTAL_DB_PATH=/data/portal.db
     volumes:
       - ./portal/static:/app/portal/static
       - ./portal/templates:/app/portal/templates
       - ./curriculum:/app/curriculum
+      - portal-data:/data
     restart: unless-stopped
 
     # ── Security hardening ──────────────────────────────────────────────
@@ -29,3 +31,6 @@ services:
         reservations:
           cpus: "0.5"
           memory: 512M
+
+volumes:
+  portal-data:

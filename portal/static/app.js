@@ -20,6 +20,139 @@ function toggleTheme() {
     }
 }
 
+/* ── User identity & server-side progress ──────────────────────────────── */
+
+function _userToken() { return localStorage.getItem('portalUserToken'); }
+function _userName() { return localStorage.getItem('portalUserName'); }
+
+function _authHeaders() {
+    const t = _userToken();
+    return t ? { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' } : {};
+}
+
+async function _apiPost(url, body) {
+    const t = _userToken();
+    if (!t) return null;
+    try {
+        const res = await fetch(url, {
+            method: 'POST', headers: _authHeaders(), body: JSON.stringify(body)
+        });
+        return res.ok ? await res.json() : null;
+    } catch (e) { return null; }
+}
+
+async function _apiDelete(url, body) {
+    const t = _userToken();
+    if (!t) return null;
+    try {
+        const res = await fetch(url, {
+            method: 'DELETE', headers: _authHeaders(), body: JSON.stringify(body)
+        });
+        return res.ok ? await res.json() : null;
+    } catch (e) { return null; }
+}
+
+let _serverState = null;
+
+async function _loadServerState() {
+    const t = _userToken();
+    if (!t) return null;
+    try {
+        const res = await fetch('/api/user/state', { headers: _authHeaders() });
+        if (!res.ok) {
+            if (res.status === 401) {
+                localStorage.removeItem('portalUserToken');
+                localStorage.removeItem('portalUserName');
+                _showWelcome();
+            }
+            return null;
+        }
+        _serverState = await res.json();
+        _syncServerToLocal(_serverState);
+        return _serverState;
+    } catch (e) { return null; }
+}
+
+function _syncServerToLocal(state) {
+    if (state.progress) localStorage.setItem('portalProgress', JSON.stringify(state.progress));
+    if (state.bookmarks) localStorage.setItem('portalBookmarks', JSON.stringify(state.bookmarks));
+    if (state.lastVisited) localStorage.setItem('portalLastVisited', JSON.stringify(state.lastVisited));
+    if (state.lastStep) localStorage.setItem('portalLastStep', JSON.stringify(state.lastStep));
+}
+
+function _showWelcome() {
+    const overlay = document.getElementById('welcomeOverlay');
+    const modal = document.getElementById('welcomeModal');
+    if (overlay) overlay.classList.add('open');
+    if (modal) modal.classList.add('open');
+    const inp = document.getElementById('welcomeName');
+    if (inp) setTimeout(() => inp.focus(), 100);
+}
+
+function _hideWelcome() {
+    const overlay = document.getElementById('welcomeOverlay');
+    const modal = document.getElementById('welcomeModal');
+    if (overlay) overlay.classList.remove('open');
+    if (modal) modal.classList.remove('open');
+}
+
+async function submitWelcome() {
+    const inp = document.getElementById('welcomeName');
+    const errEl = document.getElementById('welcomeError');
+    const name = (inp ? inp.value : '').trim();
+    if (!name) { errEl.textContent = 'Please enter a name.'; return; }
+    errEl.textContent = '';
+    try {
+        const res = await fetch('/api/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            errEl.textContent = data.error || 'Something went wrong.';
+            return;
+        }
+        localStorage.setItem('portalUserToken', data.token);
+        localStorage.setItem('portalUserName', data.name);
+        _hideWelcome();
+        _updateUserPill();
+        _loadServerState();
+    } catch (e) {
+        errEl.textContent = 'Network error — please try again.';
+    }
+}
+
+function _updateUserPill() {
+    const pill = document.getElementById('userPill');
+    const name = _userName();
+    if (pill && name) {
+        pill.textContent = name;
+        pill.style.display = '';
+    }
+}
+
+function showUserMenu(e) {
+    if (e) e.stopPropagation();
+}
+
+(async function initUser() {
+    const token = _userToken();
+    if (!token) {
+        _showWelcome();
+    } else {
+        _updateUserPill();
+        await _loadServerState();
+        if (typeof renderCommandMenu === 'function') renderCommandMenu();
+        if (typeof applyVisitedSteps === 'function') applyVisitedSteps();
+    }
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('welcomeName');
+    if (inp) inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitWelcome(); });
+});
+
 /* ── Command menu (logo click) ──────────────────────────────────────────── */
 
 function toggleCommandMenu(e) {
@@ -180,13 +313,16 @@ function addBookmark() {
     if (bookmarks.some(b => b.lessonId === lessonId && b.step === step)) return;
     bookmarks.push({ lessonId, step, title, ts: Date.now() });
     localStorage.setItem('portalBookmarks', JSON.stringify(bookmarks));
+    _apiPost('/api/user/bookmark', { lessonId, step, title });
     renderCommandMenu();
 }
 
 function removeBookmark(index) {
     const bookmarks = JSON.parse(localStorage.getItem('portalBookmarks') || '[]');
+    const removed = bookmarks[index];
     bookmarks.splice(index, 1);
     localStorage.setItem('portalBookmarks', JSON.stringify(bookmarks));
+    if (removed) _apiDelete('/api/user/bookmark', { lessonId: removed.lessonId, step: removed.step });
     renderCommandMenu();
 }
 
@@ -203,6 +339,7 @@ function resetAllProgress() {
     localStorage.removeItem('portalLastVisited');
     localStorage.removeItem('portalBookmarks');
     localStorage.removeItem('visitedSteps');
+    _apiPost('/api/user/reset', { scope: 'all' });
     closeCommandMenu();
     window.location.reload();
 }
@@ -311,9 +448,8 @@ async function resetLessonProgress(lessonId, event) {
         }
     } catch (e) {}
 
-    // visitedSteps is a flat per-page cache (single-lesson scope), so it's
-    // always safe to drop when resetting whichever lesson the user is on.
     localStorage.removeItem('visitedSteps');
+    _apiPost('/api/user/reset', { scope: 'lesson', lessonId });
 
     window.location.reload();
 }
@@ -361,6 +497,8 @@ async function resetStageProgress(stageTitle, lessonIdsCsv, event) {
         }
     } catch (e) {}
 
+    _apiPost('/api/user/reset', { scope: 'stage', lessonIds });
+
     window.location.reload();
 }
 
@@ -384,6 +522,7 @@ async function resetAllProgressFromHome(event) {
     localStorage.removeItem('portalLastVisited');
     localStorage.removeItem('portalBookmarks');
     localStorage.removeItem('visitedSteps');
+    _apiPost('/api/user/reset', { scope: 'all' });
     window.location.reload();
 }
 

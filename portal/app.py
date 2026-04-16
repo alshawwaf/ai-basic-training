@@ -29,6 +29,7 @@ from flask import (
 from config import STAGES, get_all_lessons, get_lesson
 from runner import run_script, run_script_stream
 from site_settings import ALLOWED_HOME_VIEWS, get_home_view, set_home_view
+import users as user_db
 
 warnings.filterwarnings("ignore")
 
@@ -493,6 +494,116 @@ def api_pdf_guides():
     return jsonify({"guides": out})
 
 
+# ── User progress API ────────────────────────────────────────────────────────
+
+def _get_token():
+    """Extract user token from Authorization header."""
+    auth = request.headers.get("Authorization", "")
+    if auth.startswith("Bearer "):
+        return auth[7:]
+    return None
+
+
+def _require_token():
+    """Return (token, user) or abort 401."""
+    token = _get_token()
+    if not token:
+        abort(401, "Missing token")
+    u = user_db.get_user(token)
+    if not u:
+        abort(401, "Invalid token")
+    return token
+
+
+@app.route("/api/user/register", methods=["POST"])
+def api_user_register():
+    data = request.get_json(silent=True) or {}
+    name = (data.get("name") or "").strip()
+    if not name or len(name) > 40:
+        return jsonify({"error": "Name must be 1-40 characters"}), 400
+    if user_db.name_taken(name):
+        return jsonify({"error": "Name already taken"}), 409
+    token = user_db.create_user(name)
+    return jsonify({"token": token, "name": name})
+
+
+@app.route("/api/user/login", methods=["POST"])
+def api_user_login():
+    data = request.get_json(silent=True) or {}
+    token = (data.get("token") or "").strip()
+    if not token:
+        return jsonify({"error": "Missing token"}), 400
+    u = user_db.get_user(token)
+    if not u:
+        return jsonify({"error": "Invalid token"}), 401
+    return jsonify({"token": u["token"], "name": u["name"]})
+
+
+@app.route("/api/user/state")
+def api_user_state():
+    token = _require_token()
+    return jsonify(user_db.get_full_state(token))
+
+
+@app.route("/api/user/progress", methods=["POST"])
+def api_user_progress():
+    token = _require_token()
+    data = request.get_json(silent=True) or {}
+    lesson_id = data.get("lessonId", "")
+    step = data.get("step")
+    title = data.get("title", "")
+    if not lesson_id or step is None:
+        return jsonify({"error": "Missing lessonId or step"}), 400
+    if isinstance(step, int):
+        user_db.mark_step(token, lesson_id, step)
+        user_db.set_last_step(token, lesson_id, step)
+    user_db.set_last_visited(token, lesson_id, step, title)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/user/bookmark", methods=["POST"])
+def api_user_bookmark_add():
+    token = _require_token()
+    data = request.get_json(silent=True) or {}
+    lesson_id = data.get("lessonId", "")
+    step = data.get("step")
+    title = data.get("title", "")
+    if not lesson_id or step is None:
+        return jsonify({"error": "Missing lessonId or step"}), 400
+    user_db.add_bookmark(token, lesson_id, int(step), title)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/user/bookmark", methods=["DELETE"])
+def api_user_bookmark_remove():
+    token = _require_token()
+    data = request.get_json(silent=True) or {}
+    lesson_id = data.get("lessonId", "")
+    step = data.get("step")
+    if not lesson_id or step is None:
+        return jsonify({"error": "Missing lessonId or step"}), 400
+    user_db.remove_bookmark(token, lesson_id, int(step))
+    return jsonify({"ok": True})
+
+
+@app.route("/api/user/reset", methods=["POST"])
+def api_user_reset():
+    token = _require_token()
+    data = request.get_json(silent=True) or {}
+    scope = data.get("scope", "all")
+    if scope == "lesson":
+        lid = data.get("lessonId", "")
+        if lid:
+            user_db.reset_lesson(token, lid)
+    elif scope == "stage":
+        lids = data.get("lessonIds", [])
+        if lids:
+            user_db.reset_stage(token, lids)
+    else:
+        user_db.reset_all(token)
+    return jsonify({"ok": True})
+
+
 # ── Script execution API ─────────────────────────────────────────────────────
 
 @app.route("/api/run", methods=["POST"])
@@ -540,6 +651,8 @@ def api_run_stream():
 
 
 # ── Main ────────────────────────────────────────────────────────────────────
+
+user_db.init_db()
 
 if __name__ == "__main__":
     print()

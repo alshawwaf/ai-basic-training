@@ -5110,6 +5110,28 @@ body.lesson-page .controls .guess-input {
     align-items: center;
     gap: 12px;
 }
+.user-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: default;
+    white-space: nowrap;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+[data-theme="dark"] .user-pill {
+    background: rgba(129,140,248,0.08);
+    border-color: rgba(129,140,248,0.18);
+    color: #a5b4fc;
+}
 
 .theme-toggle {
     width: 36px;

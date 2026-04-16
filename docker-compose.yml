@@ -6,6 +6,7 @@ services:
     environment:
       - MPLBACKEND=Agg
       - PORTAL_DB_PATH=/data/portal.db
+      - PORTAL_SETTINGS_PATH=/data/site_settings.json
     volumes:
       - ./portal/static:/app/portal/static
       - ./portal/templates:/app/portal/templates

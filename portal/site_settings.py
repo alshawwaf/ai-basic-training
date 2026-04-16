@@ -16,7 +16,10 @@ import json
 import os
 from threading import Lock
 
-_SETTINGS_PATH = os.path.join(os.path.dirname(__file__), "site_settings.json")
+_SETTINGS_PATH = os.environ.get(
+    "PORTAL_SETTINGS_PATH",
+    os.path.join(os.path.dirname(__file__), "site_settings.json"),
+)
 _LOCK = Lock()
 
 ALLOWED_HOME_VIEWS = ("cards", "neuron")

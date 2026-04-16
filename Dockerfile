@@ -35,6 +35,9 @@ COPY --chown=ninja:ninja . /app
 # Temp directory for script execution (writable by ninja)
 RUN mkdir -p /tmp/runner && chown ninja:ninja /tmp/runner
 
+# Data directory for SQLite user progress DB (mounted as named volume)
+RUN mkdir -p /data && chown ninja:ninja /data
+
 # Switch to non-root user
 USER ninja
 

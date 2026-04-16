@@ -214,6 +214,28 @@ def admin_console():
     )
 
 
+@app.route("/admin/analytics")
+def admin_analytics():
+    """Learner analytics dashboard. Login-gated."""
+    redirect_response = _require_admin()
+    if redirect_response is not None:
+        return redirect_response
+    users = user_db.get_all_users()
+    user_details = []
+    for u in users:
+        summary = user_db.get_user_summary(u["token"])
+        user_details.append({**u, **summary})
+    stats = user_db.get_cohort_stats()
+    activity = user_db.get_recent_activity(100)
+    return render_template(
+        "admin_analytics.html",
+        users=user_details,
+        stats=stats,
+        activity=activity,
+        stages=STAGES,
+    )
+
+
 @app.route("/admin/settings", methods=["POST"])
 def admin_update_settings():
     """Persist instructor-only display settings (currently just home_view)."""

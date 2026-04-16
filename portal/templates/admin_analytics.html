@@ -1,0 +1,156 @@
+{% extends "portal_base.html" %}
+{% block title %}Learner Analytics · Admin · AI Ninja Program{% endblock %}
+
+{% block body %}
+<div class="admin-page">
+    <div class="admin-logout-row">
+        <a class="admin-btn" href="{{ url_for('admin_console') }}">&larr; Admin Console</a>
+    </div>
+
+    <header class="admin-header">
+        <div class="admin-eyebrow">Internal · Instructor only</div>
+        <h1>Learner Analytics</h1>
+        <p class="admin-tagline">Per-user progress, engagement, and recent activity across the cohort.</p>
+    </header>
+
+    <!-- ── Cohort overview ─────────────────────────────────────────────── -->
+    <section class="admin-section">
+        <div class="admin-section-head">
+            <h2>Cohort Overview</h2>
+        </div>
+        <div class="analytics-stats-grid">
+            <div class="analytics-stat">
+                <div class="analytics-stat-value">{{ stats.total_users }}</div>
+                <div class="analytics-stat-label">Registered users</div>
+            </div>
+            <div class="analytics-stat">
+                <div class="analytics-stat-value">{{ stats.active_today }}</div>
+                <div class="analytics-stat-label">Active today</div>
+            </div>
+            <div class="analytics-stat">
+                <div class="analytics-stat-value">{{ stats.active_7d }}</div>
+                <div class="analytics-stat-label">Active (7 days)</div>
+            </div>
+            <div class="analytics-stat">
+                <div class="analytics-stat-value">{{ stats.total_step_views }}</div>
+                <div class="analytics-stat-label">Total step views</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Lesson engagement ───────────────────────────────────────────── -->
+    {% if stats.lesson_engagement %}
+    <section class="admin-section">
+        <div class="admin-section-head">
+            <h2>Lesson Engagement</h2>
+            <p>Number of unique users who visited at least one step in each lesson.</p>
+        </div>
+        <div class="analytics-table-wrap">
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Lesson</th>
+                        <th>Users</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in stats.lesson_engagement %}
+                    <tr>
+                        <td class="analytics-cell-id">{{ row.lesson_id }}</td>
+                        <td>{{ row.users }}</td>
+                        <td class="analytics-cell-bar">
+                            <div class="analytics-bar" style="width: {{ (row.users / stats.total_users * 100) if stats.total_users > 0 else 0 }}%"></div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- ── Per-user progress ───────────────────────────────────────────── -->
+    <section class="admin-section">
+        <div class="admin-section-head">
+            <h2>User Progress</h2>
+            <p>{{ users | length }} registered user{{ 's' if users | length != 1 else '' }}.</p>
+        </div>
+        {% if users %}
+        <div class="analytics-table-wrap">
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Joined</th>
+                        <th>Lessons</th>
+                        <th>Steps</th>
+                        <th>Last active</th>
+                        <th>Last visited</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td><strong>{{ u.name }}</strong></td>
+                        <td class="analytics-cell-dim">{{ u.created[:10] }}</td>
+                        <td>{{ u.lessons_started }}</td>
+                        <td>{{ u.total_steps }}</td>
+                        <td class="analytics-cell-dim">{{ u.last_active[:16] if u.last_active else '—' }}</td>
+                        <td class="analytics-cell-dim">
+                            {% if u.last_visited %}
+                                {{ u.last_visited.title }} · step {{ u.last_visited.step }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="analytics-empty">No users have registered yet.</p>
+        {% endif %}
+    </section>
+
+    <!-- ── Recent activity feed ────────────────────────────────────────── -->
+    <section class="admin-section">
+        <div class="admin-section-head">
+            <h2>Recent Activity</h2>
+            <p>Last 100 step visits across all users.</p>
+        </div>
+        {% if activity %}
+        <div class="analytics-table-wrap analytics-feed-wrap">
+            <table class="analytics-table analytics-feed">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>User</th>
+                        <th>Lesson</th>
+                        <th>Step</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in activity %}
+                    <tr>
+                        <td class="analytics-cell-dim">{{ a.visited_at[:16] }}</td>
+                        <td><strong>{{ a.name }}</strong></td>
+                        <td class="analytics-cell-id">{{ a.lesson_id }}</td>
+                        <td>{{ a.step }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="analytics-empty">No activity yet.</p>
+        {% endif %}
+    </section>
+
+    <footer class="admin-footnote">
+        <span class="admin-footnote-icon" aria-hidden="true">&#128202;</span>
+        Data from server-side SQLite. Refresh to update.
+    </footer>
+</div>
+{% endblock %}

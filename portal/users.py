@@ -236,3 +236,75 @@ def get_full_state(token: str) -> dict:
         "lastVisited": get_last_visited(token),
         "lastStep": get_last_steps(token),
     }
+
+
+# ── Admin analytics ─────────────────────────────────────────────────────────
+
+def get_all_users() -> list:
+    with _db() as conn:
+        rows = conn.execute(
+            "SELECT token, name, created FROM users ORDER BY created DESC"
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_user_summary(token: str) -> dict:
+    with _db() as conn:
+        lessons_started = conn.execute(
+            "SELECT COUNT(DISTINCT lesson_id) FROM progress WHERE token = ?",
+            (token,),
+        ).fetchone()[0]
+        total_steps = conn.execute(
+            "SELECT COUNT(*) FROM progress WHERE token = ?", (token,),
+        ).fetchone()[0]
+        last_active = conn.execute(
+            "SELECT MAX(visited_at) FROM progress WHERE token = ?", (token,),
+        ).fetchone()[0]
+        lv = conn.execute(
+            "SELECT lesson_id, step, title FROM last_visited WHERE token = ?",
+            (token,),
+        ).fetchone()
+    return {
+        "lessons_started": lessons_started,
+        "total_steps": total_steps,
+        "last_active": last_active,
+        "last_visited": dict(lv) if lv else None,
+    }
+
+
+def get_recent_activity(limit: int = 50) -> list:
+    with _db() as conn:
+        rows = conn.execute(
+            """SELECT u.name, p.lesson_id, p.step, p.visited_at
+               FROM progress p JOIN users u ON u.token = p.token
+               ORDER BY p.visited_at DESC LIMIT ?""",
+            (limit,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_cohort_stats() -> dict:
+    with _db() as conn:
+        total_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+        active_today = conn.execute(
+            """SELECT COUNT(DISTINCT token) FROM progress
+               WHERE date(visited_at) = date('now')"""
+        ).fetchone()[0]
+        active_7d = conn.execute(
+            """SELECT COUNT(DISTINCT token) FROM progress
+               WHERE visited_at >= datetime('now', '-7 days')"""
+        ).fetchone()[0]
+        total_step_views = conn.execute(
+            "SELECT COUNT(*) FROM progress"
+        ).fetchone()[0]
+        lesson_counts = conn.execute(
+            """SELECT lesson_id, COUNT(DISTINCT token) as users
+               FROM progress GROUP BY lesson_id ORDER BY lesson_id"""
+        ).fetchall()
+    return {
+        "total_users": total_users,
+        "active_today": active_today,
+        "active_7d": active_7d,
+        "total_step_views": total_step_views,
+        "lesson_engagement": [dict(r) for r in lesson_counts],
+    }

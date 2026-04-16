@@ -674,7 +674,11 @@ def api_run_stream():
 
 # ── Main ────────────────────────────────────────────────────────────────────
 
-user_db.init_db()
+try:
+    user_db.init_db()
+except Exception as e:
+    print(f"  [!] Could not initialise user DB: {e}")
+    print("      Set PORTAL_DB_PATH to a writable location.")
 
 if __name__ == "__main__":
     print()

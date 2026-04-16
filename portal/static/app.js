@@ -81,12 +81,17 @@ function _syncServerToLocal(state) {
 }
 
 function _showWelcome() {
+    if (window.location.pathname.startsWith('/admin')) return;
     const overlay = document.getElementById('welcomeOverlay');
     const modal = document.getElementById('welcomeModal');
     if (overlay) overlay.classList.add('open');
     if (modal) modal.classList.add('open');
     const inp = document.getElementById('welcomeName');
     if (inp) setTimeout(() => inp.focus(), 100);
+}
+
+function skipWelcome() {
+    _hideWelcome();
 }
 
 function _hideWelcome() {

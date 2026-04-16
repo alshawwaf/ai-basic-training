@@ -7,6 +7,8 @@ services:
       - MPLBACKEND=Agg
       - PORTAL_DB_PATH=/data/portal.db
       - PORTAL_SETTINGS_PATH=/data/site_settings.json
+      - PORTAL_ADMIN_PASSWORD
+      - PORTAL_SECRET_KEY
     volumes:
       - ./portal/static:/app/portal/static
       - ./portal/templates:/app/portal/templates

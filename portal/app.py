@@ -44,19 +44,39 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 
+def _frame_ancestors() -> str:
+    """Who may iframe the portal (CSP frame-ancestors). PORTAL_FRAME_ANCESTORS overrides; otherwise
+    auto-derive from the request host — 'self' plus the parent domain, so a sibling app (e.g. a
+    dev-hub at hub.<domain>) can embed the portal while every other origin is refused. Falls back to
+    'self' for a bare host (e.g. localhost). Anti-clickjacking stays on — this scopes WHO may frame."""
+    explicit = os.environ.get("PORTAL_FRAME_ANCESTORS", "").strip()
+    if explicit:
+        return explicit
+    host = (request.host or "").split(":")[0]
+    parts = [p for p in host.split(".") if p]
+    if len(parts) >= 3:                      # learn.ai.alshawwaf.ca -> 'self' https://*.ai.alshawwaf.ca
+        return f"'self' https://*.{'.'.join(parts[1:])}"
+    return "'self'"
+
+
 @app.after_request
 def add_security_headers(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    fa = _frame_ancestors()
+    # X-Frame-Options can't express an allowlist, so only send the blanket DENY for a full lockdown;
+    # otherwise the CSP frame-ancestors directive governs who may frame.
+    if fa == "'none'":
+        response.headers["X-Frame-Options"] = "DENY"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
         "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
         "font-src 'self' https://fonts.gstatic.com; "
         "img-src 'self' data:; "
-        "connect-src 'self'"
+        "connect-src 'self'; "
+        f"frame-ancestors {fa}"
     )
     return response
 

@@ -34,7 +34,7 @@ It is also the technical core of the **AI Ninja Program**, a selective cohort-ba
 | **4 capstone projects** | End-of-stage projects with real security datasets: phishing classifier, intrusion detector, packet classifier, security RAG assistant. |
 | **Cybersecurity framing** | Every concept is introduced through a security scenario. You learn logistic regression by building a phishing detector, not by classifying flowers. |
 | **Multi-provider LLM support** | Stage 4 works with Claude, OpenAI, Gemini, or local Ollama — pick whichever key you have. |
-| **Facilitator-ready** | 22 per-session delivery guides, stage-gate assessments, and a customer-demo kit for running the program as a cohort. |
+| **Facilitator-ready** | 21 per-session delivery guides (plus program-ops guides for kickoff, positioning, and objection handling), stage-gate assessments, and a customer-demo kit for running the program as a cohort. |
 
 ---
 
@@ -46,7 +46,7 @@ cd ai-basic-training
 docker-compose up --build
 ```
 
-Then open **http://localhost:5000**.
+Then open **http://localhost:5545** (Compose publishes the container's port 5000 on host port 5545).
 
 <details>
 <summary><strong>No Docker? Run it with a venv instead.</strong></summary>
@@ -54,10 +54,14 @@ Then open **http://localhost:5000**.
 ```bash
 python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r portal/requirements.txt
-python -m portal.app
+cd portal && python app.py
 ```
 
+Run directly (no venv) works too — the app binds **http://localhost:5000** in this mode.
+
 </details>
+
+> **Admin console:** the portal serves a login-gated admin view at `/admin`. The default password is `ninja` — set `PORTAL_ADMIN_PASSWORD` (and `PORTAL_SECRET_KEY`, so sessions survive a restart) before exposing it to anyone.
 
 ---
 

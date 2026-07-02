@@ -2,6 +2,8 @@
 
 > A strategic plan for building a selective AI enablement program for security engineers and architects across the Americas.
 
+> **Status (kept for reference):** This is the original planning document. Most of its Prioritised Backlog (Section 8) has since shipped — Stage 0 positioning (`ops/stage0_positioning/`), per-stage assessments (`ops/assessments/`), the real Stage-4 RAG corpus (31 docs in `curriculum/stage4_genai/data/`), the customer demo kit (`ops/demo_kit/`), 21 facilitator guides (`ops/facilitator_guides/`), and the certificate template (`ops/program_ops/certificates.md`). The program also grew a Stage 5 (Check Point AI Security), so the delivered curriculum is 21 lessons across 5 stages. The "Current Curriculum Inventory" below reflects the pre-Stage-0/5 snapshot; see the top-level [README](../README.md) for the current shape.
+
 ---
 
 ## Program Vision

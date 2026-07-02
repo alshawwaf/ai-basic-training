@@ -77,7 +77,7 @@ The program awards progressive certifications. Each tier builds on the previous 
 
 ---
 
-## 13-Week Schedule
+## 15-Week Schedule
 
 ### Week 0 — Kickoff (Live, 90 minutes)
 
